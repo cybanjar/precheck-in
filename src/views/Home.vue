@@ -116,7 +116,41 @@
       <a-form-item :label-col="formTailLayout.labelCol" :wrapper-col="formTailLayout.wrapperCol">
         <a-button type="primary" @click="check">Check</a-button>
       </a-form-item>
-    </a-form>
+    <a-collapse v-model="activeKey">
+      <a-collapse-panel key="1" header="1 Arrival">
+ <a-form-item
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+        label="Name"
+      >
+      <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
+      </a-form-item>
+ <a-form-item
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+        label=""
+      >
+ <a-checkbox >
+    Pickup Required
+  </a-checkbox>
+  </a-form-item>
+ <a-form-item
+        :label-col="formItemLayout.labelCol"
+        :wrapper-col="formItemLayout.wrapperCol"
+        label=""
+      >
+<a-radio-group name="radioGroup" :default-value="1">
+    <a-radio :value="1">
+      Smoking
+    </a-radio>
+    <a-radio :value="2">
+      Non Smoking
+    </a-radio>
+  </a-radio-group>
+  </a-form-item>
+    </a-collapse-panel>
+        </a-collapse>
+            </a-form>
   </div>
 </template>
 
@@ -130,9 +164,12 @@ import Antd, {
   FormModel,
   Button,
   Checkbox,
-  Input
+  Input,
+  Collapse,
+  Radio
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import moment from 'moment'
 Vue.config.productionTip = false
 Vue.component(
   Row.name,
@@ -150,7 +187,11 @@ Vue.component(
   Checkbox.name,
   Checkbox,
   Input.name,
-  Input
+  Input,
+  Collapse.name,
+  Collapse,
+  Radio.name,
+  Radio
 )
 
 Vue.use(Antd)
@@ -168,7 +209,13 @@ export default {
       checkNick: false,
       formItemLayout,
       formTailLayout,
-      form: this.$form.createForm(this, { name: 'dynamic_rule' })
+      form: this.$form.createForm(this, { name: 'dynamic_rule' }),
+      activeKey: ['1']
+    }
+  },
+  watch: {
+    activeKey (key) {
+      console.log(key)
     }
   },
   methods: {
@@ -179,6 +226,7 @@ export default {
         }
       })
     },
+    moment,
     handleChange (e) {
       this.checkNick = e.target.checked
       this.$nextTick(() => {
