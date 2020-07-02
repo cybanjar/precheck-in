@@ -31,10 +31,10 @@
       <a-row>
         <a-card class="infomation">
           <a-row type="flex" justify="start">
-            <a-col :span="4">
-              <a-icon type="check-circle" :style="{ fontSize: '32px' }" theme="twoTone" />
+            <a-col :span="2">
+              <a-icon type="check-circle" :style="{ fontSize: '50px' }" theme="twoTone" />
             </a-col>
-            <a-col :span="20">
+            <a-col :span="22">
               <p>Reservation from 12/06/2020 until 14/06/2020 - Willy wanta</p>
               <p>Reservation number: 333251</p>
             </a-col>
@@ -97,28 +97,89 @@
             </a-form-item>
           </a-col>
         </a-row>
-
-        <a-row type="flex" justify="start">
-          <a-col :span="24">
-            <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
-              <a-collapse-panel key="1" header="1 Arrival">
-                <a-icon slot="extra" type="setting" />
+        <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
+          <a-collapse-panel class="sa_ant-collapse-header" key="1" header="1 Arrival">
+            <a-icon slot="extra" type="setting" />
+            <a-row>
+              <a-col :span="6">
                 <a-form-item layout="vertical" label="Estimated Arrival Time">
                   <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                 </a-form-item>
+              </a-col>
+              <a-col :span="6">
                 <a-form-item label>
                   <a-checkbox>Pickup Required</a-checkbox>
                 </a-form-item>
-                <a-form-item label>
-                  <a-radio-group name="radioGroup">
-                    <a-radio :value="1">Non Smoking</a-radio>
-                    <a-radio :value="2">Smoking</a-radio>
-                  </a-radio-group>
+              </a-col>
+            </a-row>
+            <a-col>
+              <a-form-item label>
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">Non Smoking</a-radio>
+                  <a-radio :value="2">Smoking</a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label>
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">Lower Floor</a-radio>
+                  <a-radio :value="2">High Floor</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="Room Preferences">
+                <a-textarea placeholder="Input Room Preferences" :rows="4" />
+              </a-form-item>
+            </a-col>
+            <a-row></a-row>
+          </a-collapse-panel>
+        </a-collapse>
+        <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
+          <a-collapse-panel class="sa_ant-collapse-header" key="1" header="Guest Details">
+            <a-icon slot="extra" type="setting" />
+            <a-row :gutter="[16,8]">
+              <a-col :span="6">
+                <a-form-item label="Nationality">
+                  <a-select default-value="Indonesia">
+                    <a-select-option value="indonesia">Indonesia</a-select-option>
+                    <a-select-option value="america">America</a-select-option>
+                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  </a-select>
                 </a-form-item>
-              </a-collapse-panel>
-            </a-collapse>
-          </a-col>
-        </a-row>
+              </a-col>
+              <a-col :span="3">
+                <a-form-item label="Date of Birth">
+                  <a-date-picker @change="onChange" />
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item label="Document Id">
+                  <a-select default-value="Id Card">
+                    <a-select-option value="id_card">Id Card</a-select-option>
+                    <a-select-option value="paspor">Paspor</a-select-option>
+                    <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item label="Id Number">
+                  <a-input placeholder="Please input your phone number" />
+                </a-form-item>
+              </a-col>
+              <a-col :span="3">
+                <a-form-item label="Expiry Date">
+                  <a-date-picker @change="onChange" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-col :span="12">
+              <a-form-item label="Address">
+                <a-textarea placeholder="Input Room Preferences" :rows="4" />
+              </a-form-item>
+            </a-col>
+          </a-collapse-panel>
+        </a-collapse>
+        <a-button class="mt-3" type="primary">Pre Check-In</a-button>
       </a-form>
     </div>
   </div>
@@ -136,7 +197,8 @@ import Antd, {
   Checkbox,
   Input,
   Collapse,
-  Radio
+  Radio,
+  DatePicker
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import moment from 'moment'
@@ -161,7 +223,9 @@ Vue.component(
   Collapse.name,
   Collapse,
   Radio.name,
-  Radio
+  Radio,
+  DatePicker.name,
+  DatePicker
 )
 
 Vue.use(Antd)
@@ -198,6 +262,9 @@ export default {
         }
       })
     },
+    onChange (date, dateString) {
+      console.log(date, dateString)
+    },
     moment,
     handleChange (e) {
       this.checkNick = e.target.checked
@@ -211,7 +278,7 @@ export default {
 
 <style scoped lang="scss">
 .home {
-  margin: 30px;
+  margin: 20px;
 }
 h3 {
   margin: 40px 0 0;
@@ -229,5 +296,14 @@ h3 {
 .infomation {
   background-color: #1890ff;
   border-radius: 4px;
+  line-height: 1;
+  color: #fff;
+}
+.sa_ant-collapse-header {
+  background-color: #1890ff;
+  border-radius: 4px;
+}
+.mt-3 {
+  margin-top: 0.75rem;
 }
 </style>
