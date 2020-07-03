@@ -29,14 +29,14 @@
         </a-col>
       </a-row>
       <a-row>
-        <a-card class="infomation mb-3">
+        <a-card class="infomation mb-3 rounded-pill">
           <a-row >
-            <a-col :span="1">
+            <a-col :span="1" :xl="1" :xs="4">
               <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
             </a-col>
-            <a-col :span="23">
-              <p class="font-weight-bold">Reservation from 12/06/2020 until 14/06/2020 - Willy wanta</p>
-              <p class="font-weight-bold">Reservation number: 333251</p>
+            <a-col :span="23" :xl="20" :xs="20" >
+              <p>From <span class="font-weight-bold">12/06/2020</span> until <span class="font-weight-bold">14/06/2020</span></p>
+              <p>Reservation number: <strong>333251</strong> </p>
             </a-col>
           </a-row>
         </a-card>
@@ -102,27 +102,27 @@
           </a-col>
         </a-row>
         <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
-          <a-collapse-panel class="sa_ant-collapse-header" key="1" header="1 Arrival">
+          <a-collapse-panel key="1" header="Arrival">
             <a-icon slot="extra" type="setting" />
             <a-row gutter="16">
-              <a-col :span="4">
+              <a-col :span="4" :xl="4" :xs="24">
                 <a-form-item layout="vertical" label="Estimated Arrival Time">
                   <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                 </a-form-item>
               </a-col>
-              <a-col :span="3">
+              <a-col :span="3" :xl="3" :xs="24">
                 <a-form-item label="Request">
                   <a-checkbox>Pickup Required</a-checkbox>
                 </a-form-item>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" :xl="6" :xs="24">
                 <a-form-item label="Flight Details">
                   <a-input
                     placeholder="Please input flight details"
                   />
                 </a-form-item>
               </a-col>
-              <a-col :span="4">
+              <a-col :span="4" :xl="4" :xs="20">
                 <a-form-item label="Price">
                   <a-input
                     v-decorator="[
@@ -134,8 +134,8 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :span="3">
-                <a-form-item label="Per">
+              <a-col :span="3" :xl="3" :xs="4">
+                <a-form-item label="Units">
                   <p>/Pax</p>
                 </a-form-item>
               </a-col>
@@ -154,7 +154,7 @@
                 </a-radio-group>
               </a-form-item>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="12" :xl="12" :xs="24">
               <a-form-item label="Room Preference">
                 <a-textarea placeholder="Input Room Preferences" :rows="4" />
               </a-form-item>
@@ -162,10 +162,10 @@
           </a-collapse-panel>
         </a-collapse>
         <a-collapse class="mt-3" v-model="activeKey" :expand-icon-position="expandIconPosition">
-          <a-collapse-panel class="ant-collapse-header" key="1" header="Guest Details">
+          <a-collapse-panel key="1" header="Guest Details">
             <a-icon slot="extra" type="setting" />
             <a-row :gutter="[16,8]">
-              <a-col :span="6">
+              <a-col :span="6" :xl="6" :xs="24">
                 <a-form-item label="Nationality">
                   <a-select default-value="Indonesia">
                     <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -174,12 +174,12 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :span="3">
+              <a-col :span="3" :xl="3" :xs="24">
                 <a-form-item label="Date of Birth">
                   <a-date-picker @change="onChange" />
                 </a-form-item>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" :xl="6" :xs="24">
                 <a-form-item label="Document Id">
                   <a-select default-value="Id Card">
                     <a-select-option value="id_card">Id Card</a-select-option>
@@ -188,18 +188,18 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" :xl="6" :xs="24">
                 <a-form-item label="Id Number">
                   <a-input placeholder="Please input your phone number" />
                 </a-form-item>
               </a-col>
-              <a-col :span="3">
+              <a-col :span="3" :xl="3" :xs="24">
                 <a-form-item label="Expiry Date">
                   <a-date-picker @change="onChange" />
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-col :span="12">
+            <a-col :span="12" :xl="12" :xs="24">
               <a-form-item label="Address">
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
@@ -322,10 +322,11 @@ h3 {
 }
 .infomation {
   background-color: #1890ff;
-  border-radius: 4px;
-  line-height: 0.25rem;
+  border-radius: 0.25rem;
+  line-height: 0.625rem;
   color: #fff;
-  height: 4.2rem;
+  padding: 0;
+  height: 5rem;
 }
 .ant-collapse-header {
   background-color: #1890ff;
@@ -343,6 +344,10 @@ h3 {
 .text-center{
   text-align: center;
 }
+.mt-0,
+.my-0 {
+  margin-top: 0 !important;
+}
 .mt-1,
 .my-1 {
   margin-top: 0.25rem !important;
@@ -359,10 +364,51 @@ h3 {
 .my-3 {
   margin-bottom: 1rem !important;
 }
+.pt-0,
+.py-0 {
+  padding-top: 0 !important;
+}
+.pt-1,
+.py-1 {
+  padding-top: 0.25rem !important;
+}
+.pt-2,
+.py-2 {
+  padding-top: 0.5rem !important;
+}
+.pb-0,
+.py-0 {
+  padding-bottom: 0 !important;
+}
+.pb-1,
+.py-1 {
+  padding-bottom: 0.25rem !important;
+}
+.pb-2,
+.py-2 {
+  padding-bottom: 0.5rem !important;
+}
+.pt-3,
+.py-3 {
+  padding-top: 1rem !important;
+}
+.pb-3,
+.py-3 {
+  padding-bottom: 1rem !important;
+}
+.rounded-pill {
+  border-radius: 50rem !important;
+}
 .font-weight-bold {
   font-weight: 700 !important;
 }
 .label-hidden {
   visibility: hidden;
+}
+.color-white {
+  color: #fff;
+}
+.ant-card-body{
+  margin: 0;
 }
 </style>
