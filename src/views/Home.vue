@@ -8,7 +8,7 @@
       </a-row>
     </div>
     <div class="home">
-      <a-row>
+      <a-row class="grandvisual">
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
             <img
@@ -22,21 +22,21 @@
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
             <img slot="cover" alt="example" src="../assets/GrandVisualHotel.png" />
-            <a-card-meta title="Grand Visual Hotel">
+            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel">
               <template slot="description">Cardingstron Street, 1St - London</template>
             </a-card-meta>
           </a-card>
         </a-col>
       </a-row>
       <a-row>
-        <a-card class="infomation">
-          <a-row type="flex" justify="start">
-            <a-col :span="2">
-              <a-icon type="check-circle" :style="{ fontSize: '50px' }" theme="twoTone" />
+        <a-card class="infomation mb-3">
+          <a-row >
+            <a-col :span="1">
+              <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
             </a-col>
-            <a-col :span="22">
-              <p>Reservation from 12/06/2020 until 14/06/2020 - Willy wanta</p>
-              <p>Reservation number: 333251</p>
+            <a-col :span="23">
+              <p class="font-weight-bold">Reservation from 12/06/2020 until 14/06/2020 - Willy wanta</p>
+              <p class="font-weight-bold">Reservation number: 333251</p>
             </a-col>
           </a-row>
         </a-card>
@@ -56,11 +56,13 @@
           <a-col :span="6" :xl="6" :xs="18">
             <a-form-item label="Name">
               <a-input
+                initial-value="Willy Wanta"
                 v-decorator="[
             'username',
             { rules: [{ required: true, message: 'Please input your name' }] },
           ]"
-                placeholder="Please input your name"
+                placeholder="Willy Wanta"
+                disabled
               />
             </a-form-item>
           </a-col>
@@ -72,7 +74,8 @@
                 'email',
                 { rules: [{ required: checkNick, message: 'Please input your email' }] },
               ]"
-                placeholder="Please input your phone email"
+                placeholder="willywanta@gmail.com"
+                disabled
               />
             </a-form-item>
           </a-col>
@@ -92,7 +95,8 @@
                 'nickname',
                 { rules: [{ required: true, message: 'Please input your phone number' }] },
               ]"
-                placeholder="Please input your phone number"
+                placeholder="81220002020"
+                disabled
               />
             </a-form-item>
           </a-col>
@@ -101,7 +105,7 @@
           <a-collapse-panel class="sa_ant-collapse-header" key="1" header="1 Arrival">
             <a-icon slot="extra" type="setting" />
             <a-row>
-              <a-col :span="6">
+              <a-col :span="4">
                 <a-form-item layout="vertical" label="Estimated Arrival Time">
                   <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                 </a-form-item>
@@ -127,15 +131,14 @@
               </a-form-item>
             </a-col>
             <a-col :span="12">
-              <a-form-item label="Room Preferences">
+              <a-form-item label="Room Preference">
                 <a-textarea placeholder="Input Room Preferences" :rows="4" />
               </a-form-item>
             </a-col>
-            <a-row></a-row>
           </a-collapse-panel>
         </a-collapse>
-        <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
-          <a-collapse-panel class="sa_ant-collapse-header" key="1" header="Guest Details">
+        <a-collapse class="mt-3" v-model="activeKey" :expand-icon-position="expandIconPosition">
+          <a-collapse-panel class="ant-collapse-header" key="1" header="Guest Details">
             <a-icon slot="extra" type="setting" />
             <a-row :gutter="[16,8]">
               <a-col :span="6">
@@ -174,7 +177,7 @@
             </a-row>
             <a-col :span="12">
               <a-form-item label="Address">
-                <a-textarea placeholder="Input Room Preferences" :rows="4" />
+                <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
           </a-collapse-panel>
@@ -296,14 +299,43 @@ h3 {
 .infomation {
   background-color: #1890ff;
   border-radius: 4px;
-  line-height: 1;
+  line-height: 0.25rem;
   color: #fff;
+  height: 4.2rem;
 }
-.sa_ant-collapse-header {
+.ant-collapse-header {
   background-color: #1890ff;
   border-radius: 4px;
+  color: #fff !important;
 }
 .mt-3 {
   margin-top: 0.75rem;
+}
+.grandvisual{
+  line-height: 0.25rem;
+  text-align: center;
+  padding: .0625rem;
+}
+.text-center{
+  text-align: center;
+}
+.mt-1,
+.my-1 {
+  margin-top: 0.25rem !important;
+}
+.mt-2,
+.my-2 {
+  margin-top: 0.5rem !important;
+}
+.mt-3,
+.my-3 {
+  margin-top: 1rem !important;
+}
+.mb-3,
+.my-3 {
+  margin-bottom: 1rem !important;
+}
+.font-weight-bold {
+  font-weight: 700 !important;
 }
 </style>
