@@ -429,4 +429,7 @@ h3 {
 .ant-card-body{
   margin: 0;
 }
+.ant-card-meta-title{
+  font-weight: bolder !important;
+}
 </style>
