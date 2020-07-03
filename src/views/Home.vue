@@ -41,173 +41,191 @@
           </a-row>
         </a-card>
       </a-row>
-      <a-form layout="vertical" :form="form">
-        <a-row :gutter="16">
-          <!-- Col Title 3-->
-          <a-col :span="3" :xl="3" :xs="6">
-            <a-form-item label="Title">
-              <a-select default-value="MR">
-                <a-select-option value="MR">MR</a-select-option>
-                <a-select-option value="MRS">MRS</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <!-- Col name 6 -->
-          <a-col :span="6" :xl="6" :xs="18">
-            <a-form-item label="Name">
-              <a-input
-                initial-value="Willy Wanta"
-                v-decorator="[
-            'username',
-            { rules: [{ required: true, message: 'Please input your name' }] },
-          ]"
-                placeholder="Willy Wanta"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-          <!-- Col email 6 -->
-          <a-col :span="6" :xl="6" :xs="24">
-            <a-form-item label="Email">
-              <a-input
-                v-decorator="[
-                'email',
-                { rules: [{ required: checkNick, message: 'Please input your email' }] },
-              ]"
-                placeholder="willywanta@gmail.com"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="3" :xl="3" :xs="6">
-            <a-form-item label="Code">
-              <a-select default-value="+62">
-                <a-select-option value="62">+62</a-select-option>
-                <a-select-option value="1">+1</a-select-option>
-                <a-select-option value="966">+966</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :span="6" :xl="6" :xs="18">
-            <a-form-item label="Phone Number">
-              <a-input
-                v-decorator="[
-                'nickname',
-                { rules: [{ required: true, message: 'Please input your phone number' }] },
-              ]"
-                placeholder="81220002020"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
-          <a-collapse-panel key="1" header="Arrival">
-            <a-icon slot="extra" type="setting" />
-            <a-row gutter="16">
-              <a-col :span="4" :xl="4" :xs="24">
-                <a-form-item layout="vertical" label="Estimated Arrival Time">
-                  <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item label="Request">
-                  <a-checkbox>Pickup Required</a-checkbox>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6" :xl="6" :xs="24">
-                <a-form-item label="Flight Details">
-                  <a-input
-                    placeholder="Please input flight details"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="4" :xl="4" :xs="20">
-                <a-form-item label="Price">
-                  <a-input
-                    v-decorator="[
-                    'nickname',
-                    { rules: [{ required: false, message: '' }] },
-                  ]"
-                    placeholder="100.000"
-                    disabled
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="3" :xl="3" :xs="4">
-                <a-form-item label="Units">
-                  <p>/Pax</p>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-col>
-              <a-form-item label>
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">Non Smoking</a-radio>
-                  <a-radio :value="2">Smoking</a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label>
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">Lower Floor</a-radio>
-                  <a-radio :value="2">High Floor</a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12" :xl="12" :xs="24">
-              <a-form-item label="Room Preference">
-                <a-textarea placeholder="Input Room Preferences" :rows="4" />
-              </a-form-item>
-            </a-col>
-          </a-collapse-panel>
-        </a-collapse>
-        <a-collapse class="mt-3" v-model="activeKey" :expand-icon-position="expandIconPosition">
-          <a-collapse-panel key="1" header="Guest Details">
-            <a-icon slot="extra" type="setting" />
-            <a-row :gutter="[16,8]">
-              <a-col :span="6" :xl="6" :xs="24">
-                <a-form-item label="Nationality">
-                  <a-select default-value="Indonesia">
-                    <a-select-option value="indonesia">Indonesia</a-select-option>
-                    <a-select-option value="america">America</a-select-option>
-                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item label="Date of Birth">
-                  <a-date-picker @change="onChange" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6" :xl="6" :xs="24">
-                <a-form-item label="Document Id">
-                  <a-select default-value="Id Card">
-                    <a-select-option value="id_card">Id Card</a-select-option>
-                    <a-select-option value="paspor">Paspor</a-select-option>
-                    <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6" :xl="6" :xs="24">
-                <a-form-item label="Id Number">
-                  <a-input placeholder="Please input your phone number" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item label="Expiry Date">
-                  <a-date-picker @change="onChange" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-col :span="12" :xl="12" :xs="24">
-              <a-form-item label="Address">
-                <a-textarea placeholder="Input Address" :rows="4" />
-              </a-form-item>
-            </a-col>
-          </a-collapse-panel>
-        </a-collapse>
+      <div>
+        <a-tabs default-active-key="1" @change="callback">
+          <a-tab-pane key="1" tab="Tab Willy">
+            <a-form layout="vertical" :form="form">
+              <a-row :gutter="16">
+                <!-- Col Title 3-->
+                <a-col :span="3" :xl="3" :xs="6">
+                  <a-form-item label="Title">
+                    <a-select default-value="MR">
+                      <a-select-option value="MR">MR</a-select-option>
+                      <a-select-option value="MRS">MRS</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <!-- Col name 6 -->
+                <a-col :span="6" :xl="6" :xs="18">
+                  <a-form-item label="Name">
+                    <a-input
+                      initial-value="Willy Wanta"
+                      v-decorator="[
+                  'username',
+                  { rules: [{ required: true, message: 'Please input your name' }] },
+                ]"
+                      placeholder="Willy Wanta"
+                      disabled
+                    />
+                  </a-form-item>
+                </a-col>
+                <!-- Col email 6 -->
+                <a-col :span="6" :xl="6" :xs="24">
+                  <a-form-item label="Email">
+                    <a-input
+                      v-decorator="[
+                      'email',
+                      { rules: [{ required: checkNick, message: 'Please input your email' }] },
+                    ]"
+                      placeholder="willywanta@gmail.com"
+                      disabled
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="3" :xl="3" :xs="6">
+                  <a-form-item label="Code">
+                    <a-select default-value="+62">
+                      <a-select-option value="62">+62</a-select-option>
+                      <a-select-option value="1">+1</a-select-option>
+                      <a-select-option value="966">+966</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6" :xl="6" :xs="18">
+                  <a-form-item label="Phone Number">
+                    <a-input
+                      v-decorator="[
+                      'nickname',
+                      { rules: [{ required: true, message: 'Please input your phone number' }] },
+                    ]"
+                      placeholder="81220002020"
+                      disabled
+                    />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+              <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
+                <a-collapse-panel key="1" header="Arrival">
+                  <a-icon slot="extra" type="setting" />
+                  <a-row gutter="16">
+                    <a-col :span="4" :xl="4" :xs="24">
+                      <a-form-item layout="vertical" label="Estimated Arrival Time">
+                        <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="3" :xl="3" :xs="24">
+                      <a-form-item label="Request">
+                        <a-checkbox>Pickup Required</a-checkbox>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <a-form-item label="Flight Details">
+                        <a-input
+                          placeholder="Please input flight details"
+                        />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="4" :xl="4" :xs="20">
+                      <a-form-item label="Price">
+                        <a-input
+                          v-decorator="[
+                          'nickname',
+                          { rules: [{ required: false, message: '' }] },
+                        ]"
+                          placeholder="100.000"
+                          disabled
+                        />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="3" :xl="3" :xs="4">
+                      <a-form-item label="Units">
+                        <p>/Pax</p>
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <a-col>
+                    <a-form-item label>
+                      <a-radio-group name="radioGroup">
+                        <a-radio :value="1">Non Smoking</a-radio>
+                        <a-radio :value="2">Smoking</a-radio>
+                      </a-radio-group>
+                    </a-form-item>
+                    <a-form-item label>
+                      <a-radio-group name="radioGroup">
+                        <a-radio :value="1">Lower Floor</a-radio>
+                        <a-radio :value="2">High Floor</a-radio>
+                      </a-radio-group>
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="12" :xl="12" :xs="24">
+                    <a-form-item label="Room Preference">
+                      <a-textarea placeholder="Input Room Preferences" :rows="4" />
+                    </a-form-item>
+                  </a-col>
+                </a-collapse-panel>
+              </a-collapse>
+              <a-collapse class="mt-3" v-model="activeKey" :expand-icon-position="expandIconPosition">
+                <a-collapse-panel key="1" header="Guest Details">
+                  <a-icon slot="extra" type="setting" />
+                  <a-row :gutter="[16,8]">
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <a-form-item label="Nationality">
+                        <a-select default-value="Indonesia">
+                          <a-select-option value="indonesia">Indonesia</a-select-option>
+                          <a-select-option value="america">America</a-select-option>
+                          <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="3" :xl="3" :xs="24">
+                      <a-form-item label="Date of Birth">
+                        <a-date-picker @change="onChange" />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <a-form-item label="Document Id">
+                        <a-select default-value="Id Card">
+                          <a-select-option value="id_card">Id Card</a-select-option>
+                          <a-select-option value="paspor">Paspor</a-select-option>
+                          <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <a-form-item label="Id Number">
+                        <a-input placeholder="Please input your phone number" />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="3" :xl="3" :xs="24">
+                      <a-form-item label="Expiry Date">
+                        <a-date-picker @change="onChange" />
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <a-col :span="12" :xl="12" :xs="24">
+                    <a-form-item label="Address">
+                      <a-textarea placeholder="Input Address" :rows="4" />
+                    </a-form-item>
+                  </a-col>
+                </a-collapse-panel>
+              </a-collapse>
+            </a-form>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="Tab 2">
+            Content Tab 2
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="Tab 3">
+            Content Tab 3
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="Tab 4">
+            Content Tab 4
+          </a-tab-pane>
+          <a-tab-pane key="5" tab="Tab 5">
+            Content Tab 5
+          </a-tab-pane>
+        </a-tabs>
         <a-button class="mt-3" type="primary">Pre Check-In</a-button>
-      </a-form>
+      </div>
     </div>
   </div>
 </template>
