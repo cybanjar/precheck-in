@@ -104,15 +104,39 @@
         <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
           <a-collapse-panel class="sa_ant-collapse-header" key="1" header="1 Arrival">
             <a-icon slot="extra" type="setting" />
-            <a-row>
+            <a-row gutter="16">
               <a-col :span="4">
                 <a-form-item layout="vertical" label="Estimated Arrival Time">
                   <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                 </a-form-item>
               </a-col>
-              <a-col :span="6">
-                <a-form-item label>
+              <a-col :span="3">
+                <a-form-item label="Request">
                   <a-checkbox>Pickup Required</a-checkbox>
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item label="Flight Details">
+                  <a-input
+                    placeholder="Please input flight details"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="4">
+                <a-form-item label="Price">
+                  <a-input
+                    v-decorator="[
+                    'nickname',
+                    { rules: [{ required: false, message: '' }] },
+                  ]"
+                    placeholder="100.000"
+                    disabled
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="3">
+                <a-form-item label="Per">
+                  <p>/Pax</p>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -337,5 +361,8 @@ h3 {
 }
 .font-weight-bold {
   font-weight: 700 !important;
+}
+.label-hidden {
+  visibility: hidden;
 }
 </style>
