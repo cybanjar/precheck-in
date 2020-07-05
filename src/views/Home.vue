@@ -30,13 +30,20 @@
       </a-row>
       <a-row>
         <a-card class="infomation mb-3 rounded-pill">
-          <a-row >
+          <a-row>
             <a-col :span="1" :xl="1" :xs="4">
               <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
             </a-col>
-            <a-col :span="23" :xl="20" :xs="20" >
-              <p>From <span class="font-weight-bold">12/06/2020</span> until <span class="font-weight-bold">14/06/2020</span></p>
-              <p>Reservation number: <strong>333251</strong> </p>
+            <a-col :span="23" :xl="20" :xs="20">
+              <p>
+                From
+                <span class="font-weight-bold">12/06/2020</span> until
+                <span class="font-weight-bold">14/06/2020</span>
+              </p>
+              <p>
+                Reservation number:
+                <strong>333251</strong>
+              </p>
             </a-col>
           </a-row>
         </a-card>
@@ -120,9 +127,7 @@
                     </a-col>
                     <a-col :span="6" :xl="6" :xs="24">
                       <a-form-item label="Flight Details">
-                        <a-input
-                          placeholder="Please input flight details"
-                        />
+                        <a-input placeholder="Please input flight details" />
                       </a-form-item>
                     </a-col>
                     <a-col :span="4" :xl="4" :xs="20">
@@ -139,7 +144,7 @@
                     </a-col>
                     <a-col :span="3" :xl="3" :xs="4">
                       <a-form-item label="Units">
-                        <p>/Pax</p>
+                        <p>/ Pax</p>
                       </a-form-item>
                     </a-col>
                   </a-row>
@@ -164,7 +169,11 @@
                   </a-col>
                 </a-collapse-panel>
               </a-collapse>
-              <a-collapse class="mt-3" v-model="activeKey" :expand-icon-position="expandIconPosition">
+              <a-collapse
+                class="mt-3"
+                v-model="activeKey"
+                :expand-icon-position="expandIconPosition"
+              >
                 <a-collapse-panel key="1" header="Guest Details">
                   <a-icon slot="extra" type="setting" />
                   <a-row :gutter="[16,8]">
@@ -211,18 +220,10 @@
               </a-collapse>
             </a-form>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="Tab 2">
-            Content Tab 2
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="Tab 3">
-            Content Tab 3
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="Tab 4">
-            Content Tab 4
-          </a-tab-pane>
-          <a-tab-pane key="5" tab="Tab 5">
-            Content Tab 5
-          </a-tab-pane>
+          <a-tab-pane key="2" tab="Tab 2">Content Tab 2</a-tab-pane>
+          <a-tab-pane key="3" tab="Tab 3">Content Tab 3</a-tab-pane>
+          <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
+          <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
         </a-tabs>
         <a-button class="mt-3" type="primary">Pre Check-In</a-button>
       </div>
@@ -231,7 +232,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 import Antd, {
   Row,
   Col,
@@ -244,10 +245,10 @@ import Antd, {
   Collapse,
   Radio,
   DatePicker
-} from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.css'
-import moment from 'moment'
-Vue.config.productionTip = false
+} from "ant-design-vue";
+import "ant-design-vue/dist/antd.css";
+import moment from "moment";
+Vue.config.productionTip = false;
 Vue.component(
   Row.name,
   Row,
@@ -271,54 +272,54 @@ Vue.component(
   Radio,
   DatePicker.name,
   DatePicker
-)
+);
 
-Vue.use(Antd)
+Vue.use(Antd);
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 8 }
-}
+};
 const formTailLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 8, offset: 4 }
-}
+};
 export default {
-  data () {
+  data() {
     return {
       checkNick: false,
       formItemLayout,
       formTailLayout,
-      form: this.$form.createForm(this, { name: 'dynamic_rule' }),
-      activeKey: ['1'],
-      title: ['Mr', 'Mrs'],
-      expandIconPosition: 'left'
-    }
+      form: this.$form.createForm(this, { name: "dynamic_rule" }),
+      activeKey: ["1"],
+      title: ["Mr", "Mrs"],
+      expandIconPosition: "left"
+    };
   },
   watch: {
-    activeKey (key) {
-      console.log(key)
+    activeKey(key) {
+      console.log(key);
     }
   },
   methods: {
-    check () {
+    check() {
       this.form.validateFields(err => {
         if (!err) {
-          console.info('success')
+          console.info("success");
         }
-      })
+      });
     },
-    onChange (date, dateString) {
-      console.log(date, dateString)
+    onChange(date, dateString) {
+      console.log(date, dateString);
     },
     moment,
-    handleChange (e) {
-      this.checkNick = e.target.checked
+    handleChange(e) {
+      this.checkNick = e.target.checked;
       this.$nextTick(() => {
-        this.form.validateFields(['nickname'], { force: true })
-      })
+        this.form.validateFields(["nickname"], { force: true });
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -354,12 +355,12 @@ h3 {
 .mt-3 {
   margin-top: 0.75rem;
 }
-.grandvisual{
+.grandvisual {
   line-height: 0.25rem;
   text-align: center;
-  padding: .0625rem;
+  padding: 0.0625rem;
 }
-.text-center{
+.text-center {
   text-align: center;
 }
 .mt-0,
@@ -426,10 +427,10 @@ h3 {
 .color-white {
   color: #fff;
 }
-.ant-card-body{
+.ant-card-body {
   margin: 0;
 }
-.ant-card-meta-title{
+.ant-card-meta-title {
   font-weight: bolder !important;
 }
 </style>

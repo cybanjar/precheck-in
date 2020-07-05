@@ -1,17 +1,28 @@
 module.exports = {
   root: true,
-  env: {
-    node: true
-  },
   extends: [
-    'plugin:vue/essential',
-    '@vue/standard'
+    'plugin:vue/strongly-recommended',
+    '@vue/typescript/recommended',
+    '@vue/prettier',
+    '@vue/prettier/@typescript-eslint',
   ],
-  parserOptions: {
-    parser: 'babel-eslint'
+  env: {
+    browser: true,
+    node: true,
+  },
+  globals: {
+    ga: true, // Google Analytics
+    cordova: true,
+    __statics: true,
+    process: true,
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
-  }
-}
+    'prefer-promise-reject-errors': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'vue/component-name-in-template-casing': ['error', 'kebab-case'],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-var-requires': 0,
+  },
+};
