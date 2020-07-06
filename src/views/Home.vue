@@ -50,7 +50,7 @@
       </a-row>
       <div>
         <a-tabs default-active-key="1" @change="callback">
-          <a-tab-pane key="1" tab="Tab Willy">
+          <a-tab-pane key="1" tab="Willy Wanta">
             <a-form layout="vertical" :form="form">
               <a-row :gutter="16">
                 <!-- Col Title 3-->
@@ -68,9 +68,16 @@
                     <a-input
                       initial-value="Willy Wanta"
                       v-decorator="[
-                  'username',
-                  { rules: [{ required: true, message: 'Please input your name' }] },
-                ]"
+                        'username',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please input your name',
+                            },
+                          ],
+                        },
+                      ]"
                       placeholder="Willy Wanta"
                       disabled
                     />
@@ -81,9 +88,16 @@
                   <a-form-item label="Email">
                     <a-input
                       v-decorator="[
-                      'email',
-                      { rules: [{ required: checkNick, message: 'Please input your email' }] },
-                    ]"
+                        'email',
+                        {
+                          rules: [
+                            {
+                              required: checkNick,
+                              message: 'Please input your email',
+                            },
+                          ],
+                        },
+                      ]"
                       placeholder="willywanta@gmail.com"
                       disabled
                     />
@@ -102,9 +116,16 @@
                   <a-form-item label="Phone Number">
                     <a-input
                       v-decorator="[
-                      'nickname',
-                      { rules: [{ required: true, message: 'Please input your phone number' }] },
-                    ]"
+                        'nickname',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please input your phone number',
+                            },
+                          ],
+                        },
+                      ]"
                       placeholder="81220002020"
                       disabled
                     />
@@ -122,7 +143,11 @@
                     </a-col>
                     <a-col :span="3" :xl="3" :xs="24">
                       <a-form-item label="Request">
-                        <a-checkbox>Pickup Required</a-checkbox>
+                        <a-checkbox
+                          :indeterminate="indeterminate"
+                          :checked="checkAll"
+                          @change="onCheckAllChange"
+                        >Pickup Required</a-checkbox>
                       </a-form-item>
                     </a-col>
                     <a-col :span="6" :xl="6" :xs="24">
@@ -134,9 +159,9 @@
                       <a-form-item label="Price">
                         <a-input
                           v-decorator="[
-                          'nickname',
-                          { rules: [{ required: false, message: '' }] },
-                        ]"
+                            'nickname',
+                            { rules: [{ required: false, message: '' }] },
+                          ]"
                           placeholder="100.000"
                           disabled
                         />
@@ -176,7 +201,7 @@
               >
                 <a-collapse-panel key="1" header="Guest Details">
                   <a-icon slot="extra" type="setting" />
-                  <a-row :gutter="[16,8]">
+                  <a-row :gutter="[16, 8]">
                     <a-col :span="6" :xl="6" :xs="24">
                       <a-form-item label="Nationality">
                         <a-select default-value="Indonesia">
@@ -211,19 +236,59 @@
                       </a-form-item>
                     </a-col>
                   </a-row>
-                  <a-col :span="12" :xl="12" :xs="24">
-                    <a-form-item label="Address">
-                      <a-textarea placeholder="Input Address" :rows="4" />
-                    </a-form-item>
-                  </a-col>
+                  <a-row>
+                    <a-col :span="12" :xl="12" :xs="24">
+                      <a-form-item label="Address">
+                        <a-textarea placeholder="Input Address" :rows="4" />
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <a-row :gutter="[16, 8]">
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item label="Country">
+                        <a-select default-value="Indonesia">
+                          <a-select-option value="indonesia">Indonesia</a-select-option>
+                          <a-select-option value="america">America</a-select-option>
+                          <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item label="Region">
+                        <a-select default-value="DKI Jakarta">
+                          <a-select-option value="jakarta">DKI Jakarta</a-select-option>
+                          <a-select-option value="west_java">West Java</a-select-option>
+                          <a-select-option value="central_java">Central Java</a-select-option>
+                          <a-select-option value="east_java">East Java</a-select-option>
+                          <a-select-option value="banten">Banten</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item label="City">
+                        <a-select default-value="South Jakarta">
+                          <a-select-option value="south">South Jakarta</a-select-option>
+                          <a-select-option value="west">West Jakarta</a-select-option>
+                          <a-select-option value="east">East Jakarta</a-select-option>
+                          <a-select-option value="north">North Jakata</a-select-option>
+                          <a-select-option value="central">Central Jakata</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="4" :xl="4" :xs="12">
+                      <a-form-item label="Postal Code">
+                        <a-input placeholder="Ex : 12750" />
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
                 </a-collapse-panel>
               </a-collapse>
             </a-form>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="Tab 2">Content Tab 2</a-tab-pane>
-          <a-tab-pane key="3" tab="Tab 3">Content Tab 3</a-tab-pane>
-          <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
-          <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
+          <a-tab-pane key="2" tab="Guest 2">Content Tab 2</a-tab-pane>
+          <a-tab-pane key="3" tab="Guest 3">Content Tab 3</a-tab-pane>
+          <a-tab-pane key="4" tab="Guest 4">Content Tab 4</a-tab-pane>
+          <a-tab-pane key="5" tab="Guest 5">Content Tab 5</a-tab-pane>
         </a-tabs>
         <a-button class="mt-3" type="primary">Pre Check-In</a-button>
       </div>
@@ -244,7 +309,7 @@ import Antd, {
   Input,
   Collapse,
   Radio,
-  DatePicker
+  DatePicker,
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
@@ -277,11 +342,11 @@ Vue.component(
 Vue.use(Antd);
 const formItemLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 8 }
+  wrapperCol: { span: 8 },
 };
 const formTailLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 8, offset: 4 }
+  wrapperCol: { span: 8, offset: 4 },
 };
 export default {
   data() {
@@ -292,17 +357,17 @@ export default {
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
-      expandIconPosition: "left"
+      expandIconPosition: "left",
     };
   },
   watch: {
     activeKey(key) {
       console.log(key);
-    }
+    },
   },
   methods: {
     check() {
-      this.form.validateFields(err => {
+      this.form.validateFields((err) => {
         if (!err) {
           console.info("success");
         }
@@ -317,8 +382,8 @@ export default {
       this.$nextTick(() => {
         this.form.validateFields(["nickname"], { force: true });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -432,5 +497,9 @@ h3 {
 }
 .ant-card-meta-title {
   font-weight: bolder !important;
+}
+.align-self-center {
+  -ms-flex-item-align: center !important;
+  align-self: center !important;
 }
 </style>

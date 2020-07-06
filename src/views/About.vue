@@ -34,7 +34,7 @@
             <a-col :span="1" :xl="1" :xs="4">
               <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
             </a-col>
-            <a-col :span="22" :xl="19" :xs="19">
+            <a-col :span="22" :xl="22" :xs="19">
               <p>
                 From
                 <span class="font-weight-bold">12/06/2020</span> until
@@ -46,7 +46,13 @@
               </p>
             </a-col>
             <a-col :span="1" :xl="1" :xs="1">
-              <a-icon type="setting" theme="filled" @click="showModal" />
+              <a-icon
+                type="setting"
+                :style="{ fontSize: '1.5rem' }"
+                class="float-right align-self-center"
+                theme="filled"
+                @click="showModal"
+              />
             </a-col>
           </a-row>
         </a-card>
@@ -134,11 +140,17 @@
               <a-row>
                 <a-card :style="information">
                   <a-row>
-                    <a-col :span="23" :xl="21" :xs="23">
+                    <a-col :span="23" :xl="23" :xs="23">
                       <p :style="{fontSize: '22px', lineHeight: '1.925rem' }">Arrival</p>
                     </a-col>
                     <a-col :span="1" :xl="1" :xs="1">
-                      <a-icon type="setting" theme="filled" @click="munculModal" />
+                      <a-icon
+                        type="setting"
+                        :style="{ fontSize: '1.5rem' }"
+                        class="float-right align-self-center"
+                        theme="filled"
+                        @click="munculModal"
+                      />
                     </a-col>
                   </a-row>
                 </a-card>
@@ -254,6 +266,44 @@
                 <a-col :span="12" :xl="12" :xs="24">
                   <a-form-item label="Address">
                     <a-textarea placeholder="Input Address" :rows="4" />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+              <a-row :gutter="[16, 8]">
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item label="Country">
+                    <a-select default-value="Indonesia">
+                      <a-select-option value="indonesia">Indonesia</a-select-option>
+                      <a-select-option value="america">America</a-select-option>
+                      <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item label="Region">
+                    <a-select default-value="DKI Jakarta">
+                      <a-select-option value="jakarta">DKI Jakarta</a-select-option>
+                      <a-select-option value="west_java">West Java</a-select-option>
+                      <a-select-option value="central_java">Central Java</a-select-option>
+                      <a-select-option value="east_java">East Java</a-select-option>
+                      <a-select-option value="banten">Banten</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item label="City">
+                    <a-select default-value="South Jakarta">
+                      <a-select-option value="south">South Jakarta</a-select-option>
+                      <a-select-option value="west">West Jakarta</a-select-option>
+                      <a-select-option value="east">East Jakarta</a-select-option>
+                      <a-select-option value="north">North Jakata</a-select-option>
+                      <a-select-option value="central">Central Jakata</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="4" :xl="4" :xs="12">
+                  <a-form-item label="Postal Code">
+                    <a-input placeholder="Ex : 12750" />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -513,5 +563,12 @@ h3 {
 }
 .ant-card-meta-title {
   font-weight: bolder !important;
+}
+.float-right {
+  float: right !important;
+}
+.align-self-center {
+  -ms-flex-item-align: center !important;
+  align-self: center !important;
 }
 </style>
