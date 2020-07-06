@@ -66,14 +66,13 @@
                 <a-col :span="6" :xl="6" :xs="18">
                   <a-form-item label="Name">
                     <a-input
-                      initial-value="Willy Wanta"
+                      defaultValue="Willy Wanta"
                       v-decorator="[
                         'username',
                         {
                           rules: [
                             {
                               required: true,
-                              message: 'Please input your name',
                             },
                           ],
                         },
@@ -141,35 +140,18 @@
                         <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                       </a-form-item>
                     </a-col>
-                    <a-col :span="3" :xl="3" :xs="24">
+                    <a-col :span="4" :xl="4" :xs="24">
                       <a-form-item label="Request">
-                        <a-checkbox
-                          :indeterminate="indeterminate"
-                          :checked="checkAll"
-                          @change="onCheckAllChange"
-                        >Pickup Required</a-checkbox>
+                        <a-checkbox v-model="showPrice">Pickup Required</a-checkbox>
                       </a-form-item>
                     </a-col>
-                    <a-col :span="6" :xl="6" :xs="24">
+                    <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
+                      <a-form-item label="Price">
+                        <label class="font-weight-bold">Rp. 100.000</label>
+                        <span>/Pax</span>
+                      </a-form-item>
                       <a-form-item label="Flight Details">
                         <a-input placeholder="Please input flight details" />
-                      </a-form-item>
-                    </a-col>
-                    <a-col :span="4" :xl="4" :xs="20">
-                      <a-form-item label="Price">
-                        <a-input
-                          v-decorator="[
-                            'nickname',
-                            { rules: [{ required: false, message: '' }] },
-                          ]"
-                          placeholder="100.000"
-                          disabled
-                        />
-                      </a-form-item>
-                    </a-col>
-                    <a-col :span="3" :xl="3" :xs="4">
-                      <a-form-item label="Units">
-                        <p>/ Pax</p>
                       </a-form-item>
                     </a-col>
                   </a-row>
@@ -358,6 +340,7 @@ export default {
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
+      showPrice: false
     };
   },
   watch: {
