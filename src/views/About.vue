@@ -32,7 +32,12 @@
         <a-card :style="information">
           <a-row>
             <a-col :span="1" :xl="1" :xs="4">
-              <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
+              <a-icon
+                type="check-circle"
+                :style="{ fontSize: '2rem' }"
+                theme="twoTone"
+                :two-tone-color="information.backgroundColor"
+              />
             </a-col>
             <a-col :span="22" :xl="22" :xs="19">
               <p>
