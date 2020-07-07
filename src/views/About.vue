@@ -64,15 +64,14 @@
         :confirm-loading="confirmLoading"
         @ok="handleOk"
         @cancel="handleCancel"
-        centered
       >
-        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('red')">Header Class Red</a>
+        <p>Standart Back Color</p>
+        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('red')">Red</a>
         <br />
-        <a
-          href="#"
-          onclick="return false;"
-          @mouseover="gantiHeaderClass('green')"
-        >Header Class Green</a>
+        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('green')">Green</a>
+
+        <p>Custom Back Color</p>
+        <slider-picker v-model="information.backgroundColor" @input="customHeaderClass" />
       </a-modal>
       <div>
         <a-tabs default-active-key="1" @change="callback">
@@ -318,6 +317,7 @@
 
 <script>
 import Vue from "vue";
+import  {Slider}   from 'vue-color'
 import Antd, {
   Row,
   Col,
@@ -334,50 +334,24 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
-Vue.config.productionTip = false;
-Vue.component(
-  Row.name,
-  Row,
-  Col.name,
-  Col,
-  Card.name,
-  Card,
-  Icon.name,
-  Icon,
-  FormModel.name,
-  FormModel,
-  Button.name,
-  Button,
-  Checkbox.name,
-  Checkbox,
-  Input.name,
-  Input,
-  Collapse.name,
-  Collapse,
-  Radio.name,
-  Radio,
-  DatePicker.name,
-  DatePicker,
-  Modal.name,
-  Modal
-);
 
-Vue.use(Antd);
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 8 }
-};
-const formTailLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 8, offset: 4 }
-};
+
 export default {
+   components:{
+    'slider-picker': Slider,
+  },
   data() {
     return {
       size: 'large',
       checkNick: false,
-      formItemLayout,
-      formTailLayout,
+      formItemLayout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 8 },
+      },
+      formTailLayout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 8, offset: 4 },
+      },
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -418,10 +392,12 @@ export default {
     munculModal() {
       this.muncul = true;
     },
-    gantiHeaderClass(warna) {
-      console.log(warna);
-      console.log(this.information.backgroundColor);
+     gantiHeaderClass(warna) {
       this.information.backgroundColor = warna;
+    },
+    customHeaderClass(color) {
+      console.log(color);
+      this.information.backgroundColor = color.hex;
     },
     handleOk(e) {
       this.ModalText = 'The modal will be closed after two seconds';

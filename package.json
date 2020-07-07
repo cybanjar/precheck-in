@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "eslint-loader": "^4.0.2",
     "vue": "^2.6.11",
+    "vue-color": "^2.7.1",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {
@@ -40,6 +41,6 @@
     "typescript": "^3.8.3"
   },
   "resolutions": {
-    "@babel/parser": "7.10.3"
+    "@babel/parser": "7.10.4"
   }
 }
