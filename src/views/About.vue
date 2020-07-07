@@ -64,6 +64,7 @@
         :confirm-loading="confirmLoading"
         @ok="handleOk"
         @cancel="handleCancel"
+        centered
       >
         <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('red')">Header Class Red</a>
         <br />
@@ -146,7 +147,7 @@
                 <a-card :style="information">
                   <a-row>
                     <a-col :span="23" :xl="23" :xs="23">
-                      <p :style="{fontSize: '22px', lineHeight: '1.925rem' }">Arrival</p>
+                      <p class="header-group">Arrival</p>
                     </a-col>
                     <a-col :span="1" :xl="1" :xs="1">
                       <a-icon
@@ -167,11 +168,12 @@
                 :confirm-loading="confirmLoading"
                 @ok="handleOk"
                 @cancel="handleCancel"
+                centered
               >
                 <input type="checkbox" id="checkbox" v-model="show" />
                 <label for="checkbox">Component Smoking</label>
               </a-modal>
-              <a-row class="ml-4" gutter="16">
+              <a-row class="ml-4 height-5" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item layout="vertical" label="Estimated Arrival Time">
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
@@ -218,7 +220,7 @@
                 <a-card :style="information">
                   <a-row>
                     <a-col :span="24" :xl="22" :xs="24">
-                      <p :style="{fontSize: '22px', lineHeight: '1.925rem' }">Guest Details</p>
+                      <p class="header-group">Guest Details</p>
                     </a-col>
                   </a-row>
                 </a-card>
@@ -308,7 +310,7 @@
           <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
           <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
         </a-tabs>
-        <a-button class="mt-3" type="primary">Pre Check-In</a-button>
+        <a-button class="mt-3" type="primary" :size="size">Check-In Now</a-button>
       </div>
     </div>
   </div>
@@ -372,6 +374,7 @@ const formTailLayout = {
 export default {
   data() {
     return {
+      size: 'large',
       checkNick: false,
       formItemLayout,
       formTailLayout,
@@ -427,7 +430,7 @@ export default {
         this.visible = false;
         this.muncul = false;
         this.confirmLoading = false;
-      }, 2000);
+      }, 700);
     },
     handleCancel(e) {
       console.log('Clicked cancel button');
@@ -473,6 +476,13 @@ h3 {
 //   padding: 0;
 //   height: 5rem;
 // }
+.header-group {
+  letter-spacing: 0.1rem;
+  line-height: 1.925rem;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  font-weight: bold !important;
+}
 .ant-collapse-header {
   background-color: #1890ff;
   border-radius: 4px;

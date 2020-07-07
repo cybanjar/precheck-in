@@ -162,11 +162,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-collapse
-                class="ml-3"
-                v-model="activeKey"
-                :expand-icon-position="expandIconPosition"
-              >
+              <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
                 <a-collapse-panel key="1" header="Arrival">
                   <a-icon slot="extra" type="setting" @click="showModal" />
                   <a-row gutter="16">
