@@ -34,7 +34,7 @@
             <a-col :span="1" :xl="1" :xs="4">
               <a-icon type="check-circle" :style="{ fontSize: '2rem' }" theme="twoTone" />
             </a-col>
-            <a-col :span="23" :xl="20" :xs="20">
+            <a-col :span="22" :xl="22" :xs="19">
               <p>
                 From
                 <span class="font-weight-bold">12/06/2020</span> until
@@ -45,9 +45,35 @@
                 <strong>333251</strong>
               </p>
             </a-col>
+            <a-col :span="1" :xl="1" :xs="1">
+              <a-icon
+                type="setting"
+                :style="{ fontSize: '1.5rem' }"
+                class="float-right align-self-center"
+                theme="filled"
+                @click="showModal"
+              />
+            </a-col>
           </a-row>
         </a-card>
       </a-row>
+      <a-modal
+        v-model="visible"
+        title="Color Setting"
+        :visible="visible"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
+        centered
+      >
+        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('red')">Header Class Red</a>
+        <br />
+        <a
+          href="#"
+          onclick="return false;"
+          @mouseover="gantiHeaderClass('green')"
+        >Header Class Green</a>
+      </a-modal>
       <div>
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Willy Wanta">
@@ -130,10 +156,19 @@
                     />
                   </a-form-item>
                 </a-col>
+                <a-col :span="9" :xl="9" :xs="24">
+                  <a-form-item label="Sharing Room">
+                    <a-input defaultValue="Josep" disabled />
+                  </a-form-item>
+                </a-col>
               </a-row>
-              <a-collapse v-model="activeKey" :expand-icon-position="expandIconPosition">
+              <a-collapse
+                class="ml-3"
+                v-model="activeKey"
+                :expand-icon-position="expandIconPosition"
+              >
                 <a-collapse-panel key="1" header="Arrival">
-                  <a-icon slot="extra" type="setting" />
+                  <a-icon slot="extra" type="setting" @click="showModal" />
                   <a-row gutter="16">
                     <a-col :span="4" :xl="4" :xs="24">
                       <a-form-item layout="vertical" label="Estimated Arrival Time">
@@ -340,7 +375,21 @@ export default {
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
-      showPrice: false
+      visible: false,
+      confirmLoading: false,
+      muncul:false,
+      showPrice: false,
+      information: {
+        backgroundColor: "#1890ff",
+        borderRadius: "0.25rem",
+        lineHeight: "0.625rem",
+        color: "#fff",
+        padding: 0,
+        height: "5rem",
+        marginBottom: "1rem !important",
+        borderRadius: "50rem !important",
+        show: true,
+      },
     };
   },
   watch: {
@@ -355,6 +404,31 @@ export default {
           console.info("success");
         }
       });
+    },
+    showModal() {
+      this.visible = true;
+    },
+    munculModal() {
+      this.muncul = true;
+    },
+    gantiHeaderClass(warna) {
+      console.log(warna);
+      console.log(this.information.backgroundColor);
+      this.information.backgroundColor = warna;
+    },
+    handleOk(e) {
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visible = false;
+        this.muncul = false;
+        this.confirmLoading = false;
+      }, 700);
+    },
+    handleCancel(e) {
+      console.log('Clicked cancel button');
+      this.visible = false;
+      this.muncul = false;
     },
     onChange(date, dateString) {
       console.log(date, dateString);
@@ -481,8 +555,15 @@ h3 {
 .ant-card-meta-title {
   font-weight: bolder !important;
 }
+.float-right {
+  float: right !important;
+}
 .align-self-center {
   -ms-flex-item-align: center !important;
   align-self: center !important;
+}
+.ml-3,
+.mx-3 {
+  margin-left: 1rem !important;
 }
 </style>

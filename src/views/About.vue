@@ -135,6 +135,11 @@
                     />
                   </a-form-item>
                 </a-col>
+                <a-col :span="9" :xl="9" :xs="24">
+                  <a-form-item label="Sharing Room">
+                    <a-input defaultValue="Josep" disabled />
+                  </a-form-item>
+                </a-col>
               </a-row>
 
               <a-row>
@@ -166,39 +171,28 @@
                 <input type="checkbox" id="checkbox" v-model="show" />
                 <label for="checkbox">Component Smoking</label>
               </a-modal>
-              <a-row gutter="16">
+              <a-row class="ml-4" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item layout="vertical" label="Estimated Arrival Time">
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="3" :xl="3" :xs="24">
+                <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item label="Request">
-                    <a-checkbox>Pickup Required</a-checkbox>
+                    <a-checkbox v-model="showPrice">Pickup Required</a-checkbox>
                   </a-form-item>
                 </a-col>
-                <a-col :span="6" :xl="6" :xs="24">
+                <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
+                  <a-form-item label="Price">
+                    <label class="font-weight-bold">Rp. 100.000</label>
+                    <span>/Pax</span>
+                  </a-form-item>
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="4" :xl="4" :xs="20">
-                  <a-form-item label="Price">
-                    <a-input
-                      v-decorator="[
-                          'nickname',
-                          { rules: [{ required: false, message: '' }] },
-                        ]"
-                      placeholder="100.000"
-                      disabled
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="4">
-                  <a-form-item label="Units">
-                    <p>/ Pax</p>
-                  </a-form-item>
-                </a-col>
+              </a-row>
+              <a-row class="ml-4">
                 <a-col>
                   <a-form-item label>
                     <a-radio-group name="radioGroup" v-show="show">
@@ -229,7 +223,7 @@
                   </a-row>
                 </a-card>
               </a-row>
-              <a-row :gutter="[16,8]">
+              <a-row class="ml-4" :gutter="[16,8]">
                 <a-col :span="6" :xl="6" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
@@ -269,7 +263,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row :gutter="[16, 8]">
+              <a-row class="ml-4" :gutter="[16, 8]">
                 <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Country">
                     <a-select default-value="Indonesia">
@@ -387,6 +381,7 @@ export default {
       expandIconPosition: "left",
       visible: false,
       confirmLoading: false,
+      showPrice: false,
       muncul:false,
       information: {
         backgroundColor: "#1890ff",
@@ -545,6 +540,18 @@ h3 {
 .pb-3,
 .py-3 {
   padding-bottom: 1rem !important;
+}
+.ml-3,
+.mx-3 {
+  margin-left: 1rem !important;
+}
+.ml-4,
+.mx-4 {
+  margin-left: 1.5rem !important;
+}
+.ml-5,
+.mx-5 {
+  margin-left: 3rem !important;
 }
 .rounded-pill {
   border-radius: 50rem !important;
