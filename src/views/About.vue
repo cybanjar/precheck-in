@@ -21,13 +21,23 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img slot="cover" alt="example" src="../assets/GrandVisualHotel.png" />
+            <img slot="cover" alt="example" :src="gambar" @click="imageModal" />
             <a-card-meta class="font-weight-bold" title="Grand Visual Hotel">
               <template slot="description">Cardingstron Street, 1St - London</template>
             </a-card-meta>
           </a-card>
         </a-col>
       </a-row>
+      <a-modal
+        v-model="keluar"
+        title="Image Setting"
+        :visible="keluar"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
+      >
+        <a-input v-model="gambar" @input="masukinFoto" />
+      </a-modal>
       <a-row>
         <a-card :style="information">
           <a-row>
@@ -351,12 +361,12 @@ import moment from "moment";
 
 
 export default {
-   components:{
-    'slider-picker': Slider,
+  components: {
+    "slider-picker": Slider,
   },
   data() {
     return {
-      size: 'large',
+      size: "large",
       checkNick: false,
       formItemLayout: {
         labelCol: { span: 4 },
@@ -374,6 +384,8 @@ export default {
       confirmLoading: false,
       showPrice: false,
       muncul:false,
+      keluar:false,
+      gambar: 'https://3.bp.blogspot.com/-NhPfUtJrsmQ/UX_KFZ19tYI/AAAAAAAAAKw/Ehcb7gDFSkg/s280/Magenta.full.939823.jpg',
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
@@ -400,8 +412,16 @@ export default {
         }
       });
     },
+    masukinFoto(foto){
+      console.log(foto,"foto");
+      
+      this.gambar = foto.target.value;
+    },
     showModal() {
       this.visible = true;
+    },
+    imageModal() {
+      this.keluar = true;
     },
     munculModal() {
       this.muncul = true;
