@@ -76,7 +76,11 @@
         <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('green')">Green</a>
 
         <p>Custom Back Color</p>
-        <slider-picker v-model="information.backgroundColor" @input="customHeaderClass" />
+        <slider-picker
+          class="vc-slider"
+          v-model="information.backgroundColor"
+          @input="customHeaderClass"
+        />
       </a-modal>
       <div>
         <a-tabs default-active-key="1" @change="callback">
@@ -175,9 +179,9 @@
                 centered
               >
                 <input type="checkbox" id="checkbox" v-model="show" />
-                <label for="checkbox">Component Smoking</label>
+                <label class="ml-2" for="checkbox">Component Smoking</label>
               </a-modal>
-              <a-row class="ml-4 height-5" gutter="16">
+              <a-row class="height-5" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item layout="vertical" label="Estimated Arrival Time">
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
@@ -198,7 +202,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row class="ml-4">
+              <a-row>
                 <a-col>
                   <a-form-item label>
                     <a-radio-group name="radioGroup" v-show="show">
@@ -229,7 +233,7 @@
                   </a-row>
                 </a-card>
               </a-row>
-              <a-row class="ml-4" :gutter="[16,8]">
+              <a-row :gutter="[16,8]">
                 <a-col :span="6" :xl="6" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
@@ -269,7 +273,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row class="ml-4" :gutter="[16, 8]">
+              <a-row :gutter="[16, 8]">
                 <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Country">
                     <a-select default-value="Indonesia">
@@ -314,6 +318,11 @@
           <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
           <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
         </a-tabs>
+        <a-row>
+          <a-col :span="12" :xl="12" :xs="24">
+            <a-checkbox>I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.</a-checkbox>
+          </a-col>
+        </a-row>
         <a-button class="mt-3" type="primary" :size="size">Check-In Now</a-button>
       </div>
     </div>
@@ -411,7 +420,7 @@ export default {
         this.visible = false;
         this.muncul = false;
         this.confirmLoading = false;
-      }, 700);
+      }, 300);
     },
     handleCancel(e) {
       console.log('Clicked cancel button');
@@ -463,6 +472,12 @@ h3 {
   font-size: 1.25rem;
   text-transform: uppercase;
   font-weight: bold !important;
+}
+.shadow-header {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
+}
+.vc-slider {
+  width: 312px;
 }
 .ant-collapse-header {
   background-color: #1890ff;
@@ -531,6 +546,14 @@ h3 {
 .pb-3,
 .py-3 {
   padding-bottom: 1rem !important;
+}
+.ml-1,
+.mx-1 {
+  margin-left: 0.125rem !important;
+}
+.ml-2,
+.mx-2 {
+  margin-left: 0.5rem !important;
 }
 .ml-3,
 .mx-3 {
