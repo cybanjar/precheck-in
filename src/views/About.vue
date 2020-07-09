@@ -412,6 +412,9 @@
               <a-row class="ml-3 mb-3" gutter="8">
                 <a-col :span="10" :xl="10" :xs="24">
                   <a-card title="Health Declaration">
+                    <a slot="extra">
+                      <a-icon :style="{fontSize: '1.25rem'}" type="safety-certificate" />
+                    </a>
                     <!-- <a slot="extra" href="#">more</a> -->
                     <ol>
                       <li>Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days? <br>
