@@ -327,12 +327,7 @@
                 </a-card>
               </a-row>
               <a-row class="ml-4" :gutter="[16,8]">
-                <a-col :span="3" :xl="3" :xs="24">
-                  <a-form-item label="Date of Birth">
-                    <a-date-picker @change="onChange" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="4" :xl="4" :xs="24">
+                <a-col :span="6" :xl="6" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
                       <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -341,7 +336,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :span="4" :xl="4" :xs="24">
+                <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Document Id">
                     <a-select default-value="Id Card">
                       <a-select-option value="id_card">Id Card</a-select-option>
@@ -357,6 +352,11 @@
                 </a-col>
                 <a-col :span="3" :xl="3" :xs="24">
                   <a-form-item label="Expiry Date">
+                    <a-date-picker @change="onChange" />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="3" :xl="3" :xs="24">
+                  <a-form-item label="Date of Birth">
                     <a-date-picker @change="onChange" />
                   </a-form-item>
                 </a-col>
@@ -399,10 +399,13 @@
                     <a-input placeholder="Ex : 12750" />
                   </a-form-item>
                 </a-col>
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-checkbox :style="{ marginTop: '2rem' }">Save your information detail</a-checkbox>
+                </a-col>
               </a-row>
               <!-- Address -->
               <a-row class="ml-4" :gutter="[16, 8]">
-                <a-col :span="12" :xl="12" :xs="24">
+                <a-col :span="11" :xl="11" :xs="24">
                   <a-form-item label="Address">
                     <a-textarea placeholder="Input Address" :rows="4" />
                   </a-form-item>
