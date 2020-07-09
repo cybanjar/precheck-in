@@ -3,7 +3,12 @@
     <div>
       <a-row type="flex" justify="start" align="top">
         <a-col>
-          <img class="responsive" :src="require('../assets/GradientTop.svg')" />
+          <img
+            v-if="information.backgroundColor == '#E8505B'"
+            class="responsive"
+            :src="require('../assets/gradient-red.svg')"
+          />
+          <img v-else class="responsive" :src="require('../assets/GradientTop.svg')" />
         </a-col>
       </a-row>
     </div>
@@ -468,7 +473,7 @@ export default {
       muncul: false,
       keluar: false,
       // gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
-      gambar:"https://lh3.googleusercontent.com/BwkdiOz2GDx-v50tLMC6j1yIL6FcGL49OreI4n2pk83PaUIG7QjM8xIXA7nPuQb1GOgGHGTgVcKD_99jTMk-mQs5n0HrnLVS8hhnPqU6-j5ahoAKffigI1frIUKdZ0k6rpfaXqIHP9xlJVcDxjGIIksURrHLgR3xhS-0BlO5VX9VSzoJKrfQepQSlGFP6i2zI0J3qQejM7r1sxeeMdti3zotNAwrJMwZnELvpSkL1vuwDXkJkI7vU8q2jdwdk_PJX4GZosJsEvc5dNTpkKSz7Ly4K5thCt9Y3XAkJfMcvuzt7A3dLnMbYu0FTmOi2RmihnUc4Q75Ud6-9hU_UwNvwTqW4QnSLsRG3Wp4DHcDIfR9VkbqqLhsky3bpJLpC_mjZYbqeWP6_TUGVVDcuKVQPh_2pHTHmJkdjtQM5IXnap8I7DbOmrPyp0mE-7tuN1Ie5EfTwBwUm7guimM-JY-l_VNuKGvYqPYsr5JYSvNhhdirGX5P_a3RSzKdSKsQrCaHO1FcbYQNeQ3aQ-PKbieYBSGshogXwZ1BXEiOxeTkSWk6eHEG_L5bbd6Ngw2thE8V1-dTyuo7ojjoI1XtjpBaSzocp0u88qt500NT-oHpriiGgs0BRwOJu_BwXAgUj5wsbBcuOOen-LHRLPaVdIGw70DBtV7rJFKiEeb8a4NgLkJw76UsYra0GDcY5hQP=w641-h331-no?authuser=0",
+      gambar:"https://lh3.googleusercontent.com/bowRsqpYx4jerOJMh30uHmHnzdS_g5BVBrIkAuu6NkVu4xTJdpu7xZtFVOh581Ls5_P22aKAh1M7NpkazGn-i3ZLlLXKV4zn3Ywi_F3T98o-JA83gIg_qRi9aHKuYsOEI_1BEAfMXpNAtJEbRLfPjFDjlC4h59Krvo3WJ3vw2SuPr3Z7mJiVWjVKz0b1u9bmB691YUuHJtQ6HZQKpiAo6PJKAUL5c6t6riAmKp4Ff5ah3m31eQYC7wgMMwSDX5IT8ctqQpnQ9fHfYbH-jRVMYQzGSAPeHRf_jYDZNmvLA3lHYj-czuF1j1ljtOs88vSL0bCPzL77vC6aYj4-FGAqdUCMljb6IGhFzdlhzr3Fi6e1xtIfutSKS-63yf73sU-Z0B5m6DytZQVoG85-ber8ku_U9fq2pf8EgAQh5ucBDtROUUcogu_Z3FkK_wXpued9l8GDdYRvsvqV8Hc2-2xP8cghBVTSh_XsbAii7hmmvhxpbWhsTF76VW3gABogU30u6VOEb1yOi3Jl2CnE4VgkNe-xilKvO0voowYqT7mjrGTk8Hwg1RGnQjlKNCS8IjNnA0MmYOZHaP2yxXcJCOYVtKaq34P_-48a33-WA6-hnqOZBJwcqZXzMrEzvB5c8_OIxWWMFpMyZtMVY_Al1CeK9NhJ_-8togn4ZQVpgVUz6WvE8XEigAkn8PrhIPm1=w641-h331-no?authuser=0",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
