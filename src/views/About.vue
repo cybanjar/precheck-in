@@ -465,7 +465,7 @@
         </a-tabs>
         <a-row>
           <a-col :span="12" :xl="12" :xs="24">
-            <a-checkbox>I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.</a-checkbox>
+            <a-checkbox>I agree with the <a href="#">Terms and Conditions</a> of Visual Grand Hotel Web Check-in.</a-checkbox>
           </a-col>
         </a-row>
         <a-button class="mt-3" type="primary" :size="size">Check-In Now</a-button>
@@ -476,7 +476,7 @@
 
 <script>
 import Vue from "vue";
-import  {Slider}   from 'vue-color'
+import  {Slider} from 'vue-color'
 import Antd, {
   Row,
   Col,
