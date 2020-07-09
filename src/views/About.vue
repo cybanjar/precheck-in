@@ -14,6 +14,8 @@
             <img
               class="card-online"
               slot="cover"
+              :xl="24"
+              :xs="24"
               alt="example"
               src="../assets/CardOnlineCheck-in.svg"
             />
@@ -21,7 +23,19 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img slot="cover" alt="example" :src="gambar" @click="imageModal" />
+            <img
+              class="img-hotel rounded"
+              slot="cover"
+              alt="example"
+              :src="gambar"
+              @click="imageModal"
+            />
+            <a-icon
+              type="setting"
+              :style="{ fontSize: '1.5rem' }"
+              class="float-right"
+              theme="filled"
+            />
             <a-card-meta class="font-weight-bold" title="Grand Visual Hotel">
               <template slot="description">Cardingstron Street, 1St - London</template>
             </a-card-meta>
@@ -449,7 +463,8 @@ export default {
       showPrice: false,
       muncul: false,
       keluar: false,
-      gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
+      // gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
+      gambar:"https://lh3.googleusercontent.com/BwkdiOz2GDx-v50tLMC6j1yIL6FcGL49OreI4n2pk83PaUIG7QjM8xIXA7nPuQb1GOgGHGTgVcKD_99jTMk-mQs5n0HrnLVS8hhnPqU6-j5ahoAKffigI1frIUKdZ0k6rpfaXqIHP9xlJVcDxjGIIksURrHLgR3xhS-0BlO5VX9VSzoJKrfQepQSlGFP6i2zI0J3qQejM7r1sxeeMdti3zotNAwrJMwZnELvpSkL1vuwDXkJkI7vU8q2jdwdk_PJX4GZosJsEvc5dNTpkKSz7Ly4K5thCt9Y3XAkJfMcvuzt7A3dLnMbYu0FTmOi2RmihnUc4Q75Ud6-9hU_UwNvwTqW4QnSLsRG3Wp4DHcDIfR9VkbqqLhsky3bpJLpC_mjZYbqeWP6_TUGVVDcuKVQPh_2pHTHmJkdjtQM5IXnap8I7DbOmrPyp0mE-7tuN1Ie5EfTwBwUm7guimM-JY-l_VNuKGvYqPYsr5JYSvNhhdirGX5P_a3RSzKdSKsQrCaHO1FcbYQNeQ3aQ-PKbieYBSGshogXwZ1BXEiOxeTkSWk6eHEG_L5bbd6Ngw2thE8V1-dTyuo7ojjoI1XtjpBaSzocp0u88qt500NT-oHpriiGgs0BRwOJu_BwXAgUj5wsbBcuOOen-LHRLPaVdIGw70DBtV7rJFKiEeb8a4NgLkJw76UsYra0GDcY5hQP=w641-h331-no?authuser=0",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
@@ -539,24 +554,27 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+.rounded {
+  border-radius: 0.25rem !important;
+}
 @media screen and (max-width: 576px) {
   .responsive {
     width: 100%;
+  }
+  .img-hotel {
+    // width: 333px;
+    height: 171.95px;
   }
 }
 @media screen and (min-width: 1200px) {
   .card-online {
     width: 400px;
   }
+  .img-hotel {
+    // width: 662px;
+    height: 341.85px;
+  }
 }
-// .infomation {
-//   background-color: #1890ff;
-//   border-radius: 0.25rem;
-//   line-height: 0.625rem;
-//   color: #fff;
-//   padding: 0;
-//   height: 5rem;
-// }
 .header-group {
   letter-spacing: 0.1rem;
   line-height: 1.925rem;
@@ -574,9 +592,6 @@ h3 {
   background-color: #1890ff;
   border-radius: 4px;
   color: #fff !important;
-}
-.mt-3 {
-  margin-top: 0.75rem;
 }
 .grandvisual {
   line-height: 0.25rem;
