@@ -60,7 +60,11 @@
         @ok="handleOk"
         @cancel="handleCancel"
       >
+        <label>URL Image</label>
         <a-input v-model="gambar" @input="masukinFoto" />
+        <p
+          :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
+        >* Recommended resolution 1366 x 768 atau HD</p>
       </a-modal>
       <a-row>
         <a-card :style="information">
@@ -249,7 +253,7 @@
                   <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
                 </p>
               </a-modal>
-              <a-row class="height-5" gutter="16">
+              <a-row class="ml-4" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item layout="vertical" label="Estimated Arrival Time">
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
@@ -272,7 +276,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row>
+              <a-row class="ml-4">
                 <a-col>
                   <a-form-item label v-show="showSmoking">
                     <a-radio-group name="radioGroup">
@@ -293,6 +297,8 @@
                     </a-radio-group>
                   </a-form-item>
                 </a-col>
+              </a-row>
+              <a-row class="ml-4" :gutter="[16, 8]">
                 <a-col :span="12" :xl="12" :xs="24">
                   <a-form-item label="Room Preference">
                     <a-textarea placeholder="Input Room Preferences" :rows="4" />
@@ -318,7 +324,7 @@
                   </a-row>
                 </a-card>
               </a-row>
-              <a-row :gutter="[16,8]">
+              <a-row class="ml-4" :gutter="[16,8]">
                 <a-col :span="6" :xl="6" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
@@ -352,13 +358,9 @@
                     <a-date-picker @change="onChange" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="12" :xl="12" :xs="24">
-                  <a-form-item label="Address">
-                    <a-textarea placeholder="Input Address" :rows="4" />
-                  </a-form-item>
-                </a-col>
               </a-row>
-              <a-row :gutter="[16, 8]">
+              <!-- Country -->
+              <a-row class="ml-4" :gutter="[16, 8]">
                 <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Country">
                     <a-select default-value="Indonesia">
@@ -393,6 +395,14 @@
                 <a-col :span="4" :xl="4" :xs="12">
                   <a-form-item label="Postal Code">
                     <a-input placeholder="Ex : 12750" />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+              <!-- Address -->
+              <a-row class="ml-4" :gutter="[16, 8]">
+                <a-col :span="12" :xl="12" :xs="24">
+                  <a-form-item label="Address">
+                    <a-textarea placeholder="Input Address" :rows="4" />
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -468,7 +478,7 @@ export default {
       muncul: false,
       keluar: false,
       // gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
-      gambar:"https://lh3.googleusercontent.com/bowRsqpYx4jerOJMh30uHmHnzdS_g5BVBrIkAuu6NkVu4xTJdpu7xZtFVOh581Ls5_P22aKAh1M7NpkazGn-i3ZLlLXKV4zn3Ywi_F3T98o-JA83gIg_qRi9aHKuYsOEI_1BEAfMXpNAtJEbRLfPjFDjlC4h59Krvo3WJ3vw2SuPr3Z7mJiVWjVKz0b1u9bmB691YUuHJtQ6HZQKpiAo6PJKAUL5c6t6riAmKp4Ff5ah3m31eQYC7wgMMwSDX5IT8ctqQpnQ9fHfYbH-jRVMYQzGSAPeHRf_jYDZNmvLA3lHYj-czuF1j1ljtOs88vSL0bCPzL77vC6aYj4-FGAqdUCMljb6IGhFzdlhzr3Fi6e1xtIfutSKS-63yf73sU-Z0B5m6DytZQVoG85-ber8ku_U9fq2pf8EgAQh5ucBDtROUUcogu_Z3FkK_wXpued9l8GDdYRvsvqV8Hc2-2xP8cghBVTSh_XsbAii7hmmvhxpbWhsTF76VW3gABogU30u6VOEb1yOi3Jl2CnE4VgkNe-xilKvO0voowYqT7mjrGTk8Hwg1RGnQjlKNCS8IjNnA0MmYOZHaP2yxXcJCOYVtKaq34P_-48a33-WA6-hnqOZBJwcqZXzMrEzvB5c8_OIxWWMFpMyZtMVY_Al1CeK9NhJ_-8togn4ZQVpgVUz6WvE8XEigAkn8PrhIPm1=w641-h331-no?authuser=0",
+      gambar:"https://lh3.googleusercontent.com/4CZ_BWzzTZKVXWDcK9ner4dhLOizJKbYyBRUOwcHnuUf0oXajPbCkeQCBHiDKKOftDypkrnisJKCNM0JRSfzaF5qezV05HC70UMDvbdMVkI_xRYB6VxBReVNFlDR6glqbTRVLvjWj3-cbMqbolddcz-ijjw4AMM_Q32W1PkbRasZzX8eBeETkGanM4lwmgnOcZWF3EVxOIGjUUt_dnGdSFCEKSWzPqvLkdxpsRHCuXcIB2UJcDxxAws7yT4cCrfi2gHoDL1dDSYxhmgg5pEvHYiZWg8bv45Z3WjvCgj6XignOBGHaZkcdd-3V4vOCGpp5fBvfDn4n-EFAalcM9PMA2O6StOf2pTtqZE5EFzFBKWTQLxP8InaGDbucROHNKjIKtvNTU3BMgPV942xkB4VWtli1-_dNkQz6ZlSSAw3UFSp-vcBMV-JJLnvfCUQzImJyHXL7ksftONEUzBwFhYp3YOcjU-ejUyPc7mCzIUk_raeT0TRB4WRRkCjwO5JferS6YSaX2Wa5priuIFOSW_0I-TpP7lk9_gykXBEFsX-zv9ZQ8OMEnbY6Y9zy-4aZsRxW3ry0NeINdHK0G__Xr95vTlJCfr24EIqRaxJPxca_Cr_U88IJ9HXWCM7tp1sm8hk_rpowL-64aAaJW5mv09bu6cjrio1HVItOqTutX3CbACh9W5CrjxaxXwYrp9v=w641-h331-no?authuser=0",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
