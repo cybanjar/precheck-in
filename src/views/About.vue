@@ -198,7 +198,7 @@
                   <label class="ml-2" for="checkbox">Use Pickup Request</label>
                 </p>
                 <p>
-                  <label>Pickup Request Type : </label>
+                  <label>Pickup Request Type :</label>
                   <a-radio-group name="radioGroup" :default-value="nilai" @change="berubah">
                     <a-radio :value="1">Per Pax</a-radio>
                     <a-radio :value="2">Per Car</a-radio>
@@ -231,12 +231,7 @@
                   <label class="ml-2" for="checkbox">Smoking & Non Smoking</label>
                 </p>
                 <p>
-                  <input
-                    type="checkbox"
-                    id="checkbox"
-                    :default-value="showBed"
-                    v-model="showBed"
-                  />
+                  <input type="checkbox" id="checkbox" :default-value="showBed" v-model="showBed" />
                   <label class="ml-2" for="checkbox">One Big Bed & Two Single Bed</label>
                 </p>
               </a-modal>
@@ -253,10 +248,10 @@
                 </a-col>
                 <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
                   <a-form-item label="Price">
-                    <label class="font-weight-bold">Rp. {{ money + " "}}</label>
+                    <label class="font-weight-bold">Rp. {{nilai === 3 ? 0 + " " : money + " "}}</label>
                     <span v-if="nilai === 1">/ Pax</span>
                     <span v-else-if="nilai === 2">/ Car</span>
-                    <span v-else>/ Free</span>
+                    <span v-else>Free</span>
                   </a-form-item>
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
@@ -454,8 +449,7 @@ export default {
       showPrice: false,
       muncul: false,
       keluar: false,
-      gambar:
-        "https://lh3.googleusercontent.com/g8BMvqK3zxmL4a7gwnPswHXsN1FUcIxghEVf2JE9aKMZmBM6AM63tjgINF6QPB244_lCdvUG4ByluYY9XIV0Qe0CKi8eLX0QxXslXWkhId7Kk4G-ON8byy85_gU0clWeWqaEgVJtcsOf5P3h_VqlZthh3i2uNj6yABig3KRSEAYNaKOz0C5m7kMEqR3Q0PR6-hlbaryl_eo39wqEdM1cO74GPvHrew0bk0jmfCA4nmLMTHzcTTJaSjXxfyBV6ILYEK6bJ9MYGUWjilevoI43Rihg0yZ-gedd-CLaCrSIRSKbMXCqfRNK-LNmApAKj7hu5YvJhG4Z4WHxe9BJKRkQQwPhZBknd0ctpqTcTNk21hrSHBLpdb4ESWqNe8tAimIkfRo3Ws7jH4yfL8nWip1D-4wDHWbcy7Aq3-gE0FCMI9LP8FYUMZoK9nmezflsKUY7buDTMGdWHDnne2EPI2JXJyRqhNrUDiPPVTWNGjY7a3xYnEeI-SYKIwBqQ662SXv6Df-jyb8YG4sy_rNuWgofQEaRWlyDafT-HKScgjwHVeRXpNWMqwRuBmJruSmTs49bQdZEaG3jJwuDPMAoWzSFGkKNbxs0qK0hcPK4OszyJEY6JilxPBklEY5GtGDolfWph2WufVQJ09psGLGwlGwc3IqjjvrBZzqEfJ9Zep6LMuZqeRixRtSn79rAG9ug=w641-h331-no?authuser=0",
+      gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
