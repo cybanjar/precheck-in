@@ -181,15 +181,64 @@
               </a-row>
               <a-modal
                 v-model="muncul"
-                title="Component Setting"
+                title="Arrival Preference Setup"
                 :visible="muncul"
                 :confirm-loading="confirmLoading"
                 @ok="handleOk"
                 @cancel="handleCancel"
                 centered
               >
-                <input type="checkbox" id="checkbox" v-model="show" />
-                <label class="ml-2" for="checkbox">Component Smoking</label>
+                <p>
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    :default-value="showPickupRequest"
+                    v-model="showPickupRequest"
+                  />
+                  <label class="ml-2" for="checkbox">Use Pickup Request</label>
+                </p>
+                <p>
+                  <label>Pickup Request Type : </label>
+                  <a-radio-group name="radioGroup" :default-value="nilai" @change="berubah">
+                    <a-radio :value="1">Per Pax</a-radio>
+                    <a-radio :value="2">Per Car</a-radio>
+                    <a-radio :value="3">Free</a-radio>
+                  </a-radio-group>
+                </p>
+                <p>
+                  <label>Pickup Rate :</label>
+                  <a-input v-model="money" @input="masukinUang" />
+                </p>
+                <p>
+                  <label class="ml-2" for="checkbox">Room Preferences :</label>
+                </p>
+                <p>
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    :default-value="showFloor"
+                    v-model="showFloor"
+                  />
+                  <label class="ml-2" for="checkbox">Lower Floor & High Floor</label>
+                </p>
+                <p>
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    :default-value="showSmoking"
+                    v-model="showSmoking"
+                  />
+                  <label class="ml-2" for="checkbox">Smoking & Non Smoking</label>
+                </p>
+                <p>
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    :default-value="showBed"
+                    v-model="showBed"
+                  />
+                  <label class="ml-2" for="checkbox">One Big Bed & Two Single Bed</label>
+                </p>
               </a-modal>
               <a-row class="height-5" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
@@ -198,14 +247,16 @@
                   </a-form-item>
                 </a-col>
                 <a-col :span="4" :xl="4" :xs="24">
-                  <a-form-item label="Request">
+                  <a-form-item label="Request" v-show="showPickupRequest">
                     <a-checkbox v-model="showPrice">Pickup Required</a-checkbox>
                   </a-form-item>
                 </a-col>
                 <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
                   <a-form-item label="Price">
-                    <label class="font-weight-bold">Rp. 100.000</label>
-                    <span>/Pax</span>
+                    <label class="font-weight-bold">Rp. {{ money + " "}}</label>
+                    <span v-if="nilai === 1">/ Pax</span>
+                    <span v-else-if="nilai === 2">/ Car</span>
+                    <span v-else>/ Free</span>
                   </a-form-item>
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
@@ -214,16 +265,22 @@
               </a-row>
               <a-row>
                 <a-col>
-                  <a-form-item label>
-                    <a-radio-group name="radioGroup" v-show="show">
+                  <a-form-item label v-show="showSmoking">
+                    <a-radio-group name="radioGroup">
                       <a-radio :value="1">Non Smoking</a-radio>
                       <a-radio :value="2">Smoking</a-radio>
                     </a-radio-group>
                   </a-form-item>
-                  <a-form-item label>
+                  <a-form-item label v-show="showFloor">
                     <a-radio-group name="radioGroup">
                       <a-radio :value="1">Lower Floor</a-radio>
                       <a-radio :value="2">High Floor</a-radio>
+                    </a-radio-group>
+                  </a-form-item>
+                  <a-form-item label v-show="showBed">
+                    <a-radio-group name="radioGroup">
+                      <a-radio :value="1">One Big Bed</a-radio>
+                      <a-radio :value="2">Two Single Bed</a-radio>
                     </a-radio-group>
                   </a-form-item>
                 </a-col>
@@ -237,8 +294,17 @@
               <a-row>
                 <a-card :style="information">
                   <a-row>
-                    <a-col :span="24" :xl="22" :xs="24">
+                    <a-col :span="23" :xl="23" :xs="23">
                       <p class="header-group">Guest Details</p>
+                    </a-col>
+                    <a-col :span="1" :xl="1" :xs="1">
+                      <a-icon
+                        type="setting"
+                        :style="{ fontSize: '1.5rem' }"
+                        class="float-right align-self-center"
+                        theme="filled"
+                        @click="munculModal"
+                      />
                     </a-col>
                   </a-row>
                 </a-card>
@@ -358,6 +424,7 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
+Vue.use(Antd);
 
 
 export default {
@@ -376,6 +443,8 @@ export default {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
       },
+      nilai: 2,
+      money: 100000 ,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -383,9 +452,10 @@ export default {
       visible: false,
       confirmLoading: false,
       showPrice: false,
-      muncul:false,
-      keluar:false,
-      gambar: 'https://lh3.googleusercontent.com/g8BMvqK3zxmL4a7gwnPswHXsN1FUcIxghEVf2JE9aKMZmBM6AM63tjgINF6QPB244_lCdvUG4ByluYY9XIV0Qe0CKi8eLX0QxXslXWkhId7Kk4G-ON8byy85_gU0clWeWqaEgVJtcsOf5P3h_VqlZthh3i2uNj6yABig3KRSEAYNaKOz0C5m7kMEqR3Q0PR6-hlbaryl_eo39wqEdM1cO74GPvHrew0bk0jmfCA4nmLMTHzcTTJaSjXxfyBV6ILYEK6bJ9MYGUWjilevoI43Rihg0yZ-gedd-CLaCrSIRSKbMXCqfRNK-LNmApAKj7hu5YvJhG4Z4WHxe9BJKRkQQwPhZBknd0ctpqTcTNk21hrSHBLpdb4ESWqNe8tAimIkfRo3Ws7jH4yfL8nWip1D-4wDHWbcy7Aq3-gE0FCMI9LP8FYUMZoK9nmezflsKUY7buDTMGdWHDnne2EPI2JXJyRqhNrUDiPPVTWNGjY7a3xYnEeI-SYKIwBqQ662SXv6Df-jyb8YG4sy_rNuWgofQEaRWlyDafT-HKScgjwHVeRXpNWMqwRuBmJruSmTs49bQdZEaG3jJwuDPMAoWzSFGkKNbxs0qK0hcPK4OszyJEY6JilxPBklEY5GtGDolfWph2WufVQJ09psGLGwlGwc3IqjjvrBZzqEfJ9Zep6LMuZqeRixRtSn79rAG9ug=w641-h331-no?authuser=0',
+      muncul: false,
+      keluar: false,
+      gambar:
+        "https://lh3.googleusercontent.com/g8BMvqK3zxmL4a7gwnPswHXsN1FUcIxghEVf2JE9aKMZmBM6AM63tjgINF6QPB244_lCdvUG4ByluYY9XIV0Qe0CKi8eLX0QxXslXWkhId7Kk4G-ON8byy85_gU0clWeWqaEgVJtcsOf5P3h_VqlZthh3i2uNj6yABig3KRSEAYNaKOz0C5m7kMEqR3Q0PR6-hlbaryl_eo39wqEdM1cO74GPvHrew0bk0jmfCA4nmLMTHzcTTJaSjXxfyBV6ILYEK6bJ9MYGUWjilevoI43Rihg0yZ-gedd-CLaCrSIRSKbMXCqfRNK-LNmApAKj7hu5YvJhG4Z4WHxe9BJKRkQQwPhZBknd0ctpqTcTNk21hrSHBLpdb4ESWqNe8tAimIkfRo3Ws7jH4yfL8nWip1D-4wDHWbcy7Aq3-gE0FCMI9LP8FYUMZoK9nmezflsKUY7buDTMGdWHDnne2EPI2JXJyRqhNrUDiPPVTWNGjY7a3xYnEeI-SYKIwBqQ662SXv6Df-jyb8YG4sy_rNuWgofQEaRWlyDafT-HKScgjwHVeRXpNWMqwRuBmJruSmTs49bQdZEaG3jJwuDPMAoWzSFGkKNbxs0qK0hcPK4OszyJEY6JilxPBklEY5GtGDolfWph2WufVQJ09psGLGwlGwc3IqjjvrBZzqEfJ9Zep6LMuZqeRixRtSn79rAG9ug=w641-h331-no?authuser=0",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
@@ -395,7 +465,10 @@ export default {
         height: "5rem",
         marginBottom: "1rem !important",
         borderRadius: "50rem !important",
-        show: true,
+        showSmoking: false,
+        showBed: false,
+        showFloor: false,
+        showPickupRequest: false,
       },
     };
   },
@@ -405,6 +478,9 @@ export default {
     }
   },
   methods: {
+    berubah(e) {
+      this.nilai = e.target.value
+    },
     check() {
       this.form.validateFields(err => {
         if (!err) {
@@ -412,10 +488,11 @@ export default {
         }
       });
     },
-    masukinFoto(foto){
-      console.log(foto,"foto");
-      
+    masukinFoto(foto) {
       this.gambar = foto.target.value;
+    },
+    masukinUang(uang){
+      this.money = uang.target.value;
     },
     showModal() {
       this.visible = true;

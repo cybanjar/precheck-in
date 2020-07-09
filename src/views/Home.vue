@@ -326,31 +326,6 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
-Vue.config.productionTip = false;
-Vue.component(
-  Row.name,
-  Row,
-  Col.name,
-  Col,
-  Card.name,
-  Card,
-  Icon.name,
-  Icon,
-  FormModel.name,
-  FormModel,
-  Button.name,
-  Button,
-  Checkbox.name,
-  Checkbox,
-  Input.name,
-  Input,
-  Collapse.name,
-  Collapse,
-  Radio.name,
-  Radio,
-  DatePicker.name,
-  DatePicker
-);
 
 Vue.use(Antd);
 const formItemLayout = {
