@@ -12,6 +12,16 @@
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
             <img
+              v-if="information.backgroundColor == '#E8505B'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/Card Online Check-in - Red.svg"
+            />
+            <img
+              v-else
               class="card-online"
               slot="cover"
               :xl="24"
@@ -95,7 +105,7 @@
         @cancel="handleCancel"
       >
         <p>Standart Back Color</p>
-        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('red')">Red</a>
+        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('#E8505B')">Red</a>
         <br />
         <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('green')">Green</a>
 
