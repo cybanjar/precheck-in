@@ -108,7 +108,7 @@
         @ok="handleOk"
         @cancel="handleCancel"
       >
-        <p>Standart Back Color</p>
+        <p>Standart Color</p>
         <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('#E8505B')">Red</a>
         <br />
         <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('green')">Green</a>
@@ -280,6 +280,7 @@
               </a-row>
               <a-row class="ml-4">
                 <a-col>
+                  <p>Room Preferences</p>
                   <a-form-item label v-show="showSmoking">
                     <a-radio-group name="radioGroup">
                       <a-radio :value="1">Non Smoking</a-radio>
@@ -302,8 +303,8 @@
               </a-row>
               <a-row class="ml-4" :gutter="[16, 8]">
                 <a-col :span="12" :xl="12" :xs="24">
-                  <a-form-item label="Room Preference">
-                    <a-textarea placeholder="Input Room Preferences" :rows="4" />
+                  <a-form-item label="Special Request">
+                    <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
                   </a-form-item>
                 </a-col>
               </a-row>
