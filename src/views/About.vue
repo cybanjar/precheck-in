@@ -203,17 +203,20 @@
                 centered
               >
                 <p>
-                  <input
-                    type="checkbox"
-                    id="checkbox"
-                    :default-value="showPickupRequest"
+                  <a-checkbox
+                    :checked="showPickupRequest"
                     v-model="showPickupRequest"
-                  />
-                  <label class="ml-2" for="checkbox">Use Pickup Request</label>
+                  >Use Pickup Request</a-checkbox>
+                  <!-- @change="onChange" -->
                 </p>
                 <p>
                   <label>Pickup Request Type :</label>
-                  <a-radio-group name="radioGroup" :default-value="nilai" @change="berubah">
+                  <a-radio-group
+                    name="radioGroup"
+                    :default-value="nilai"
+                    @change="berubah"
+                    :disabled="!showPickupRequest"
+                  >
                     <a-radio :value="1">Per Pax</a-radio>
                     <a-radio :value="2">Per Car</a-radio>
                     <a-radio :value="3">Free</a-radio>
@@ -221,32 +224,19 @@
                 </p>
                 <p>
                   <label>Pickup Rate :</label>
-                  <a-input v-model="money" @input="masukinUang" />
+                  <a-input v-model="money" @input="masukinUang" :disabled="!showPickupRequest" />
                 </p>
                 <p>
                   <label class="ml-2" for="checkbox">Room Preferences :</label>
                 </p>
                 <p>
-                  <input
-                    type="checkbox"
-                    id="checkbox"
-                    :default-value="showFloor"
-                    v-model="showFloor"
-                  />
-                  <label class="ml-2" for="checkbox">Lower Floor & High Floor</label>
+                  <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & High Floor</a-checkbox>
                 </p>
                 <p>
-                  <input
-                    type="checkbox"
-                    id="checkbox"
-                    :default-value="showSmoking"
-                    v-model="showSmoking"
-                  />
-                  <label class="ml-2" for="checkbox">Smoking & Non Smoking</label>
+                  <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
                 </p>
                 <p>
-                  <input type="checkbox" id="checkbox" :default-value="showBed" v-model="showBed" />
-                  <label class="ml-2" for="checkbox">One Big Bed & Two Single Bed</label>
+                  <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
                 </p>
               </a-modal>
               <a-row class="height-5" gutter="16">
@@ -255,12 +245,12 @@
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="4" :xl="4" :xs="24">
-                  <a-form-item label="Request" v-show="showPickupRequest">
-                    <a-checkbox v-model="showPrice">Pickup Required</a-checkbox>
+                <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
+                  <a-form-item label="Request">
+                    <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
                   </a-form-item>
                 </a-col>
-                <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
+                <a-col v-show="showPrice && showPickupRequest" :span="10" :xl="10" :xs="24">
                   <a-form-item label="Price">
                     <label class="font-weight-bold">Rp. {{nilai === 3 ? 0 + " " : money + " "}}</label>
                     <span v-if="nilai === 1">/ Pax</span>
@@ -454,13 +444,17 @@ export default {
       },
       nilai: 2,
       money: 100000 ,
+      showSmoking: false,
+      showBed: false,
+      showFloor: false,
+      showPickupRequest: false,
+      showPrice:  false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
       visible: false,
       confirmLoading: false,
-      showPrice: false,
       muncul: false,
       keluar: false,
       // gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
@@ -474,10 +468,6 @@ export default {
         height: "5rem",
         marginBottom: "1rem !important",
         borderRadius: "50rem !important",
-        showSmoking: false,
-        showBed: false,
-        showFloor: false,
-        showPickupRequest: false,
       },
     };
   },
