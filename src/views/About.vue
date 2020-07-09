@@ -264,13 +264,15 @@
                     <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
                   </a-form-item>
                 </a-col>
-                <a-col v-show="showPrice && showPickupRequest" :span="10" :xl="10" :xs="24">
+                <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
                   <a-form-item label="Price">
                     <label class="font-weight-bold">Rp. {{nilai === 3 ? 0 + " " : money + " "}}</label>
                     <span v-if="nilai === 1">/ Pax</span>
                     <span v-else-if="nilai === 2">/ Car</span>
                     <span v-else>Free</span>
                   </a-form-item>
+                </a-col>
+                <a-col :span="8" :xl="8" :xs="24">
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
                   </a-form-item>
@@ -325,7 +327,12 @@
                 </a-card>
               </a-row>
               <a-row class="ml-4" :gutter="[16,8]">
-                <a-col :span="6" :xl="6" :xs="24">
+                <a-col :span="3" :xl="3" :xs="24">
+                  <a-form-item label="Date of Birth">
+                    <a-date-picker @change="onChange" />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
                       <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -334,12 +341,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :span="3" :xl="3" :xs="24">
-                  <a-form-item label="Date of Birth">
-                    <a-date-picker @change="onChange" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="6" :xl="6" :xs="24">
+                <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item label="Document Id">
                     <a-select default-value="Id Card">
                       <a-select-option value="id_card">Id Card</a-select-option>
@@ -348,7 +350,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :span="6" :xl="6" :xs="24">
+                <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Id Number">
                     <a-input placeholder="Please input your phone number" />
                   </a-form-item>
@@ -361,7 +363,7 @@
               </a-row>
               <!-- Country -->
               <a-row class="ml-4" :gutter="[16, 8]">
-                <a-col :span="5" :xl="5" :xs="24">
+                <a-col :span="6" :xl="6" :xs="24">
                   <a-form-item label="Country">
                     <a-select default-value="Indonesia">
                       <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -392,7 +394,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :span="4" :xl="4" :xs="12">
+                <a-col :span="3" :xl="3" :xs="12">
                   <a-form-item label="Postal Code">
                     <a-input placeholder="Ex : 12750" />
                   </a-form-item>
