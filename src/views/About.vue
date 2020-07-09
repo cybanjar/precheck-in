@@ -38,18 +38,13 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img
-              class="img-hotel rounded"
-              slot="cover"
-              alt="example"
-              :src="gambar"
-              @click="imageModal"
-            />
+            <img class="img-hotel rounded" slot="cover" alt="example" :src="gambar" />
             <a-icon
               type="setting"
               :style="{ fontSize: '1.5rem' }"
               class="float-right"
               theme="filled"
+              @click="imageModal"
             />
             <a-card-meta class="font-weight-bold" title="Grand Visual Hotel">
               <template slot="description">Cardingstron Street, 1St - London</template>
