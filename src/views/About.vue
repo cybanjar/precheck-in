@@ -253,7 +253,7 @@
                   <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
                 </p>
               </a-modal>
-              <a-row class="ml-4" gutter="16">
+              <a-row class="ml-3" gutter="16">
                 <a-col :span="4" :xl="4" :xs="24">
                   <a-form-item layout="vertical" label="Estimated Arrival Time">
                     <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
@@ -278,7 +278,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row class="ml-4">
+              <a-row class="ml-3" gutter="16">
                 <a-col>
                   <p>Room Preferences</p>
                   <a-form-item label v-show="showSmoking">
@@ -301,7 +301,7 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-row class="ml-4" :gutter="[16, 8]">
+              <a-row class="ml-3" :gutter="[16, 8]">
                 <a-col :span="12" :xl="12" :xs="24">
                   <a-form-item label="Special Request">
                     <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
@@ -327,8 +327,8 @@
                   </a-row>
                 </a-card>
               </a-row>
-              <a-row class="ml-4" :gutter="[16,8]">
-                <a-col :span="6" :xl="6" :xs="24">
+              <a-row class="ml-3" :gutter="[16,8]">
+                <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Nationality">
                     <a-select default-value="Indonesia">
                       <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -363,8 +363,8 @@
                 </a-col>
               </a-row>
               <!-- Country -->
-              <a-row class="ml-4" :gutter="[16, 8]">
-                <a-col :span="6" :xl="6" :xs="24">
+              <a-row class="ml-3" :gutter="[16, 8]">
+                <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Country">
                     <a-select default-value="Indonesia">
                       <a-select-option value="indonesia">Indonesia</a-select-option>
@@ -399,17 +399,58 @@
                   <a-form-item label="Postal Code">
                     <a-input placeholder="Ex : 12750" />
                   </a-form-item>
-                </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-checkbox :style="{ marginTop: '2rem' }">Save your information detail</a-checkbox>
-                </a-col>
+                </a-col>                
               </a-row>
               <!-- Address -->
-              <a-row class="ml-4" :gutter="[16, 8]">
-                <a-col :span="11" :xl="11" :xs="24">
+              <a-row class="ml-3" gutter="8">
+                <a-col :span="10" :xl="10" :xs="24">
                   <a-form-item label="Address">
                     <a-textarea placeholder="Input Address" :rows="4" />
                   </a-form-item>
+                </a-col>
+              </a-row>
+              <a-row class="ml-3 mb-3" gutter="8">
+                <a-col :span="10" :xl="10" :xs="24">
+                  <a-card title="Health Declaration">
+                    <!-- <a slot="extra" href="#">more</a> -->
+                    <ol>
+                      <li>Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days? <br>
+                        <p>
+                          <a-radio-group
+                            name="radioGroup"
+                          >
+                            <a-radio :value="1">No</a-radio>
+                            <a-radio :value="2">Yes</a-radio>
+                          </a-radio-group>
+                       </p>
+                      </li>
+                      <li>Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat? <br> 
+                        <p>
+                          <a-radio-group
+                            name="radioGroup"
+                          >
+                            <a-radio :value="1">No</a-radio>
+                            <a-radio :value="2">Yes</a-radio>
+                          </a-radio-group>
+                       </p>
+                      </li>
+                      <li>Have you ever traveled into another country the past 3 month's? <br> 
+                        <p>
+                          <a-radio-group
+                            name="radioGroup"
+                          >
+                            <a-radio :value="1">No</a-radio>
+                            <a-radio :value="2">Yes</a-radio>
+                          </a-radio-group>
+                       </p>
+                      </li>
+                    </ol>
+                  </a-card>
+                </a-col>
+              </a-row>
+              <a-row class="ml-3 mb-3" gutter="8">
+                <a-col :span="5" :xl="5" :xs="24">
+                    <a-checkbox>Save your information detail</a-checkbox>
                 </a-col>
               </a-row>
             </a-form>
@@ -567,6 +608,9 @@ export default {
 .home {
   margin: 20px;
 }
+.ant-form{
+  color: rgba(0, 0, 0, 0.85);
+}
 h3 {
   margin: 40px 0 0;
 }
@@ -608,6 +652,9 @@ h3 {
   background-color: #1890ff;
   border-radius: 4px;
   color: #fff !important;
+}
+.ant-card-head-title{
+  text-align: center;
 }
 .grandvisual {
   line-height: 0.25rem;
