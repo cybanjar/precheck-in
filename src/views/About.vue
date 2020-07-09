@@ -248,10 +248,10 @@
                 </a-col>
                 <a-col v-if="showPrice" :span="10" :xl="10" :xs="24">
                   <a-form-item label="Price">
-                    <label class="font-weight-bold">Rp. {{ money + " "}}</label>
+                    <label class="font-weight-bold">Rp. {{nilai === 3 ? 0 + " " : money + " "}}</label>
                     <span v-if="nilai === 1">/ Pax</span>
                     <span v-else-if="nilai === 2">/ Car</span>
-                    <span v-else>/ Free</span>
+                    <span v-else>Free</span>
                   </a-form-item>
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
