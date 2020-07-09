@@ -385,7 +385,7 @@ export default {
       showPrice: false,
       muncul:false,
       keluar:false,
-      gambar: 'https://3.bp.blogspot.com/-NhPfUtJrsmQ/UX_KFZ19tYI/AAAAAAAAAKw/Ehcb7gDFSkg/s280/Magenta.full.939823.jpg',
+      gambar: 'https://lh3.googleusercontent.com/g8BMvqK3zxmL4a7gwnPswHXsN1FUcIxghEVf2JE9aKMZmBM6AM63tjgINF6QPB244_lCdvUG4ByluYY9XIV0Qe0CKi8eLX0QxXslXWkhId7Kk4G-ON8byy85_gU0clWeWqaEgVJtcsOf5P3h_VqlZthh3i2uNj6yABig3KRSEAYNaKOz0C5m7kMEqR3Q0PR6-hlbaryl_eo39wqEdM1cO74GPvHrew0bk0jmfCA4nmLMTHzcTTJaSjXxfyBV6ILYEK6bJ9MYGUWjilevoI43Rihg0yZ-gedd-CLaCrSIRSKbMXCqfRNK-LNmApAKj7hu5YvJhG4Z4WHxe9BJKRkQQwPhZBknd0ctpqTcTNk21hrSHBLpdb4ESWqNe8tAimIkfRo3Ws7jH4yfL8nWip1D-4wDHWbcy7Aq3-gE0FCMI9LP8FYUMZoK9nmezflsKUY7buDTMGdWHDnne2EPI2JXJyRqhNrUDiPPVTWNGjY7a3xYnEeI-SYKIwBqQ662SXv6Df-jyb8YG4sy_rNuWgofQEaRWlyDafT-HKScgjwHVeRXpNWMqwRuBmJruSmTs49bQdZEaG3jJwuDPMAoWzSFGkKNbxs0qK0hcPK4OszyJEY6JilxPBklEY5GtGDolfWph2WufVQJ09psGLGwlGwc3IqjjvrBZzqEfJ9Zep6LMuZqeRixRtSn79rAG9ug=w641-h331-no?authuser=0',
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
@@ -426,7 +426,7 @@ export default {
     munculModal() {
       this.muncul = true;
     },
-     gantiHeaderClass(warna) {
+    gantiHeaderClass(warna) {
       this.information.backgroundColor = warna;
     },
     customHeaderClass(color) {
@@ -434,7 +434,7 @@ export default {
       this.information.backgroundColor = color.hex;
     },
     handleOk(e) {
-      this.ModalText = 'The modal will be closed after two seconds';
+      this.ModalText = "The modal will be closed after two seconds";
       this.confirmLoading = true;
       setTimeout(() => {
         this.visible = false;
@@ -443,7 +443,7 @@ export default {
       }, 300);
     },
     handleCancel(e) {
-      console.log('Clicked cancel button');
+      console.log("Clicked cancel button");
       this.visible = false;
       this.muncul = false;
     },
