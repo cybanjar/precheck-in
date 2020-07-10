@@ -224,7 +224,7 @@
                   <!-- @change="onChange" -->
                 </p>
                 <p>
-                  <label>Pickup Request Type :</label>
+                  <label>Pickup Request Type : </label>
                   <a-radio-group
                     name="radioGroup"
                     :default-value="nilai"
@@ -238,7 +238,23 @@
                 </p>
                 <p>
                   <label>Pickup Rate :</label>
-                  <a-input v-model="money" @input="masukinUang" :disabled="!showPickupRequest" />
+                  <a-input-group compact>
+                    <a-select
+                      :disabled="!showPickupRequest"
+                      :default-value="currency"
+                      v-model="currency"
+                    >
+                      <a-select-option value="Rp.">Rp.</a-select-option>
+                      <a-select-option value="$">$</a-select-option>
+                      <a-select-option value="€">€</a-select-option>
+                    </a-select>
+                    <a-input
+                      :disabled="!showPickupRequest"
+                      style="width: 50%"
+                      v-model="money"
+                      @input="masukinUang"
+                    />
+                  </a-input-group>
                 </p>
                 <p>
                   <label class="ml-2" for="checkbox">Room Preferences :</label>
@@ -266,13 +282,15 @@
                 </a-col>
                 <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
                   <a-form-item label="Price">
-                    <label class="font-weight-bold">Rp. {{nilai === 3 ? 0 + " " : money + " "}}</label>
+                    <label
+                      class="font-weight-bold"
+                    >{{currency}} {{nilai === 3 ? 0 + " " : money + " "}}</label>
                     <span v-if="nilai === 1">/ Pax</span>
                     <span v-else-if="nilai === 2">/ Car</span>
                     <span v-else>Free</span>
                   </a-form-item>
                 </a-col>
-                <a-col :span="8" :xl="8" :xs="24">
+                <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
                   <a-form-item label="Flight Details">
                     <a-input placeholder="Please input flight details" />
                   </a-form-item>
@@ -280,7 +298,7 @@
               </a-row>
               <a-row class="ml-3" gutter="16">
                 <a-col>
-                  <p>Room Preferences</p>
+                  <p v-show="showSmoking || showFloor || showBed">Room Preferences</p>
                   <a-form-item label v-show="showSmoking">
                     <a-radio-group name="radioGroup">
                       <a-radio :value="1">Non Smoking</a-radio>
@@ -321,12 +339,23 @@
                         :style="{ fontSize: '1.5rem' }"
                         class="float-right align-self-center"
                         theme="filled"
-                        @click="munculModal"
+                        @click="guestModal"
                       />
                     </a-col>
                   </a-row>
                 </a-card>
               </a-row>
+              <a-modal
+                v-model="guest"
+                title="Guest Preference Setup"
+                :visible="guest"
+                :confirm-loading="confirmLoading"
+                @ok="handleOk"
+                @cancel="handleCancel"
+              >
+                <label>Term and Condition</label>
+                <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
+              </a-modal>
               <a-row class="ml-3" :gutter="[16,8]">
                 <a-col :span="5" :xl="5" :xs="24">
                   <a-form-item label="Nationality">
@@ -407,7 +436,7 @@
                       <a-select-option value="leisure">Leisure (LS)</a-select-option>
                     </a-select>
                   </a-form-item>
-                </a-col>                
+                </a-col>
               </a-row>
               <!-- Address -->
               <a-row class="ml-3" gutter="8">
@@ -425,35 +454,35 @@
                     </a>
                     <!-- <a slot="extra" href="#">more</a> -->
                     <ol>
-                      <li>Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days? <br>
+                      <li>
+                        Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days?
+                        <br />
                         <p>
-                          <a-radio-group
-                            name="radioGroup"
-                          >
+                          <a-radio-group name="radioGroup">
                             <a-radio :value="1">No</a-radio>
                             <a-radio :value="2">Yes</a-radio>
                           </a-radio-group>
-                       </p>
+                        </p>
                       </li>
-                      <li>Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat? <br> 
+                      <li>
+                        Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat?
+                        <br />
                         <p>
-                          <a-radio-group
-                            name="radioGroup"
-                          >
+                          <a-radio-group name="radioGroup">
                             <a-radio :value="1">No</a-radio>
                             <a-radio :value="2">Yes</a-radio>
                           </a-radio-group>
-                       </p>
+                        </p>
                       </li>
-                      <li>Have you ever traveled into another country the past 3 month's? <br> 
+                      <li>
+                        Have you ever traveled into another country the past 3 month's?
+                        <br />
                         <p>
-                          <a-radio-group
-                            name="radioGroup"
-                          >
+                          <a-radio-group name="radioGroup">
                             <a-radio :value="1">No</a-radio>
                             <a-radio :value="2">Yes</a-radio>
                           </a-radio-group>
-                       </p>
+                        </p>
                       </li>
                     </ol>
                   </a-card>
@@ -461,7 +490,7 @@
               </a-row>
               <a-row class="ml-3 mb-3" gutter="8">
                 <a-col :span="5" :xl="5" :xs="24">
-                    <a-checkbox>Save your information detail</a-checkbox>
+                  <a-checkbox>Save your information detail</a-checkbox>
                 </a-col>
               </a-row>
             </a-form>
@@ -473,12 +502,18 @@
         </a-tabs>
         <a-row>
           <a-col :span="12" :xl="12" :xs="24">
-            <a-checkbox>I agree with the <a href="#">Terms and Conditions</a> of Visual Grand Hotel Web Check-in.</a-checkbox>
+            <a-checkbox>{{term}}</a-checkbox>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="4" :xl="4" :xs="24">
-            <a-button :xl="12" class="font-weight-bold mt-3" type="primary" block :size="size">Check-In Now</a-button>
+            <a-button
+              :xl="12"
+              class="font-weight-bold mt-3"
+              type="primary"
+              block
+              :size="size"
+            >Check-In Now</a-button>
           </a-col>
         </a-row>
       </div>
@@ -538,7 +573,10 @@ export default {
       visible: false,
       confirmLoading: false,
       muncul: false,
+      guest: false,
       keluar: false,
+      currency: 'Rp.',
+      term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "#1890ff",
@@ -571,6 +609,9 @@ export default {
     masukinFoto(foto) {
       this.gambar = foto.target.value;
     },
+    masukinTerm(tulisan) {
+      this.term = tulisan.target.value;
+    },
     masukinUang(uang){
       this.money = uang.target.value;
     },
@@ -582,6 +623,9 @@ export default {
     },
     munculModal() {
       this.muncul = true;
+    },
+    guestModal() {
+      this.guest = true;
     },
     gantiHeaderClass(warna) {
       this.information.backgroundColor = warna;
@@ -596,6 +640,8 @@ export default {
       setTimeout(() => {
         this.visible = false;
         this.muncul = false;
+        this.keluar = false;
+        this.guest = false;
         this.confirmLoading = false;
       }, 300);
     },
@@ -622,13 +668,13 @@ export default {
 .home {
   margin: 20px;
 }
-.ant-form{
+.ant-form {
   color: rgba(0, 0, 0, 0.85);
 }
 h3 {
   margin: 40px 0 0;
 }
-.ant-card-meta-detail{
+.ant-card-meta-detail {
   font-size: 1.375rem;
   font-weight: bold !important;
   text-transform: uppercase;
@@ -672,7 +718,7 @@ h3 {
   border-radius: 4px;
   color: #fff !important;
 }
-.ant-card-head-title{
+.ant-card-head-title {
   text-align: center;
 }
 .grandvisual {
