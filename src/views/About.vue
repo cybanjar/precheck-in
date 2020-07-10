@@ -476,7 +476,7 @@
 
 <script>
 import Vue from "vue";
-import  {Slider} from 'vue-color'
+import { Slider } from 'vue-color'
 import Antd, {
   Row,
   Col,
@@ -527,8 +527,7 @@ export default {
       confirmLoading: false,
       muncul: false,
       keluar: false,
-      // gambar:"https://lh3.googleusercontent.com/5RgIt2osj6LKK1bazwUZw044F3DY15MhVWUPMK35RRT11f7Cq6Tm_9vlzoaxggJ-758Ty6K1j_qw_veY8N9aH0H2VkmgHV5Qe54NwsY5br-94ivHAX3L8YrzluGtCyI_nBVjBmt4Jtbl3yVAxAIz1aEFU4b0FImAPKGeXWSKSxFE8YdOeZXXfEevvel23HVBfU2DBd2yqkCT_RZBoaARFh11ny52OQ5MonMUGAdXPJ6YV10myEooBQxvRCD70qUtK9SsItZVOUnrMQlpmjh2olfTxv_7VP25KHYKz1GkLcHfKQEllEDlqMuVA3-itzXTEz-Mw3JkrYP2bqxQMx2u62htoSxYYdpLo_a1qgaDbXdoirSfNHgJGjoemA5eFUsf9-sYiqodglZeDPj7MdgWODevOwHAcMT5RZQwWzul2GtA4toXqyyt4P5_dlE1IekiSz3mLPq_bYQEknrD1cV4YIwXn7gxUOugMCaOo_5YS7llo6B1U7eRf_lyQwoxVGPjM2q5SbLNooabuY36Ft-SXTxc_KKgjxz4u1rAYoHE2x1oiBCgzuyH15D5_6TxpmpdOgnMJi_ZRvk1m4PU216ZiUuHdU4zxv3cWKjm3EGLTVxcIydfoFldqq9f5sIgBLJBsl1SYLU7uEmi27Tx3txXJ9fjFleHTUxlFxfX9YBYz88GFdbcEDutZUxSxSuI=w808-h429-no?authuser=0",
-      gambar:"https://lh3.googleusercontent.com/4CZ_BWzzTZKVXWDcK9ner4dhLOizJKbYyBRUOwcHnuUf0oXajPbCkeQCBHiDKKOftDypkrnisJKCNM0JRSfzaF5qezV05HC70UMDvbdMVkI_xRYB6VxBReVNFlDR6glqbTRVLvjWj3-cbMqbolddcz-ijjw4AMM_Q32W1PkbRasZzX8eBeETkGanM4lwmgnOcZWF3EVxOIGjUUt_dnGdSFCEKSWzPqvLkdxpsRHCuXcIB2UJcDxxAws7yT4cCrfi2gHoDL1dDSYxhmgg5pEvHYiZWg8bv45Z3WjvCgj6XignOBGHaZkcdd-3V4vOCGpp5fBvfDn4n-EFAalcM9PMA2O6StOf2pTtqZE5EFzFBKWTQLxP8InaGDbucROHNKjIKtvNTU3BMgPV942xkB4VWtli1-_dNkQz6ZlSSAw3UFSp-vcBMV-JJLnvfCUQzImJyHXL7ksftONEUzBwFhYp3YOcjU-ejUyPc7mCzIUk_raeT0TRB4WRRkCjwO5JferS6YSaX2Wa5priuIFOSW_0I-TpP7lk9_gykXBEFsX-zv9ZQ8OMEnbY6Y9zy-4aZsRxW3ry0NeINdHK0G__Xr95vTlJCfr24EIqRaxJPxca_Cr_U88IJ9HXWCM7tp1sm8hk_rpowL-64aAaJW5mv09bu6cjrio1HVItOqTutX3CbACh9W5CrjxaxXwYrp9v=w641-h331-no?authuser=0",
+      gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "#1890ff",
         borderRadius: "0.25rem",
