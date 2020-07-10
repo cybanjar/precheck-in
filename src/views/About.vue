@@ -102,7 +102,7 @@
       </a-row>
       <a-modal
         v-model="visible"
-        title="Color Setting"
+        title="Theme Color Setting"
         :visible="visible"
         :confirm-loading="confirmLoading"
         @ok="handleOk"
