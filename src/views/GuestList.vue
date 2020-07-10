@@ -12,7 +12,7 @@
         :scroll="{ x: 'calc(700px + 50%)', y: 350 }"
       />
     </div>
-    <a-button class="mr-3 float-right" type="primary" :size="size">Check-In</a-button>
+    <a-button href='about' class="mr-3 float-right" type="primary" :size="size">Next</a-button>
   </div>
 </template>
 <script>
@@ -84,7 +84,7 @@ const columns = [
 ];
 
 const data = [];
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 10; i++) {
   data.push({
     key: i,
     name: 'John Brown',

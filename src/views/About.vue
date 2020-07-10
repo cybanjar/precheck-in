@@ -224,7 +224,7 @@
                   <!-- @change="onChange" -->
                 </p>
                 <p>
-                  <label>Pickup Request Type :</label>
+                  <label>Pickup Request Type : </label>
                   <a-radio-group
                     name="radioGroup"
                     :default-value="nilai"
@@ -347,13 +347,13 @@
               </a-row>
               <a-modal
                 v-model="guest"
-                title="Guest Setting"
+                title="Guest Preference Setup"
                 :visible="guest"
                 :confirm-loading="confirmLoading"
                 @ok="handleOk"
                 @cancel="handleCancel"
               >
-                <label>Term</label>
+                <label>Term and Condition</label>
                 <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
               </a-modal>
               <a-row class="ml-3" :gutter="[16,8]">
