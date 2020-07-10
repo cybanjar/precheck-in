@@ -298,7 +298,7 @@
               </a-row>
               <a-row class="ml-3" gutter="16">
                 <a-col>
-                  <p>Room Preferences</p>
+                  <p v-show="showSmoking || showFloor || showBed">Room Preferences</p>
                   <a-form-item label v-show="showSmoking">
                     <a-radio-group name="radioGroup">
                       <a-radio :value="1">Non Smoking</a-radio>
