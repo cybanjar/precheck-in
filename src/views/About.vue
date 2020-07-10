@@ -399,6 +399,14 @@
                   <a-form-item label="Postal Code">
                     <a-input placeholder="Ex : 12750" />
                   </a-form-item>
+                </a-col>
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item label="Purpose of Stay">
+                    <a-select default-value="Bussiness (BS)">
+                      <a-select-option value="bussiness">Bussiness (BS)</a-select-option>
+                      <a-select-option value="leisure">Leisure (LS)</a-select-option>
+                    </a-select>
+                  </a-form-item>
                 </a-col>                
               </a-row>
               <!-- Address -->
@@ -468,7 +476,11 @@
             <a-checkbox>I agree with the <a href="#">Terms and Conditions</a> of Visual Grand Hotel Web Check-in.</a-checkbox>
           </a-col>
         </a-row>
-        <a-button class="mt-3" type="primary" :size="size">Check-In Now</a-button>
+        <a-row>
+          <a-col :span="4" :xl="4" :xs="24">
+            <a-button :xl="12" class="font-weight-bold mt-3" type="primary" block :size="size">Check-In Now</a-button>
+          </a-col>
+        </a-row>
       </div>
     </div>
   </div>
@@ -615,6 +627,11 @@ export default {
 }
 h3 {
   margin: 40px 0 0;
+}
+.ant-card-meta-detail{
+  font-size: 1.375rem;
+  font-weight: bold !important;
+  text-transform: uppercase;
 }
 .rounded {
   border-radius: 0.25rem !important;
