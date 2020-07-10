@@ -400,7 +400,7 @@
                     <a-input placeholder="Ex : 12750" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
+                <a-col :span="3" :xl="3" :xs="24">
                   <a-form-item label="Purpose of Stay">
                     <a-select default-value="Bussiness (BS)">
                       <a-select-option value="bussiness">Bussiness (BS)</a-select-option>
