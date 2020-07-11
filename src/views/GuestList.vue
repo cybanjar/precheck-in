@@ -10,6 +10,7 @@
         :data-source="data"
         :pagination="false"
         size="middle"
+        :scroll="{ x: 'calc(700px + 50%)', y: 350 }"
       >
         <span slot="tags" slot-scope="tags">
           <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>
@@ -83,5 +84,51 @@ export default {
   margin-right: 1rem !important;
 }
 
+.ant-table-row-expand-icon {
+  color: #1890ff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  color: inherit;
+  line-height: 13px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 2px;
+  outline: none;
+  transition: all 0.3s;
+  user-select: none;
+}
+.ant-table-row-expand-icon:focus,
+.ant-table-row-expand-icon:hover {
+  color: #40a9ff;
+}
+.ant-table-row-expand-icon:active {
+  color: #096dd9;
+}
+.ant-table-row-expand-icon:focus,
+.ant-table-row-expand-icon:hover,
+.ant-table-row-expand-icon:active {
+  border-color: currentColor;
+}
+.ant-table-row-expanded::after {
+  content: "\25B2";
+}
+.ant-table-row-collapsed::after {
+  content: "\25BC";
+}
 
+.ant-table-row-collapsed::after {
+  font-size: 12px;
+  content: "\25BC";
+  color: #bfbfbf;
+}
+.ant-table-row-expanded::after {
+  content: "\25B2";
+  font-size: 12px;
+  color: #bfbfbf;
+}
 </style>
