@@ -22,6 +22,11 @@ const routes = [
     path: '/guest-list',
     name: 'Guest List',
     component: () => import('../views/GuestList')
+  },
+  {
+    path: '/ota',
+    name: 'OTA',
+    component: () => import('../views/OTA')
   }
 ]
 
