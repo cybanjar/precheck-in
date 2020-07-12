@@ -303,7 +303,7 @@
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Tab Willy">
             <a-form layout="vertical" :form="form">
-              <a-row :gutter="16">
+              <a-row class="ml-3" gutter="16">
                 <!-- Col Title 3-->
                 <a-col :span="3" :xl="3" :xs="6">
                   <a-form-item label="Title">
@@ -367,311 +367,6 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-
-              <a-row>
-                <a-card :style="information">
-                  <a-row>
-                    <a-col :span="23" :xl="23" :xs="23">
-                      <p class="header-group">Arrival</p>
-                    </a-col>
-                    <a-col :span="1" :xl="1" :xs="1">
-                      <a-icon
-                        type="setting"
-                        :style="{ fontSize: '1.5rem' }"
-                        class="float-right align-self-center"
-                        theme="filled"
-                        @click="munculModal"
-                      />
-                    </a-col>
-                  </a-row>
-                </a-card>
-              </a-row>
-              <a-modal
-                v-model="muncul"
-                title="Arrival Preference Setup"
-                :visible="muncul"
-                :confirm-loading="confirmLoading"
-                @ok="handleOk"
-                @cancel="handleCancel"
-                centered
-              >
-                <p>
-                  <a-checkbox
-                    :checked="showPickupRequest"
-                    v-model="showPickupRequest"
-                  >Use Pickup Request</a-checkbox>
-                  <!-- @change="onChange" -->
-                </p>
-                <p>
-                  <label>Pickup Request Type :</label>
-                  <a-radio-group
-                    name="radioGroup"
-                    :default-value="nilai"
-                    @change="berubah"
-                    :disabled="!showPickupRequest"
-                  >
-                    <a-radio :value="1">Per Pax</a-radio>
-                    <a-radio :value="2">Per Car</a-radio>
-                    <a-radio :value="3">Free</a-radio>
-                  </a-radio-group>
-                </p>
-                <p>
-                  <label>Pickup Rate :</label>
-                  <a-input-group compact>
-                    <a-select
-                      :disabled="!showPickupRequest"
-                      :default-value="currency"
-                      v-model="currency"
-                    >
-                      <a-select-option value="Rp.">Rp.</a-select-option>
-                      <a-select-option value="$">$</a-select-option>
-                      <a-select-option value="€">€</a-select-option>
-                    </a-select>
-                    <a-input
-                      :disabled="!showPickupRequest"
-                      style="width: 50%"
-                      v-model="money"
-                      @input="masukinUang"
-                    />
-                  </a-input-group>
-                </p>
-                <p>
-                  <label class="ml-2" for="checkbox">Room Preferences :</label>
-                </p>
-                <p>
-                  <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & High Floor</a-checkbox>
-                </p>
-                <p>
-                  <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
-                </p>
-                <p>
-                  <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
-                </p>
-              </a-modal>
-              <a-row class="ml-3" gutter="16">
-                <a-col :span="4" :xl="4" :xs="24">
-                  <a-form-item layout="vertical" label="Estimated Arrival Time">
-                    <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
-                  <a-form-item label="Request">
-                    <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
-                  </a-form-item>
-                </a-col>
-                <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
-                  <a-form-item label="Price">
-                    <label
-                      class="font-weight-bold"
-                    >{{currency}} {{nilai === 3 ? 0 + " " : money + " "}}</label>
-                    <span v-if="nilai === 1">/ Pax</span>
-                    <span v-else-if="nilai === 2">/ Car</span>
-                    <span v-else>Free</span>
-                  </a-form-item>
-                </a-col>
-                <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
-                  <a-form-item label="Flight Details">
-                    <a-input placeholder="Please input flight details" />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <a-row class="ml-3" gutter="16">
-                <a-col>
-                  <p v-show="showSmoking || showFloor || showBed">Room Preferences</p>
-                  <a-form-item label v-show="showSmoking">
-                    <a-radio-group name="radioGroup">
-                      <a-radio :value="1">Non Smoking</a-radio>
-                      <a-radio :value="2">Smoking</a-radio>
-                    </a-radio-group>
-                  </a-form-item>
-                  <a-form-item label v-show="showFloor">
-                    <a-radio-group name="radioGroup">
-                      <a-radio :value="1">Lower Floor</a-radio>
-                      <a-radio :value="2">High Floor</a-radio>
-                    </a-radio-group>
-                  </a-form-item>
-                  <a-form-item label v-show="showBed">
-                    <a-radio-group name="radioGroup">
-                      <a-radio :value="1">One Big Bed</a-radio>
-                      <a-radio :value="2">Two Single Bed</a-radio>
-                    </a-radio-group>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <a-row class="ml-3" :gutter="[16, 8]">
-                <a-col :span="12" :xl="12" :xs="24">
-                  <a-form-item label="Special Request">
-                    <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-
-              <a-row>
-                <a-card :style="information">
-                  <a-row>
-                    <a-col :span="23" :xl="23" :xs="23">
-                      <p class="header-group">Guest Details</p>
-                    </a-col>
-                    <a-col :span="1" :xl="1" :xs="1">
-                      <a-icon
-                        type="setting"
-                        :style="{ fontSize: '1.5rem' }"
-                        class="float-right align-self-center"
-                        theme="filled"
-                        @click="guestModal"
-                      />
-                    </a-col>
-                  </a-row>
-                </a-card>
-              </a-row>
-              <a-modal
-                v-model="guest"
-                title="Guest Preference Setup"
-                :visible="guest"
-                :confirm-loading="confirmLoading"
-                @ok="handleOk"
-                @cancel="handleCancel"
-              >
-                <label>Term and Condition</label>
-                <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
-              </a-modal>
-              <a-row class="ml-3" :gutter="[16,8]">
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="Nationality">
-                    <a-select default-value="Indonesia">
-                      <a-select-option value="indonesia">Indonesia</a-select-option>
-                      <a-select-option value="america">America</a-select-option>
-                      <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="Document Id">
-                    <a-select default-value="Id Card">
-                      <a-select-option value="id_card">Id Card</a-select-option>
-                      <a-select-option value="paspor">Paspor</a-select-option>
-                      <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="Id Number">
-                    <a-input placeholder="Please input your phone number" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="24">
-                  <a-form-item label="Expiry Date">
-                    <a-date-picker @change="onChange" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="24">
-                  <a-form-item label="Date of Birth">
-                    <a-date-picker @change="onChange" />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <!-- Country -->
-              <a-row class="ml-3" :gutter="[16, 8]">
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="Country">
-                    <a-select default-value="Indonesia">
-                      <a-select-option value="indonesia">Indonesia</a-select-option>
-                      <a-select-option value="america">America</a-select-option>
-                      <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="Region">
-                    <a-select default-value="DKI Jakarta">
-                      <a-select-option value="jakarta">DKI Jakarta</a-select-option>
-                      <a-select-option value="west_java">West Java</a-select-option>
-                      <a-select-option value="central_java">Central Java</a-select-option>
-                      <a-select-option value="east_java">East Java</a-select-option>
-                      <a-select-option value="banten">Banten</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item label="City">
-                    <a-select default-value="South Jakarta">
-                      <a-select-option value="south">South Jakarta</a-select-option>
-                      <a-select-option value="west">West Jakarta</a-select-option>
-                      <a-select-option value="east">East Jakarta</a-select-option>
-                      <a-select-option value="north">North Jakata</a-select-option>
-                      <a-select-option value="central">Central Jakata</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="12">
-                  <a-form-item label="Postal Code">
-                    <a-input placeholder="Ex : 12750" />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="24">
-                  <a-form-item label="Purpose of Stay">
-                    <a-select default-value="Bussiness (BS)">
-                      <a-select-option value="bussiness">Bussiness (BS)</a-select-option>
-                      <a-select-option value="leisure">Leisure (LS)</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <!-- Address -->
-              <a-row class="ml-3" gutter="8">
-                <a-col :span="10" :xl="10" :xs="24">
-                  <a-form-item label="Address">
-                    <a-textarea placeholder="Input Address" :rows="4" />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <a-row class="ml-3 mb-3" gutter="8">
-                <a-col :span="10" :xl="10" :xs="24">
-                  <a-card title="Health Declaration">
-                    <a slot="extra">
-                      <a-icon :style="{fontSize: '1.25rem'}" type="safety-certificate" />
-                    </a>
-                    <!-- <a slot="extra" href="#">more</a> -->
-                    <ol>
-                      <li>
-                        Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days?
-                        <br />
-                        <p>
-                          <a-radio-group name="radioGroup">
-                            <a-radio :value="1">No</a-radio>
-                            <a-radio :value="2">Yes</a-radio>
-                          </a-radio-group>
-                        </p>
-                      </li>
-                      <li>
-                        Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat?
-                        <br />
-                        <p>
-                          <a-radio-group name="radioGroup">
-                            <a-radio :value="1">No</a-radio>
-                            <a-radio :value="2">Yes</a-radio>
-                          </a-radio-group>
-                        </p>
-                      </li>
-                      <li>
-                        Have you ever traveled into another country the past 3 month's?
-                        <br />
-                        <p>
-                          <a-radio-group name="radioGroup">
-                            <a-radio :value="1">No</a-radio>
-                            <a-radio :value="2">Yes</a-radio>
-                          </a-radio-group>
-                        </p>
-                      </li>
-                    </ol>
-                  </a-card>
-                </a-col>
-              </a-row>
-              <a-row class="ml-3 mb-3" gutter="8">
-                <a-col :span="5" :xl="5" :xs="24">
-                  <a-checkbox>Save your information detail</a-checkbox>
-                </a-col>
-              </a-row>
             </a-form>
           </a-tab-pane>
           <a-tab-pane key="2" tab="Tab 2">Content Tab 2</a-tab-pane>
@@ -679,11 +374,316 @@
           <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
           <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
         </a-tabs>
-        <a-row>
-          <a-col :span="12" :xl="12" :xs="24">
-            <a-checkbox>{{term}}</a-checkbox>
-          </a-col>
-        </a-row>
+        <a-form layout="vertical" :form="form">
+          <a-row>
+            <a-card :style="information">
+              <a-row>
+                <a-col :span="23" :xl="23" :xs="23">
+                  <p class="header-group">Arrival</p>
+                </a-col>
+                <a-col :span="1" :xl="1" :xs="1">
+                  <a-icon
+                    type="setting"
+                    :style="{ fontSize: '1.5rem' }"
+                    class="float-right align-self-center"
+                    theme="filled"
+                    @click="munculModal"
+                  />
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-row>
+          <a-modal
+            v-model="muncul"
+            title="Arrival Preference Setup"
+            :visible="muncul"
+            :confirm-loading="confirmLoading"
+            @ok="handleOk"
+            @cancel="handleCancel"
+            centered
+          >
+            <p>
+              <a-checkbox
+                :checked="showPickupRequest"
+                v-model="showPickupRequest"
+              >Use Pickup Request</a-checkbox>
+              <!-- @change="onChange" -->
+            </p>
+            <p>
+              <label>Pickup Request Type :</label>
+              <a-radio-group
+                name="radioGroup"
+                :default-value="nilai"
+                @change="berubah"
+                :disabled="!showPickupRequest"
+              >
+                <a-radio :value="1">Per Pax</a-radio>
+                <a-radio :value="2">Per Car</a-radio>
+                <a-radio :value="3">Free</a-radio>
+              </a-radio-group>
+            </p>
+            <p>
+              <label>Pickup Rate :</label>
+              <a-input-group compact>
+                <a-select
+                  :disabled="!showPickupRequest"
+                  :default-value="currency"
+                  v-model="currency"
+                >
+                  <a-select-option value="Rp.">Rp.</a-select-option>
+                  <a-select-option value="$">$</a-select-option>
+                  <a-select-option value="€">€</a-select-option>
+                </a-select>
+                <a-input
+                  :disabled="!showPickupRequest"
+                  style="width: 50%"
+                  v-model="money"
+                  @input="masukinUang"
+                />
+              </a-input-group>
+            </p>
+            <p>
+              <label class="ml-2" for="checkbox">Room Preferences :</label>
+            </p>
+            <p>
+              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & High Floor</a-checkbox>
+            </p>
+            <p>
+              <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
+            </p>
+            <p>
+              <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
+            </p>
+          </a-modal>
+          <a-row class="ml-3" gutter="16">
+            <a-col :span="4" :xl="4" :xs="24">
+              <a-form-item layout="vertical" label="Estimated Arrival Time">
+                <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
+              <a-form-item label="Request">
+                <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
+              </a-form-item>
+            </a-col>
+            <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
+              <a-form-item label="Price">
+                <label class="font-weight-bold">{{currency}} {{nilai === 3 ? 0 + " " : money + " "}}</label>
+                <span v-if="nilai === 1">/ Pax</span>
+                <span v-else-if="nilai === 2">/ Car</span>
+                <span v-else>Free</span>
+              </a-form-item>
+            </a-col>
+            <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
+              <a-form-item label="Flight Details">
+                <a-input placeholder="Please input flight details" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" gutter="16">
+            <a-col>
+              <p v-show="showSmoking || showFloor || showBed">Room Preferences</p>
+              <a-form-item label v-show="showSmoking">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">Non Smoking</a-radio>
+                  <a-radio :value="2">Smoking</a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label v-show="showFloor">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">Lower Floor</a-radio>
+                  <a-radio :value="2">High Floor</a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label v-show="showBed">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">One Big Bed</a-radio>
+                  <a-radio :value="2">Two Single Bed</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="12" :xl="12" :xs="24">
+              <a-form-item label="Special Request">
+                <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row>
+            <a-card :style="information">
+              <a-row>
+                <a-col :span="23" :xl="23" :xs="23">
+                  <p class="header-group">Guest Details</p>
+                </a-col>
+                <a-col :span="1" :xl="1" :xs="1">
+                  <a-icon
+                    type="setting"
+                    :style="{ fontSize: '1.5rem' }"
+                    class="float-right align-self-center"
+                    theme="filled"
+                    @click="guestModal"
+                  />
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-row>
+          <a-modal
+            v-model="guest"
+            title="Guest Preference Setup"
+            :visible="guest"
+            :confirm-loading="confirmLoading"
+            @ok="handleOk"
+            @cancel="handleCancel"
+          >
+            <label>Term and Condition</label>
+            <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
+          </a-modal>
+          <a-row class="ml-3" :gutter="[16,8]">
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Nationality">
+                <a-select default-value="Indonesia">
+                  <a-select-option value="indonesia">Indonesia</a-select-option>
+                  <a-select-option value="america">America</a-select-option>
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Document Id">
+                <a-select default-value="Id Card">
+                  <a-select-option value="id_card">Id Card</a-select-option>
+                  <a-select-option value="paspor">Paspor</a-select-option>
+                  <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Id Number">
+                <a-input placeholder="Please input your phone number" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Expiry Date">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Date of Birth">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <!-- Country -->
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Country">
+                <a-select default-value="Indonesia">
+                  <a-select-option value="indonesia">Indonesia</a-select-option>
+                  <a-select-option value="america">America</a-select-option>
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Region">
+                <a-select default-value="DKI Jakarta">
+                  <a-select-option value="jakarta">DKI Jakarta</a-select-option>
+                  <a-select-option value="west_java">West Java</a-select-option>
+                  <a-select-option value="central_java">Central Java</a-select-option>
+                  <a-select-option value="east_java">East Java</a-select-option>
+                  <a-select-option value="banten">Banten</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="City">
+                <a-select default-value="South Jakarta">
+                  <a-select-option value="south">South Jakarta</a-select-option>
+                  <a-select-option value="west">West Jakarta</a-select-option>
+                  <a-select-option value="east">East Jakarta</a-select-option>
+                  <a-select-option value="north">North Jakata</a-select-option>
+                  <a-select-option value="central">Central Jakata</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="12">
+              <a-form-item label="Postal Code">
+                <a-input placeholder="Ex : 12750" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Purpose of Stay">
+                <a-select default-value="Bussiness (BS)">
+                  <a-select-option value="bussiness">Bussiness (BS)</a-select-option>
+                  <a-select-option value="leisure">Leisure (LS)</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <!-- Address -->
+          <a-row class="ml-3" gutter="8">
+            <a-col :span="10" :xl="10" :xs="24">
+              <a-form-item label="Address">
+                <a-textarea placeholder="Input Address" :rows="4" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3 mb-3" gutter="8">
+            <a-col :span="10" :xl="10" :xs="24">
+              <a-card title="Health Declaration">
+                <a slot="extra">
+                  <a-icon :style="{fontSize: '1.25rem'}" type="safety-certificate" />
+                </a>
+                <!-- <a slot="extra" href="#">more</a> -->
+                <ol>
+                  <li>
+                    Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days?
+                    <br />
+                    <p>
+                      <a-radio-group name="radioGroup">
+                        <a-radio :value="1">No</a-radio>
+                        <a-radio :value="2">Yes</a-radio>
+                      </a-radio-group>
+                    </p>
+                  </li>
+                  <li>
+                    Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat?
+                    <br />
+                    <p>
+                      <a-radio-group name="radioGroup">
+                        <a-radio :value="1">No</a-radio>
+                        <a-radio :value="2">Yes</a-radio>
+                      </a-radio-group>
+                    </p>
+                  </li>
+                  <li>
+                    Have you ever traveled into another country the past 3 month's?
+                    <br />
+                    <p>
+                      <a-radio-group name="radioGroup">
+                        <a-radio :value="1">No</a-radio>
+                        <a-radio :value="2">Yes</a-radio>
+                      </a-radio-group>
+                    </p>
+                  </li>
+                </ol>
+              </a-card>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3 mb-3" gutter="8">
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-checkbox>Save your information detail</a-checkbox>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12" :xl="12" :xs="24">
+              <a-checkbox>{{term}}</a-checkbox>
+            </a-col>
+          </a-row>
+        </a-form>
+
         <a-row>
           <a-col :span="4" :xl="4" :xs="24">
             <a-button
