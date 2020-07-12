@@ -551,17 +551,17 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Document Id">
-                <a-select default-value="Id Card">
-                  <a-select-option value="id_card">Id Card</a-select-option>
+              <a-form-item label="Document ID">
+                <a-select default-value="ID Card">
+                  <a-select-option value="id_card">ID Card</a-select-option>
                   <a-select-option value="paspor">Paspor</a-select-option>
                   <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Id Number">
-                <a-input placeholder="Please input your phone number" />
+              <a-form-item label="ID Number">
+                <a-input placeholder="Please input " />
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
