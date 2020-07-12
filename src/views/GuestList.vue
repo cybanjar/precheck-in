@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       columns: [
-          // { title: 'Action', dataIndex: '', key: 'x', scopedSlots: { customRender: 'action' } },
+          // { title: 'Action', dataIndex: '', key: 'x', scopedSlots: { customRender: 'expandedRowRender' } },
         { title: "Guest Name", dataIndex: "name", key: "name" },
         { title: "Arrival Date", dataIndex: "arrival", key: "arrival" },
         { title: "Departure Date", dataIndex: "departure", key: "departure" },

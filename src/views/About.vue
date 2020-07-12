@@ -8,6 +8,51 @@
             class="responsive"
             :src="require('../assets/gradient-red.svg')"
           />
+          <img
+            v-else-if="information.backgroundColor == '#FBDB81'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Yellow.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#D42A83'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Magenta.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#901f90'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Purple.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#FA7D09'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Orange.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#E4E3E3'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Grey.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#FFBF00'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Gold.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == 'green'"
+            class="responsive"
+            :src="require('../assets/GradientTop.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#00D7FF'"
+            class="responsive"
+            :src="require('../assets/gradientTop-BlueSky.svg')"
+          />
+          <img
+            v-else-if="information.backgroundColor == '#1B262C'"
+            class="responsive"
+            :src="require('../assets/gradientTop-Black.svg')"
+          />
           <img v-else class="responsive" :src="require('../assets/GradientTop.svg')" />
         </a-col>
       </a-row>
@@ -24,6 +69,87 @@
               :xs="24"
               alt="example"
               src="../assets/Card Online Check-in - Red.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#FBDB81'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Yellow.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#D42A83'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Magenta.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#901f90'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Purple.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#FA7D09'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Orange.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#E4E3E3'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Grey.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#FFBF00'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Gold.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#FFBF00'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-BlueSky.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == 'green'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/CardOnlineCheck-in.svg"
+            />
+            <img
+              v-else-if="information.backgroundColor == '#1B262C'"
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/onlineCheckin-Black.svg"
             />
             <img
               v-else
@@ -108,17 +234,70 @@
         @ok="handleOk"
         @cancel="handleCancel"
       >
-        <p>Standart Color</p>
-        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('#E8505B')">Red</a>
-        <br />
-        <a href="#" onclick="return false;" @mouseover="gantiHeaderClass('green')">Green</a>
+        <a-tabs default-active-key="1" @change="callback">
+          <a-tab-pane key="1" tab="Background Color">
+            <p>Standart Color</p>
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
 
-        <p>Custom Back Color</p>
-        <slider-picker
-          class="vc-slider"
-          v-model="information.backgroundColor"
-          @input="customHeaderClass"
-        />
+            <p>Custom Back Color</p>
+            <slider-picker
+              class="vc-slider"
+              v-model="information.backgroundColor"
+              @input="customHeaderClass"
+            />
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="Font Color" force-render>
+            <p>Standart Color</p>
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
+            <br />
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
+
+            <p>Custom Back Color</p>
+            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
+          </a-tab-pane>
+        </a-tabs>
       </a-modal>
       <div>
         <a-tabs default-active-key="1" @change="callback">
@@ -224,7 +403,7 @@
                   <!-- @change="onChange" -->
                 </p>
                 <p>
-                  <label>Pickup Request Type : </label>
+                  <label>Pickup Request Type :</label>
                   <a-radio-group
                     name="radioGroup"
                     :default-value="nilai"
@@ -630,9 +809,14 @@ export default {
     gantiHeaderClass(warna) {
       this.information.backgroundColor = warna;
     },
+    gantiFontClass(colours) {
+      this.information.color = colours;
+    },
     customHeaderClass(color) {
-      console.log(color);
       this.information.backgroundColor = color.hex;
+    },
+    customFontClass(colour) {
+      this.information.color = colour.hex;
     },
     handleOk(e) {
       this.ModalText = "The modal will be closed after two seconds";
