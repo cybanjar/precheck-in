@@ -579,7 +579,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
-                <a-select default-value="Indonesia">
+                <a-select :default-value="country" v-model="country">
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
                   <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
@@ -587,17 +587,31 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Region">
-                <a-select default-value="DKI Jakarta">
-                  <a-select-option value="jakarta">DKI Jakarta</a-select-option>
-                  <a-select-option value="west_java">West Java</a-select-option>
-                  <a-select-option value="central_java">Central Java</a-select-option>
-                  <a-select-option value="east_java">East Java</a-select-option>
-                  <a-select-option value="banten">Banten</a-select-option>
-                </a-select>
-              </a-form-item>
+              <div v-if="country === 'indonesia'">
+                
+                <a-form-item label="Region">
+                  <a-select default-value="DKI Jakarta">
+                    <a-select-option value="jakarta">DKI Jakarta</a-select-option>
+                    <a-select-option value="west_java">West Java</a-select-option>
+                    <a-select-option value="central_java">Central Java</a-select-option>
+                    <a-select-option value="east_java">East Java</a-select-option>
+                    <a-select-option value="banten">Banten</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </div>
+              <div v-else>
+                <a-form-item label="State">
+                  <a-input
+                    initial-value="Willy Wanta"
+                    v-decorator="[
+                  'username',
+                  { rules: [{ required: true, message: '' }] },
+                ]"
+                  />
+                </a-form-item>
+                </div>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select default-value="South Jakarta">
                   <a-select-option value="south">South Jakarta</a-select-option>
@@ -606,6 +620,17 @@
                   <a-select-option value="north">North Jakata</a-select-option>
                   <a-select-option value="central">Central Jakata</a-select-option>
                 </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24" v-else>
+              <a-form-item label="City">
+                <a-input
+                  initial-value="Willy Wanta"
+                  v-decorator="[
+                  'username',
+                  { rules: [{ required: true, message: '' }] },
+                ]"
+                />
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="12">
@@ -755,6 +780,7 @@ export default {
       guest: false,
       keluar: false,
       currency: 'Rp.',
+      country: 'indonesia',
       term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
