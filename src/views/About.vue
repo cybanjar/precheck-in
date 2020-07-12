@@ -640,9 +640,9 @@
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
               <a-form-item label="Purpose of Stay">
-                <a-select default-value="Bussiness (BS)">
-                  <a-select-option value="bussiness">Bussiness (BS)</a-select-option>
-                  <a-select-option value="leisure">Leisure (LS)</a-select-option>
+                <a-select default-value="Bussiness">
+                  <a-select-option value="bussiness">Bussiness</a-select-option>
+                  <a-select-option value="leisure">Leisure</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
