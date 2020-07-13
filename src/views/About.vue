@@ -434,10 +434,18 @@
                   <a-select-option value="$">$</a-select-option>
                   <a-select-option value="€">€</a-select-option>
                 </a-select>
-                <a-input
+                <!-- <a-input
                   :disabled="!showPickupRequest"
                   style="width: 50%"
                   v-model="money"
+                  @input="masukinUang"
+                />-->
+                <a-input-number
+                  :disabled="!showPickupRequest"
+                  :default-value="money"
+                  v-model="money"
+                  :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\$\s?|(,*)/g, '')"
                   @input="masukinUang"
                 />
               </a-input-group>
@@ -468,12 +476,13 @@
             </a-col>
             <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
               <a-form-item label="Price">
-                <label class="font-weight-bold">{{currency}} {{nilai === 3 ? 0 + " " : money + " "}}</label>
+                <label class="font-weight-bold">{{currency}} {{nilai === 3 ? 0 + " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
                 <span v-else>Free</span>
               </a-form-item>
             </a-col>
+            
             <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
               <a-form-item label="Flight Details">
                 <a-input placeholder="Please input flight details" />
@@ -588,7 +597,6 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <div v-if="country === 'indonesia'">
-                
                 <a-form-item label="Region">
                   <a-select default-value="DKI Jakarta">
                     <a-select-option value="jakarta">DKI Jakarta</a-select-option>
@@ -609,7 +617,7 @@
                 ]"
                   />
                 </a-form-item>
-                </div>
+              </div>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
@@ -764,12 +772,12 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
-      money: 100000 ,
-      showSmoking: false,
-      showBed: false,
-      showFloor: false,
-      showPickupRequest: false,
-      showPrice:  false,
+      money: 100000,
+      showSmoking: true,
+      showBed: true,
+      showFloor: true,
+      showPickupRequest: true,
+      showPrice:  true,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -818,7 +826,7 @@ export default {
       this.term = tulisan.target.value;
     },
     masukinUang(uang){
-      this.money = uang.target.value;
+      this.money =   uang.target.value;
     },
     showModal() {
       this.visible = true;
