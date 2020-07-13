@@ -164,7 +164,13 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img class="img-hotel rounded" slot="cover" alt="example" :src="gambar" />
+            <img
+              class="img-hotel rounded"
+              slot="cover"
+              alt="example"
+              :src="gambar"
+              @click="showModal"
+            />
             <a-icon
               type="setting"
               :style="{ fontSize: '1.5rem' }"
@@ -172,8 +178,10 @@
               theme="filled"
               @click="imageModal"
             />
-            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel">
-              <template slot="description">Cardingstron Street, 1St - London</template>
+            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel Jakarta">
+              <template
+                slot="description"
+              >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
             </a-card-meta>
           </a-card>
         </a-col>
@@ -192,7 +200,7 @@
           :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
         >* Recommended resolution 1366 x 768 atau HD</p>
       </a-modal>
-      <a-row>
+      <!-- <a-row>
         <a-card :style="information">
           <a-row>
             <a-col :span="1" :xl="1" :xs="4">
@@ -225,7 +233,7 @@
             </a-col>
           </a-row>
         </a-card>
-      </a-row>
+      </a-row>-->
       <a-modal
         v-model="visible"
         title="Theme Color Setting"
@@ -300,80 +308,6 @@
         </a-tabs>
       </a-modal>
       <div>
-        <a-tabs default-active-key="1" @change="callback">
-          <a-tab-pane key="1" tab="Tab Willy">
-            <a-form layout="vertical" :form="form">
-              <a-row class="ml-3" gutter="16">
-                <!-- Col Title 3-->
-                <a-col :span="3" :xl="3" :xs="6">
-                  <a-form-item label="Title">
-                    <a-select default-value="MR">
-                      <a-select-option value="MR">MR</a-select-option>
-                      <a-select-option value="MRS">MRS</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <!-- Col name 6 -->
-                <a-col :span="6" :xl="6" :xs="18">
-                  <a-form-item label="Name">
-                    <a-input
-                      initial-value="Willy Wanta"
-                      v-decorator="[
-                  'username',
-                  { rules: [{ required: true, message: 'Please input your name' }] },
-                ]"
-                      placeholder="Willy Wanta"
-                      disabled
-                    />
-                  </a-form-item>
-                </a-col>
-                <!-- Col email 6 -->
-                <a-col :span="6" :xl="6" :xs="24">
-                  <a-form-item label="Email">
-                    <a-input
-                      v-decorator="[
-                      'email',
-                      { rules: [{ required: checkNick, message: 'Please input your email' }] },
-                    ]"
-                      placeholder="willywanta@gmail.com"
-                      disabled
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="3" :xl="3" :xs="6">
-                  <a-form-item label="Code">
-                    <a-select default-value="+62">
-                      <a-select-option value="62">+62</a-select-option>
-                      <a-select-option value="1">+1</a-select-option>
-                      <a-select-option value="966">+966</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="6" :xl="6" :xs="18">
-                  <a-form-item label="Phone Number">
-                    <a-input
-                      v-decorator="[
-                      'nickname',
-                      { rules: [{ required: true, message: 'Please input your phone number' }] },
-                    ]"
-                      placeholder="81220002020"
-                      disabled
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="9" :xl="9" :xs="24">
-                  <a-form-item label="Sharing Room">
-                    <a-input defaultValue="Josep" disabled />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-form>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="Tab 2">Content Tab 2</a-tab-pane>
-          <a-tab-pane key="3" tab="Tab 3">Content Tab 3</a-tab-pane>
-          <a-tab-pane key="4" tab="Tab 4">Content Tab 4</a-tab-pane>
-          <a-tab-pane key="5" tab="Tab 5">Content Tab 5</a-tab-pane>
-        </a-tabs>
         <a-form layout="vertical" :form="form">
           <a-row>
             <a-card :style="information">
@@ -434,10 +368,12 @@
                   <a-select-option value="$">$</a-select-option>
                   <a-select-option value="€">€</a-select-option>
                 </a-select>
-                <a-input
+                <a-input-number
                   :disabled="!showPickupRequest"
-                  style="width: 50%"
+                  :default-value="money"
                   v-model="money"
+                  :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\$\s?|(,*)/g, '')"
                   @input="masukinUang"
                 />
               </a-input-group>
@@ -468,12 +404,15 @@
             </a-col>
             <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
               <a-form-item label="Price">
-                <label class="font-weight-bold">{{currency}} {{nilai === 3 ? 0 + " " : money + " "}}</label>
+                <label
+                  class="font-weight-bold"
+                >{{currency}} {{nilai === 3 ? 0 + " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
                 <span v-else>Free</span>
               </a-form-item>
             </a-col>
+
             <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
               <a-form-item label="Flight Details">
                 <a-input placeholder="Please input flight details" />
@@ -588,7 +527,6 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <div v-if="country === 'indonesia'">
-                
                 <a-form-item label="Region">
                   <a-select default-value="DKI Jakarta">
                     <a-select-option value="jakarta">DKI Jakarta</a-select-option>
@@ -609,7 +547,7 @@
                 ]"
                   />
                 </a-form-item>
-                </div>
+              </div>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
@@ -646,6 +584,41 @@
                 </a-select>
               </a-form-item>
             </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Email">
+                <a-input
+                  v-decorator="[
+                      'email',
+                      { rules: [{ required: checkNick, message: 'Please input your email' }] },
+                    ]"
+                  placeholder="willywanta@gmail.com"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="6">
+              <a-form-item label="Phone Number">
+                <a-input
+                  v-decorator="[
+          'phone',
+          {
+            rules: [{ required: true, message: 'Please input your phone number!' }],
+          },
+        ]"
+                  style="width: 100%"
+                >
+                  <a-select
+                    slot="addonBefore"
+                    v-decorator="['prefix', { initialValue: '62' }]"
+                    style="width: 70px"
+                  >
+                    <a-select-option value="62">+62</a-select-option>
+                    <a-select-option value="1">+1</a-select-option>
+                    <a-select-option value="966">+966</a-select-option>
+                  </a-select>
+                </a-input>
+              </a-form-item>
+            </a-col>
           </a-row>
           <!-- Address -->
           <a-row class="ml-3" gutter="8">
@@ -655,54 +628,8 @@
               </a-form-item>
             </a-col>
           </a-row>
+
           <a-row class="ml-3 mb-3" gutter="8">
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-card title="Health Declaration">
-                <a slot="extra">
-                  <a-icon :style="{fontSize: '1.25rem'}" type="safety-certificate" />
-                </a>
-                <!-- <a slot="extra" href="#">more</a> -->
-                <ol>
-                  <li>
-                    Have you come into close contact (within 6 feet) with someone who has a laboratory confirmed COVID – 19 diagnosis in the past 14 days?
-                    <br />
-                    <p>
-                      <a-radio-group name="radioGroup">
-                        <a-radio :value="1">No</a-radio>
-                        <a-radio :value="2">Yes</a-radio>
-                      </a-radio-group>
-                    </p>
-                  </li>
-                  <li>
-                    Do you have any of the following: fever or chills, cough, shortness of breath or difficulty breathing, body aches, headache, new loss of taste or smell, sore throat?
-                    <br />
-                    <p>
-                      <a-radio-group name="radioGroup">
-                        <a-radio :value="1">No</a-radio>
-                        <a-radio :value="2">Yes</a-radio>
-                      </a-radio-group>
-                    </p>
-                  </li>
-                  <li>
-                    Have you ever traveled into another country the past 3 month's?
-                    <br />
-                    <p>
-                      <a-radio-group name="radioGroup">
-                        <a-radio :value="1">No</a-radio>
-                        <a-radio :value="2">Yes</a-radio>
-                      </a-radio-group>
-                    </p>
-                  </li>
-                </ol>
-              </a-card>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3 mb-3" gutter="8">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-checkbox>Save your information detail</a-checkbox>
-            </a-col>
-          </a-row>
-          <a-row>
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox>{{term}}</a-checkbox>
             </a-col>
@@ -764,12 +691,12 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
-      money: 100000 ,
-      showSmoking: false,
-      showBed: false,
-      showFloor: false,
-      showPickupRequest: false,
-      showPrice:  false,
+      money: 100000,
+      showSmoking: true,
+      showBed: true,
+      showFloor: true,
+      showPickupRequest: true,
+      showPrice:  true,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -818,7 +745,7 @@ export default {
       this.term = tulisan.target.value;
     },
     masukinUang(uang){
-      this.money = uang.target.value;
+      this.money =   uang.target.value;
     },
     showModal() {
       this.visible = true;

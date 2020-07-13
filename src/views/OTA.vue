@@ -1,41 +1,48 @@
 <template>
   <div class="container">
-    <a-card class="login-card" style="width: 300px">
-      <label>Choose</label>
+    <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="Loading image" />
+    <a-card class="login-card">
+      <a-form layout="vertical" :form="form">
+        <a-row class="ml-3" gutter="16">
+          <a-col :span="12" :xl="12" :xs="24">
+            <a-form-item label="Choose">
+              <a-select :default-value="option" style="width: 250px" v-model="option">
+                <a-select-option value="bookigcode">Booking Code</a-select-option>
+                <a-select-option value="guestname">Guest Name & Checkout Date</a-select-option>
+                <a-select-option value="email">Email</a-select-option>
+                <a-select-option value="membership">Membership & Checkout Date</a-select-option>
+              </a-select>
+            </a-form-item>
+            <div class="mt-1" v-if="option === 'bookigcode'">
+              <a-form-item label="Booking Code">
+                <a-input />
+              </a-form-item>
+            </div>
+            <div class="mt-1" v-else-if="option === 'guestname'">
+              <label>Guest Name</label>
+              <a-input />
 
-      <a-select :default-value="option" style="width: 250px" v-model="option">
-        <a-select-option value="bookigcode">Booking Code</a-select-option>
-        <a-select-option value="guestname">Guest Name & Checkout Date</a-select-option>
-        <a-select-option value="email">Email</a-select-option>
-        <a-select-option value="membership">Membership & Checkout Date</a-select-option>
-      </a-select>
-      <div class="mt-1" v-if="option === 'bookigcode'">
-        <label>Booking Code</label>
-        <a-input />
-      </div>
-      <div class="mt-1" v-else-if="option === 'guestname'">
-        <label>Guest Name</label>
-        <a-input />
-
-        <br />
-        <br />
-        <label>Checkout Date</label>
-        <a-date-picker @change="onChange" />
-      </div>
-      <div class="mt-1" v-else-if="option === 'email'">
-        <label>Email</label>
-        <a-input />
-      </div>
-      <div class="mt-1" v-else>
-        <label>Membership</label>
-        <a-input />
-
-        <br />
-        <br />
-        <label>Checkout Date</label>
-        <a-date-picker @change="onChange" />
-      </div>
-      <a-button href="about" class="mt-1 mr-3 float-right" type="primary">Next</a-button>
+              <br />
+              <br />
+              <label>Checkout Date</label>
+              <a-date-picker @change="onChange" />
+            </div>
+            <div class="mt-1" v-else-if="option === 'email'">
+              <label>Email</label>
+              <a-input />
+            </div>
+            <div class="mt-1" v-else>
+              <label>Membership</label>
+              <a-input />
+              <br />
+              <br />
+              <label>Checkout Date</label>
+              <a-date-picker @change="onChange" />
+            </div>
+          </a-col>
+        </a-row>
+        <a-button href="about" class="mt-1 mr-3 float-right" type="primary">Next</a-button>
+      </a-form>
     </a-card>
   </div>
 </template>
@@ -59,6 +66,21 @@ data() {
 .float-right {
   float: right !important;
 }
+.img-hero {
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  // display: none;
+  // background-color: rgba(0, 0, 0, 0.9);
+  // z-index: 2;
+}
+.overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2;
+}
 .mr-3,
 .mx-3 {
   margin-right: 0rem !important;
@@ -69,19 +91,19 @@ data() {
 .login-card {
   position: absolute;
   width: 420px;
-  height: 550px;
+  // height: 550px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  padding: 5px 30px;
+  padding: 5px 20px;
   left: 50%;
   top: 5%;
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border: 0px;
+  background-color: rgba(255, 255, 255, 1);
+  // border: 0px;
 }
-.container {
-  height: 100%;
-  width: 100%;
-  background-image: url("https://i.pinimg.com/originals/16/d0/88/16d0881109f34ff8761cdebfdc040fab.jpg") !important;
-}
+// .container {
+//   height: 100%;
+//   width: 100%;
+//   background-image: url("https://i.pinimg.com/originals/16/d0/88/16d0881109f34ff8761cdebfdc040fab.jpg") !important;
+// }
 </style>
