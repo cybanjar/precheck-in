@@ -410,7 +410,7 @@
               <!-- @change="onChange" -->
             </p>
             <p>
-              <label>Pickup Request Type :</label>
+              <label>Pickup Request Type : </label>
               <a-radio-group
                 name="radioGroup"
                 :default-value="nilai"
@@ -710,7 +710,7 @@
               <a-checkbox>Save your information detail</a-checkbox>
             </a-col>
           </a-row>
-          <a-row>
+          <a-row class="ml-3 mb-3" gutter="8">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox>{{term}}</a-checkbox>
             </a-col>
