@@ -35,7 +35,7 @@
         <label>Checkout Date</label>
         <a-date-picker @change="onChange" />
       </div>
-      <a-button href="about" class="mt-1 mr-3 float-right" type="primary">Next</a-button>
+      <a-button href="guest-list" class="mt-1 mr-3 float-right" type="primary">Next</a-button>
     </a-card>
   </div>
 </template>
