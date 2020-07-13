@@ -76,7 +76,8 @@ export default {
         { title: "Departure Date", dataIndex: "departure", key: "departure" },
         { title: "Adult", dataIndex: "adult", key: "adult" },
         { title: "Room Type", dataIndex: "tags", key: "tags", scopedSlots: { customRender: 'tags' },},
-      ],data
+      ],
+      data,
     };
   },
    computed: {
