@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="hero" />
+    <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="Loading image" />
     <a-card class="login-card">
       <a-form layout="vertical" :form="form">
         <a-row class="ml-3" gutter="16">
@@ -67,7 +67,19 @@ data() {
   float: right !important;
 }
 .img-hero {
+  width: 100vw;
+  height: 100vh;
+  background-position: center;
   background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  // display: none;
+  // background-color: rgba(0, 0, 0, 0.9);
+  // z-index: 2;
+}
+.overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2;
 }
 .mr-3,
 .mx-3 {
@@ -82,7 +94,7 @@ data() {
   // height: 550px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  padding: 5px 30px;
+  padding: 5px 20px;
   left: 50%;
   top: 5%;
   border-radius: 4px;

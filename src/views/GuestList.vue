@@ -1,7 +1,35 @@
 <template>
   <div>
     <div>
-      <h1 class="text-center">Guest Lists</h1>
+      <a-row type="flex" justify="start" align="top">
+        <a-col>
+          <img class="responsive" :src="require('../assets/GradientTop.svg')" />
+        </a-col>
+      </a-row>
+    </div>
+    <div class="home">
+      <a-row class="grandvisual">
+        <a-col :span="8" :md="12" :xs="24">
+          <a-card :bordered="false">
+            <img
+              class="card-online"
+              slot="cover"
+              :xl="24"
+              :xs="24"
+              alt="example"
+              src="../assets/CardOnlineCheck-in.svg"
+            />
+          </a-card>
+        </a-col>
+        <a-col :span="8" :md="12" :xs="24">
+          <a-card :bordered="false">
+            <img class="img-hotel shadow rounded" slot="cover" alt="example" :src="gambar" />
+          </a-card>
+        </a-col>
+      </a-row>
+    </div>
+    <div>
+      <h1 class="text-center">Guest List</h1>
     </div>
     <div class="sa-table">
       <a-table
@@ -15,7 +43,7 @@
         <span slot="tags" slot-scope="tags">
           <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>
         </span>
-        <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{ record.description }}</p>
+        <!-- <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{ record.description }}</p> -->
       </a-table>
     </div>
     <a-button href="about" class="mr-3 float-right" type="primary" :size="size">Next</a-button>
@@ -40,6 +68,7 @@ for (let i = 0; i < 10; i++) {
 export default {
   data() {
     return {
+      gambar:"https://source.unsplash.com/1366x786/?hotel",
       columns: [
           // { title: 'Action', dataIndex: '', key: 'x', scopedSlots: { customRender: 'expandedRowRender' } },
         { title: "Guest Name", dataIndex: "name", key: "name" },
@@ -69,6 +98,33 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.home {
+  margin: 20px;
+}
+.rounded {
+  border-radius: 0.25rem !important;
+}
+@media screen and (max-width: 576px) {
+  .responsive {
+    width: 100%;
+  }
+  .img-hotel {
+    // width: 333px;
+    height: 171.95px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .card-online {
+    width: 400px;
+  }
+  .img-hotel {
+    // width: 662px;
+    height: 341.85px;
+  }
+}
+.shadow {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
+}
 .text-center {
   text-align: center;
   font-weight: bold !important;
