@@ -161,6 +161,12 @@
               src="../assets/CardOnlineCheck-in.svg"
             />
           </a-card>
+          <div class="mt-3 ml-3 guest-name float-left">
+            <h1 class="font-weight-bold">MR. DODY OKTAVIANTO</h1>
+            <p class="float-left">Reservation from 12/06/2020 untul 12/06/2020</p>
+            <br />
+            <p class="float-left">Reservation number 11</p>
+          </div>
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
@@ -858,6 +864,9 @@ h3 {
 .ant-card-head-title {
   text-align: center;
 }
+.guest-name {
+  line-height: 1;
+}
 .grandvisual {
   line-height: 0.25rem;
   text-align: center;
@@ -958,6 +967,9 @@ h3 {
 }
 .float-right {
   float: right !important;
+}
+.float-left {
+  float: left !important;
 }
 .align-self-center {
   -ms-flex-item-align: center !important;
