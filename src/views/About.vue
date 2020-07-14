@@ -161,14 +161,12 @@
               src="../assets/CardOnlineCheck-in.svg"
             />
           </a-card>
-          <div class="mt-3 ml-3 guest-name float-left">
+          <div class="mt-3 ml-3 guest-name text-left">
             <h1
               class="font-weight-bold"
-            >MRS. Aiwinur Siti Diah Ayu Mega Ningrum Dwi Pangestuti Lestasi Endang Pamikasih Sri Kumala Sari Dewi Puspita Anggraini</h1>
-            <p class="float-left">Reservation from 12/06/2020 untul 12/06/2020</p>
-            <br />
-            <br />
-            <p class="float-left">Reservation number 11</p>
+            >Aiwinur Siti Diah Ayu Mega Ningrum Dwi Pangestuti Lestasi Endang Pamikasih Sri Kumala Sari Dewi Puspita Anggraini</h1>
+            <p>Reservation from 12/06/2020 until 12/06/2020</p>
+            <p>Reservation number 11020133</p>
           </div>
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
@@ -454,7 +452,13 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-form-item label="Special Request">
-                <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
+                <a-textarea
+                  placeholder="Ex: Connecting Wifi"
+                  :rows="4"
+                  :maxlength="max"
+                  v-model="text"
+                />
+                <span v-text="(text.length) + '/' + (max)"></span>
               </a-form-item>
             </a-col>
           </a-row>
@@ -700,6 +704,8 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
+      max: 200,
+      text: '',
       money: 100000,
       showSmoking: true,
       showBed: true,
@@ -837,6 +843,9 @@ h3 {
     height: 171.95px;
   }
 }
+.clear-fix {
+  clear: both;
+}
 @media screen and (min-width: 1200px) {
   .card-online {
     width: 400px;
@@ -877,6 +886,9 @@ h3 {
 }
 .text-center {
   text-align: center;
+}
+.text-left {
+  text-align: left;
 }
 .mt-0,
 .my-0 {
