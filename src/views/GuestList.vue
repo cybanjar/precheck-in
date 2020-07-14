@@ -23,11 +23,11 @@
         </a-col>
         <a-col class="text-center" :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img class="img-hotel shadow rounded" slot="cover" alt="example" :src="gambar" />
-            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel Jakarta">
+            <img class="img-hotel shadow rounded" slot="cover" alt="Loading image" :src="gambar" />
+            <a-card-meta title="Grand Visual Hotel Jakarta">
               <template
                 slot="description"
-              >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
+              >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar, Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
             </a-card-meta>
           </a-card>
         </a-col>
@@ -133,7 +133,6 @@ export default {
 }
 .text-center {
   text-align: center;
-  font-weight: bold !important;
 }
 .sa-table {
   margin: 1rem;
