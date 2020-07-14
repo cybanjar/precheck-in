@@ -452,7 +452,13 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-form-item label="Special Request">
-                <a-textarea placeholder="Ex: Connecting Wifi" :rows="4" />
+                <a-textarea
+                  placeholder="Ex: Connecting Wifi"
+                  :rows="4"
+                  :maxlength="max"
+                  v-model="text"
+                />
+                <span v-text="(text.length) + '/' + (max)"></span>
               </a-form-item>
             </a-col>
           </a-row>
@@ -698,6 +704,8 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
+      max: 200,
+      text: '',
       money: 100000,
       showSmoking: true,
       showBed: true,
