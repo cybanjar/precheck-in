@@ -162,8 +162,11 @@
             />
           </a-card>
           <div class="mt-3 ml-3 guest-name float-left">
-            <h1 class="font-weight-bold">MR. DODY OKTAVIANTO</h1>
+            <h1
+              class="font-weight-bold"
+            >MRS. Aiwinur Siti Diah Ayu Mega Ningrum Dwi Pangestuti Lestasi Endang Pamikasih Sri Kumala Sari Dewi Puspita Anggraini</h1>
             <p class="float-left">Reservation from 12/06/2020 untul 12/06/2020</p>
+            <br />
             <br />
             <p class="float-left">Reservation number 11</p>
           </div>
@@ -184,7 +187,7 @@
               theme="filled"
               @click="imageModal"
             />
-            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel Jakarta">
+            <a-card-meta title="Grand Visual Hotel Jakarta">
               <template
                 slot="description"
               >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
@@ -388,7 +391,7 @@
               <label class="ml-2" for="checkbox">Room Preferences :</label>
             </p>
             <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & High Floor</a-checkbox>
+              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
             </p>
             <p>
               <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
@@ -412,10 +415,10 @@
               <a-form-item label="Price">
                 <label
                   class="font-weight-bold"
-                >{{currency}} {{nilai === 3 ? 0 + " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
+                >{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
-                <span v-else>Free</span>
+                <span v-else>Free of Charge</span>
               </a-form-item>
             </a-col>
 
@@ -437,7 +440,7 @@
               <a-form-item label v-show="showFloor">
                 <a-radio-group name="radioGroup">
                   <a-radio :value="1">Lower Floor</a-radio>
-                  <a-radio :value="2">High Floor</a-radio>
+                  <a-radio :value="2">Higher Floor</a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label v-show="showBed">
@@ -952,6 +955,7 @@ h3 {
 }
 .font-weight-bold {
   font-weight: 700 !important;
+  clear: both;
 }
 .label-hidden {
   visibility: hidden;
