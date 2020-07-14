@@ -185,7 +185,7 @@
               theme="filled"
               @click="imageModal"
             />
-            <a-card-meta class="font-weight-bold" title="Grand Visual Hotel Jakarta">
+            <a-card-meta title="Grand Visual Hotel Jakarta">
               <template
                 slot="description"
               >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
