@@ -1,6 +1,7 @@
 <template>
-  <div class="container overlay-bg">
+  <div class="container">
     <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="Loading image" />
+    <div class="overlay-bg"></div>
     <a-card class="login-card responsive">
       <a-form layout="vertical" :form="form">
         <a-row class="ml-3" gutter="8">
@@ -72,7 +73,7 @@ data() {
   float: right !important;
 }
 .img-hero {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-position: center;
   background-attachment: fixed;
@@ -83,7 +84,7 @@ data() {
   // z-index: 2;
 }
 .overlay-bg {
-  background-color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.37);
   position: fixed;
   widows: 100vw;
   height: 100vh;
@@ -91,7 +92,7 @@ data() {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 2;
+  z-index: 1;
 }
 .login-card {
   position: absolute;
@@ -105,6 +106,7 @@ data() {
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 1);
   border: 0px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.37);
+  z-index: 2;
 }
 </style>
