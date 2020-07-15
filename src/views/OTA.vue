@@ -1,47 +1,47 @@
 <template>
-  <div class="container">
+  <div class="container overlay-bg">
     <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="Loading image" />
-    <a-card class="login-card">
+    <a-card class="login-card responsive">
       <a-form layout="vertical" :form="form">
-        <a-row class="ml-3" gutter="16">
-          <a-col :span="12" :xl="12" :xs="24">
+        <a-row class="ml-3" gutter="8">
+          <a-col :span="24" :xl="24" :xs="24">
             <a-form-item label="Choose">
-              <a-select :default-value="option" style="width: 250px" v-model="option">
+              <a-select :default-value="option" v-model="option">
                 <a-select-option value="bookigcode">Booking Code</a-select-option>
                 <a-select-option value="guestname">Guest Name & Checkout Date</a-select-option>
                 <a-select-option value="email">Email</a-select-option>
                 <a-select-option value="membership">Membership & Checkout Date</a-select-option>
               </a-select>
             </a-form-item>
-            <div class="mt-1" v-if="option === 'bookigcode'">
+            <div v-if="option === 'bookigcode'">
               <a-form-item label="Booking Code">
-                <a-input />
+                <a-input placeholder="Input your booking code" />
               </a-form-item>
             </div>
-            <div class="mt-1" v-else-if="option === 'guestname'">
-              <label>Guest Name</label>
-              <a-input />
-
-              <br />
-              <br />
-              <label>Checkout Date</label>
-              <a-date-picker @change="onChange" />
+            <div v-else-if="option === 'guestname'">
+              <a-form-item label="Guest name">
+                <a-input placeholder="Ex: Indra Wijaya" />
+              </a-form-item>
+              <a-form-item label="Checkout Date">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
             </div>
-            <div class="mt-1" v-else-if="option === 'email'">
-              <label>Email</label>
-              <a-input />
+            <div v-else-if="option === 'email'">
+              <a-form-item label="Email">
+                <a-input placeholder="Ex: indra@domain.com" />
+              </a-form-item>
             </div>
-            <div class="mt-1" v-else>
-              <label>Membership</label>
-              <a-input />
-              <br />
-              <br />
-              <label>Checkout Date</label>
-              <a-date-picker @change="onChange" />
+            <div v-else>
+              <a-form-item label="Membership">
+                <a-input placeholder="Input your membership" />
+              </a-form-item>
+              <a-form-item label="Checkout Date">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
             </div>
           </a-col>
         </a-row>
-        <a-button href="about" class="mt-1 mr-3 float-right" type="primary">Next</a-button>
+        <a-button href="about" class="mt-1 mr-3 float-right" type="primary" block>Next</a-button>
       </a-form>
     </a-card>
   </div>
@@ -63,6 +63,11 @@ data() {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-width: 576px) {
+  .responsive {
+    width: 85%;
+  }
+}
 .float-right {
   float: right !important;
 }
@@ -77,16 +82,16 @@ data() {
   // background-color: rgba(0, 0, 0, 0.9);
   // z-index: 2;
 }
-.overlay {
-  background-color: rgba(0, 0, 0, 0.9);
+.overlay-bg {
+  background-color: rgba(0, 0, 0, 0.87);
+  position: fixed;
+  widows: 100vw;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 2;
-}
-.mr-3,
-.mx-3 {
-  margin-right: 0rem !important;
-}
-.mt-1 {
-  margin-top: 1rem !important;
 }
 .login-card {
   position: absolute;
@@ -96,14 +101,10 @@ data() {
   transform: translateX(-50%);
   padding: 5px 20px;
   left: 50%;
-  top: 5%;
+  top: 10%;
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 1);
-  // border: 0px;
+  border: 0px;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
 }
-// .container {
-//   height: 100%;
-//   width: 100%;
-//   background-image: url("https://i.pinimg.com/originals/16/d0/88/16d0881109f34ff8761cdebfdc040fab.jpg") !important;
-// }
 </style>
