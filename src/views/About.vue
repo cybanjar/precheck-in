@@ -609,7 +609,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="6">
+            <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Phone Number">
                 <a-input
                   v-decorator="[
