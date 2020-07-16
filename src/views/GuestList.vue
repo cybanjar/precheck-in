@@ -70,10 +70,10 @@
 <script>
 
 const data = [];
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 100; i++) {
   data.push({
     key: i,
-    name: 'John Brown',
+    name: 'John Brown '+ i,
     arrival: '12/06/2020',
     departure: '14/06/2020',
     adult: '2',

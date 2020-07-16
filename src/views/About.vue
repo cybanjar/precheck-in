@@ -167,7 +167,7 @@
             />
           </a-card>
           <div class="mt-3 ml-3 guest-name text-left">
-            <h1 class="mb-3 main-guest-title font-weight-bold">MR. Muhammad Dodit Novianto</h1>
+            <h1 class="mb-3 main-guest-title font-weight-bold">MR. {{currDataPrepare.name}}</h1>
             <p class="ant-card-meta-description">
               Reservation from 12/06/2020 until 12/06/2020
               <br />Reservation number
@@ -654,7 +654,6 @@
             </a-col>
           </a-row>
         </a-form>
-
         <a-row>
           <a-col :span="4" :xl="4" :xs="24">
             <a-button
@@ -755,10 +754,9 @@ export default {
       key
     }
   },
-  beforeCreate(){
-  this.loading = false
-  },
    created() {
+       this.loading = false
+
      if(this.$route.params.id != undefined){
 
     this.id = this.$route.params.id;
@@ -847,5 +845,4 @@ else{
 };
 </script>
 
-<style scoped lang="scss" src="../css/style.scss">
-</style>
+<style scoped lang="scss" src="../css/style.scss"/>
