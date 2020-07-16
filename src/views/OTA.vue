@@ -74,7 +74,7 @@ data() {
 }
 .img-hero {
   width: 100%;
-  height: 100vh;
+  height: auto;
   background-position: center;
   background-attachment: fixed;
   background-size: cover;
