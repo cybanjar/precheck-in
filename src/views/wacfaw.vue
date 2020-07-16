@@ -136,7 +136,7 @@
                 <!-- Col email 6 -->
 
                 <a-col :span="9" :xl="9" :xs="24">
-                  <a-form-item label="Sharing Room">
+                  <a-form-item label="Sharing Guest">
                     <a-input defaultValue="Josep" disabled />
                   </a-form-item>
                 </a-col>

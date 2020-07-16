@@ -177,13 +177,7 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img
-              class="img-hotel rounded"
-              slot="cover"
-              alt="example"
-              :src="gambar"
-              @click="showModal"
-            />
+            <img class="img-hotel rounded" slot="cover" alt="example" :src="gambar" />
             <a-icon
               type="setting"
               :style="{ fontSize: '1.5rem' }"
@@ -203,54 +197,6 @@
         v-model="keluar"
         title="Image Setting"
         :visible="keluar"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        <label>URL Image</label>
-        <a-input v-model="gambar" @input="masukinFoto" />
-        <p
-          :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
-        >* Recommended resolution 1366 x 768 atau HD</p>
-      </a-modal>
-      <!-- <a-row>
-        <a-card :style="information">
-          <a-row>
-            <a-col :span="1" :xl="1" :xs="4">
-              <a-icon
-                type="check-circle"
-                :style="{ fontSize: '2rem' }"
-                theme="twoTone"
-                :two-tone-color="information.backgroundColor"
-              />
-            </a-col>
-            <a-col :span="22" :xl="22" :xs="19">
-              <p>
-                From
-                <span class="font-weight-bold">12/06/2020</span> until
-                <span class="font-weight-bold">14/06/2020</span>
-              </p>
-              <p>
-                Reservation number:
-                <strong>333251</strong>
-              </p>
-            </a-col>
-            <a-col :span="1" :xl="1" :xs="1">
-              <a-icon
-                type="setting"
-                :style="{ fontSize: '1.5rem' }"
-                class="float-right align-self-center"
-                theme="filled"
-                @click="showModal"
-              />
-            </a-col>
-          </a-row>
-        </a-card>
-      </a-row>-->
-      <a-modal
-        v-model="visible"
-        title="Theme Color Setting"
-        :visible="visible"
         :confirm-loading="confirmLoading"
         @ok="handleOk"
         @cancel="handleCancel"
@@ -318,8 +264,59 @@
             <p>Custom Back Color</p>
             <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
           </a-tab-pane>
+          <a-tab-pane key="3" tab="Change Image" force-render>
+            <label>URL Image</label>
+            <a-input v-model="gambar" @input="masukinFoto" />
+            <p
+              :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
+            >* Recommended resolution 1366 x 768 atau HD</p>
+          </a-tab-pane>
         </a-tabs>
       </a-modal>
+      <!-- <a-row>
+        <a-card :style="information">
+          <a-row>
+            <a-col :span="1" :xl="1" :xs="4">
+              <a-icon
+                type="check-circle"
+                :style="{ fontSize: '2rem' }"
+                theme="twoTone"
+                :two-tone-color="information.backgroundColor"
+              />
+            </a-col>
+            <a-col :span="22" :xl="22" :xs="19">
+              <p>
+                From
+                <span class="font-weight-bold">12/06/2020</span> until
+                <span class="font-weight-bold">14/06/2020</span>
+              </p>
+              <p>
+                Reservation number:
+                <strong>333251</strong>
+              </p>
+            </a-col>
+            <a-col :span="1" :xl="1" :xs="1">
+              <a-icon
+                type="setting"
+                :style="{ fontSize: '1.5rem' }"
+                class="float-right align-self-center"
+                theme="filled"
+                @click="showModal"
+              />
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-row>-->
+      <!-- <a-modal
+        v-model="visible"
+        title="Theme Color Setting"
+        :visible="visible"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
+      >
+        
+      </a-modal>-->
       <div>
         <a-form layout="vertical" :form="form">
           <a-row>
@@ -636,6 +633,15 @@
                     <a-select-option value="966">+966</a-select-option>
                   </a-select>
                 </a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Sharing Guest">
+                <a-input
+                  placeholder="Please input"
+                  disabled
+                  :defaultValue="currDataPrepare.description"
+                />
               </a-form-item>
             </a-col>
           </a-row>
