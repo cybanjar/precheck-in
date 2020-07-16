@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="example" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div>
       <a-row type="flex" justify="start" align="top">
         <a-col>
@@ -657,7 +662,9 @@
               type="primary"
               block
               :size="size"
-            >Check-In Now</a-button>
+              @click="save"
+              :disabled="id == 0"
+            >Check-In Now {{counter}}</a-button>
           </a-col>
         </a-row>
       </div>
@@ -666,6 +673,7 @@
 </template>
 
 <script>
+import router from '../router'
 import Vue from "vue";
 import { Slider } from 'vue-color'
 import Antd, {
@@ -693,6 +701,9 @@ export default {
   },
   data() {
     return {
+      id: [],
+      currDataPrepare: {},
+      counter: 0,
       size: "large",
       checkNick: false,
       formItemLayout: {
@@ -722,7 +733,8 @@ export default {
       guest: false,
       keluar: false,
       currency: 'Rp.',
-      country: 'indonesia',
+      country: 'indonesia',          
+      loading: true,
       term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
@@ -739,19 +751,38 @@ export default {
   },
   watch: {
     activeKey(key) {
-      console.log(key);
+      key
     }
   },
+  beforeCreate(){
+  this.loading = false
+  },
+   created() {
+     if(this.$route.params.id != undefined){
+
+    this.id = this.$route.params.id;
+    // this.counter = this.id.length;
+
+    this.currDataPrepare = this.id[this.counter];
+    this.counter += 1;
+     }
+else{
+  router.push('guest-list')
+}
+  },
   methods: {
+    save() {
+      if (this.counter == this.id.length) {
+      return false
+      }
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    },
+    navigate() {
+                router.go(-1);
+            },
     berubah(e) {
       this.nilai = e.target.value
-    },
-    check() {
-      this.form.validateFields(err => {
-        if (!err) {
-          console.info("success");
-        }
-      });
     },
     masukinFoto(foto) {
       this.gambar = foto.target.value;
@@ -798,12 +829,11 @@ export default {
       }, 300);
     },
     handleCancel(e) {
-      console.log("Clicked cancel button");
       this.visible = false;
       this.muncul = false;
     },
     onChange(date, dateString) {
-      console.log(date, dateString);
+      data =0 
     },
     moment,
     handleChange(e) {
@@ -990,5 +1020,15 @@ h3 {
 .align-self-center {
   -ms-flex-item-align: center !important;
   align-self: center !important;
+}
+.example {
+  text-align: center;
+  background: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  margin: 20px 0;
 }
 </style>

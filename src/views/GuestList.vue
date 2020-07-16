@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="example" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div>
       <a-row type="flex" justify="start" align="top">
         <a-col>
@@ -51,13 +56,21 @@
         <!-- <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{ record.description }}</p> -->
       </a-table>
     </div>
-    <a-button href="about" class="mr-3 float-right" type="primary" :size="size">Next</a-button>
+
+    <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+      <a-button
+        class="mr-3 float-right"
+        type="primary"
+        :size="size"
+        :disabled="selectedData == 0"
+      >Next</a-button>
+    </router-link>
   </div>
 </template>
 <script>
 
 const data = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1000; i++) {
   data.push({
     key: i,
     name: 'John Brown',
@@ -83,20 +96,27 @@ export default {
         { title: "Room Type", dataIndex: "tags", key: "tags", scopedSlots: { customRender: 'tags' },},
       ],
       data,
+      loading: true,
+      selectedRowKeys: "",
+      selectedData: [],
     };
   },
-   computed: {
+  created(){
+    this.loading = false;
+  },
+  computed: {
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.selectedData = selectedRows;
+          
+          // selectedRows['index'] = selectedRowKeys; 
+
+          // const tempDataSelected = selectedRows;
+          // tempDataSelected['index'] = selectedRowKeys; 
+          
+          // this.selectedData = tempDataSelected;
         },
-        getCheckboxProps: record => ({
-          props: {
-            disabled: record.name === 'Disabled User', // Column configuration not to be checked
-            name: record.name,
-          },
-        }),
       };
     },
     },
@@ -191,5 +211,15 @@ export default {
   content: "\25B2";
   font-size: 12px;
   color: #bfbfbf;
+}
+.example {
+  text-align: center;
+  background: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  margin: 20px 0;
 }
 </style>
