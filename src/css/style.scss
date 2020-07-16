@@ -172,7 +172,8 @@ h3 {
   align-self: center !important;
 }
 .main-guest-title {
-  letter-spacing: 0.125rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 .ant-card-meta-description{
   color: rgba(0, 0, 0, 0.45);

@@ -162,7 +162,7 @@
             />
           </a-card>
           <div class="mt-3 ml-3 guest-name text-left">
-            <h1 class="mb-3 main-guest-title font-weight-bold">MR. DODYT NOVIANTO</h1>
+            <h1 class="mb-3 main-guest-title font-weight-bold">MR. Muhammad Dodit Novianto</h1>
             <p class="ant-card-meta-description">
               Reservation from 12/06/2020 until 12/06/2020
               <br />Reservation number
