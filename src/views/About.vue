@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="example" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div>
       <a-row type="flex" justify="start" align="top">
         <a-col>
@@ -162,7 +167,7 @@
             />
           </a-card>
           <div class="mt-3 ml-3 guest-name text-left">
-            <h1 class="mb-3 main-guest-title font-weight-bold">MR. Muhammad Dodit Novianto</h1>
+            <h1 class="mb-3 main-guest-title font-weight-bold">MR. {{currDataPrepare.name}}</h1>
             <p class="ant-card-meta-description">
               Reservation from 12/06/2020 until 12/06/2020
               <br />Reservation number
@@ -172,13 +177,7 @@
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
-            <img
-              class="img-hotel rounded"
-              slot="cover"
-              alt="example"
-              :src="gambar"
-              @click="showModal"
-            />
+            <img class="img-hotel rounded" slot="cover" alt="example" :src="gambar" />
             <a-icon
               type="setting"
               :style="{ fontSize: '1.5rem' }"
@@ -198,54 +197,6 @@
         v-model="keluar"
         title="Image Setting"
         :visible="keluar"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        <label>URL Image</label>
-        <a-input v-model="gambar" @input="masukinFoto" />
-        <p
-          :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
-        >* Recommended resolution 1366 x 768 atau HD</p>
-      </a-modal>
-      <!-- <a-row>
-        <a-card :style="information">
-          <a-row>
-            <a-col :span="1" :xl="1" :xs="4">
-              <a-icon
-                type="check-circle"
-                :style="{ fontSize: '2rem' }"
-                theme="twoTone"
-                :two-tone-color="information.backgroundColor"
-              />
-            </a-col>
-            <a-col :span="22" :xl="22" :xs="19">
-              <p>
-                From
-                <span class="font-weight-bold">12/06/2020</span> until
-                <span class="font-weight-bold">14/06/2020</span>
-              </p>
-              <p>
-                Reservation number:
-                <strong>333251</strong>
-              </p>
-            </a-col>
-            <a-col :span="1" :xl="1" :xs="1">
-              <a-icon
-                type="setting"
-                :style="{ fontSize: '1.5rem' }"
-                class="float-right align-self-center"
-                theme="filled"
-                @click="showModal"
-              />
-            </a-col>
-          </a-row>
-        </a-card>
-      </a-row>-->
-      <a-modal
-        v-model="visible"
-        title="Theme Color Setting"
-        :visible="visible"
         :confirm-loading="confirmLoading"
         @ok="handleOk"
         @cancel="handleCancel"
@@ -313,8 +264,59 @@
             <p>Custom Back Color</p>
             <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
           </a-tab-pane>
+          <a-tab-pane key="3" tab="Change Image" force-render>
+            <label>URL Image</label>
+            <a-input v-model="gambar" @input="masukinFoto" />
+            <p
+              :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
+            >* Recommended resolution 1366 x 768 atau HD</p>
+          </a-tab-pane>
         </a-tabs>
       </a-modal>
+      <!-- <a-row>
+        <a-card :style="information">
+          <a-row>
+            <a-col :span="1" :xl="1" :xs="4">
+              <a-icon
+                type="check-circle"
+                :style="{ fontSize: '2rem' }"
+                theme="twoTone"
+                :two-tone-color="information.backgroundColor"
+              />
+            </a-col>
+            <a-col :span="22" :xl="22" :xs="19">
+              <p>
+                From
+                <span class="font-weight-bold">12/06/2020</span> until
+                <span class="font-weight-bold">14/06/2020</span>
+              </p>
+              <p>
+                Reservation number:
+                <strong>333251</strong>
+              </p>
+            </a-col>
+            <a-col :span="1" :xl="1" :xs="1">
+              <a-icon
+                type="setting"
+                :style="{ fontSize: '1.5rem' }"
+                class="float-right align-self-center"
+                theme="filled"
+                @click="showModal"
+              />
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-row>-->
+      <!-- <a-modal
+        v-model="visible"
+        title="Theme Color Setting"
+        :visible="visible"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
+      >
+        
+      </a-modal>-->
       <div>
         <a-form layout="vertical" :form="form">
           <a-row>
@@ -390,7 +392,7 @@
               <label class="ml-2" for="checkbox">Room Preferences :</label>
             </p>
             <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & High Floor</a-checkbox>
+              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
             </p>
             <p>
               <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
@@ -414,10 +416,10 @@
               <a-form-item label="Price">
                 <label
                   class="font-weight-bold"
-                >{{currency}} {{nilai === 3 ? 0 + " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
+                >{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
-                <span v-else>Free</span>
+                <span v-else>Free of Charge</span>
               </a-form-item>
             </a-col>
 
@@ -439,7 +441,7 @@
               <a-form-item label v-show="showFloor">
                 <a-radio-group name="radioGroup">
                   <a-radio :value="1">Lower Floor</a-radio>
-                  <a-radio :value="2">High Floor</a-radio>
+                  <a-radio :value="2">Higher Floor</a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label v-show="showBed">
@@ -490,6 +492,22 @@
             @ok="handleOk"
             @cancel="handleCancel"
           >
+            <label>Document ID Setup</label>
+            <br />
+            <a-checkbox-group @change="onID">
+              <a-checkbox value="id_card">ID Card</a-checkbox>
+
+              <a-checkbox value="paspor">Paspor</a-checkbox>
+
+              <a-checkbox value="driver_lisence">Driver Lisence</a-checkbox>
+
+              <a-checkbox value="other">Other</a-checkbox>
+            </a-checkbox-group>
+            <!-- <input v-model="message"  />
+            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}} -->
+            <br />
+            <br />
+
             <label>Term and Condition</label>
             <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
           </a-modal>
@@ -509,6 +527,7 @@
                   <a-select-option value="id_card">ID Card</a-select-option>
                   <a-select-option value="paspor">Paspor</a-select-option>
                   <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                  <a-select-option value="kitas">KITAS</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -633,6 +652,15 @@
                 </a-input>
               </a-form-item>
             </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Sharing Guest">
+                <a-input
+                  placeholder="Please input"
+                  disabled
+                  :defaultValue="currDataPrepare.description"
+                />
+              </a-form-item>
+            </a-col>
           </a-row>
           <!-- Address -->
           <a-row class="ml-3" gutter="8">
@@ -649,7 +677,6 @@
             </a-col>
           </a-row>
         </a-form>
-
         <a-row>
           <a-col :span="4" :xl="4" :xs="24">
             <a-button
@@ -658,7 +685,9 @@
               type="primary"
               block
               :size="size"
-            >Check-In Now</a-button>
+              @click="save"
+              :disabled="id == 0"
+            >Check-In Now {{counter}}</a-button>
           </a-col>
         </a-row>
       </div>
@@ -667,6 +696,7 @@
 </template>
 
 <script>
+import router from '../router'
 import Vue from "vue";
 import { Slider } from 'vue-color'
 import Antd, {
@@ -687,13 +717,15 @@ import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 Vue.use(Antd);
 
-
 export default {
   components: {
     "slider-picker": Slider,
   },
   data() {
     return {
+      id: [],
+      currDataPrepare: {},
+      counter: 0,
       size: "large",
       checkNick: false,
       formItemLayout: {
@@ -705,6 +737,7 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
+      dataID: [],
       max: 200,
       text: '',
       money: 100000,
@@ -723,7 +756,8 @@ export default {
       guest: false,
       keluar: false,
       currency: 'Rp.',
-      country: 'indonesia',
+      country: 'indonesia',          
+      loading: true,
       term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
@@ -740,19 +774,38 @@ export default {
   },
   watch: {
     activeKey(key) {
-      console.log(key);
+      key
     }
   },
+   created() {
+       this.loading = false
+
+     if(this.$route.params.id != undefined){
+
+    this.id = this.$route.params.id;
+    // this.counter = this.id.length;
+
+    this.currDataPrepare = this.id[this.counter];
+    this.counter += 1;
+     }
+else{
+  router.push('guest-list')
+}
+  },
   methods: {
+    save() {
+      if (this.counter == this.id.length) {
+      return false
+      }
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    },
+    onID(checkedValues) {
+      console.log('checked = ', checkedValues);
+      this.dataID = checkedValues;
+    },
     berubah(e) {
       this.nilai = e.target.value
-    },
-    check() {
-      this.form.validateFields(err => {
-        if (!err) {
-          console.info("success");
-        }
-      });
     },
     masukinFoto(foto) {
       this.gambar = foto.target.value;
@@ -799,12 +852,11 @@ export default {
       }, 300);
     },
     handleCancel(e) {
-      console.log("Clicked cancel button");
       this.visible = false;
       this.muncul = false;
     },
     onChange(date, dateString) {
-      console.log(date, dateString);
+      data =0 
     },
     moment,
     handleChange(e) {
@@ -817,5 +869,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="../css/style.scss">
-</style>
+<style scoped lang="scss" src="../css/style.scss"/>
