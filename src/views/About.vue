@@ -492,6 +492,22 @@
             @ok="handleOk"
             @cancel="handleCancel"
           >
+            <label>Document ID Setup</label>
+            <br />
+            <a-checkbox-group @change="onID">
+              <a-checkbox value="id_card">ID Card</a-checkbox>
+
+              <a-checkbox value="paspor">Paspor</a-checkbox>
+
+              <a-checkbox value="driver_lisence">Driver Lisence</a-checkbox>
+
+              <a-checkbox value="other">Other</a-checkbox>
+            </a-checkbox-group>
+            <!-- <input v-model="message"  />
+            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}} -->
+            <br />
+            <br />
+
             <label>Term and Condition</label>
             <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
           </a-modal>
@@ -511,6 +527,7 @@
                   <a-select-option value="id_card">ID Card</a-select-option>
                   <a-select-option value="paspor">Paspor</a-select-option>
                   <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                  <a-select-option value="kitas">KITAS</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -700,7 +717,6 @@ import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 Vue.use(Antd);
 
-
 export default {
   components: {
     "slider-picker": Slider,
@@ -721,6 +737,7 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
+      dataID: [],
       max: 200,
       text: '',
       money: 100000,
@@ -783,9 +800,10 @@ else{
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
     },
-    navigate() {
-                router.go(-1);
-            },
+    onID(checkedValues) {
+      console.log('checked = ', checkedValues);
+      this.dataID = checkedValues;
+    },
     berubah(e) {
       this.nilai = e.target.value
     },
