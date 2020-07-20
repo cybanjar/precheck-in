@@ -544,7 +544,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="ID Number">
-                <a-input placeholder="Please input "  />
+                <a-input placeholder="Please input " />
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
@@ -676,7 +676,18 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Phone Number">
-                <a-input
+                <vue-tel-input
+                  v-model="phone"
+                  v-decorator="[
+          'phone',
+          {
+            rules: [{ required: true}],
+          },
+        ]"
+                  @input="phoneInput"
+                ></vue-tel-input>
+
+                <!-- <a-input
                   v-decorator="[
           'phone',
           {
@@ -695,7 +706,7 @@
                     <a-select-option value="1">+1</a-select-option>
                     <a-select-option value="966">+966</a-select-option>
                   </a-select>
-                </a-input>
+                </a-input>-->
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
@@ -750,6 +761,7 @@
 import router from '../router'
 import Vue from "vue";
 import { Slider } from 'vue-color'
+import { VueTelInput } from 'vue-tel-input'
 import Antd, {
   Row,
   Col,
@@ -771,6 +783,7 @@ Vue.use(Antd);
 export default {
   components: {
     "slider-picker": Slider,
+    "vue-tel-input":VueTelInput,
   },
   data() {
     return {
@@ -792,6 +805,11 @@ export default {
       region:"jakarta",
       nationality:"Indonesia",
       city: "south",
+      phone: {
+        number: '',
+        valid: '',
+        country: ''
+      },
       dataID: [],
       max: 100,
       agree:false,
@@ -852,6 +870,14 @@ export default {
     }
   },
   methods: {
+   phoneInput(formattedNumber, { number, valid, country }) {
+     console.log(number.international);
+     console.log(valid);
+     console.log(country && country.name);
+      this.phone.number = number.international;
+      this.phone.valid = valid;
+      this.phone.country = country && country.name;
+    },
     onKeydown (event) {
     	const char = String.fromCharCode(event.keyCode)
     	if (!/[0-9]/.test(char)) {
