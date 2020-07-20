@@ -505,7 +505,7 @@
               <a-checkbox value="other">Other</a-checkbox>
             </a-checkbox-group>
             <!-- <input v-model="message"  />
-            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}} -->
+            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}}-->
             <br />
             <br />
 
@@ -610,14 +610,25 @@
                 <a-input placeholder="Ex : 12750" />
               </a-form-item>
             </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Purpose of Stay">
-                <a-select default-value="Bussiness">
-                  <a-select-option value="bussiness">Bussiness</a-select-option>
-                  <a-select-option value="leisure">Leisure</a-select-option>
-                </a-select>
+
+            <a-col :span="10" :xl="10" :xs="24">
+              <a-form-item label="Address">
+                <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
+            <!--<a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Sharing Guest">
+                <a-input
+                  placeholder="Please input"
+                  disabled
+                  :defaultValue="currDataPrepare.description"
+                />
+              </a-form-item>
+            </a-col>-->
+          </a-row>
+
+          <!-- Address -->
+          <a-row class="ml-3" gutter="8">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Email">
                 <a-input
@@ -653,21 +664,12 @@
                 </a-input>
               </a-form-item>
             </a-col>
-            <!--<a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Sharing Guest">
-                <a-input
-                  placeholder="Please input"
-                  disabled
-                  :defaultValue="currDataPrepare.description"
-                />
-              </a-form-item>
-            </a-col>-->
-          </a-row>
-          <!-- Address -->
-          <a-row class="ml-3" gutter="8">
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-form-item label="Address">
-                <a-textarea placeholder="Input Address" :rows="4" />
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Purpose of Stay">
+                <a-select default-value="Bussiness">
+                  <a-select-option value="bussiness">Bussiness</a-select-option>
+                  <a-select-option value="leisure">Leisure</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -799,9 +801,9 @@ export default {
     this.currDataPrepare = this.id[this.counter];
     this.counter += 1;
      }
-else{
-  router.push('guest-list')
-}
+    else{
+      router.push('guest-list')
+    }
   },
   methods: {
     scrollToTop() {
