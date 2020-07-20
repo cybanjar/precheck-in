@@ -496,9 +496,9 @@
             <a-checkbox-group @change="onID">
               <a-checkbox value="id_card">ID Card</a-checkbox>
 
-              <a-checkbox value="paspor">Paspor</a-checkbox>
+              <a-checkbox value="pasport">Pasport</a-checkbox>
 
-              <a-checkbox value="driver_lisence">Driver Lisence</a-checkbox>
+              <a-checkbox value="driving_license">Driving License</a-checkbox>
 
               <a-checkbox value="other">Other</a-checkbox>
             </a-checkbox-group>
@@ -529,15 +529,15 @@
               <a-form-item label="Document ID">
                 <a-select default-value="ID Card">
                   <a-select-option value="id_card">ID Card</a-select-option>
-                  <a-select-option value="paspor">Paspor</a-select-option>
-                  <a-select-option value="driver_lisence">Driver Lisence</a-select-option>
+                  <a-select-option value="pasport">Pasport</a-select-option>
+                  <a-select-option value="driving_license">Driving License</a-select-option>
                   <a-select-option value="kitas">KITAS</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="ID Number">
-                <a-input placeholder="Please input " @keydown="onKeydown" />
+                <a-input placeholder="Please input "  />
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
@@ -552,6 +552,13 @@
             </a-col>
           </a-row>
           <!-- Country -->
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="10" :xl="10" :xs="24">
+              <a-form-item label="Address">
+                <a-textarea placeholder="Input Address" :rows="4" />
+              </a-form-item>
+            </a-col>
+          </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
@@ -569,6 +576,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
+
             <a-col :span="5" :xl="5" :xs="24">
               <div v-if="country === 'indonesia'">
                 <a-form-item label="Region">
@@ -630,15 +638,10 @@
             </a-col>
             <a-col :span="3" :xl="3" :xs="12">
               <a-form-item label="Postal Code">
-                <a-input  placeholder="Ex : 12750" @keydown="onKeydown" />
+                <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
             </a-col>
 
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-form-item label="Address">
-                <a-textarea placeholder="Input Address" :rows="4" />
-              </a-form-item>
-            </a-col>
             <!--<a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Sharing Guest">
                 <a-input
