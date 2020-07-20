@@ -674,7 +674,7 @@
 
           <a-row class="ml-3 mb-3" gutter="8">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox>{{term}}</a-checkbox>
+              <a-checkbox v-model="agree">{{term}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
@@ -696,8 +696,7 @@
               block
               :size="size"
               @click="save"
-              disabled="true"
-              :enabled="term"
+              :disabled="!agree"
             >Check-In Now</a-button>
           </a-col>
         </a-row>
@@ -750,6 +749,7 @@ export default {
       nilai: 2,
       dataID: [],
       max: 200,
+      agree:false,
       text: '',
       money: 100000,
       showSmoking: true,
