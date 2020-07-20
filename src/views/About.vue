@@ -539,7 +539,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="ID Number">
-                <a-input placeholder="Please input " />
+                <a-input placeholder="Please input " @keydown="onKeydown" />
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
@@ -632,7 +632,7 @@
             </a-col>
             <a-col :span="3" :xl="3" :xs="12">
               <a-form-item label="Postal Code">
-                <a-input placeholder="Ex : 12750" />
+                <a-input  placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
             </a-col>
 
@@ -676,6 +676,7 @@
           },
         ]"
                   style="width: 100%"
+                  @keydown="onKeydown"
                 >
                   <a-select
                     slot="addonBefore"
@@ -840,6 +841,12 @@ export default {
     }
   },
   methods: {
+    onKeydown (event) {
+    	const char = String.fromCharCode(event.keyCode)
+    	if (!/[0-9]/.test(char)) {
+      	event.preventDefault()
+      }
+    },
     scrollToTop() {
                 window.scrollTo(0,0);
            },
