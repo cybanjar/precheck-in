@@ -1,5 +1,5 @@
 <template>
-  <div class="example" v-if="loading">
+  <div class="spin-load-table" v-if="loading">
     <a-spin>
       <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
@@ -10,60 +10,60 @@
         <a-col>
           <img
             v-if="information.backgroundColor == '#E8505B'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradient-red.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#FBDB81'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Yellow.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#D42A83'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Magenta.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#901f90'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Purple.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#FA7D09'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Orange.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#E4E3E3'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Grey.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#FFBF00'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Gold.svg')"
           />
           <img
             v-else-if="information.backgroundColor == 'green'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/GradientTop.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#00D7FF'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-BlueSky.svg')"
           />
           <img
             v-else-if="information.backgroundColor == '#1B262C'"
-            class="responsive"
+            class="ilustrasi-top"
             :src="require('../assets/gradientTop-Black.svg')"
           />
-          <img v-else class="responsive" :src="require('../assets/GradientTop.svg')" />
+          <img v-else class="ilustrasi-top" :src="require('../assets/GradientTop.svg')" />
         </a-col>
       </a-row>
     </div>
     <div class="home">
-      <a-row class="grandvisual">
+      <a-row class="grandvisual" type="flex" justify="space-between">
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
             <img
@@ -175,9 +175,9 @@
             </p>
           </div>
         </a-col>
-        <a-col :span="8" :md="12" :xs="24">
+        <a-col :span="10" :md="10" :xs="24">
           <a-card :bordered="false">
-            <img class="img-hotel rounded" slot="cover" alt="example" :src="gambar" />
+            <img class="img-hotel shadow rounded" slot="cover" alt="Loading image" :src="gambar" />
             <a-icon
               type="setting"
               :style="{ fontSize: '1.5rem' }"
@@ -186,9 +186,7 @@
               @click="imageModal"
             />
             <a-card-meta title="Grand Visual Hotel Jakarta">
-              <template
-                slot="description"
-              >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
+              <template slot="description">{{ addessHotel }}</template>
             </a-card-meta>
           </a-card>
         </a-col>
@@ -504,7 +502,7 @@
               <a-checkbox value="other">Other</a-checkbox>
             </a-checkbox-group>
             <!-- <input v-model="message"  />
-            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}} -->
+            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}}-->
             <br />
             <br />
 
@@ -723,6 +721,7 @@ export default {
   },
   data() {
     return {
+      addessHotel: "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
       currDataPrepare: {},
       counter: 0,
