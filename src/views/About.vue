@@ -603,7 +603,14 @@
             </a-col>
             <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
-                <a-select default-value="South Jakarta">
+                <a-select
+                  v-model="city"
+                  v-decorator="[
+          'city',
+          { initialValue: city,
+          rules: [{ required: true }] },
+        ]"
+                >
                   <a-select-option value="south">South Jakarta</a-select-option>
                   <a-select-option value="west">West Jakarta</a-select-option>
                   <a-select-option value="east">East Jakarta</a-select-option>
@@ -774,6 +781,7 @@ export default {
       nilai: 2,
       region:"jakarta",
       nationality:"Indonesia",
+      city: "south",
       dataID: [],
       max: 100,
       agree:false,
@@ -841,6 +849,7 @@ export default {
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
+      this.agree = false;
     },
     back() {
       if (this.counter == this.id.length) {
