@@ -871,9 +871,9 @@ export default {
   },
   methods: {
    phoneInput(formattedNumber, { number, valid, country }) {
-     console.log(number.international);
-     console.log(valid);
-     console.log(country && country.name);
+    //  console.log(number.international);
+    //  console.log(valid);
+    //  console.log(country && country.name);
       this.phone.number = number.international;
       this.phone.valid = valid;
       this.phone.country = country && country.name;

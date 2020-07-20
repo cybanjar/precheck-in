@@ -1,0 +1,34 @@
+[debug] [2020-07-20T10:15:34.999Z] ----------------------------------------------------------------------
+[debug] [2020-07-20T10:15:35.007Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\development\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-07-20T10:15:35.008Z] CLI Version:   8.6.0
+[debug] [2020-07-20T10:15:35.008Z] Platform:      win32
+[debug] [2020-07-20T10:15:35.009Z] Node Version:  v12.16.2
+[debug] [2020-07-20T10:15:35.053Z] Time:          Mon Jul 20 2020 17:15:35 GMT+0700 (Western Indonesia Time)
+[debug] [2020-07-20T10:15:35.054Z] ----------------------------------------------------------------------
+[debug] [2020-07-20T10:15:35.054Z] 
+[debug] [2020-07-20T10:15:35.125Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-07-20T10:15:35.126Z] > authorizing via signed-in user
+[debug] [2020-07-20T10:15:35.126Z] [iam] checking project precheckin-8392e for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-07-20T10:15:35.131Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-07-20T10:15:35.132Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-07-20T10:15:35.444Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 20 Jul 2020 10:15:34 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-07-20T10:15:35.481Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/precheckin-8392e:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2020-07-20T10:15:36.608Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 20 Jul 2020 10:15:35 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=1016","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-07-20T10:15:36.609Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/precheckin-8392e  
+ 
+[debug] [2020-07-20T10:15:36.948Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 20 Jul 2020 10:15:36 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'precheckin-8392e'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2020-07-20T10:15:36.967Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/precheckin-8392e/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2020-07-20T10:15:38.565Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 20 Jul 2020 10:15:37 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  hosting[precheckin-8392e]: beginning deploy... 
+[info] i  hosting[precheckin-8392e]: found 34 files in dist 
+[debug] [2020-07-20T10:15:39.583Z] [hosting] hash cache [ZGlzdA] stored for 34 files
+[debug] [2020-07-20T10:15:39.583Z] [hosting][hash queue][FINAL] {"max":973,"min":19,"avg":54.294117647058826,"active":0,"complete":34,"success":34,"errored":0,"retried":0,"total":34,"elapsed":987}
+[debug] [2020-07-20T10:15:39.583Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/precheckin-8392e/versions/41350da2e27dac47:populateFiles  
+ <request body omitted>
