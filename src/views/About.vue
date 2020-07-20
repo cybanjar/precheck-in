@@ -515,7 +515,12 @@
           <a-row class="ml-3" :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Nationality">
-                <a-select default-value="Indonesia">
+                <a-select
+                  v-decorator="[
+          'nationality',
+          { initialValue: nationality,rules: [{ required: true }] },
+        ]"
+                >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
                   <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
@@ -552,7 +557,14 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
-                <a-select :default-value="country" v-model="country">
+                <a-select
+                  v-model="country"
+                  v-decorator="[
+          'country',
+          { initialValue: country,
+          rules: [{ required: true }] },
+        ]"
+                >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
                   <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
@@ -562,7 +574,13 @@
             <a-col :span="5" :xl="5" :xs="24">
               <div v-if="country === 'indonesia'">
                 <a-form-item label="Region">
-                  <a-select default-value="DKI Jakarta">
+                  <a-select
+                    v-decorator="[
+          'region',
+          { initialValue: region,
+          rules: [{ required: true }] },
+        ]"
+                  >
                     <a-select-option value="jakarta">DKI Jakarta</a-select-option>
                     <a-select-option value="west_java">West Java</a-select-option>
                     <a-select-option value="central_java">Central Java</a-select-option>
@@ -577,7 +595,7 @@
                     initial-value="Willy Wanta"
                     v-decorator="[
                   'username',
-                  { rules: [{ required: true, message: '' }] },
+                  { rules: [{ required: false, message: '' }] },
                 ]"
                   />
                 </a-form-item>
@@ -634,7 +652,7 @@
                 <a-input
                   v-decorator="[
                       'email',
-                      { rules: [{ required: checkNick, message: 'Please input your email' }] },
+                      { rules: [{ required: true, message: 'Please input your email' }] },
                     ]"
                   :placeholder="currDataPrepare.email"
                   disabled
@@ -666,7 +684,12 @@
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
               <a-form-item label="Purpose of Stay">
-                <a-select default-value="Bussiness">
+                <a-select
+                  v-decorator="[
+          'purpose',
+          { initialValue:purpose,rules: [{ required: true }] },
+        ]"
+                >
                   <a-select-option value="bussiness">Bussiness</a-select-option>
                   <a-select-option value="leisure">Leisure</a-select-option>
                 </a-select>
@@ -749,6 +772,8 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
+      region:"jakarta",
+      nationality:"Indonesia",
       dataID: [],
       max: 100,
       agree:false,
@@ -769,7 +794,8 @@ export default {
       guest: false,
       keluar: false,
       currency: 'Rp.',
-      country: 'indonesia',          
+      country: 'indonesia',  
+      purpose:"bussiness",        
       loading: true,
       term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
@@ -824,7 +850,6 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     onID(checkedValues) {
-      console.log('checked = ', checkedValues);
       this.dataID = checkedValues;
     },
     berubah(e) {
