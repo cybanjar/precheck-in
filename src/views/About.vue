@@ -695,7 +695,7 @@
               type="primary"
               block
               :size="size"
-              @click="save"
+              @click="save();scrollToTop();"
               :disabled="!agree"
             >Check-In Now</a-button>
           </a-col>
@@ -748,7 +748,7 @@ export default {
       },
       nilai: 2,
       dataID: [],
-      max: 200,
+      max: 100,
       agree:false,
       text: '',
       money: 100000,
@@ -804,6 +804,9 @@ else{
 }
   },
   methods: {
+    scrollToTop() {
+                window.scrollTo(0,0);
+           },
     save() {
       if (this.counter == this.id.length) {
       return false
