@@ -48,13 +48,13 @@
         :data-source="data"
         :pagination="false"
         size="middle"
-        default-expand-all-rows="true"
+        defaultExpandAllRows="true"
         :scroll="{ x: 'calc(700px + 50%)', y: 350 }"
       >
         <span slot="tags" slot-scope="tags">
           <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>
         </span>
-        <p v-if="!record.description == ''" slot="expandedRowRender" slot-scope="record" style="margin: 0">{{ record.description }}</p>
+        <p slot="expandedRowRender" v-if="record.rs > 0" slot-scope="record" style="margin: 0">{{ record.description }}</p>
       </a-table>
     </div>
 
@@ -94,6 +94,7 @@ if (bookingCode == '123') {
     adult: '2',
     email: 'h.djasri@gmail.com',
     tags: ['Suites'],
+    rs: 0,
     description: '',
   });
   data.push({
@@ -104,6 +105,7 @@ if (bookingCode == '123') {
     adult: '2',
     email: 'li.haiying@gmail.com',
     tags: ['Suites'],
+    rs: 1,
     description: 'Chao Bao, Mr',
   });
   data.push({
@@ -114,6 +116,7 @@ if (bookingCode == '123') {
     adult: '1',
     email: 'jin.yeoh@gmail.com',
     tags: ['Suites'],
+    rs: 0,
     description: '',
   });
   data.push({
@@ -124,6 +127,7 @@ if (bookingCode == '123') {
     adult: '1',
     email: 'saki.kato@gmail.com',
     tags: ['Suites'],
+    rs: 0,
     description: '',
   });
   data.push({
@@ -134,6 +138,7 @@ if (bookingCode == '123') {
     adult: '2',
     email: 'm.imdadun@gmail.com',
     tags: ['Suites'],
+    rs: 0,
     description: '',
   });
 } else if (bookingCode == '456') {
@@ -145,6 +150,7 @@ if (bookingCode == '123') {
     adult: '1',
     email: 's.sutji@gmail.com',
     tags: ['Suites'],
+    rs: 0,
     description: '',
   });
 }

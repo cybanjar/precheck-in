@@ -168,6 +168,7 @@
           </a-card>
           <div class="mt-3 ml-3 guest-name text-left">
             <h1 class="mb-3 main-guest-title font-weight-bold">{{currDataPrepare.name}}</h1>
+            <h4 class="mb-3 main-guest-title font-weight-bold">{{currDataPrepare.description}}</h4>
             <p class="ant-card-meta-description">
               Reservation from {{currDataPrepare.arrival}} until {{currDataPrepare.departure}}
               <br />Reservation number
@@ -195,7 +196,7 @@
       </a-row>
       <a-modal
         v-model="keluar"
-        title="Image Setting"
+        title="Color and Image Setting"
         :visible="keluar"
         :confirm-loading="confirmLoading"
         @ok="handleOk"
@@ -366,7 +367,7 @@
                 <a-radio :value="3">Free</a-radio>
               </a-radio-group>
             </p>
-            <p>
+            <p v-if="nilai != 3">
               <label>Pickup Rate :</label>
               <a-input-group compact>
                 <a-select
@@ -652,7 +653,7 @@
                 </a-input>
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <!--<a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Sharing Guest">
                 <a-input
                   placeholder="Please input"
@@ -660,7 +661,7 @@
                   :defaultValue="currDataPrepare.description"
                 />
               </a-form-item>
-            </a-col>
+            </a-col>-->
           </a-row>
           <!-- Address -->
           <a-row class="ml-3" gutter="8">
@@ -695,7 +696,8 @@
               block
               :size="size"
               @click="save"
-              :disabled="id == 0"
+              disabled="true"
+              :enabled="term"
             >Check-In Now</a-button>
           </a-col>
         </a-row>
