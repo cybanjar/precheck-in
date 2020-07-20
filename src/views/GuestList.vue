@@ -52,7 +52,12 @@
         <span slot="tags" slot-scope="tags">
           <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>
         </span>
-        <p slot="expandedRowRender" v-if="record.rs > 0" slot-scope="record" style="margin: 0">{{ record.description }}</p>
+        <p
+          slot="expandedRowRender"
+          v-if="record.rs > 0"
+          slot-scope="record"
+          :style="{ margin: '0 0 0 60px' }"
+        >{{ record.description }}</p>
       </a-table>
     </div>
 
