@@ -202,7 +202,7 @@
       >
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Background Color">
-            <p>Standart Color</p>
+            <p>Standard Color</p>
             <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
             <br />
             <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
@@ -235,7 +235,7 @@
             />
           </a-tab-pane>
           <a-tab-pane key="2" tab="Font Color" force-render>
-            <p>Standart Color</p>
+            <p>Standard Color</p>
             <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
             <br />
             <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
@@ -496,7 +496,7 @@
             <a-checkbox-group @change="onID">
               <a-checkbox value="id_card">ID Card</a-checkbox>
 
-              <a-checkbox value="pasport">Pasport</a-checkbox>
+              <a-checkbox value="passport">Passport</a-checkbox>
 
               <a-checkbox value="driving_license">Driving License</a-checkbox>
 
@@ -508,7 +508,14 @@
             <br />
 
             <label>Term and Condition</label>
-            <a-textarea v-model="term" @input="masukinTerm" :rows="3" />
+            <p>
+              <a-radio-group v-model="value">
+                <a-radio value="terma">Local language</a-radio>
+                <a-textarea v-model="term1" @input="masukinTerm" :rows="3" />
+                <a-radio value="termb">Other language</a-radio>
+                <a-textarea v-model="term2" @input="masukinTerm" :rows="3" />
+              </a-radio-group>
+            </p>
           </a-modal>
           <a-row class="ml-3" :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
@@ -529,7 +536,7 @@
               <a-form-item label="Document ID">
                 <a-select default-value="ID Card">
                   <a-select-option value="id_card">ID Card</a-select-option>
-                  <a-select-option value="pasport">Pasport</a-select-option>
+                  <a-select-option value="passport">Passport</a-select-option>
                   <a-select-option value="driving_license">Driving License</a-select-option>
                   <a-select-option value="kitas">KITAS</a-select-option>
                 </a-select>
@@ -708,7 +715,7 @@
 
           <a-row class="ml-3 mb-3" gutter="8">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{term}}</a-checkbox>
+              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
@@ -808,7 +815,9 @@ export default {
       country: 'indonesia',  
       purpose:"bussiness",        
       loading: true,
-      term: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
+      term1: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
+      term2: 'Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.',
+      value: 'terma',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "#1890ff",
