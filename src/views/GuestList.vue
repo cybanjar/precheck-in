@@ -1,5 +1,5 @@
 <template>
-  <div class="example" v-if="loading">
+  <div class="spin-load-table" v-if="loading">
     <a-spin>
       <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
@@ -8,12 +8,12 @@
     <div>
       <a-row type="flex" justify="start" align="top">
         <a-col>
-          <img class="responsive" :src="require('../assets/GradientTop.svg')" />
+          <img class="ilustrasi-top" :src="require('../assets/GradientTop.svg')" />
         </a-col>
       </a-row>
     </div>
     <div class="home">
-      <a-row class="grandvisual">
+      <a-row class="grandvisual" type="flex" justify="space-between">
         <a-col :span="8" :md="12" :xs="24">
           <a-card :bordered="false">
             <img
@@ -26,13 +26,11 @@
             />
           </a-card>
         </a-col>
-        <a-col class="text-center" :span="8" :md="12" :xs="24">
+        <a-col :span="10" :md="10" :xs="24">
           <a-card :bordered="false">
             <img class="img-hotel shadow rounded" slot="cover" alt="Loading image" :src="gambar" />
             <a-card-meta title="Grand Visual Hotel Jakarta">
-              <template
-                slot="description"
-              >Jl. Bukit Gading Raya, Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240, Indonesia, RT.18/RW.8, Klp. Gading Bar, Kec. Klp. Gading, Kota Jkt Utara, Daerah Khusus Ibukota Jakarta 14240</template>
+              <template slot="description">{{ addessHotel }}</template>
             </a-card-meta>
           </a-card>
         </a-col>
@@ -158,9 +156,9 @@ if (bookingCode == '123') {
 export default {
   data() {
     return {
+      addessHotel: "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       columns: [
-       
         { title: "Guest Name", dataIndex: "name", key: "name" },
         { title: "Arrival Date", dataIndex: "arrival", key: "arrival" },
         { title: "Departure Date", dataIndex: "departure", key: "departure" },
@@ -200,103 +198,5 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.home {
-  margin: 20px;
-}
-.rounded {
-  border-radius: 0.25rem !important;
-}
-@media screen and (max-width: 576px) {
-  .responsive {
-    width: 100%;
-  }
-  .img-hotel {
-    // width: 333px;
-    height: 171.95px;
-  }
-}
-@media screen and (min-width: 1200px) {
-  .card-online {
-    width: 400px;
-  }
-  .img-hotel {
-    // width: 662px;
-    height: 341.85px;
-  }
-}
-.shadow {
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
-}
-.text-center {
-  text-align: center;
-}
-.sa-table {
-  margin: 1rem;
-}
-.float-right {
-  float: right !important;
-}
-.mr-3,
-.mx-3 {
-  margin-right: 1rem !important;
-}
-
-.ant-table-row-expand-icon {
-  color: #1890ff;
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 0.3s;
-  display: inline-block;
-  width: 17px;
-  height: 17px;
-  color: inherit;
-  line-height: 13px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 2px;
-  outline: none;
-  transition: all 0.3s;
-  user-select: none;
-}
-.ant-table-row-expand-icon:focus,
-.ant-table-row-expand-icon:hover {
-  color: #40a9ff;
-}
-.ant-table-row-expand-icon:active {
-  color: #096dd9;
-}
-.ant-table-row-expand-icon:focus,
-.ant-table-row-expand-icon:hover,
-.ant-table-row-expand-icon:active {
-  border-color: currentColor;
-}
-.ant-table-row-expanded::after {
-  content: "\25B2";
-}
-.ant-table-row-collapsed::after {
-  content: "\25BC";
-}
-
-.ant-table-row-collapsed::after {
-  font-size: 12px;
-  content: "\25BC";
-  color: #bfbfbf;
-}
-.ant-table-row-expanded::after {
-  content: "\25B2";
-  font-size: 12px;
-  color: #bfbfbf;
-}
-.example {
-  text-align: center;
-  background: white;
-  height: 100%;
-  width: 100%;
-  border-radius: 4px;
-  margin-bottom: 20px;
-  padding: 30px 50px;
-  margin: 20px 0;
-}
+<style scoped lang="scss" src="../css/style.scss">
 </style>

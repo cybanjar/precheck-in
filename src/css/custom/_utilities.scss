@@ -70,6 +70,10 @@
 .mx-5 {
   margin-left: 3rem !important;
 }
+.mr-3,
+.mx-3 {
+  margin-right: 1rem !important;
+}
 .float-right {
   float: right !important;
 }
@@ -87,6 +91,9 @@
   clear: both;
 }
 .shadow-header {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
+}
+.shadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
 }
 .rounded-pill {

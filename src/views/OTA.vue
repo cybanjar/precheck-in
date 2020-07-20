@@ -2,7 +2,7 @@
   <div class="container">
     <img class="img-hero" src="https://source.unsplash.com/1366x786/?hotel" alt="Loading image" />
     <div class="overlay-bg"></div>
-    <a-card class="login-card responsive">
+    <a-card class="login-card ilustrasi-top">
       <a-form layout="vertical" :form="form">
         <a-row class="ml-3" gutter="8">
           <a-col :span="24" :xl="24" :xs="24">
@@ -65,7 +65,7 @@ data() {
 
 <style lang="scss" scoped>
 @media screen and (max-width: 576px) {
-  .responsive {
+  .ilustrasi-top {
     width: 85%;
   }
 }
