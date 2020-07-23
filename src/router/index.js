@@ -28,6 +28,11 @@ const routes = [
     name: "OTA",
     component: () => import("../views/OTA"),
   },
+  {
+    path: "/success",
+    name: "Success",
+    component: () => import("../views/Success"),
+  },
 ];
 
 const router = new VueRouter({
