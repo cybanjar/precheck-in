@@ -30,6 +30,10 @@
 .py-2 {
   padding-top: 0.5rem !important;
 }
+.pl-3,
+.px-3 {
+  padding-left: 1rem !important;
+}
 .pb-0,
 .py-0 {
   padding-bottom: 0 !important;
@@ -107,4 +111,18 @@
 }
 .color-white {
   color: $white;
+}
+.color-gray {
+  color: $gray;
+}
+.overlay{
+  position: fixed;
+  // display: none;
+  // width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  cursor: pointer;
+}
+.ant-form-item label {
+  font-weight: bold !important;
 }

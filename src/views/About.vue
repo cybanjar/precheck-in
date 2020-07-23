@@ -5,191 +5,26 @@
     </a-spin>
   </div>
   <div v-else>
-    <div>
-      <a-row type="flex" justify="start" align="top">
-        <a-col>
-          <img
-            v-if="information.backgroundColor == '#E8505B'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradient-red.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#FBDB81'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Yellow.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#D42A83'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Magenta.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#901f90'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Purple.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#FA7D09'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Orange.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#E4E3E3'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Grey.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#FFBF00'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Gold.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == 'green'"
-            class="ilustrasi-top"
-            :src="require('../assets/GradientTop.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#00D7FF'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-BlueSky.svg')"
-          />
-          <img
-            v-else-if="information.backgroundColor == '#1B262C'"
-            class="ilustrasi-top"
-            :src="require('../assets/gradientTop-Black.svg')"
-          />
-          <img v-else class="ilustrasi-top" :src="require('../assets/GradientTop.svg')" />
-        </a-col>
-      </a-row>
-    </div>
     <div class="home">
-      <a-row class="grandvisual" type="flex" justify="space-between">
-        <a-col :span="8" :md="12" :xs="24">
-          <a-card :bordered="false">
-            <img
-              v-if="information.backgroundColor == '#E8505B'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/Card Online Check-in - Red.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#FBDB81'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Yellow.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#D42A83'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Magenta.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#901f90'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Purple.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#FA7D09'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Orange.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#E4E3E3'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Grey.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#FFBF00'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Gold.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#FFBF00'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-BlueSky.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == 'green'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/CardOnlineCheck-in.svg"
-            />
-            <img
-              v-else-if="information.backgroundColor == '#1B262C'"
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/onlineCheckin-Black.svg"
-            />
-            <img
-              v-else
-              class="card-online"
-              slot="cover"
-              :xl="24"
-              :xs="24"
-              alt="example"
-              src="../assets/CardOnlineCheck-in.svg"
-            />
-          </a-card>
-          <div class="mt-3 ml-3 guest-name text-left">
-            <h1 class="mb-3 main-guest-title font-weight-bold">{{currDataPrepare.name}}</h1>
-            <h4 class="mb-3 main-guest-title font-weight-bold">{{currDataPrepare.description}}</h4>
-            <p class="ant-card-meta-description">
-              Reservation from {{currDataPrepare.arrival}} until {{currDataPrepare.departure}}
-              <br />Reservation number
-              <a-tag color="green">11020133</a-tag>
-            </p>
-          </div>
+      <a-row class="header-branding" type="flex" justify="space-between">
+        <a-col class="pl-3 pt-3" :span="8" :md="12" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
+          <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
+          <p class="ant-card-meta-description font-white">
+            Reservation from
+            <strong>{{currDataPrepare.arrival}}</strong> until
+            <strong>{{currDataPrepare.departure}}</strong>
+            <br />Reservation number
+            <strong>11020133</strong>
+          </p>
         </a-col>
-        <a-col :span="10" :md="10" :xs="24">
-          <a-card :bordered="false">
-            <img class="img-hotel shadow rounded" slot="cover" alt="Loading image" :src="gambar" />
-            <a-icon
-              type="setting"
-              :style="{ fontSize: '1.5rem' }"
-              class="float-right"
-              theme="filled"
-              @click="imageModal"
-            />
-            <a-card-meta title="Grand Visual Hotel Jakarta">
-              <template slot="description">{{ addessHotel }}</template>
-            </a-card-meta>
-          </a-card>
+        <a-col :span="8" :md="12" :xs="24">
+          <img
+            class="img-hotel float-right"
+            src="https://source.unsplash.com/1366x786/?hotel"
+            alt="Image Loading"
+          />
         </a-col>
       </a-row>
       <a-modal
@@ -272,50 +107,6 @@
           </a-tab-pane>
         </a-tabs>
       </a-modal>
-      <!-- <a-row>
-        <a-card :style="information">
-          <a-row>
-            <a-col :span="1" :xl="1" :xs="4">
-              <a-icon
-                type="check-circle"
-                :style="{ fontSize: '2rem' }"
-                theme="twoTone"
-                :two-tone-color="information.backgroundColor"
-              />
-            </a-col>
-            <a-col :span="22" :xl="22" :xs="19">
-              <p>
-                From
-                <span class="font-weight-bold">12/06/2020</span> until
-                <span class="font-weight-bold">14/06/2020</span>
-              </p>
-              <p>
-                Reservation number:
-                <strong>333251</strong>
-              </p>
-            </a-col>
-            <a-col :span="1" :xl="1" :xs="1">
-              <a-icon
-                type="setting"
-                :style="{ fontSize: '1.5rem' }"
-                class="float-right align-self-center"
-                theme="filled"
-                @click="showModal"
-              />
-            </a-col>
-          </a-row>
-        </a-card>
-      </a-row>-->
-      <!-- <a-modal
-        v-model="visible"
-        title="Theme Color Setting"
-        :visible="visible"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        
-      </a-modal>-->
       <div>
         <a-form layout="vertical" :form="form">
           <a-row>
@@ -413,9 +204,7 @@
             </a-col>
             <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
               <a-form-item label="Price">
-                <label
-                  class="font-weight-bold"
-                >{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
+                <label>{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
                 <span v-else>Free of Charge</span>
@@ -460,7 +249,7 @@
                   :maxlength="max"
                   v-model="text"
                 />
-                <span v-text="(text.length) + '/' + (max)"></span>
+                <span class="float-right" v-text="(text.length) + '/' + (max)"></span>
               </a-form-item>
             </a-col>
           </a-row>
