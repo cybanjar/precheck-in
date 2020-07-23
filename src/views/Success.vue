@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <canvas id="canvas"></canvas>
-        <label>Thank you for using our online check-in. Please save QR code above for your check-in in the hotel.</label>
-    </div>
+  <div class="text-center">
+    <canvas id="canvas"></canvas>
+    <p>Thank you for using our online check-in. Please save QR code above for your check-in in the hotel.</p>
+  </div>
 </template>
 
 <script>
@@ -19,7 +19,7 @@ export default {
     mounted() {
         const success = btoa('{' + this.resnr + ';' + this.htlCode + ';' + this.coDate + '}');
 
-        QRCode.toCanvas(document.getElementById('canvas'), success, {width: 360}, function (error) {
+        QRCode.toCanvas(document.getElementById('canvas'), success, {width: 250}, function (error) {
         if (error) console.error(error)
         console.log('success!');
         });
