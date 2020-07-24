@@ -6,8 +6,9 @@
   </div>
   <div v-else>
     <div class="home">
+      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" type="flex" justify="space-between">
-        <a-col class="pl-3 pt-3" :span="8" :md="12" :xs="24">
+        <a-col class="pl-3 pt-3 invisible" :span="8" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
           <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
           <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
@@ -20,11 +21,25 @@
           </p>
         </a-col>
         <a-col :span="8" :md="12" :xs="24">
-          <img
-            class="img-hotel float-right"
-            src="https://source.unsplash.com/1366x786/?hotel"
-            alt="Image Loading"
-          />
+          <div>
+            <img
+              class="img-hotel float-right"
+              src="https://source.unsplash.com/1366x786/?hotel"
+              alt="Image Loading"
+            />
+          </div>
+        </a-col>
+        <a-col class="pl-3 pt-3 visible" :span="8" :md="12" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
+          <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
+          <p class="ant-card-meta-description font-white">
+            Reservation from
+            <strong>{{currDataPrepare.arrival}}</strong> until
+            <strong>{{currDataPrepare.departure}}</strong>
+            <br />Reservation number
+            <strong>11020133</strong>
+          </p>
         </a-col>
       </a-row>
       <a-modal
@@ -179,7 +194,7 @@
               </a-input-group>
             </p>
             <p>
-              <label class="ml-2" for="checkbox">Room Preferences :</label>
+              <label class="ml-2 font-weight-bold" for="checkbox">Room Preferences :</label>
             </p>
             <p>
               <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
@@ -219,23 +234,38 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <p v-show="showSmoking || showFloor || showBed">Room Preferences</p>
+              <p
+                class="font-weight-bold"
+                v-show="showSmoking || showFloor || showBed"
+              >Room Preferences</p>
               <a-form-item label v-show="showSmoking">
                 <a-radio-group name="radioGroup">
-                  <a-radio :value="1">Non Smoking</a-radio>
-                  <a-radio :value="2">Smoking</a-radio>
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">Non Smoking</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Smoking</span>
+                  </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label v-show="showFloor">
                 <a-radio-group name="radioGroup">
-                  <a-radio :value="1">Lower Floor</a-radio>
-                  <a-radio :value="2">Higher Floor</a-radio>
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">Lower Floor</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Higher Floor</span>
+                  </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label v-show="showBed">
                 <a-radio-group name="radioGroup">
-                  <a-radio :value="1">One Big Bed</a-radio>
-                  <a-radio :value="2">Two Single Bed</a-radio>
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">One Big Bed</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Two Single Bed</span>
+                  </a-radio>
                 </a-radio-group>
               </a-form-item>
             </a-col>
@@ -311,7 +341,7 @@
               <a-form-item label="Nationality">
                 <a-select
                   v-decorator="[
-          'nationality',
+                  'nationality',
           { initialValue: nationality,rules: [{ required: true }] },
         ]"
                 >
@@ -437,16 +467,6 @@
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
             </a-col>
-
-            <!--<a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Sharing Guest">
-                <a-input
-                  placeholder="Please input"
-                  disabled
-                  :defaultValue="currDataPrepare.description"
-                />
-              </a-form-item>
-            </a-col>-->
           </a-row>
 
           <!-- Address -->
@@ -475,27 +495,6 @@
         ]"
                   @input="phoneInput"
                 ></vue-tel-input>
-
-                <!-- <a-input
-                  v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
-          },
-        ]"
-                  style="width: 100%"
-                  @keydown="onKeydown"
-                >
-                  <a-select
-                    slot="addonBefore"
-                    v-decorator="['prefix', { initialValue: '62' }]"
-                    style="width: 70px"
-                  >
-                    <a-select-option value="62">+62</a-select-option>
-                    <a-select-option value="1">+1</a-select-option>
-                    <a-select-option value="966">+966</a-select-option>
-                  </a-select>
-                </a-input>-->
               </a-form-item>
             </a-col>
             <a-col :span="3" :xl="3" :xs="24">
@@ -521,15 +520,6 @@
         </a-form>
         <a-row>
           <a-col :span="4" :xl="4" :xs="24">
-            <!--<a-button
-              :xl="12"
-              class="font-weight-bold mt-3"
-              type="primary"
-              block
-              :size="size"
-              @click="back"
-              :disabled="id == 0"
-            >Back</a-button>-->
             <a-button
               :xl="12"
               class="font-weight-bold mt-3"
@@ -627,14 +617,15 @@ export default {
       value: 'terma',
       gambar:"https://source.unsplash.com/1366x786/?hotel",
       information: {
-        backgroundColor: "#1890ff",
-        borderRadius: "0.25rem",
-        lineHeight: "0.625rem",
-        color: "#fff",
-        padding: 0,
-        height: "5rem",
+        backgroundColor: "#fff",
+        border: "none",
+        borderBottom: "3px solid black",
+        color: "#000",
+        padding: "24px 0 0px 0",    
+        // lineHeight: "0.625rem",
+        // padding: 0,
+        // height: "5rem",
         marginBottom: "1rem !important",
-        borderRadius: "50rem !important",
       },
     };
   },
@@ -759,4 +750,5 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="../css/style.scss"/>
+<style scoped lang="scss" src="../css/style.scss">
+</style>

@@ -6,7 +6,7 @@
 }
 .header-group {
   letter-spacing: 0.1rem;
-  line-height: 1.925rem;
+  line-height: 1.5rem;
   font-size: 1.25rem;
   text-transform: uppercase;
   font-weight: bold !important;
@@ -22,4 +22,5 @@
 .header-branding{
   width: 100%;
   background-color: $green;
+  // position: relative;
 }
