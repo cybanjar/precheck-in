@@ -161,8 +161,9 @@ if (bookingCode == '123') {
 export default {
   data() {
     return {
-      addessHotel: "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
-      gambar:"https://source.unsplash.com/1366x786/?hotel",
+      addessHotel:
+        "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
+      gambar: "https://source.unsplash.com/1366x786/?hotel",
       columns: [
         { title: "Guest Name", dataIndex: "name", key: "name" },
         { title: "Arrival Date", dataIndex: "arrival", key: "arrival" },
