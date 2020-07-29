@@ -8,7 +8,7 @@
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" type="flex" justify="space-between">
-        <a-col class="pl-3 pt-3 invisible" :span="8" :md="12" :xs="24">
+        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
           <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
           <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
@@ -20,16 +20,28 @@
             <strong>11020133</strong>
           </p>
         </a-col>
-        <a-col :span="8" :md="12" :xs="24">
-          <div>
-            <img
-              class="img-hotel float-right"
-              src="https://source.unsplash.com/1366x786/?hotel"
-              alt="Image Loading"
-            />
+        <a-col class="container" :span="9" :md="9" :xs="24">
+          <img
+            class="img-hotel float-right image"
+            src="https://source.unsplash.com/1366x786/?hotel"
+            alt="Image Loading"
+          />
+          <div class="overlay invisible">
+            <div class="text">Grand Visual Hotel Jakarta</div>
+          </div>
+          <div class="invisible">
+            <div class="gear-setting">
+              <a-icon
+                type="setting"
+                :style="{ fontSize: '1.5rem' }"
+                class="float-right align-self-center"
+                theme="filled"
+                @click="munculModal"
+              />
+            </div>
           </div>
         </a-col>
-        <a-col class="pl-3 pt-3 visible" :span="8" :md="12" :xs="24">
+        <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
           <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
           <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
@@ -124,7 +136,7 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <a-row>
+          <a-row class="ml-4" gutter="16">
             <a-card :style="information">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -217,7 +229,7 @@
                 <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col v-show="showPrice && showPickupRequest" :span="4" :xl="4" :xs="24">
+            <a-col :span="4" :xl="4" :xs="24">
               <a-form-item label="Price">
                 <label>{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
                 <span v-if="nilai === 1">/ Pax</span>
@@ -284,7 +296,7 @@
             </a-col>
           </a-row>
 
-          <a-row>
+          <a-row class="ml-4">
             <a-card :style="information">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -513,13 +525,13 @@
             </a-col>
           </a-row>
 
-          <a-row class="ml-3 mb-3" gutter="8">
+          <a-row class="ml-3 mb-3" :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
-        <a-row>
+        <a-row class="ml-3" :gutter="[16,8]">
           <a-col :span="4" :xl="4" :xs="24">
             <a-button
               :xl="12"
@@ -631,7 +643,7 @@ export default {
         border: "none",
         borderBottom: "3px solid black",
         color: "#000",
-        padding: "24px 0 0px 0",
+        // padding: "24px 0 0px 0",    
         // lineHeight: "0.625rem",
         // padding: 0,
         // height: "5rem",
