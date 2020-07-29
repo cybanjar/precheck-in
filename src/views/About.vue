@@ -407,17 +407,19 @@
               <div v-if="country === 'indonesia'">
                 <a-form-item label="Region">
                   <a-select
+                    v-model="setRegion"
+                    show-search
+                    @change="handleChangeProvince"
                     v-decorator="[
-          'region',
-          { initialValue: region,
-          rules: [{ required: true }] },
-        ]"
+                      'region',
+                      { initialValue: region, rules: [{ required: true }] },
+                    ]"
                   >
-                    <a-select-option value="jakarta">DKI Jakarta</a-select-option>
-                    <a-select-option value="west_java">West Java</a-select-option>
-                    <a-select-option value="central_java">Central Java</a-select-option>
-                    <a-select-option value="east_java">East Java</a-select-option>
-                    <a-select-option value="banten">Banten</a-select-option>
+                    <a-select-option
+                      v-for="(item, keys) in filteredRegion"
+                      :key="keys"
+                      :value="filteredRegion[keys]['province']"
+                    >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </div>
@@ -436,18 +438,17 @@
             <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
+                  show-search
                   v-model="city"
                   v-decorator="[
-          'city',
-          { initialValue: city,
-          rules: [{ required: true }] },
-        ]"
+                    'city',
+                    { initialValue: city, rules: [{ required: true }] },]"
                 >
-                  <a-select-option value="south">South Jakarta</a-select-option>
-                  <a-select-option value="west">West Jakarta</a-select-option>
-                  <a-select-option value="east">East Jakarta</a-select-option>
-                  <a-select-option value="north">North Jakata</a-select-option>
-                  <a-select-option value="central">Central Jakata</a-select-option>
+                  <a-select-option
+                    v-for="(item, key) in filteredCities"
+                    :key="key"
+                    :value="filteredCities[key].city_name"
+                  >{{ filteredCities[key].city_name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -537,10 +538,11 @@
 </template>
 
 <script>
-import router from '../router'
+import router from "../router";
+import data from "../components/json/indonesia";
 import Vue from "vue";
-import { Slider } from 'vue-color'
-import { VueTelInput } from 'vue-tel-input'
+import { Slider } from "vue-color";
+import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -553,7 +555,7 @@ import Antd, {
   Collapse,
   Radio,
   DatePicker,
-  Modal
+  Modal,
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
@@ -562,11 +564,12 @@ Vue.use(Antd);
 export default {
   components: {
     "slider-picker": Slider,
-    "vue-tel-input":VueTelInput,
+    "vue-tel-input": VueTelInput,
   },
   data() {
     return {
-      addessHotel: "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
+      addessHotel:
+        "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
       currDataPrepare: {},
       counter: 0,
@@ -581,24 +584,29 @@ export default {
         wrapperCol: { span: 8, offset: 4 },
       },
       nilai: 2,
-      region:"jakarta",
-      nationality:"Indonesia",
-      city: "south",
+      setRegion: "Bali",
+      Region: data.Indonesia.Region,
+      City: data.Indonesia.City,
+      cek: "",
+      cities: "",
+      // filteredCity: [],
+      filteredRegion: [],
+      nationality: "Indonesia",
       phone: {
-        number: '',
-        valid: '',
-        country: ''
+        number: "",
+        valid: "",
+        country: "",
       },
       dataID: [],
       max: 100,
-      agree:false,
-      text: '',
+      agree: false,
+      text: "",
       money: 100000,
       showSmoking: true,
       showBed: true,
       showFloor: true,
       showPickupRequest: true,
-      showPrice:  true,
+      showPrice: true,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -608,20 +616,22 @@ export default {
       muncul: false,
       guest: false,
       keluar: false,
-      currency: 'Rp.',
-      country: 'indonesia',  
-      purpose:"bussiness",        
+      currency: "Rp.",
+      country: "indonesia",
+      purpose: "bussiness",
       loading: true,
-      term1: 'I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.',
-      term2: 'Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.',
-      value: 'terma',
-      gambar:"https://source.unsplash.com/1366x786/?hotel",
+      term1:
+        "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
+      term2:
+        "Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.",
+      value: "terma",
+      gambar: "https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "#fff",
         border: "none",
         borderBottom: "3px solid black",
         color: "#000",
-        padding: "24px 0 0px 0",    
+        padding: "24px 0 0px 0",
         // lineHeight: "0.625rem",
         // padding: 0,
         // height: "5rem",
@@ -631,45 +641,46 @@ export default {
   },
   watch: {
     activeKey(key) {
-      key
+      key;
+    },
+  },
+  created() {
+    this.loading = false;
+
+    if (this.$route.params.id != undefined) {
+      this.id = this.$route.params.id;
+      // this.counter = this.id.length;
+
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    } else {
+      router.push("guest-list");
     }
   },
-   created() {
-       this.loading = false
-
-     if(this.$route.params.id != undefined){
-
-    this.id = this.$route.params.id;
-    // this.counter = this.id.length;
-
-    this.currDataPrepare = this.id[this.counter];
-    this.counter += 1;
-     }
-    else{
-      router.push('guest-list')
-    }
+  mounted() {
+    this.filteredRegion = this.Region;
   },
   methods: {
-   phoneInput(formattedNumber, { number, valid, country }) {
-    //  console.log(number.international);
-    //  console.log(valid);
-    //  console.log(country && country.name);
+    phoneInput(formattedNumber, { number, valid, country }) {
+      //  console.log(number.international);
+      //  console.log(valid);
+      //  console.log(country && country.name);
       this.phone.number = number.international;
       this.phone.valid = valid;
       this.phone.country = country && country.name;
     },
-    onKeydown (event) {
-    	const char = String.fromCharCode(event.keyCode)
-    	if (!/[0-9]/.test(char)) {
-      	event.preventDefault()
+    onKeydown(event) {
+      const char = String.fromCharCode(event.keyCode);
+      if (!/[0-9]/.test(char)) {
+        event.preventDefault();
       }
     },
     scrollToTop() {
-                window.scrollTo(0,0);
-           },
+      window.scrollTo(0, 0);
+    },
     save() {
       if (this.counter == this.id.length) {
-      return false
+        router.push("success");
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
@@ -677,7 +688,7 @@ export default {
     },
     back() {
       if (this.counter == this.id.length) {
-      return false
+        return false;
       }
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
@@ -686,7 +697,7 @@ export default {
       this.dataID = checkedValues;
     },
     berubah(e) {
-      this.nilai = e.target.value
+      this.nilai = e.target.value;
     },
     masukinFoto(foto) {
       this.gambar = foto.target.value;
@@ -694,8 +705,8 @@ export default {
     masukinTerm(tulisan) {
       this.term = tulisan.target.value;
     },
-    masukinUang(uang){
-      this.money =   uang.target.value;
+    masukinUang(uang) {
+      this.money = uang.target.value;
     },
     showModal() {
       this.visible = true;
@@ -737,7 +748,7 @@ export default {
       this.muncul = false;
     },
     onChange(date, dateString) {
-      data =0 
+      data = 0;
     },
     moment,
     handleChange(e) {
@@ -745,8 +756,38 @@ export default {
       this.$nextTick(() => {
         this.form.validateFields(["nickname"], { force: true });
       });
-    }
-  }
+    },
+    handleBlur() {
+      console.log("blur");
+    },
+    handleFocus() {
+      console.log("focus");
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
+  },
+  computed: {
+    filteredCities() {
+      const filteredCity = [];
+      const set = this.setRegion;
+
+      for (let i = 0; i < this.City.length; i++) {
+        const regionID = set;
+        const dataRow = this.City[i];
+        const regionIDinCity = dataRow["province"];
+
+        if (regionID === regionIDinCity) {
+          filteredCity.push(dataRow);
+        }
+      }
+      return filteredCity;
+    },
+  },
 };
 </script>
 

@@ -4,7 +4,7 @@
 
     <a-select
       v-model="setRegion"
-      defaultValue="DKI Jakarta"
+      default-value="DKI Jakarta"
       show-search
       style="width: 200px"
       @change="handleChangeProvince"
