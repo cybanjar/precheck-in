@@ -11,16 +11,22 @@
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
+            v-if="currDataPrepare.description !== ''"
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >{{currDataPrepare.name}} | {{currDataPrepare.description}}</h2>
+          <h2
+            v-else
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >{{currDataPrepare.name}}</h2>
           <!-- <h4
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
-            Reservation from
-            <strong>{{currDataPrepare.arrival}}</strong> until
+            Arrival
+            <strong>{{currDataPrepare.arrival}}</strong> Departure
             <strong>{{currDataPrepare.departure}}</strong>
             <br />Reservation number
             <strong>11020133</strong>
@@ -229,7 +235,7 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :default-value="moment('12:00', 'HH A')" format="HH A" />
+                <a-time-picker :default-value="moment('14:00', 'HH:ss')" format="HH:ss" />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
@@ -299,15 +305,15 @@
                   :maxlength="max"
                   v-model="text"
                 />
-                <a-progress :percent="max-text.length">
+                <!-- <a-progress :percent="max-text.length">
                   <template #format="percent">
                     <span style="color: red">{{ percent }}</span>
                   </template>
-                </a-progress>
+                </a-progress> -->
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
-              <!-- <span v-text="(text.length) + '/' + (max)"></span> -->
+              <span v-text="(text.length) + '/' + (max)"></span>
               <!-- <a-progress
                 type="circle"
                 :percent="max-text.length"   
@@ -642,7 +648,7 @@ export default {
       showBed: true,
       showFloor: true,
       showPickupRequest: true,
-      showPrice: true,
+      showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
