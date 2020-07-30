@@ -7,12 +7,12 @@
   <div v-else>
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
-      <a-row class="header-branding" type="flex" justify="space-between">
+      <a-row class="header-branding " :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-          <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
-          <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
-          <p class="ant-card-meta-description font-white">
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h2 class="main-guest-title font-white font-weight-bold" :style="information">{{currDataPrepare.name}}</h2>
+          <h4 class="main-guest-title font-white font-weight-bold" :style="information">{{currDataPrepare.description}}</h4>
+          <p class="ant-card-meta-description font-white" :style="information">
             Reservation from
             <strong>{{currDataPrepare.arrival}}</strong> until
             <strong>{{currDataPrepare.departure}}</strong>
@@ -137,7 +137,7 @@
       <div>
         <a-form layout="vertical" :form="form">
           <a-row class="ml-4 mr-3 mt-3" gutter="16">
-            <a-card :style="information">
+            <a-card >
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Arrival</p>
@@ -291,15 +291,41 @@
                   :maxlength="max"
                   v-model="text"
                 />
+                <a-progress
+                  :percent="max-text.length"
+                  status="exception"
+                  :stroke-color="{
+        '0': 'red',
+        '100': 'blue',
+      }"
+                >
+                  <template #format="percent">
+                    <span style="color: red">{{ percent }}</span>
+                  </template>
+                </a-progress>
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
-              <span v-text="(text.length) + '/' + (max)"></span>
+              <!-- <span v-text="(text.length) + '/' + (max)"></span> -->
+              <!-- <a-progress
+                type="circle"
+                :percent="max-text.length"
+                status="exception"
+                :width="30"
+                :stroke-color="{
+        '0': 'red',
+        '100': 'blue',
+      }"
+              >
+                <template #format="percent">
+                  <span style="color: red">{{ percent }}</span>
+                </template>
+              </a-progress>-->
             </a-col>
           </a-row>
 
           <a-row class="ml-4 mr-3">
-            <a-card :style="information">
+            <a-card >
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Guest Details</p>
@@ -642,14 +668,14 @@ export default {
       gambar: "https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "#fff",
-        border: "none",
-        borderBottom: "3px solid black",
+        // border: "none",
+        // borderBottom: "3px solid black",
         color: "#000",
         // padding: "24px 0 0px 0",
         // lineHeight: "0.625rem",
         // padding: 0,
         // height: "5rem",
-        marginBottom: "1rem !important",
+        // marginBottom: "1rem !important",
       },
     };
   },
@@ -807,3 +833,4 @@ export default {
 
 <style scoped lang="scss" src="../css/style.scss">
 </style>
+
