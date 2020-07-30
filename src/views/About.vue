@@ -283,7 +283,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="12" :xl="12" :xs="24">
+            <a-col :span="9" :xl="9" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
                   placeholder="Ex: Connecting Wifi"
@@ -291,8 +291,10 @@
                   :maxlength="max"
                   v-model="text"
                 />
-                <span class="float-right" v-text="(text.length) + '/' + (max)"></span>
               </a-form-item>
+            </a-col>
+            <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
+              <span v-text="(text.length) + '/' + (max)"></span>
             </a-col>
           </a-row>
 
@@ -643,7 +645,7 @@ export default {
         border: "none",
         borderBottom: "3px solid black",
         color: "#000",
-        // padding: "24px 0 0px 0",    
+        // padding: "24px 0 0px 0",
         // lineHeight: "0.625rem",
         // padding: 0,
         // height: "5rem",
