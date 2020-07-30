@@ -40,9 +40,7 @@
                 <a-date-picker @change="onChange" />
               </a-form-item>
             </div>
-            <div>
-              <a-button href="about" class="mb-3" type="primary" block>Next</a-button>
-            </div>
+            <a-button href="about" class="mb-3" type="primary" block>Next</a-button>
           </a-col>
         </a-row>
       </a-form>
@@ -52,7 +50,7 @@
 
 <script>
 export default {
-data() {
+  data() {
     return {
       option: "bookigcode",
     };
