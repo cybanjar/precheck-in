@@ -7,11 +7,17 @@
   <div v-else>
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
-      <a-row class="header-branding " :style="information" type="flex" justify="space-between">
+      <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
-          <h2 class="main-guest-title font-white font-weight-bold" :style="information">{{currDataPrepare.name}}</h2>
-          <h4 class="main-guest-title font-white font-weight-bold" :style="information">{{currDataPrepare.description}}</h4>
+          <h2
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >{{currDataPrepare.name}}</h2>
+          <h4
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >{{currDataPrepare.description}}</h4>
           <p class="ant-card-meta-description font-white" :style="information">
             Reservation from
             <strong>{{currDataPrepare.arrival}}</strong> until
@@ -137,7 +143,7 @@
       <div>
         <a-form layout="vertical" :form="form">
           <a-row class="ml-4 mr-3 mt-3" gutter="16">
-            <a-card >
+            <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Arrival</p>
@@ -325,7 +331,7 @@
           </a-row>
 
           <a-row class="ml-4 mr-3">
-            <a-card >
+            <a-card>
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Guest Details</p>
@@ -667,10 +673,10 @@ export default {
       value: "terma",
       gambar: "https://source.unsplash.com/1366x786/?hotel",
       information: {
-        backgroundColor: "#fff",
+        backgroundColor: "$green",
         // border: "none",
         // borderBottom: "3px solid black",
-        color: "#000",
+        color: "$white",
         // padding: "24px 0 0px 0",
         // lineHeight: "0.625rem",
         // padding: 0,
