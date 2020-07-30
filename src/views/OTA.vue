@@ -65,57 +65,5 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
-<style lang="scss" scoped>
-@media screen and (max-width: 576px) {
-  .ilustrasi-top {
-    width: 85%;
-  }
-}
-.float-right {
-  float: right !important;
-}
-.img-hero {
-  width: 100%;
-  height: auto;
-  background-position: center;
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-  // display: none;
-  // background-color: rgba(0, 0, 0, 0.9);
-  // z-index: 2;
-}
-.overlay-bg {
-  background-color: rgba(0, 0, 0, 0.37);
-  position: fixed;
-  widows: 100vw;
-  height: 100vh;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-}
-.login-card {
-  position: absolute;
-  width: 420px;
-  // height: 550px;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  padding: 5px 20px;
-  left: 50%;
-  top: 10%;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 1);
-  border: 0px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.37);
-  z-index: 2;
-}
-</style>
-// <style scoped lang="scss" src="../css/style.scss">
-// </style>
-=======
 <style scoped lang="scss" src="../css/style.scss">
 </style>
->>>>>>> 6e095b129c257e5ae81b2722216e13738ac38d0b
