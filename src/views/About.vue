@@ -142,7 +142,7 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <a-row class="ml-4 mr-3 mt-3" gutter="16">
+          <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -330,8 +330,8 @@
             </a-col>
           </a-row>
 
-          <a-row class="ml-4 mr-3">
-            <a-card>
+          <a-row class="ml-4 mr-3 mb-3">
+            <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Guest Details</p>
