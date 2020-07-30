@@ -1,0 +1,22 @@
+.img-hero {
+  width: 100%;
+  height: auto;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  // display: none;
+  // background-color: rgba(0, 0, 0, 0.9);
+  // z-index: 2;
+}
+.overlay-bg {
+  background-color: rgba(0, 0, 0, 0.37);
+  position: fixed;
+  widows: 100vw;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}

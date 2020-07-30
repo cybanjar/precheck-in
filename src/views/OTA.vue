@@ -4,7 +4,7 @@
     <div class="overlay-bg"></div>
     <a-card class="login-card ilustrasi-top">
       <a-form layout="vertical" :form="form">
-        <a-row class="ml-3" gutter="8">
+        <a-row gutter="8">
           <a-col :span="24" :xl="24" :xs="24">
             <a-form-item label="Choose">
               <a-select :default-value="option" v-model="option">
@@ -40,9 +40,11 @@
                 <a-date-picker @change="onChange" />
               </a-form-item>
             </div>
+            <div>
+              <a-button href="about" class="mb-3" type="primary" block>Next</a-button>
+            </div>
           </a-col>
         </a-row>
-        <a-button href="about" class="mt-1 mr-3 float-right" type="primary" block>Next</a-button>
       </a-form>
     </a-card>
   </div>
@@ -63,6 +65,7 @@ export default {
 };
 </script>
 
+<<<<<<< HEAD
 <style lang="scss" scoped>
 @media screen and (max-width: 576px) {
   .ilustrasi-top {
@@ -112,3 +115,7 @@ export default {
 </style>
 // <style scoped lang="scss" src="../css/style.scss">
 // </style>
+=======
+<style scoped lang="scss" src="../css/style.scss">
+</style>
+>>>>>>> 6e095b129c257e5ae81b2722216e13738ac38d0b
