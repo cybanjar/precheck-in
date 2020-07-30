@@ -12,7 +12,7 @@
 
  */
 
-@import "./custom/variables";
+@import "./custom/_variables";
 @import "./custom/_card";
 @import "./custom/_utilities";
 @import "./custom/_sections";
@@ -20,7 +20,3 @@
 @import "./custom/_form";
 @import "./custom/_responsive";
 @import "./custom/_tables";
-
-html, body{
-    line-height: 1;
-}

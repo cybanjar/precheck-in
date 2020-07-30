@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <a-row class="header-branding" type="flex" justify="space-between">
+      <a-row class="header-brandings" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>
