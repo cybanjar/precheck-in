@@ -50,7 +50,7 @@
 
 <script>
 export default {
-data() {
+  data() {
     return {
       option: "bookigcode",
     };
@@ -110,3 +110,5 @@ data() {
   z-index: 2;
 }
 </style>
+// <style scoped lang="scss" src="../css/style.scss">
+// </style>
