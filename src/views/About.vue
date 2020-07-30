@@ -316,7 +316,7 @@
                 <template #format="percent">
                   <span style="color: red">{{ percent }}</span>
                 </template>
-              </a-progress> -->
+              </a-progress>-->
             </a-col>
           </a-row>
 
