@@ -36,7 +36,7 @@
                 :style="{ fontSize: '1.5rem' }"
                 class="float-right align-self-center"
                 theme="filled"
-                @click="munculModal"
+                @click="imageModal"
               />
             </div>
           </div>
