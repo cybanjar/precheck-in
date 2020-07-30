@@ -9,6 +9,12 @@
     width: 89vw;
     height: auto;
   }
+
+  .img-hotels {
+    width: 89vw;
+    height: auto;
+  }
+
   .invisible {
     display: none !important;
   }
@@ -20,6 +26,12 @@
   .img-hotel {
     width: auto;
     height: 195px;
+    z-index: 1;
+  }
+
+  .img-hotels {
+    width: auto;
+    height: 150px;
     z-index: 1;
   }
   .visible {

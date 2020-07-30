@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">BE THE ONE</h3>
+      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
@@ -36,7 +36,7 @@
                 :style="{ fontSize: '1.5rem' }"
                 class="float-right align-self-center"
                 theme="filled"
-                @click="munculModal"
+                @click="imageModal"
               />
             </div>
           </div>
@@ -136,7 +136,7 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <a-row class="ml-4 mt-3 mr-3" gutter="16">
+          <a-row class="ml-4" gutter="16">
             <a-card :style="information">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -296,7 +296,7 @@
             </a-col>
           </a-row>
 
-          <a-row class="ml-4 mr-3">
+          <a-row class="ml-4">
             <a-card :style="information">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -770,10 +770,10 @@ export default {
       });
     },
     handleBlur() {
-      // console.log("blur");
+      console.log("blur");
     },
     handleFocus() {
-      // console.log("focus");
+      console.log("focus");
     },
     filterOption(input, option) {
       return (

@@ -12,7 +12,7 @@
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img
-            class="img-hotel float-right image"
+            class="img-hotels float-right images"
             src="https://source.unsplash.com/1366x786/?hotel"
             alt="Image Loading"
           />
