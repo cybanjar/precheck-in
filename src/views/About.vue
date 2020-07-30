@@ -299,14 +299,7 @@
                   :maxlength="max"
                   v-model="text"
                 />
-                <a-progress
-                  :percent="max-text.length"
-                  status="exception"
-                  :stroke-color="{
-        '0': 'red',
-        '100': 'blue',
-      }"
-                >
+                <a-progress :percent="max-text.length">
                   <template #format="percent">
                     <span style="color: red">{{ percent }}</span>
                   </template>
@@ -317,18 +310,13 @@
               <!-- <span v-text="(text.length) + '/' + (max)"></span> -->
               <!-- <a-progress
                 type="circle"
-                :percent="max-text.length"
-                status="exception"
-                :width="30"
-                :stroke-color="{
-        '0': 'red',
-        '100': 'blue',
-      }"
+                :percent="max-text.length"   
+                :width="30"             
               >
                 <template #format="percent">
                   <span style="color: red">{{ percent }}</span>
                 </template>
-              </a-progress>-->
+              </a-progress> -->
             </a-col>
           </a-row>
 
