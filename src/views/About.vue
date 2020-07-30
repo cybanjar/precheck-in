@@ -13,11 +13,11 @@
           <h2
             class="main-guest-title font-white font-weight-bold"
             :style="information"
-          >{{currDataPrepare.name}}</h2>
-          <h4
+          >{{currDataPrepare.name}} | {{currDataPrepare.description}}</h2>
+          <!-- <h4
             class="main-guest-title font-white font-weight-bold"
             :style="information"
-          >{{currDataPrepare.description}}</h4>
+          >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
             Reservation from
             <strong>{{currDataPrepare.arrival}}</strong> until
@@ -49,8 +49,10 @@
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-          <h2 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.name}}</h2>
-          <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4>
+          <h2
+            class="main-guest-title font-white font-weight-bold"
+          >{{currDataPrepare.name}} | {{currDataPrepare.description}}</h2>
+          <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white">
             Reservation from
             <strong>{{currDataPrepare.arrival}}</strong> until
