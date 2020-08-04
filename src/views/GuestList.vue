@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <a-row class="header-branding" type="flex" justify="space-between">
+      <a-row class="header-brandings" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>
@@ -16,13 +16,14 @@
             src="https://source.unsplash.com/1366x786/?hotel"
             alt="Image Loading"
           />
-          <div class="overlay invisible">
+          <div class="overlay">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
-          <div class="invisible"></div>
-        </a-col>
-        <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <div class="visible">
+            <div class="online-checkin-mobile">
+              <p class="text-center">Online Check-In</p>
+            </div>
+          </div>
         </a-col>
       </a-row>
       <div>
@@ -36,7 +37,7 @@
           :pagination="false"
           size="middle"
           defaultExpandAllRows="true"
-          :scroll="{ x: 'calc(700px + 50%)', y: 350 }"
+          :scroll="{ x: 'calc(600px + 50%)', y: 350 }"
         >
           <span slot="tags" slot-scope="tags">
             <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>

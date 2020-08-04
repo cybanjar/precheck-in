@@ -33,11 +33,16 @@ const routes = [
     name: "Success",
     component: () => import("../views/Success"),
   },
-  // {
-  //   path: "/select",
-  //   name: "Select",
-  //   component: () => import("../views/Select"),
-  // },
+  {
+    path: "/list",
+    name: "List",
+    component: () => import("../views/List"),
+  },
+  {
+    path: "/checkin",
+    name: "CheckIn",
+    component: () => import("../views/CheckIn"),
+  },
 ];
 
 const router = new VueRouter({

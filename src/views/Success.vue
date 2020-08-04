@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>Thank you for using our online check-in. Please save QR code above for your check-in in the hotel.</p>
+    <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p>
   </div>
 </template>
 

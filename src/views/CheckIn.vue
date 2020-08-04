@@ -150,182 +150,6 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
-            <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Arrival</p>
-                </a-col>
-                <a-col :span="1" :xl="1" :xs="1">
-                  <a-icon
-                    type="setting"
-                    :style="{ fontSize: '1.5rem' }"
-                    class="float-right align-self-center"
-                    theme="filled"
-                    @click="munculModal"
-                  />
-                </a-col>
-              </a-row>
-            </a-card>
-          </a-row>
-          <a-modal
-            v-model="muncul"
-            title="Arrival Preference Setup"
-            :visible="muncul"
-            :confirm-loading="confirmLoading"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            centered
-          >
-            <p>
-              <a-checkbox
-                :checked="showPickupRequest"
-                v-model="showPickupRequest"
-              >Use Pickup Request</a-checkbox>
-              <!-- @change="onChange" -->
-            </p>
-            <p>
-              <label>Pickup Request Type :</label>
-              <a-radio-group
-                name="radioGroup"
-                :default-value="nilai"
-                @change="berubah"
-                :disabled="!showPickupRequest"
-              >
-                <a-radio :value="1">Per Pax</a-radio>
-                <a-radio :value="2">Per Car</a-radio>
-                <a-radio :value="3">Free</a-radio>
-              </a-radio-group>
-            </p>
-            <p v-if="nilai != 3">
-              <label>Pickup Rate :</label>
-              <a-input-group compact>
-                <a-select
-                  :disabled="!showPickupRequest"
-                  :default-value="currency"
-                  v-model="currency"
-                >
-                  <a-select-option value="Rp.">Rp.</a-select-option>
-                  <a-select-option value="$">$</a-select-option>
-                  <a-select-option value="€">€</a-select-option>
-                </a-select>
-                <a-input-number
-                  :disabled="!showPickupRequest"
-                  :default-value="money"
-                  v-model="money"
-                  :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                  :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-                  @input="masukinUang"
-                />
-              </a-input-group>
-            </p>
-            <p>
-              <label class="ml-2 font-weight-bold" for="checkbox">Room Preferences :</label>
-            </p>
-            <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
-            </p>
-            <p>
-              <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
-            </p>
-            <p>
-              <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
-            </p>
-          </a-modal>
-          <a-row class="ml-3" gutter="16">
-            <a-col :span="4" :xl="4" :xs="24">
-              <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :default-value="moment('14:00', 'HH:ss')" format="HH:ss" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
-              <a-form-item label="Request">
-                <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
-              </a-form-item>
-            </a-col>
-            <a-col :span="4" :xl="4" :xs="24">
-              <a-form-item label="Price">
-                <label>{{nilai === 3 ? "" : currency}} {{nilai === 3 ? " " : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " "}}</label>
-                <span v-if="nilai === 1">/ Pax</span>
-                <span v-else-if="nilai === 2">/ Car</span>
-                <span v-else>Free of Charge</span>
-              </a-form-item>
-            </a-col>
-
-            <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
-              <a-form-item label="Flight Details">
-                <a-input placeholder="Please input flight details" />
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" gutter="16">
-            <a-col>
-              <p
-                class="font-weight-bold"
-                v-show="showSmoking || showFloor || showBed"
-              >Room Preferences</p>
-              <a-form-item label v-show="showSmoking">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">Non Smoking</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Smoking</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label v-show="showFloor">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">Lower Floor</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Higher Floor</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label v-show="showBed">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">One Big Bed</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Two Single Bed</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="9" :xl="9" :xs="18">
-              <a-form-item label="Special Request">
-                <a-textarea
-                  placeholder="Ex: Connecting Wifi"
-                  :rows="4"
-                  :maxlength="max"
-                  v-model="text"
-                />
-                <!-- <a-progress :percent="max-text.length">
-                  <template #format="percent">
-                    <span style="color: red">{{ percent }}</span>
-                  </template>
-                </a-progress> -->
-              </a-form-item>
-            </a-col>
-            <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
-              <span v-text="(text.length) + '/' + (max)"></span>
-              <!-- <a-progress
-                type="circle"
-                :percent="max-text.length"   
-                :width="30"             
-              >
-                <template #format="percent">
-                  <span style="color: red">{{ percent }}</span>
-                </template>
-              </a-progress>-->
-            </a-col>
-          </a-row>
-
           <a-row class="ml-4 mr-3 mb-3">
             <a-card class="header-card">
               <a-row>
@@ -419,7 +243,14 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <!-- Country -->
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="10" :xl="10" :xs="24">
+              <input type="file" @change="onFileChange" />
+            </a-col>
+            <a-col :span="10" :xl="10" :xs="24">
+                <img class="preview" v-if="url" :src="url" />
+            </a-col>
+          </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
               <a-form-item label="Address">
@@ -554,7 +385,44 @@
               </a-form-item>
             </a-col>
           </a-row>
-
+          <a-row class="ml-3" gutter="16">
+            <a-col>
+              <p
+                class="font-weight-bold"
+                v-show="showSmoking || showFloor || showBed"
+              >Room Preferences</p>
+              <a-form-item label v-show="showSmoking">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">Non Smoking</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Smoking</span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label v-show="showFloor">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">Lower Floor</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Higher Floor</span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label v-show="showBed">
+                <a-radio-group name="radioGroup">
+                  <a-radio :value="1">
+                    <span class="font-weight-normal">One Big Bed</span>
+                  </a-radio>
+                  <a-radio :value="2">
+                    <span class="font-weight-normal">Two Single Bed</span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-col>
+          </a-row>
           <a-row class="ml-3 mb-3" :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
@@ -579,6 +447,7 @@
   </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
@@ -610,6 +479,7 @@ export default {
   },
   data() {
     return {
+      url: null,
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
@@ -695,14 +565,19 @@ export default {
 
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
-    } else {
-      router.push("guest-list");
     }
+    //  else {
+    //   router.push("guest-list");
+    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
   },
   methods: {
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
     phoneInput(formattedNumber, { number, valid, country }) {
       //  console.log(number.international);
       //  console.log(valid);
