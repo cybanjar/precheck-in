@@ -248,7 +248,7 @@
               <input type="file" @change="onFileChange" />
             </a-col>
             <a-col :span="10" :xl="10" :xs="24">
-                <img class="preview" v-if="url" :src="url" />
+              <img class="preview" v-if="url" :src="url" />
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -437,7 +437,7 @@
               type="primary"
               block
               :size="size"
-              @click="save();scrollToTop();"
+              @click="search"
               :disabled="!agree"
             >Check-In Now</a-button>
           </a-col>
@@ -470,6 +470,7 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
+import ky from "ky";
 Vue.use(Antd);
 
 export default {
@@ -574,6 +575,79 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    search() {
+      (async () => {
+        const parsed = await ky
+          .post("https://www.nicepay.co.id/nicepay/api/orderRegist.do", {
+            mode: "no-cors",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+            json: {
+              request: {
+                iMid: "IONPAYTEST",
+                merchantToken:
+                  "6cfccfc0046773c1b589d8e98f8b596c284f3c70a4ecf86eba14c18944b74bcd",
+                payMethod: "01",
+                currency: "IDR",
+                amt: "10000",
+                instmntType: "1",
+                instmntMon: "1",
+                referenceNo: "MerchantReferenceNumber1",
+                goodsNm: "Merchant Goods 1",
+                billingNm: "Buyer Name",
+                billingPhone: "02123456789",
+                billingEmail: "buyer@merchant.com",
+                billingAddr: "Billing Address",
+                billingCity: "Jakarta Utara",
+                billingState: "DKI Jakarta",
+                billingPostCd: "10160",
+                billingCountry: "Indonesia",
+                deliveryNm: "Delivery name",
+                deliveryPhone: "02123456789",
+                deliveryAddr: "Delivery Address",
+                deliveryCity: "Jakarta Utara",
+                deliveryState: "DKI Jakarta",
+                deliveryPostCd: "10160",
+                deliveryCountry: "indonesia",
+                callBackUrl: "https://merchant.com/callBackUrl",
+                dbProcessUrl: "https://merchant.com/dbProcessUrl",
+                vat: 0,
+                fee: 0,
+                notaxAmt: 0,
+                description: "",
+                reqDt: "20180303",
+                reqTm: "135959",
+                reqDomain: "www.merchant.com",
+                reqServerIP: "127.0.0.1",
+                reqClientVer: "1.0",
+                userIP: "127.0.0.1",
+                userSessionID: "userSessionID",
+                userAgent: "Mozilla",
+                userLanguage: "en-US",
+                recurrOpt: "0",
+                cartData: "{}",
+                instmntType: "1",
+                worker: "worker",
+                merFixAcctId: "14015824",
+                vacctValidDt: "20180404",
+                vacctValidTm: "235959",
+                paymentExpDt: "20180404",
+                paymentExpTm: "235959",
+                payValidTm: "235959",
+                // tXid: "BM...315",
+                // mitraCd: "ALMA",
+                // mRefNo: "bankcd123456789",
+                // timeStamp: "20180404165639",
+                // version: "D2",
+              },
+            },
+          })
+          .json();
+        console.log(parsed, "test");
+      })();
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -595,14 +669,14 @@ export default {
     scrollToTop() {
       window.scrollTo(0, 0);
     },
-    save() {
-      if (this.counter == this.id.length) {
-        router.push("success");
-      }
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-      this.agree = false;
-    },
+    // save() {
+    //   if (this.counter == this.id.length) {
+    //     router.push("success");
+    //   }
+    //   this.currDataPrepare = this.id[this.counter];
+    //   this.counter += 1;
+    //   this.agree = false;
+    // },
     back() {
       if (this.counter == this.id.length) {
         return false;
