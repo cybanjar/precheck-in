@@ -645,7 +645,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed, "test");
+        // console.log(parsed, "test");
       })();
     },
     onFileChange(e) {
