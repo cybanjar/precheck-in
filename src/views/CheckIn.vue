@@ -470,6 +470,7 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
+import ky from 'ky';
 Vue.use(Antd);
 
 export default {
