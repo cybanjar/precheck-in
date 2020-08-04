@@ -309,7 +309,7 @@
                   <template #format="percent">
                     <span style="color: red">{{ percent }}</span>
                   </template>
-                </a-progress> -->
+                </a-progress>-->
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -832,7 +832,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss" src="../css/style.scss">
-</style>
-
