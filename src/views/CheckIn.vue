@@ -578,7 +578,7 @@ export default {
     search() {
       (async () => {
         const parsed = await ky
-          .post("https://www.nicepay.co.id/nicepay/api/orderRegist.do", {
+          .post("https://dev.nicepay.co.id/nicepay/api/orderRegist.do	", {
             mode: "no-cors",
             headers: {
               "Access-Control-Allow-Origin": "*",
