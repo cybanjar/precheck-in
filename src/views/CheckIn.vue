@@ -245,14 +245,6 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
-              <input type="file" @change="onFileChange" />
-            </a-col>
-            <a-col :span="10" :xl="10" :xs="24">
-              <img class="preview" v-if="url" :src="url" />
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="10" :xl="10" :xs="24">
               <a-form-item label="Address">
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
@@ -385,6 +377,11 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <input type="file" @change="onFileChange" />
+            <img class="preview" v-if="url" :src="url" />
+          </a-row>
+          <br />
           <a-row class="ml-3" gutter="16">
             <a-col>
               <p
