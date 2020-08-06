@@ -375,8 +375,17 @@
           </a-row>
           <a-row class :gutter="[16, 8]">
             <a-col :span="3" :xl="3" :xs="24">
-              <label class="font-weight-bold">Choose/Upload ID</label>
-              <input class type="file" @change="onFileChange" />
+              <a-form-item label="Choose/Upload ID">
+                <input
+                  class
+                  type="file"
+                  @change="onFileChange"
+                  v-decorator="[
+          'url',
+          { initialValue: '',rules: [{ required: true }] },
+        ]"
+                />
+              </a-form-item>
               <img class="preview" v-if="url" :src="url" />
             </a-col>
           </a-row>
