@@ -378,8 +378,8 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <input type="file" @change="onFileChange" />
-            <img class="preview" v-if="url" :src="url" />
+            <input class="ml-3" type="file" @change="onFileChange" />
+            <img class="preview ml-3" v-if="url" :src="url" />
           </a-row>
           <br />
           <a-row class="ml-3" gutter="16">
@@ -418,6 +418,47 @@
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-4 mr-3 mb-3">
+            <a-card class="header-card">
+              <a-row>
+                <a-col :span="23" :xl="23" :xs="23">
+                  <p class="header-group">Payment</p>
+                </a-col>
+                <!-- <a-col :span="1" :xl="1" :xs="1">
+                  <a-icon
+                    type="setting"
+                    :style="{ fontSize: '1.5rem' }"
+                    class="float-right align-self-center"
+                    theme="filled"
+                    @click="guestModal"
+                  />
+                </a-col>-->
+              </a-row>
+            </a-card>
+          </a-row>
+          <a-row class="ml-3 mb-3" :gutter="[16,8]">
+            <a-col :span="12" :xl="12" :xs="24">
+              <a-form-item label="Deposit">
+                <a-input
+                  v-decorator="[
+                      'email',
+                      { rules: [{ required: false, message: 'Please input your email' }] },
+                    ]"
+                  :placeholder="'Rp 500,000'"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="10" :xl="10" :xs="24">
+              <a-button  class="font-weight-bold mt-3" type="primary" :size="size">Pay</a-button>
+
+              <img
+                class="img-hotel float-right image"
+                src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
+                style="height:50px;width:50px;"
+              />
             </a-col>
           </a-row>
           <a-row class="ml-3 mb-3" :gutter="[16,8]">
