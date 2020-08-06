@@ -144,34 +144,6 @@
             <br />Booking Code
             <strong>11020133</strong>
           </p>
-          <a-row class :gutter="[16,8]">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Email">
-                <a-input
-                  v-decorator="[
-                      'email',
-                      { rules: [{ required: true, message: 'Please input your email' }] },
-                    ]"
-                  :placeholder="currDataPrepare.email"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Phone Number">
-                <vue-tel-input
-                  v-model="phone"
-                  v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true}],
-          },
-        ]"
-                  @input="phoneInput"
-                ></vue-tel-input>
-              </a-form-item>
-            </a-col>
-          </a-row>
           <a-row class="mb-3">
             <a-card class="header-card">
               <a-row>
@@ -224,6 +196,35 @@
               </a-radio-group>
             </p>
           </a-modal>
+          <a-row class :gutter="[16,8]">
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Email">
+                <a-input
+                  v-decorator="[
+                      'email',
+                      { rules: [{ required: true, message: 'Please input your email' }] },
+                    ]"
+                  :placeholder="currDataPrepare.email"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Phone Number">
+                <vue-tel-input
+                  v-model="phone"
+                  v-decorator="[
+          'phone',
+          {
+            rules: [{ required: true}],
+          },
+        ]"
+                  @input="phoneInput"
+                ></vue-tel-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
           <a-row class :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Nationality">
