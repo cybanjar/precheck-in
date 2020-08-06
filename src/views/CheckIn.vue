@@ -241,7 +241,7 @@
               <a-form-item label="Date of Birth">
                 <a-date-picker @change="onChange" />
               </a-form-item>
-            </a-col> -->
+            </a-col>-->
           </a-row>
           <!-- <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
@@ -249,7 +249,7 @@
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
-          </a-row> -->
+          </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
@@ -332,7 +332,7 @@
               <a-form-item label="Postal Code">
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
-            </a-col> -->
+            </a-col>-->
           </a-row>
 
           <!-- Address -->
@@ -455,7 +455,7 @@
               <a-button class="font-weight-bold mt-3" type="primary" :size="size">Pay</a-button>
 
               <img
-              class="ml-3"
+                class="ml-3"
                 src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
                 style="height:50px;width:50px;"
               />
@@ -807,7 +807,4 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss" src="../css/style.scss">
-</style>
 
