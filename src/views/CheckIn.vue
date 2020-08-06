@@ -63,7 +63,7 @@
             Reservation from
             <strong>{{currDataPrepare.arrival}}</strong> until
             <strong>{{currDataPrepare.departure}}</strong>
-            <br />Reservation number
+            <br />Booking Code
             <strong>11020133</strong>
           </p>
         </a-col>
@@ -217,7 +217,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Document ID">
                 <a-select default-value="ID Card">
                   <a-select-option value="id_card">ID Card</a-select-option>
@@ -241,15 +241,15 @@
               <a-form-item label="Date of Birth">
                 <a-date-picker @change="onChange" />
               </a-form-item>
-            </a-col>
+            </a-col> -->
           </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
+          <!-- <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
               <a-form-item label="Address">
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
-          </a-row>
+          </a-row> -->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
@@ -300,7 +300,7 @@
                 </a-form-item>
               </div>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
+            <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
                   show-search
@@ -332,7 +332,7 @@
               <a-form-item label="Postal Code">
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
-            </a-col>
+            </a-col> -->
           </a-row>
 
           <!-- Address -->
@@ -569,7 +569,7 @@ export default {
       keluar: false,
       currency: "Rp.",
       country: "indonesia",
-      purpose: "bussiness",
+      purpose: "leisure",
       loading: true,
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
