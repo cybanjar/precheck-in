@@ -6,8 +6,8 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
-      <a-row class="header-branding" :style="information" type="flex" justify="space-between">
+      <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
+      <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
@@ -17,8 +17,13 @@
             src="https://source.unsplash.com/1366x786/?hotel"
             alt="Image Loading"
           />
-          <div class="overlay invisible">
+          <div class="overlay visible">
             <div class="text">Grand Visual Hotel Jakarta</div>
+          </div>
+          <div class="visible">
+            <div class="online-checkin-mobile">
+              <p class="text-center">Online Check-In</p>
+            </div>
           </div>
           <div class="invisible">
             <div class="gear-setting">
@@ -32,9 +37,9 @@
             </div>
           </div>
         </a-col>
-        <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
+        <!-- <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-        </a-col>
+        </a-col>-->
       </a-row>
       <a-modal
         v-model="keluar"
@@ -118,18 +123,28 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <h2
-            class="main-guest-title  font-weight-bold"
-          >R. Andito Rizky Pratama | Ariella Calista Ichwan</h2>
+          <!-- <h2 class="main-guest-title font-weight-bold">
+            R. Andito Rizky Pratama
+            <br />
+            <small>Ariella Calista Ichwan</small>
+          </h2>-->
+          <a-alert
+            message="R. Andito Rizky Pratama"
+            description="Ariella Calista Ichwan"
+            type="info"
+            show-icon
+            class="mb-3"
+          />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
-          <p class="ant-card-meta-description ">
-            Arrival 
-            <strong>12/12/2020</strong> Departure
+          <p>
+            Arrival
+            <strong>12/12/2020</strong>
+            Departure
             <strong>15/15/2020</strong>
             <br />Booking Code
             <strong>11020133</strong>
           </p>
-          <a-row class="ml-3" :gutter="[16,8]">
+          <a-row class :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Email">
                 <a-input
@@ -157,7 +172,7 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row class="ml-4 mr-3 mb-3">
+          <a-row class="mb-3">
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -209,7 +224,7 @@
               </a-radio-group>
             </p>
           </a-modal>
-          <a-row class="ml-3" :gutter="[16,8]">
+          <a-row class :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
@@ -250,14 +265,14 @@
               </a-form-item>
             </a-col>-->
           </a-row>
-          <!-- <a-row class="ml-3" :gutter="[16, 8]">
+          <!-- <a-row class="" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
               <a-form-item label="Address">
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
           </a-row>-->
-          <a-row class="ml-3" :gutter="[16, 8]">
+          <a-row class :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
                 <a-select
@@ -343,7 +358,7 @@
           </a-row>
 
           <!-- Address -->
-          <a-row class="ml-3" :gutter="[16,8]">
+          <a-row class :gutter="[16,8]">
             <a-col :span="3" :xl="3" :xs="24">
               <a-form-item label="Purpose of Stay">
                 <a-select
@@ -358,51 +373,28 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <label class="ml-3 font-weight-bold">Choose/Upload ID</label>
-            <input class="ml-3" type="file" @change="onFileChange" />
-            <img class="preview ml-3" v-if="url" :src="url" />
+          <a-row class :gutter="[16, 8]">
+            <a-col :span="3" :xl="3" :xs="24">
+              <label class="font-weight-bold">Choose/Upload ID</label>
+              <input class type="file" @change="onFileChange" />
+              <img class="preview" v-if="url" :src="url" />
+            </a-col>
           </a-row>
           <br />
-          <a-row class="ml-3" gutter="16">
+          <a-row class gutter="16">
             <a-col>
               <p
                 class="font-weight-bold"
                 v-show="showSmoking || showFloor || showBed"
               >Room Preferences</p>
-              <a-form-item label v-show="showSmoking">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">Non Smoking</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Smoking</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label v-show="showFloor">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">Lower Floor</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Higher Floor</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label v-show="showBed">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
-                    <span class="font-weight-normal">One Big Bed</span>
-                  </a-radio>
-                  <a-radio :value="2">
-                    <span class="font-weight-normal">Two Single Bed</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
+              <ul>
+                <li>Non Smoking</li>
+                <li>Lower Floor</li>
+                <li>One Big Bed</li>
+              </ul>
             </a-col>
           </a-row>
-          <a-row class="ml-4 mr-3 mb-3">
+          <a-row class="mb-3">
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -420,36 +412,30 @@
               </a-row>
             </a-card>
           </a-row>
-          <a-row class="ml-3 mb-3" :gutter="[16,8]">
-            <a-col :span="12" :xl="12" :xs="24">
+          <a-row :gutter="[16,8]">
+            <a-col :span="12" :xl="12" :xs="12">
               <a-form-item label="Deposit">
-                <a-input
-                  v-decorator="[
-                      'email',
-                      { rules: [{ required: false, message: 'Please input your email' }] },
-                    ]"
-                  :placeholder="'Rp 500,000'"
-                  disabled
-                />
+                <h2>
+                  <strong>Rp. 500,000</strong>
+                </h2>
               </a-form-item>
             </a-col>
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-button class="font-weight-bold mt-3" type="primary" :size="size">Pay</a-button>
-
+            <a-col :span="10" :xl="10" :xs="12">
+              <a-button class="font-weight-bold mt-3 mr-3" type="primary">Pay</a-button>
               <img
-                class="ml-3"
+                class="rounded float-right"
                 src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
-                style="height:50px;width:50px;"
+                style="height:50px;width:50px; opacity: .65;"
               />
             </a-col>
           </a-row>
-          <a-row class="ml-3 mb-3" :gutter="[16,8]">
+          <a-row :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
-        <a-row class="ml-3" :gutter="[16,8]">
+        <a-row class :gutter="[16,8]">
           <a-col :span="4" :xl="4" :xs="24">
             <a-button
               :xl="12"
