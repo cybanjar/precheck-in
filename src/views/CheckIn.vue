@@ -452,10 +452,10 @@
               </a-form-item>
             </a-col>
             <a-col :span="10" :xl="10" :xs="24">
-              <a-button  class="font-weight-bold mt-3" type="primary" :size="size">Pay</a-button>
+              <a-button class="font-weight-bold mt-3" type="primary" :size="size">Pay</a-button>
 
               <img
-                class="img-hotel float-right image"
+              class="ml-3"
                 src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
                 style="height:50px;width:50px;"
               />
