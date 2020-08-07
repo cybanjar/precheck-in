@@ -43,6 +43,11 @@ const routes = [
     name: "CheckIn",
     component: () => import("../views/CheckIn"),
   },
+  {
+    path: "/step",
+    name: "Step",
+    component: () => import("../views/Step"),
+  },
 ];
 
 const router = new VueRouter({

@@ -144,103 +144,54 @@
             <br />Booking Code
             <strong>11020133</strong>
           </p>
-          <a-row class="mb-3">
-            <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Guest Details</p>
-                </a-col>
-                <a-col :span="1" :xl="1" :xs="1">
-                  <a-icon
-                    type="setting"
-                    :style="{ fontSize: '1.5rem' }"
-                    class="float-right align-self-center"
-                    theme="filled"
-                    @click="guestModal"
-                  />
-                </a-col>
-              </a-row>
-            </a-card>
-          </a-row>
-          <a-modal
-            v-model="guest"
-            title="Guest Preference Setup"
-            :visible="guest"
-            :confirm-loading="confirmLoading"
-            @ok="handleOk"
-            @cancel="handleCancel"
-          >
-            <label>Document ID Setup</label>
-            <br />
-            <a-checkbox-group @change="onID">
-              <a-checkbox value="id_card">ID Card</a-checkbox>
-
-              <a-checkbox value="passport">Passport</a-checkbox>
-
-              <a-checkbox value="driving_license">Driving License</a-checkbox>
-
-              <a-checkbox value="other">Other</a-checkbox>
-            </a-checkbox-group>
-            <!-- <input v-model="message"  />
-            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}}-->
-            <br />
-            <br />
-
-            <label>Term and Condition</label>
-            <p>
-              <a-radio-group v-model="value">
-                <a-radio value="terma">Local language</a-radio>
-                <a-textarea v-model="term1" @input="masukinTerm" :rows="3" />
-                <a-radio value="termb">Other language</a-radio>
-                <a-textarea v-model="term2" @input="masukinTerm" :rows="3" />
-              </a-radio-group>
-            </p>
-          </a-modal>
-          <a-row class :gutter="[16,8]">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Email">
-                <a-input
-                  v-decorator="[
+          <a-steps :current="current">
+            <a-step v-for="item in steps" :key="item.title" :title="item.title" />
+          </a-steps>
+          <div class="steps-content" v-show="current === 0">
+            <a-row class :gutter="[16,8]">
+              <a-col :span="5" :xl="5" :xs="24">
+                <a-form-item label="Email">
+                  <a-input
+                    v-decorator="[
                       'email',
                       { rules: [{ required: true, message: 'Please input your email' }] },
                     ]"
-                  :placeholder="currDataPrepare.email"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Phone Number">
-                <vue-tel-input
-                  v-model="phone"
-                  v-decorator="[
+                    :placeholder="currDataPrepare.email"
+                    disabled
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="5" :xl="5" :xs="24">
+                <a-form-item label="Phone Number">
+                  <vue-tel-input
+                    v-model="phone"
+                    v-decorator="[
           'phone',
           {
             rules: [{ required: true}],
           },
         ]"
-                  @input="phoneInput"
-                ></vue-tel-input>
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row class :gutter="[16,8]">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Nationality">
-                <a-select
-                  v-decorator="[
+                    @input="phoneInput"
+                  ></vue-tel-input>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class :gutter="[16,8]">
+              <a-col :span="5" :xl="5" :xs="24">
+                <a-form-item label="Nationality">
+                  <a-select
+                    v-decorator="[
                   'nationality',
           { initialValue: nationality,rules: [{ required: true }] },
         ]"
-                >
-                  <a-select-option value="indonesia">Indonesia</a-select-option>
-                  <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <!-- <a-col :span="5" :xl="5" :xs="24">
+                  >
+                    <a-select-option value="indonesia">Indonesia</a-select-option>
+                    <a-select-option value="america">America</a-select-option>
+                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Document ID">
                 <a-select default-value="ID Card">
                   <a-select-option value="id_card">ID Card</a-select-option>
@@ -264,66 +215,59 @@
               <a-form-item label="Date of Birth">
                 <a-date-picker @change="onChange" />
               </a-form-item>
-            </a-col>-->
-          </a-row>
-          <!-- <a-row class="" :gutter="[16, 8]">
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-form-item label="Address">
-                <a-textarea placeholder="Input Address" :rows="4" />
-              </a-form-item>
-            </a-col>
-          </a-row>-->
-          <a-row class :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Country">
-                <a-select
-                  v-model="country"
-                  v-decorator="[
+              </a-col>-->
+            </a-row>
+            <a-row class :gutter="[16, 8]">
+              <a-col :span="5" :xl="5" :xs="24">
+                <a-form-item label="Country">
+                  <a-select
+                    v-model="country"
+                    v-decorator="[
           'country',
           { initialValue: country,
           rules: [{ required: true }] },
         ]"
-                >
-                  <a-select-option value="indonesia">Indonesia</a-select-option>
-                  <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+                  >
+                    <a-select-option value="indonesia">Indonesia</a-select-option>
+                    <a-select-option value="america">America</a-select-option>
+                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
 
-            <a-col :span="5" :xl="5" :xs="24">
-              <div v-if="country === 'indonesia'">
-                <a-form-item label="Region">
-                  <a-select
-                    v-model="setRegion"
-                    show-search
-                    @change="handleChangeProvince"
-                    v-decorator="[
+              <a-col :span="5" :xl="5" :xs="24">
+                <div v-if="country === 'indonesia'">
+                  <a-form-item label="Region">
+                    <a-select
+                      v-model="setRegion"
+                      show-search
+                      @change="handleChangeProvince"
+                      v-decorator="[
                       'region',
                       { initialValue: region, rules: [{ required: true }] },
                     ]"
-                  >
-                    <a-select-option
-                      v-for="(item, keys) in filteredRegion"
-                      :key="keys"
-                      :value="filteredRegion[keys]['province']"
-                    >{{ filteredRegion[keys].province }}</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </div>
-              <div v-else>
-                <a-form-item label="State">
-                  <a-input
-                    initial-value="Willy Wanta"
-                    v-decorator="[
+                    >
+                      <a-select-option
+                        v-for="(item, keys) in filteredRegion"
+                        :key="keys"
+                        :value="filteredRegion[keys]['province']"
+                      >{{ filteredRegion[keys].province }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </div>
+                <div v-else>
+                  <a-form-item label="State">
+                    <a-input
+                      initial-value="Willy Wanta"
+                      v-decorator="[
                   'username',
                   { rules: [{ required: false, message: '' }] },
                 ]"
-                  />
-                </a-form-item>
-              </div>
-            </a-col>
-            <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
+                    />
+                  </a-form-item>
+                </div>
+              </a-col>
+              <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
                   show-search
@@ -355,90 +299,83 @@
               <a-form-item label="Postal Code">
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
-            </a-col>-->
-          </a-row>
-
-          <!-- Address -->
-          <a-row class :gutter="[16,8]">
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Purpose of Stay">
-                <a-select
-                  v-decorator="[
+              </a-col>-->
+            </a-row>
+            <a-row class :gutter="[16,8]">
+              <a-col :span="3" :xl="3" :xs="24">
+                <a-form-item label="Purpose of Stay">
+                  <a-select
+                    v-decorator="[
           'purpose',
           { initialValue:purpose,rules: [{ required: true }] },
         ]"
-                >
-                  <a-select-option value="bussiness">Bussiness</a-select-option>
-                  <a-select-option value="leisure">Leisure</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class :gutter="[16, 8]">
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Choose/Upload ID">
-                <input
-                  class
-                  type="file"
-                  @change="onFileChange"
-                  v-decorator="[
+                  >
+                    <a-select-option value="bussiness">Bussiness</a-select-option>
+                    <a-select-option value="leisure">Leisure</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class gutter="16">
+              <a-col>
+                <p
+                  class="font-weight-bold"
+                  v-show="showSmoking || showFloor || showBed"
+                >Room Preferences</p>
+                <ul>
+                  <li>Non Smoking</li>
+                  <li>Lower Floor</li>
+                  <li>One Big Bed</li>
+                </ul>
+              </a-col>
+            </a-row>
+          </div>
+          <div class="steps-content" v-show="current === 1">
+            <a-row class :gutter="[16, 8]">
+              <a-col :span="3" :xl="3" :xs="24">
+                <a-form-item label="Choose/Upload ID">
+                  <input
+                    class
+                    type="file"
+                    @change="onFileChange"
+                    v-decorator="[
           'url',
           { initialValue: '',rules: [{ required: true }] },
         ]"
-                />
-              </a-form-item>
-              <img class="preview" v-if="url" :src="url" />
-            </a-col>
-          </a-row>
-          <br />
-          <a-row class gutter="16">
-            <a-col>
-              <p
-                class="font-weight-bold"
-                v-show="showSmoking || showFloor || showBed"
-              >Room Preferences</p>
-              <ul>
-                <li>Non Smoking</li>
-                <li>Lower Floor</li>
-                <li>One Big Bed</li>
-              </ul>
-            </a-col>
-          </a-row>
-          <a-row class="mb-3">
-            <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Payment</p>
-                </a-col>
-                <!-- <a-col :span="1" :xl="1" :xs="1">
-                  <a-icon
-                    type="setting"
-                    :style="{ fontSize: '1.5rem' }"
-                    class="float-right align-self-center"
-                    theme="filled"
-                    @click="guestModal"
                   />
-                </a-col>-->
-              </a-row>
-            </a-card>
-          </a-row>
-          <a-row :gutter="[16,8]">
-            <a-col :span="12" :xl="12" :xs="12">
-              <a-form-item label="Deposit">
-                <h2>
-                  <strong>Rp. 500,000</strong>
-                </h2>
-              </a-form-item>
-            </a-col>
-            <a-col :span="10" :xl="10" :xs="12">
-              <a-button class="font-weight-bold mt-3 mr-3" type="primary">Pay</a-button>
-              <img
-                class="rounded float-right"
-                src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
-                style="height:50px;width:50px; opacity: .65;"
-              />
-            </a-col>
-          </a-row>
+                </a-form-item>
+                <img class="preview" v-if="url" :src="url" />
+              </a-col>
+            </a-row>
+          </div>
+          <div class="steps-content" v-show="current === 2">
+            <a-row :gutter="[16,8]">
+              <a-col :span="12" :xl="12" :xs="12">
+                <a-form-item label="Deposit">
+                  <h2>
+                    <strong>Rp. 500,000</strong>
+                  </h2>
+                </a-form-item>
+              </a-col>
+              <a-col :span="10" :xl="10" :xs="12">
+                <a-button class="font-weight-bold mt-3 mr-3" type="primary">Pay</a-button>
+                <img
+                  class="rounded float-right"
+                  src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
+                  style="height:50px;width:50px; opacity: .65;"
+                />
+              </a-col>
+            </a-row>
+          </div>
+          <div class="steps-action">
+            <a-button v-if="current < steps.length - 1" type="primary" @click="next">Next</a-button>
+            <a-button
+              v-if="current == steps.length - 1"
+              type="primary"
+              @click="$message.success('Processing complete!')"
+            >Done</a-button>
+            <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">Previous</a-button>
+          </div>
           <a-row :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
@@ -487,6 +424,7 @@ import Antd, {
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
+
 Vue.use(Antd);
 
 export default {
@@ -496,6 +434,18 @@ export default {
   },
   data() {
     return {
+      current: 0,
+      steps: [
+        {
+          title: "Guest Detail",
+        },
+        {
+          title: "Scan ID",
+        },
+        {
+          title: "Booking Payment",
+        },
+      ],
       url: null,
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
@@ -591,6 +541,12 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    next() {
+      this.current++;
+    },
+    prev() {
+      this.current--;
+    },
     search() {
       (async () => {
         const parsed = await ky
@@ -649,7 +605,7 @@ export default {
             },
           })
           .json();
-        // console.log(parsed, "test");
+        console.log(parsed, "test");
       })();
     },
     onFileChange(e) {

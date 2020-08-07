@@ -6,7 +6,7 @@
       <a-form layout="vertical" :form="form">
         <a-row gutter="8">
           <a-col :span="24" :xl="24" :xs="24">
-            <a-form-item label="Choose">
+            <a-form-item label="Search reservation by :">
               <a-select :default-value="option" v-model="option">
                 <a-select-option value="bookigcode">Booking Code</a-select-option>
                 <a-select-option value="guestname">Guest Name & Checkout Date</a-select-option>
