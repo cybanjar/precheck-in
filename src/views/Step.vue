@@ -123,6 +123,9 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
+          <a-steps :current="current">
+            <a-step v-for="item in steps" :key="item.title" :title="item.title" />
+          </a-steps>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -137,16 +140,14 @@
           />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
-            Arrival
+            Arrival :
             <strong>12/12/2020</strong>
-            Departure
+            Departure :
             <strong>15/15/2020</strong>
-            <br />Booking Code
+            <br />Booking Code :
             <strong>11020133</strong>
           </p>
-          <a-steps :current="current">
-            <a-step v-for="item in steps" :key="item.title" :title="item.title" />
-          </a-steps>
+
           <div class="steps-content" v-show="current === 0">
             <a-row class :gutter="[16,8]">
               <a-col :span="5" :xl="5" :xs="24">
@@ -176,6 +177,36 @@
                 </a-form-item>
               </a-col>
             </a-row>
+            <a-row class :gutter="[16,8]">
+              <a-col :span="3" :xl="3" :xs="24">
+                <a-form-item label="Purpose of Stay">
+                  <a-select
+                    v-decorator="[
+          'purpose',
+          { initialValue:purpose,rules: [{ required: true }] },
+        ]"
+                  >
+                    <a-select-option value="bussiness">Bussiness</a-select-option>
+                    <a-select-option value="leisure">Leisure</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class gutter="16">
+              <a-col>
+                <p
+                  class="font-weight-bold"
+                  v-show="showSmoking || showFloor || showBed"
+                >Room Preferences</p>
+                <ul>
+                  <li>Non Smoking</li>
+                  <li>Lower Floor</li>
+                  <li>One Big Bed</li>
+                </ul>
+              </a-col>
+            </a-row>
+          </div>
+          <div class="steps-content" v-show="current === 1">
             <a-row class :gutter="[16,8]">
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Nationality">
@@ -301,36 +332,8 @@
               </a-form-item>
               </a-col>-->
             </a-row>
-            <a-row class :gutter="[16,8]">
-              <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item label="Purpose of Stay">
-                  <a-select
-                    v-decorator="[
-          'purpose',
-          { initialValue:purpose,rules: [{ required: true }] },
-        ]"
-                  >
-                    <a-select-option value="bussiness">Bussiness</a-select-option>
-                    <a-select-option value="leisure">Leisure</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row class gutter="16">
-              <a-col>
-                <p
-                  class="font-weight-bold"
-                  v-show="showSmoking || showFloor || showBed"
-                >Room Preferences</p>
-                <ul>
-                  <li>Non Smoking</li>
-                  <li>Lower Floor</li>
-                  <li>One Big Bed</li>
-                </ul>
-              </a-col>
-            </a-row>
           </div>
-          <div class="steps-content" v-show="current === 1">
+          <div class="steps-content" v-show="current === 2">
             <a-row class :gutter="[16, 8]">
               <a-col :span="3" :xl="3" :xs="24">
                 <a-form-item label="Choose/Upload ID">
@@ -348,7 +351,7 @@
               </a-col>
             </a-row>
           </div>
-          <div class="steps-content" v-show="current === 2">
+          <div class="steps-content" v-show="current === 3">
             <a-row :gutter="[16,8]">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Deposit">
@@ -368,19 +371,19 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <a-button v-if="current < steps.length - 1" type="primary" @click="next">Next</a-button>
-            <a-button
+            <a-button v-if="current > 0" @click="prev">Previous</a-button>
+            <a-button v-if="current < steps.length - 1" style="margin-left: 8px" type="primary" @click="next">Next</a-button>
+            <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
               @click="$message.success('Processing complete!')"
-            >Done</a-button>
-            <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">Previous</a-button>
+            >Done</a-button>-->
           </div>
-          <a-row :gutter="[16,8]">
+          <!-- <a-row :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
-          </a-row>
+          </a-row>-->
         </a-form>
         <a-row class :gutter="[16,8]">
           <a-col :span="4" :xl="4" :xs="24">
@@ -391,7 +394,7 @@
               block
               :size="size"
               @click="search"
-              :disabled="!agree"
+              v-if="current == steps.length - 1"
             >Check-In Now</a-button>
           </a-col>
         </a-row>
@@ -438,6 +441,9 @@ export default {
       steps: [
         {
           title: "Guest Detail",
+        },
+        {
+          title: "Address",
         },
         {
           title: "Scan ID",
@@ -605,7 +611,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed, "test");
+        // console.log(parsed, "test");
       })();
     },
     onFileChange(e) {
@@ -709,10 +715,10 @@ export default {
       });
     },
     handleBlur() {
-      console.log("blur");
+      // console.log("blur");
     },
     handleFocus() {
-      console.log("focus");
+      // console.log("focus");
     },
     filterOption(input, option) {
       return (
