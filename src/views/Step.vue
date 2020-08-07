@@ -123,9 +123,10 @@
       </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
-          <a-steps :current="current">
-            <a-step v-for="item in steps" :key="item.title" :title="item.title" />
-          </a-steps>
+          <h2 v-show="current === 0">Guest Detail</h2>
+          <h2 v-show="current === 1">Address</h2>
+          <h2 v-show="current === 2">Scan ID</h2>
+          <h2 v-show="current === 3">Deposit Payment</h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -372,7 +373,12 @@
           </div>
           <div class="steps-action">
             <a-button v-if="current > 0" @click="prev">Previous</a-button>
-            <a-button v-if="current < steps.length - 1" style="margin-left: 8px" type="primary" @click="next">Next</a-button>
+            <a-button
+              v-if="current < steps.length - 1"
+              style="margin-left: 8px"
+              type="primary"
+              @click="next"
+            >Next</a-button>
             <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
@@ -449,7 +455,7 @@ export default {
           title: "Scan ID",
         },
         {
-          title: "Booking Payment",
+          title: "Deposit Payment",
         },
       ],
       url: null,
