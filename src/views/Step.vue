@@ -336,7 +336,7 @@
           </div>
           <div class="steps-content" v-show="current === 2">
             <a-row class :gutter="[16, 8]">
-              <a-col :span="3" :xl="3" :xs="24">
+              <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Choose/Upload ID">
                   <input
                     class
@@ -348,6 +348,8 @@
         ]"
                   />
                 </a-form-item>
+              </a-col>
+              <a-col :span="12" :xl="12" :xs="12">
                 <img class="preview" v-if="url" :src="url" />
               </a-col>
             </a-row>
