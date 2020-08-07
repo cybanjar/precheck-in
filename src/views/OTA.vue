@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="ota text-center">
-      <a-row :gutter="[ 16, 8 ]" class="mb-5">
+      <a-row :gutter="[ 8, 32 ]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 class="text-white">Find Your Reservation</h1>
           <p class="text-white text-secondary">You can either Scan the QR Code or Search by One Option Below</p>
         </a-col>
       </a-row>
-      <a-row :gutter="[ 8, 8 ]" class="mt-3" type="flex" justify="center">
+      <a-row :gutter="[ 8, 32 ]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalBookingCode" src="../assets/BookingCode.svg">
           <a-modal 
@@ -59,7 +59,6 @@
 export default {
   data() {
     return {
-      option: "bookigcode",
       modalBookingCode: false,
       modalGuestName: false,
       modalEmailAddress: false,
