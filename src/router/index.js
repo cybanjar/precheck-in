@@ -33,6 +33,11 @@ const routes = [
     name: "Success",
     component: () => import("../views/Success"),
   },
+  {
+    path: "/gid",
+    name: "GuestID",
+    component: () => import("../views/GuestID"),
+  },
 ];
 
 const router = new VueRouter({
