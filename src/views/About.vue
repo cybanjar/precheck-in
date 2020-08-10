@@ -28,7 +28,7 @@
             Arrival
             <strong>{{currDataPrepare.arrival}}</strong> Departure
             <strong>{{currDataPrepare.departure}}</strong>
-            <br />Reservation number
+            <br />Booking Code
             <strong>11020133</strong>
           </p>
         </a-col>
@@ -60,10 +60,10 @@
           >{{currDataPrepare.name}} | {{currDataPrepare.description}}</h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white">
-            Reservation from
-            <strong>{{currDataPrepare.arrival}}</strong> until
+            Arrival
+            <strong>{{currDataPrepare.arrival}}</strong> Departure
             <strong>{{currDataPrepare.departure}}</strong>
-            <br />Reservation number
+            <br />Booking Code
             <strong>11020133</strong>
           </p>
         </a-col>
