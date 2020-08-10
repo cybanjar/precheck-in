@@ -2,24 +2,31 @@
   z-index: 1;
 }
 @media screen and (max-width: 576px) {
-  .ilustrasi-top {
-    width: 100%;
-  }
   .img-hotel {
-    width: 100%;
-    height: 171.95px;
+    width: 89vw;
+    height: auto;
+  }
+  .img-hotels {
+    width: 89vw;
+    height: auto;
   }
   .invisible {
     display: none !important;
   }
+  h2 {
+    font-size: 1rem;
+  }
 }
 @media screen and (min-width: 1200px) {
-  .card-online {
-    width: 400px;
-  }
   .img-hotel {
     width: auto;
-    height: 214px;
+    height: 195px;
+    z-index: 1;
+  }
+
+  .img-hotels {
+    width: auto;
+    height: 150px;
     z-index: 1;
   }
   .visible {

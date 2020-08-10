@@ -31,4 +31,25 @@
 }
 .ant-card-body {
   margin: 0;
+  padding: 24px 0 0 0;
+  zoom: 1;
+}
+.header-card{
+  border: none;
+  border-bottom: 3px solid black;
+}
+.login-card {
+  position: absolute;
+  width: 420px;
+  // height: 550px;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  padding: 5px 20px;
+  left: 50%;
+  top: 10%;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 1);
+  border: 0px;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.37);
+  z-index: 2;
 }

@@ -34,9 +34,19 @@ const routes = [
     component: () => import("../views/Success"),
   },
   {
-    path: "/gid",
-    name: "GuestID",
-    component: () => import("../views/GuestID"),
+    path: "/list",
+    name: "List",
+    component: () => import("../views/List"),
+  },
+  {
+    path: "/checkin",
+    name: "CheckIn",
+    component: () => import("../views/CheckIn"),
+  },
+  {
+    path: "/step",
+    name: "Step",
+    component: () => import("../views/Step"),
   },
 ];
 
