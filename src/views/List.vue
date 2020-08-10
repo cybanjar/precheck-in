@@ -1,13 +1,9 @@
 <template>
   <div>
     <div>
-      <a-list
-        :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }"
-        :data-source="data"
-        @click="select"
-      >
-        <a-list-item slot="renderItem" slot-scope="item">
-          <a-card>
+      <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }" :data-source="data">
+        <a-list-item slot="renderItem" slot-scope="item" @click="select(item)">
+          <a-card :style="information">
             <p>Name: {{item.name}}</p>
             <p>arrival: {{item.arrival}}</p>
             <p>departure: {{item.departure}}</p>
@@ -100,13 +96,41 @@ export default {
   data() {
     return {
       data,
+      information: {
+        backgroundColor: "white",
+        color: "black",
+      },
       selectedData: [],
     };
   },
   methods: {
     select(client) {
-      this.selectedData = client;
-      console.log(client, "goks");
+      if (this.selectedData.length == 0) {
+        this.selectedData.push(client);
+      } else {
+        let data;
+        for (const i in this.selectedData) {
+          data = this.selectedData[i];
+        }
+        console.log(data, "lg1");
+        console.log(client.key, "lg2");
+        if (data.key != client.key) {
+          this.selectedData.push(client);
+        } else {
+          console.log(i, "lg3");
+          this.selectedData.splice(i, 1);
+          // const index = this.selectedData[i].indexOf(client.key);
+          // if (index > -1) {
+          //   array.splice(index, 1);
+          // }
+        }
+      }
+    },
+    change(key) {
+      console.log(key, "gokas");
+
+      this.information.backgroundColor = "blue";
+      this.information.color = "white";
     },
   },
 };

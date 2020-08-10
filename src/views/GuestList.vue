@@ -29,6 +29,7 @@
       <div>
         <h1 class="text-center">Guest List</h1>
       </div>
+      {{selectedData}}
       <div class="sa-table">
         <a-table
           :row-selection="rowSelection"
