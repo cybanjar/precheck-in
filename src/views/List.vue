@@ -1,26 +1,26 @@
 <template>
   <div>
-    <div>
-      <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }" :data-source="data">
+    <div class="ml-3 mt-3 mr-3">
+      <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }" :data-source="data">
         <a-list-item slot="renderItem" slot-scope="item">
-          {{item.isSelected}}
           <a-card
             :class="item.isSelected == true ? 'selected' : 'notselected'"
             @click="select(item)"
           >
-            <p>Name: {{item.name}}</p>
-            <p>arrival: {{item.arrival}}</p>
-            <p>departure: {{item.departure}}</p>
-            <p>adult: {{item.adult}}</p>
-            <p>email: {{item.email}}</p>
-            <p>tags: {{item.tags}}</p>
-            <p>rs: {{item.rs}}</p>
-            <p>description: {{item.description}}</p>
+            <h2
+              :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
+            >{{item.name}}</h2>
+            <p v-show="item.description != ''" class="pl-3">{{item.description}}</p>
+            <p class="pl-3">Arrival: {{item.arrival}} Departure: {{item.departure}}</p>
+            <p class="pl-3">
+              {{item.adult}} Adult
+              <a-tag color="green">{{ item.tags}}</a-tag>
+            </p>
           </a-card>
         </a-list-item>
       </a-list>
     </div>
-    <div>{{ selectedData }}</div>
+    <!-- <div>{{ selectedData }}</div> -->
   </div>
 </template>
 <script>
@@ -33,7 +33,7 @@ const data = [
     departure: "14/01/2019",
     adult: "2",
     email: "h.djasri@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 0,
     description: "",
     isSelected: false,
@@ -45,10 +45,10 @@ const data = [
     departure: "14/01/2019",
     adult: "2",
     email: "li.haiying@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 1,
     description: "Chao Bao, Mr",
-    isSelected: true,
+    isSelected: false,
   },
   {
     key: 3,
@@ -57,7 +57,7 @@ const data = [
     departure: "14/01/2019",
     adult: "1",
     email: "jin.yeoh@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 0,
     description: "",
     isSelected: false,
@@ -69,31 +69,31 @@ const data = [
     departure: "14/01/2019",
     adult: "1",
     email: "saki.kato@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 0,
     description: "",
     isSelected: false,
   },
   {
     key: 5,
-    name: "Muhammad Imdadun Rahmat, Mr",
+    name: "Rahmat, Mr",
     arrival: "13/01/2019",
     departure: "14/01/2019",
     adult: "2",
     email: "m.imdadun@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 0,
     description: "",
     isSelected: false,
   },
   {
     key: 6,
-    name: "Sri Sutji Rahaju, Ms",
+    name: "Sri Rahaju, Ms",
     arrival: "14/01/2019",
     departure: "15/01/2019",
     adult: "1",
     email: "s.sutji@gmail.com",
-    tags: ["Suites"],
+    tags: "Suites",
     rs: 0,
     description: "",
     isSelected: false,

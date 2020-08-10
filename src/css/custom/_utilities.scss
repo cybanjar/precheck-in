@@ -214,12 +214,14 @@
 }
 
 .selected {
-  background: blue;
+  background: $primary;
   color: white;
 }
 
 .notselected {
-  background: lightblue;
-  color: white;
-
+  background: #f5f6f7;
+  color: #262728;
+}
+.ant-list *{
+  border-radius: 8px;
 }
