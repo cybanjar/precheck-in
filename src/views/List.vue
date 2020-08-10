@@ -2,8 +2,12 @@
   <div>
     <div>
       <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }" :data-source="data">
-        <a-list-item slot="renderItem" slot-scope="item" @click="select(item)">
-          <a-card :style="information">
+        <a-list-item slot="renderItem" slot-scope="item">
+          {{item.isSelected}}
+          <a-card
+            :class="item.isSelected == true ? 'selected' : 'notselected'"
+            @click="select(item)"
+          >
             <p>Name: {{item.name}}</p>
             <p>arrival: {{item.arrival}}</p>
             <p>departure: {{item.departure}}</p>
@@ -20,10 +24,9 @@
   </div>
 </template>
 <script>
-const data = [];
-const bookingCode = "123";
-if (bookingCode == "123") {
-  data.push({
+import { Alert } from "ant-design-vue";
+const data = [
+  {
     key: 1,
     name: "Hanevi Djasri, Mr",
     arrival: "14/01/2019",
@@ -33,8 +36,9 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 0,
     description: "",
-  });
-  data.push({
+    isSelected: false,
+  },
+  {
     key: 2,
     name: "Haiying Li, Mrs",
     arrival: "12/01/2019",
@@ -44,8 +48,9 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 1,
     description: "Chao Bao, Mr",
-  });
-  data.push({
+    isSelected: true,
+  },
+  {
     key: 3,
     name: "Yeoh Hui Jin, Mrs",
     arrival: "13/01/2019",
@@ -55,8 +60,9 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 0,
     description: "",
-  });
-  data.push({
+    isSelected: false,
+  },
+  {
     key: 4,
     name: "Saki Sato, Ms",
     arrival: "12/01/2019",
@@ -66,8 +72,9 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 0,
     description: "",
-  });
-  data.push({
+    isSelected: false,
+  },
+  {
     key: 5,
     name: "Muhammad Imdadun Rahmat, Mr",
     arrival: "13/01/2019",
@@ -77,10 +84,10 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 0,
     description: "",
-  });
-} else if (bookingCode == "456") {
-  data.push({
-    key: 1,
+    isSelected: false,
+  },
+  {
+    key: 6,
     name: "Sri Sutji Rahaju, Ms",
     arrival: "14/01/2019",
     departure: "15/01/2019",
@@ -89,50 +96,41 @@ if (bookingCode == "123") {
     tags: ["Suites"],
     rs: 0,
     description: "",
-  });
-}
+    isSelected: false,
+  },
+];
 
 export default {
   data() {
     return {
       data,
-      information: {
-        backgroundColor: "white",
-        color: "black",
-      },
       selectedData: [],
     };
   },
   methods: {
     select(client) {
-      if (this.selectedData.length == 0) {
+      console.log(client);
+      if (client.isSelected == false) {
         this.selectedData.push(client);
-      } else {
-        let data;
-        for (const i in this.selectedData) {
-          data = this.selectedData[i];
+        for (const i in this.data) {
+          if (this.data[i].key == client.key) {
+            this.data[i].isSelected = true;
+          }
         }
-        console.log(data, "lg1");
-        console.log(client.key, "lg2");
-        if (data.key != client.key) {
-          this.selectedData.push(client);
-        } else {
-          console.log(i, "lg3");
-          this.selectedData.splice(i, 1);
-          // const index = this.selectedData[i].indexOf(client.key);
-          // if (index > -1) {
-          //   array.splice(index, 1);
-          // }
+      } else {
+        for (const i in this.data) {
+          if (this.data[i].key == client.key) {
+            this.data[i].isSelected = false;
+          }
+        }
+        for (const x in this.selectedData) {
+          if (this.selectedData[x].key == client.key) {
+            console.log("msk"); 
+            this.selectedData.splice(x, 1);
+          }
         }
       }
-    },
-    change(key) {
-      console.log(key, "gokas");
-
-      this.information.backgroundColor = "blue";
-      this.information.color = "white";
     },
   },
 };
 </script>
-<style></style>
