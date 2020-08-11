@@ -3,8 +3,9 @@
     <canvas id="canvas"></canvas>
     <p>Booking Code : 982010</p>
     <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
-    <br/>
-
+    <p>
+      <br />
+    </p>
     <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p>
   </div>
 </template>
@@ -28,10 +29,10 @@ export default {
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { width: 250 },
+      { width: 250 }
       // function (error) {
-        // if (error) console.error(error);
-        // console.log("success!");
+      // if (error) console.error(error);
+      // console.log("success!");
       // }
     );
   },

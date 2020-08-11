@@ -6,7 +6,7 @@
           <h1 class="text-white">Find Your Reservation</h1>
           <p
             class="text-white text-secondary"
-          >You can either Scan the QR Code or Search by One Option Below</p>
+          >Search by One Option Below</p>
         </a-col>
       </a-row>
       <a-row :gutter="[ 8, 32 ]" class="mt-3" type="flex" justify="center">
@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import router from "../router";
+
 export default {
   data() {
     return {
@@ -85,13 +87,13 @@ export default {
     showModalMembershipID() {
       this.modalMembershipID = true;
     },
-    handleOk(e) {
+    handleOk() {
       // console.log(e);
+      router.push("step");
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
-      router.push("step");
     },
   },
 };
