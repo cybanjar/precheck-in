@@ -408,7 +408,7 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Payment</p>
+                  <p class="header-group">Deposit Payment</p>
                 </a-col>
                 <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon

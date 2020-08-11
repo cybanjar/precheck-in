@@ -1,7 +1,6 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      {{guests}}
       <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
@@ -356,7 +355,7 @@
             <label>Document ID Setup</label>
             <br />
             <a-checkbox-group @change="onID">
-              <a-checkbox value="id_card">ID Card</a-checkbox>
+              <a-checkbox value="id_card">E-KTP</a-checkbox>
 
               <a-checkbox value="passport">Passport</a-checkbox>
 
@@ -395,9 +394,9 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Document ID">
-                <a-select default-value="ID Card">
-                  <a-select-option value="id_card">ID Card</a-select-option>
+              <a-form-item label="Choose of Document ID">
+                <a-select default-value="E-KTP">
+                  <a-select-option value="id_card">E-KTP</a-select-option>
                   <a-select-option value="passport">Passport</a-select-option>
                   <a-select-option value="driving_license">Driving License</a-select-option>
                   <a-select-option value="kitas">KITAS</a-select-option>
@@ -689,9 +688,26 @@ export default {
     },
   },
   created() {
-    this.guests = this.$router.query.guests;
+    const urlParams = new URLSearchParams(window.location.search);
+    this.guests = urlParams.get("guests");
     this.loading = false;
 
+    if (this.guests === "3") {
+      router.push("list");
+    } else {
+      this.currDataPrepare = {
+        key: 1,
+        name: "Sri Rahaju, Ms",
+        arrival: "14/01/2019",
+        departure: "15/01/2019",
+        adult: "1",
+        email: "s.sutji@gmail.com",
+        tags: "Suites",
+        rs: 0,
+        description: "",
+        isSelected: false,
+      };
+    }
     if (this.$route.params.id != undefined) {
       this.id = this.$route.params.id;
       // this.counter = this.id.length;
@@ -699,9 +715,6 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
     }
-    //  else {
-    //   router.push("list");
-    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
