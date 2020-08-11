@@ -10,7 +10,10 @@
             <h2
               :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
             >{{item.name}}</h2>
-            <p v-show="item.description != ''" class="pl-3">{{item.description}}</p>
+            <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
+            <p v-else class="pl-3">
+              <br />
+            </p>
             <p class="pl-3">Arrival: {{item.arrival}} Departure: {{item.departure}}</p>
             <p class="pl-3">
               {{item.adult}} Adult
@@ -125,7 +128,7 @@ export default {
         }
         for (const x in this.selectedData) {
           if (this.selectedData[x].key == client.key) {
-            console.log("msk"); 
+            console.log("msk");
             this.selectedData.splice(x, 1);
           }
         }
