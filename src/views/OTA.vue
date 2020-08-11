@@ -4,9 +4,7 @@
       <a-row :gutter="[ 8, 32 ]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 class="text-white">Find Your Reservation</h1>
-          <p
-            class="text-white text-secondary"
-          >Search by One Option Below</p>
+          <p class="text-white text-secondary">Search by One Option Below</p>
         </a-col>
       </a-row>
       <a-row :gutter="[ 8, 32 ]" class="mt-3" type="flex" justify="center">
@@ -14,7 +12,7 @@
           <img @click="showModalBookingCode" src="../assets/BookingCode.svg" />
           <a-modal v-model="modalBookingCode" title="Booking Code" @ok="handleOk">
             <a-form-item label="Booking Code">
-              <a-input placeholder="Input your booking code" />
+              <a-input v-model="bookingcode" placeholder="Input your booking code" />
             </a-form-item>
             <a-form-item label="Checkout Date">
               <a-date-picker @change="onChange" />
@@ -69,6 +67,7 @@ export default {
       modalGuestName: false,
       modalEmailAddress: false,
       modalMembershipID: false,
+      bookingcode: "",
     };
   },
   methods: {
@@ -89,7 +88,9 @@ export default {
     },
     handleOk() {
       // console.log(e);
-      router.push("step");
+
+      router.push({ path: "step", query: { bookingcode: this.bookingcode } });
+
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;

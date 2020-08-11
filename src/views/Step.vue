@@ -133,8 +133,8 @@
             <small>Ariella Calista Ichwan</small>
           </h2>-->
           <a-alert
-            message="R. Andito Rizky Pratama"
-            description="Ariella Calista Ichwan"
+            :message="this.currDataPrepare.name"
+            :description="this.currDataPrepare.description"
             type="info"
             show-icon
             class="mb-3"
@@ -142,11 +142,11 @@
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
             Arrival :
-            <strong>12/12/2020</strong>
+            <strong>{{this.currDataPrepare.arrival}}</strong>
             Departure :
-            <strong>15/15/2020</strong>
+            <strong>{{this.currDataPrepare.departure}}</strong>
             <br />Booking Code :
-            <strong>11020133</strong>
+            <strong>{{this.currDataPrepare.booking}}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
@@ -445,6 +445,7 @@ export default {
   data() {
     return {
       current: 0,
+      bookingcode: "",
       steps: [
         {
           title: "Guest Detail",
@@ -537,8 +538,27 @@ export default {
     },
   },
   created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.bookingcode = urlParams.get("bookingcode");
     this.loading = false;
 
+    if (this.bookingcode === "982010") {
+      router.push("list");
+    } else {
+      this.currDataPrepare = {
+        key: 1,
+        name: "R. Andito Rizky Pratama, Mr",
+        arrival: "12/12/2020",
+        departure: "15/12/2020",
+        adult: "2",
+        booking: "11020133",
+        email: "randitorizky@gmail.com",
+        tags: "Suites",
+        rs: 0,
+        description: "Ariella Calista Ichwan",
+        isSelected: false,
+      };
+    }
     if (this.$route.params.id != undefined) {
       this.id = this.$route.params.id;
       // this.counter = this.id.length;
@@ -554,8 +574,8 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
-    checkin(){
-        router.push("successcheckin");
+    checkin() {
+      router.push("successcheckin");
     },
     next() {
       this.current++;
