@@ -1,17 +1,23 @@
-[debug] [2020-08-11T01:29:01.193Z] ----------------------------------------------------------------------
-[debug] [2020-08-11T01:29:01.195Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\development\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
-[debug] [2020-08-11T01:29:01.195Z] CLI Version:   8.7.0
-[debug] [2020-08-11T01:29:01.195Z] Platform:      win32
-[debug] [2020-08-11T01:29:01.196Z] Node Version:  v12.16.2
-[debug] [2020-08-11T01:29:01.231Z] Time:          Tue Aug 11 2020 08:29:01 GMT+0700 (Western Indonesia Time)
-[debug] [2020-08-11T01:29:01.231Z] ----------------------------------------------------------------------
-[debug] [2020-08-11T01:29:01.232Z] 
-[debug] [2020-08-11T01:29:01.284Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2020-08-11T01:29:01.285Z] > authorizing via signed-in user
-[debug] [2020-08-11T01:29:01.285Z] [iam] checking project precheckin-8392e for permissions ["firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2020-08-11T01:29:01.287Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2020-08-11T01:29:01.287Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- <request body omitted>
-[debug] [2020-08-11T01:29:03.692Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 11 Aug 2020 01:29:02 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2020-08-11T01:29:03.756Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/precheckin-8392e:testIamPermissions  
+[debug] [2020-08-11T02:37:27.606Z] ----------------------------------------------------------------------
+[debug] [2020-08-11T02:37:27.608Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\development\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-08-11T02:37:27.608Z] CLI Version:   8.7.0
+[debug] [2020-08-11T02:37:27.608Z] Platform:      win32
+[debug] [2020-08-11T02:37:27.608Z] Node Version:  v12.16.2
+[debug] [2020-08-11T02:37:27.609Z] Time:          Tue Aug 11 2020 09:37:27 GMT+0700 (Western Indonesia Time)
+[debug] [2020-08-11T02:37:27.610Z] ----------------------------------------------------------------------
+[debug] [2020-08-11T02:37:27.610Z] 
+[debug] [2020-08-11T02:37:27.618Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-08-11T02:37:27.619Z] > authorizing via signed-in user
+[debug] [2020-08-11T02:37:27.619Z] [iam] checking project precheckin-8392e for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-08-11T02:37:27.622Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/precheckin-8392e:testIamPermissions  
  {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2020-08-11T02:37:29.819Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 11 Aug 2020 02:37:28 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=943","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-11T02:37:29.825Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/precheckin-8392e  
+ 
+[debug] [2020-08-11T02:37:31.265Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 11 Aug 2020 02:37:30 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'precheckin-8392e'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2020-08-11T02:37:31.270Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/precheckin-8392e/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}

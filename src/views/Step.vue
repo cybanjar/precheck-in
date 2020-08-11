@@ -348,8 +348,7 @@
         ]"
                   />
                 </a-form-item>
-              </a-col>
-              <a-col :span="12" :xl="12" :xs="12">
+
                 <img class="preview" v-if="url" :src="url" />
               </a-col>
             </a-row>
@@ -401,7 +400,7 @@
               type="primary"
               block
               :size="size"
-              @click="search"
+              @click="checkin"
               v-if="current == steps.length - 1"
             >Check-In Now</a-button>
           </a-col>
@@ -555,6 +554,9 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    checkin(){
+        router.push("successcheckin");
+    },
     next() {
       this.current++;
     },

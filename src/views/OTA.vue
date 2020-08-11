@@ -16,6 +16,9 @@
             <a-form-item label="Booking Code">
               <a-input placeholder="Input your booking code" />
             </a-form-item>
+            <a-form-item label="Checkout Date">
+              <a-date-picker @change="onChange" />
+            </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
@@ -34,6 +37,9 @@
           <a-modal v-model="modalEmailAddress" title="Email Address" @ok="handleOk">
             <a-form-item label="Email Address">
               <a-input placeholder="Input your email address" />
+            </a-form-item>
+            <a-form-item label="Checkout Date">
+              <a-date-picker @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -65,7 +71,7 @@ export default {
   },
   methods: {
     onChange(date, dateString) {
-      console.log(date, dateString);
+      // console.log(date, dateString);
     },
     showModalBookingCode() {
       this.modalBookingCode = true;
@@ -80,11 +86,12 @@ export default {
       this.modalMembershipID = true;
     },
     handleOk(e) {
-      console.log(e);
+      // console.log(e);
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
+      router.push("step");
     },
   },
 };

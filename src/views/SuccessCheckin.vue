@@ -1,8 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>Booking Code : 982010</p>
-    <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
+    <p>Room Number: 105</p>
     <br/>
 
     <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p>

@@ -48,6 +48,11 @@ const routes = [
     name: "Step",
     component: () => import("../views/Step"),
   },
+  {
+    path: "/successcheckin",
+    name: "SuccessCheckIn",
+    component: () => import("../views/SuccessCheckin"),
+  },
 ];
 
 const router = new VueRouter({
