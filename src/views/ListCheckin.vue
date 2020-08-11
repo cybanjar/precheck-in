@@ -50,7 +50,7 @@
           </a-list-item>
         </a-list>
       </div>
-      <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+      <router-link :to="{ name: 'Step', params: { id: selectedData } }">
         <a-button
           class="mr-3 float-right"
           type="primary"

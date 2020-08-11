@@ -53,6 +53,11 @@ const routes = [
     name: "SuccessCheckIn",
     component: () => import("../views/SuccessCheckin"),
   },
+  {
+    path: "/listcheckin",
+    name: "ListCheckIn",
+    component: () => import("../views/ListCheckin"),
+  },
 ];
 
 const router = new VueRouter({

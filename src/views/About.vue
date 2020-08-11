@@ -355,7 +355,7 @@
             <label>Document ID Setup</label>
             <br />
             <a-checkbox-group @change="onID">
-              <a-checkbox value="id_card">ID Card</a-checkbox>
+              <a-checkbox value="id_card">E-KTP</a-checkbox>
 
               <a-checkbox value="passport">Passport</a-checkbox>
 
@@ -394,9 +394,9 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Document ID">
-                <a-select default-value="ID Card">
-                  <a-select-option value="id_card">ID Card</a-select-option>
+              <a-form-item label="Choose of Document ID">
+                <a-select default-value="E-KTP">
+                  <a-select-option value="id_card">E-KTP</a-select-option>
                   <a-select-option value="passport">Passport</a-select-option>
                   <a-select-option value="driving_license">Driving License</a-select-option>
                   <a-select-option value="kitas">KITAS</a-select-option>

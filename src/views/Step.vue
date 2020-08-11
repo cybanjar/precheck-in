@@ -225,9 +225,9 @@
                 </a-form-item>
               </a-col>
               <!-- <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Document ID">
-                <a-select default-value="ID Card">
-                  <a-select-option value="id_card">ID Card</a-select-option>
+              <a-form-item label="Choose of Document ID">
+                <a-select default-value="E-KTP">
+                  <a-select-option value="id_card">E-KTP</a-select-option>
                   <a-select-option value="passport">Passport</a-select-option>
                   <a-select-option value="driving_license">Driving License</a-select-option>
                   <a-select-option value="kitas">KITAS</a-select-option>
@@ -355,7 +355,7 @@
             </a-row>
           </div>
           <div class="steps-content" v-show="current === 3">
-            <a-row :gutter="[16,8]">
+            <a-row :gutter="[16,8]" v-if="pay == false">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Deposit">
                   <h2>
@@ -370,6 +370,23 @@
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
                   style="height:50px;width:50px; opacity: .65;"
                 />
+              </a-col>
+            </a-row>
+            <a-row :gutter="[16,8]" v-else>
+              <a-col :span="12" :xl="12" :xs="12">
+                <a-form-item label="Deposit">
+                  <h2>
+                    <strong>Cash Basis</strong>
+                  </h2>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row :gutter="[16,8]">
+              <a-col :span="12" :xl="12" :xs="24">
+                <a-checkbox v-model="pay">
+                  If you skip this deposite payment
+                  <br />your all transaction will be cash basis
+                </a-checkbox>
               </a-col>
             </a-row>
           </div>
@@ -401,7 +418,7 @@
               type="primary"
               block
               :size="size"
-              @click="checkin"
+              @click="save();scrollToTop();"
               v-if="current == steps.length - 1"
             >Check-In Now</a-button>
           </a-col>
@@ -445,6 +462,7 @@ export default {
   },
   data() {
     return {
+      pay: false,
       current: 0,
       bookingcode: "",
       steps: [
@@ -544,7 +562,7 @@ export default {
     this.loading = false;
 
     if (this.bookingcode === "982010") {
-      router.push("list");
+      router.push("listcheckin");
     } else {
       this.currDataPrepare = {
         key: 1,
@@ -575,9 +593,9 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
-    checkin() {
-      router.push("successcheckin");
-    },
+    // checkin() {
+    //   router.push("successcheckin");
+    // },
     next() {
       this.current++;
     },
@@ -665,15 +683,16 @@ export default {
     },
     scrollToTop() {
       window.scrollTo(0, 0);
+      this.current = 0;
     },
-    // save() {
-    //   if (this.counter == this.id.length) {
-    //     router.push("success");
-    //   }
-    //   this.currDataPrepare = this.id[this.counter];
-    //   this.counter += 1;
-    //   this.agree = false;
-    // },
+    save() {
+      if (this.counter == this.id.length) {
+        router.push("successcheckin");
+      }
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+      this.agree = false;
+    },
     back() {
       if (this.counter == this.id.length) {
         return false;
