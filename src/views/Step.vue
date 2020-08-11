@@ -6,6 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
+      <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
       <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
