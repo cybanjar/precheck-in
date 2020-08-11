@@ -1,6 +1,7 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
+      {{guests}}
       <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
@@ -657,6 +658,7 @@ export default {
       confirmLoading: false,
       muncul: false,
       guest: false,
+      guests: "",
       keluar: false,
       currency: "Rp.",
       country: "indonesia",
@@ -687,6 +689,7 @@ export default {
     },
   },
   created() {
+    this.guests = this.$router.query.guests;
     this.loading = false;
 
     if (this.$route.params.id != undefined) {
@@ -695,9 +698,10 @@ export default {
 
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
-    } else {
-      router.push("list");
     }
+    //  else {
+    //   router.push("list");
+    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
