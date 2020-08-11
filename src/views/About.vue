@@ -1,7 +1,6 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      {{guests}}
       <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
@@ -689,9 +688,26 @@ export default {
     },
   },
   created() {
-    this.guests = this.$router.query.guests;
+    const urlParams = new URLSearchParams(window.location.search);
+    this.guests = urlParams.get("guests");
     this.loading = false;
 
+    if (this.guests === "3") {
+      router.push("list");
+    } else {
+      this.currDataPrepare = {
+        key: 1,
+        name: "Sri Rahaju, Ms",
+        arrival: "14/01/2019",
+        departure: "15/01/2019",
+        adult: "1",
+        email: "s.sutji@gmail.com",
+        tags: "Suites",
+        rs: 0,
+        description: "",
+        isSelected: false,
+      };
+    }
     if (this.$route.params.id != undefined) {
       this.id = this.$route.params.id;
       // this.counter = this.id.length;
@@ -699,9 +715,6 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
     }
-    //  else {
-    //   router.push("list");
-    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
