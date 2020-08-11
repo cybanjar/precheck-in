@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     select(client) {
-      console.log(client);
+      // console.log(client);
       if (client.isSelected == false) {
         this.selectedData.push(client);
         for (const i in this.data) {
@@ -128,7 +128,7 @@ export default {
         }
         for (const x in this.selectedData) {
           if (this.selectedData[x].key == client.key) {
-            console.log("msk");
+            // console.log("msk");
             this.selectedData.splice(x, 1);
           }
         }
