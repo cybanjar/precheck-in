@@ -23,7 +23,14 @@
         </a-list-item>
       </a-list>
     </div>
-    <!-- <div>{{ selectedData }}</div> -->
+    <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+      <a-button
+        class="mr-3 float-right"
+        type="primary"
+        :size="size"
+        :disabled="selectedData == 0"
+      >Next</a-button>
+    </router-link>
   </div>
 </template>
 <script>

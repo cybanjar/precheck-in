@@ -696,7 +696,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
     } else {
-      router.push("guest-list");
+      router.push("list");
     }
   },
   mounted() {
