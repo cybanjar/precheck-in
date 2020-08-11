@@ -1,36 +1,64 @@
 <template>
   <div>
-    <div class="ml-3 mt-3 mr-3">
-      <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }" :data-source="data">
-        <a-list-item slot="renderItem" slot-scope="item">
-          <a-card
-            :class="item.isSelected == true ? 'selected' : 'notselected'"
-            @click="select(item)"
-          >
-            <h2
-              :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
-            >{{item.name}}</h2>
-            <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
-            <p v-else class="pl-3">
-              <br />
-            </p>
-            <p class="pl-3">From: {{item.arrival}} Until: {{item.departure}}</p>
-            <p class="pl-3">
-              {{item.adult}} Adult
-              <a-tag color="green">{{ item.tags}}</a-tag>
-            </p>
-          </a-card>
-        </a-list-item>
-      </a-list>
+    <div class="home">
+      <a-row class="header-brandings" type="flex" justify="space-between">
+        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+        </a-col>
+        <a-col class="container" :span="9" :md="9" :xs="24">
+          <img
+            class="img-hotel float-right image"
+            src="https://source.unsplash.com/1366x786/?hotel"
+            alt="Image Loading"
+          />
+          <div class="overlay">
+            <div class="text">Grand Visual Hotel Jakarta</div>
+          </div>
+          <div class="visible">
+            <div class="online-checkin-mobile">
+              <p class="text-center">Online Check-In</p>
+            </div>
+          </div>
+        </a-col>
+      </a-row>
+      <div>
+        <h1 class="mt-3 text-center">Guest List</h1>
+      </div>
+      <div class="ml-3 mt-3 mr-3">
+        <a-list
+          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
+          :data-source="data"
+        >
+          <a-list-item slot="renderItem" slot-scope="item">
+            <a-card
+              :class="item.isSelected == true ? 'selected' : 'notselected'"
+              @click="select(item)"
+            >
+              <h2
+                :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
+              >{{item.name}}</h2>
+              <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
+              <p v-else class="pl-3">
+                <br />
+              </p>
+              <p class="pl-3">From: {{item.arrival}} Until: {{item.departure}}</p>
+              <p class="pl-3">
+                {{item.adult}} Adult
+                <a-tag color="green">{{ item.tags}}</a-tag>
+              </p>
+            </a-card>
+          </a-list-item>
+        </a-list>
+      </div>
+      <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+        <a-button
+          class="mr-3 float-right"
+          type="primary"
+          :size="size"
+          :disabled="selectedData == 0"
+        >Next</a-button>
+      </router-link>
     </div>
-    <router-link :to="{ name: 'Home', params: { id: selectedData } }">
-      <a-button
-        class="mr-3 float-right"
-        type="primary"
-        :size="size"
-        :disabled="selectedData == 0"
-      >Next</a-button>
-    </router-link>
   </div>
 </template>
 <script>
