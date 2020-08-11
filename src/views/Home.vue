@@ -365,14 +365,14 @@ export default {
   },
   watch: {
     activeKey(key) {
-      console.log(key);
+      // console.log(key);
     },
   },
   methods: {
     check() {
       this.form.validateFields((err) => {
         if (!err) {
-          console.info("success");
+          // console.info("success");
         }
       });
     },
@@ -383,8 +383,8 @@ export default {
       this.muncul = true;
     },
     gantiHeaderClass(warna) {
-      console.log(warna);
-      console.log(this.information.backgroundColor);
+      // console.log(warna);
+      // console.log(this.information.backgroundColor);
       this.information.backgroundColor = warna;
     },
     handleOk(e) {
@@ -397,12 +397,12 @@ export default {
       }, 700);
     },
     handleCancel(e) {
-      console.log('Clicked cancel button');
+      // console.log('Clicked cancel button');
       this.visible = false;
       this.muncul = false;
     },
     onChange(date, dateString) {
-      console.log(date, dateString);
+      // console.log(date, dateString);
     },
     moment,
     handleChange(e) {
