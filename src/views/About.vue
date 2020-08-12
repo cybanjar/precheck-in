@@ -692,10 +692,9 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.guests = urlParams.get("guests");
     this.loading = false;
-    console.log(this.guests, "ges");
     if (this.guests === "3") {
       router.push("list");
-    } else {
+    } else if (this.guests === "1") {
       this.currDataPrepare = {
         key: 1,
         name: "Sri Rahaju, Ms",
@@ -708,7 +707,10 @@ export default {
         description: "",
         isSelected: false,
       };
+    } else {
+      router.push("404");
     }
+
     if (this.$route.params.id != undefined) {
       this.id = this.$route.params.id;
       // this.counter = this.id.length;
