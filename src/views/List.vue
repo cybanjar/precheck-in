@@ -41,7 +41,7 @@
               <p v-else class="pl-3">
                 <br />
               </p>
-              <p class="pl-3">From: {{item.arrival}} Until: {{item.departure}}</p>
+              <p class="pl-3">Arrival: <span class="font-weight-bold">{{item.arrival}}</span> Departure: <span class="font-weight-bold">{{item.departure}}</span></p>
               <p class="pl-3">
                 {{item.adult}} Adult
                 <a-tag color="green">{{ item.tags}}</a-tag>
