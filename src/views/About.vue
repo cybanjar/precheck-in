@@ -692,8 +692,18 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.guests = urlParams.get("guests");
     this.loading = false;
+    console.log(this.guests);
+    console.log(this.$route.params.id);
     if (this.guests === "3") {
       router.push("list");
+    } else if (this.$route.params.id != undefined) {
+      this.id = this.$route.params.id;
+      // this.counter = this.id.length;
+
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    } else if (this.guests == null || this.$route.params.id == undefined) {
+      router.push("404");
     } else {
       this.currDataPrepare = {
         key: 1,
@@ -709,13 +719,13 @@ export default {
       };
     }
 
-    if (this.$route.params.id != undefined) {
-      this.id = this.$route.params.id;
-      // this.counter = this.id.length;
+    // if (this.$route.params.id != undefined) {
+    //   this.id = this.$route.params.id;
+    //   // this.counter = this.id.length;
 
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-    }
+    //   this.currDataPrepare = this.id[this.counter];
+    //   this.counter += 1;
+    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
