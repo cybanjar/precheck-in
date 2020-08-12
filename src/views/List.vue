@@ -52,7 +52,7 @@
       </div>
       <router-link :to="{ name: 'Home', params: { id: selectedData } }">
         <a-button
-          class="mr-3 float-right"
+          class="fixed-bottom-right mr-3 float-right"
           type="primary"
           :size="size"
           :disabled="selectedData == 0"
