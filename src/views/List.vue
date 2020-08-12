@@ -153,7 +153,6 @@ export default {
   },
   methods: {
     select(client) {
-      // console.log(client);
       if (client.isSelected == false) {
         this.selectedData.push(client);
         for (const i in this.data) {
