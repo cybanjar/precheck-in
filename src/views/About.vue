@@ -702,7 +702,7 @@ export default {
 
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
-    } else if (this.guests == null || this.$route.params.id == undefined) {
+    } else if (this.guests == null && this.$route.params.id == undefined) {
       router.push("404");
     } else {
       this.currDataPrepare = {
