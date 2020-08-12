@@ -30,13 +30,8 @@
           :data-source="data"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-card
-              :class="item.isSelected == true ? 'selected' : 'notselected'"
-              @click="select(item)"
-            >
-              <h2
-                :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
-              >{{item.name}}</h2>
+            <a-card @click="select(item)">
+              <h2>{{item.name}}</h2>
               <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
               <p v-else class="pl-3">
                 <br />
@@ -50,19 +45,19 @@
           </a-list-item>
         </a-list>
       </div>
-      {{selectedData}}
-      <router-link :to="{ name: 'Step', params: { id: selectedData } }">
+      <!-- <router-link :to="{ name: 'Step', params: { id: selectedData } }">
         <a-button
           class="mr-3 float-right"
           type="primary"
           :size="size"
           :disabled="selectedData == 0"
         >Next</a-button>
-      </router-link>
+      </router-link>-->
     </div>
   </div>
 </template>
 <script>
+import router from "../router";
 import { Alert } from "ant-design-vue";
 const data = [
   {
@@ -149,31 +144,12 @@ export default {
   data() {
     return {
       data,
-      selectedData: [],
     };
   },
   methods: {
     select(client) {
-      // if (client.isSelected == false) {
-      //   this.selectedData.push(client);
-      //   for (const i in this.data) {
-      //     if (this.data[i].key == client.key) {
-      //       this.data[i].isSelected = true;
-      //     }
-      //   }
-      // } else {
-      //   for (const i in this.data) {
-      //     if (this.data[i].key == client.key) {
-      //       this.data[i].isSelected = false;
-      //     }
-      //   }
-      //   for (const x in this.selectedData) {
-      //     if (this.selectedData[x].key == client.key) {
-      //       this.selectedData.splice(x, 1);
-      //     }
-      //   }
-      // }
-      this.selectedData = client;
+      console.log(client);
+      router.push({ name: "Step", params: { id: [client] } });
     },
   },
 };

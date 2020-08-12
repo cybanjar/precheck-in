@@ -383,10 +383,8 @@
             </a-row>
             <a-row :gutter="[16,8]">
               <a-col :span="12" :xl="12" :xs="24">
-                <a-checkbox v-model="pay">
-                  Skip deposit payment
-                </a-checkbox>
-                  <p>If you skip deposit payment, all your transaction will be cash basis</p>
+                <a-checkbox v-model="pay">Skip deposit payment</a-checkbox>
+                <p>If you skip deposit payment, all your transaction will be cash basis</p>
               </a-col>
             </a-row>
           </div>
@@ -560,7 +558,7 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.bookingcode = urlParams.get("bookingcode");
     this.loading = false;
-
+    console.log(this.$route.params.id, "lempar");
     if (this.bookingcode === "982010") {
       router.push("listcheckin");
     } else {
