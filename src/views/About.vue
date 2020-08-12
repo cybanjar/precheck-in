@@ -60,10 +60,10 @@
           >{{currDataPrepare.name}} | {{currDataPrepare.description}}</h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white">
-            Arrival
-            <strong>{{currDataPrepare.arrival}}</strong> Departure
+            Arrival:
+            <strong>{{currDataPrepare.arrival}}</strong> Departure:
             <strong>{{currDataPrepare.departure}}</strong>
-            <br />Booking Code
+            <br />Booking Code:
             <strong>11020133</strong>
           </p>
         </a-col>
@@ -235,7 +235,7 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :default-value="moment('14:00', 'HH A')" format="HH A" />
+                <a-time-picker :minute-step="30" :default-value="moment('14:00', 'HH:mm')" format="HH:mm" />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
@@ -290,7 +290,7 @@
                     <span class="font-weight-normal">One Big Bed</span>
                   </a-radio>
                   <a-radio :value="2">
-                    <span class="font-weight-normal">Two Single Bed</span>
+                    <span class="font-weight-normal">Two Single Beds</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
