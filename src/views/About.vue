@@ -235,7 +235,7 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :default-value="moment('14:00', 'HH:ss')" format="HH:ss" />
+                <a-time-picker :default-value="moment('14:00', 'HH A')" format="HH A" />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
@@ -380,6 +380,49 @@
           </a-modal>
           <a-row class="ml-3" :gutter="[16,8]">
             <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Email">
+                <a-input
+                  v-decorator="[
+                      'email',
+                      { rules: [{ required: true, message: 'Please input your email' }] },
+                    ]"
+                  :placeholder="currDataPrepare.email"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Phone Number">
+                <vue-tel-input
+                  v-model="phone"
+                  v-decorator="[
+          'phone',
+          {
+            rules: [{ required: true}],
+          },
+        ]"
+                  @input="phoneInput"
+                ></vue-tel-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16,8]">
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Purpose of Stay">
+                <a-select
+                  v-decorator="[
+          'purpose',
+          { initialValue:purpose,rules: [{ required: true }] },
+        ]"
+                >
+                  <a-select-option value="bussiness">Bussiness</a-select-option>
+                  <a-select-option value="leisure">Leisure</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16,8]">
+            <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
                   v-decorator="[
@@ -393,7 +436,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Choose of Document ID">
                 <a-select default-value="E-KTP">
                   <a-select-option value="id_card">E-KTP</a-select-option>
@@ -417,16 +460,16 @@
               <a-form-item label="Date of Birth">
                 <a-date-picker @change="onChange" />
               </a-form-item>
-            </a-col>
+            </a-col>-->
           </a-row>
           <!-- Country -->
-          <a-row class="ml-3" :gutter="[16, 8]">
+          <!-- <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="10" :xl="10" :xs="24">
               <a-form-item label="Address">
                 <a-textarea placeholder="Input Address" :rows="4" />
               </a-form-item>
             </a-col>
-          </a-row>
+          </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Country">
@@ -477,7 +520,7 @@
                 </a-form-item>
               </div>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
+            <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
                   show-search
@@ -509,52 +552,10 @@
               <a-form-item label="Postal Code">
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
-            </a-col>
+            </a-col>-->
           </a-row>
 
           <!-- Address -->
-          <a-row class="ml-3" :gutter="[16,8]">
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Email">
-                <a-input
-                  v-decorator="[
-                      'email',
-                      { rules: [{ required: true, message: 'Please input your email' }] },
-                    ]"
-                  :placeholder="currDataPrepare.email"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Phone Number">
-                <vue-tel-input
-                  v-model="phone"
-                  v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true}],
-          },
-        ]"
-                  @input="phoneInput"
-                ></vue-tel-input>
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Purpose of Stay">
-                <a-select
-                  v-decorator="[
-          'purpose',
-          { initialValue:purpose,rules: [{ required: true }] },
-        ]"
-                >
-                  <a-select-option value="bussiness">Bussiness</a-select-option>
-                  <a-select-option value="leisure">Leisure</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </a-row>
-
           <a-row class="ml-3 mb-3" :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
@@ -691,9 +692,11 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.guests = urlParams.get("guests");
     this.loading = false;
-
+    console.log(this.guests, "ges");
     if (this.guests === "3") {
       router.push("list");
+    } else if (this.guests == null) {
+      router.push("404");
     } else {
       this.currDataPrepare = {
         key: 1,
