@@ -50,6 +50,7 @@
           </a-list-item>
         </a-list>
       </div>
+      {{selectedData}}
       <router-link :to="{ name: 'Step', params: { id: selectedData } }">
         <a-button
           class="mr-3 float-right"
@@ -153,27 +154,26 @@ export default {
   },
   methods: {
     select(client) {
-      // console.log(client);
-      if (client.isSelected == false) {
-        this.selectedData.push(client);
-        for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = true;
-          }
-        }
-      } else {
-        for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = false;
-          }
-        }
-        for (const x in this.selectedData) {
-          if (this.selectedData[x].key == client.key) {
-            // console.log("msk");
-            this.selectedData.splice(x, 1);
-          }
-        }
-      }
+      // if (client.isSelected == false) {
+      //   this.selectedData.push(client);
+      //   for (const i in this.data) {
+      //     if (this.data[i].key == client.key) {
+      //       this.data[i].isSelected = true;
+      //     }
+      //   }
+      // } else {
+      //   for (const i in this.data) {
+      //     if (this.data[i].key == client.key) {
+      //       this.data[i].isSelected = false;
+      //     }
+      //   }
+      //   for (const x in this.selectedData) {
+      //     if (this.selectedData[x].key == client.key) {
+      //       this.selectedData.splice(x, 1);
+      //     }
+      //   }
+      // }
+      this.selectedData = client;
     },
   },
 };
