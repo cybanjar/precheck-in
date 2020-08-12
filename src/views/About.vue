@@ -235,7 +235,7 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :default-value="moment('14:00', 'HH:ss')" format="HH:ss" />
+                <a-time-picker :default-value="moment('14:00', 'HH A')" format="HH A" />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
@@ -692,9 +692,11 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.guests = urlParams.get("guests");
     this.loading = false;
-
+    console.log(this.guests, "ges");
     if (this.guests === "3") {
       router.push("list");
+    } else if (this.guests == null) {
+      router.push("404");
     } else {
       this.currDataPrepare = {
         key: 1,
