@@ -558,7 +558,7 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.bookingcode = urlParams.get("bookingcode");
     this.loading = false;
-    console.log(this.$route.params.id, "lempar");
+    // console.log(this.$route.params.id, "lempar");
     if (this.bookingcode === "982010") {
       router.push("listcheckin");
     } else {

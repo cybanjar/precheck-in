@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     select(client) {
-      console.log(client);
+      // console.log(client);
       router.push({ name: "Step", params: { id: [client] } });
     },
   },

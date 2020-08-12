@@ -692,8 +692,8 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.guests = urlParams.get("guests");
     this.loading = false;
-    console.log(this.guests);
-    console.log(this.$route.params.id);
+    // console.log(this.guests);
+    // console.log(this.$route.params.id);
     if (this.guests === "3") {
       router.push("list");
     } else if (this.$route.params.id != undefined) {
