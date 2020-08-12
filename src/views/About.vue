@@ -25,8 +25,8 @@
             :style="information"
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
-            Arrival
-            <strong>{{currDataPrepare.arrival}}</strong> Departure
+            Arrival:
+            <strong>{{currDataPrepare.arrival}}</strong> Departure:
             <strong>{{currDataPrepare.departure}}</strong>
             <br />Booking Code
             <strong>11020133</strong>
