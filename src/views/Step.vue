@@ -142,11 +142,11 @@
           />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
-            Arrival :
+            Arrival:
             <strong>{{this.currDataPrepare.arrival}}</strong>
-            Departure :
+            Departure:
             <strong>{{this.currDataPrepare.departure}}</strong>
-            <br />Booking Code :
+            <br />Booking Code:
             <strong>{{this.currDataPrepare.booking}}</strong>
           </p>
 
