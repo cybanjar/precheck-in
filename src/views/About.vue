@@ -695,8 +695,6 @@ export default {
     console.log(this.guests, "ges");
     if (this.guests === "3") {
       router.push("list");
-    } else if (this.guests == null) {
-      router.push("404");
     } else {
       this.currDataPrepare = {
         key: 1,
