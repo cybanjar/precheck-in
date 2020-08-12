@@ -58,6 +58,16 @@ const routes = [
     name: "ListCheckIn",
     component: () => import("../views/ListCheckin"),
   },
+  {
+    path: "/done",
+    name: "Done",
+    component: () => import("../views/Done"),
+  },
+  {
+    path: "/404",
+    name: "404",
+    component: () => import("../views/404"),
+  },
 ];
 
 const router = new VueRouter({
