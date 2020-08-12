@@ -694,7 +694,7 @@ export default {
     this.loading = false;
     if (this.guests === "3") {
       router.push("list");
-    } else if (this.guests === "1") {
+    } else {
       this.currDataPrepare = {
         key: 1,
         name: "Sri Rahaju, Ms",
@@ -707,8 +707,6 @@ export default {
         description: "",
         isSelected: false,
       };
-    } else {
-      router.push("404");
     }
 
     if (this.$route.params.id != undefined) {
