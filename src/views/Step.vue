@@ -364,7 +364,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
-                <a-button class="font-weight-bold mt-3 mr-3" type="primary">Pay</a-button>
+                <a-button class="font-weight-bold mt-3 mr-3" @click="search" type="primary">Pay</a-button>
                 <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
