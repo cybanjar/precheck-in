@@ -68,6 +68,11 @@ const routes = [
     name: "404",
     component: () => import("../views/404"),
   },
+  {
+    path: "/nicepay",
+    name: "nicepay",
+    component: () => import("../views/nicepay"),
+  },
 ];
 
 const router = new VueRouter({
