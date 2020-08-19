@@ -6,6 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
+      {{url}}
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
@@ -235,7 +236,11 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
-                <a-time-picker :minute-step="30" :default-value="moment('14:00', 'HH:mm')" format="HH:mm" />
+                <a-time-picker
+                  :minute-step="30"
+                  :default-value="moment('14:00', 'HH:mm')"
+                  format="HH:mm"
+                />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
@@ -681,6 +686,7 @@ export default {
         // height: "5rem",
         // marginBottom: "1rem !important",
       },
+      url: "",
     };
   },
   watch: {
@@ -690,6 +696,7 @@ export default {
   },
   created() {
     const urlParams = new URLSearchParams(window.location.search);
+    this.url = urlParams;
     this.guests = urlParams.get("guests");
     this.loading = false;
     // console.log(this.guests);
