@@ -162,34 +162,13 @@
   width: auto;
 }
 
-// Card overlay
-.image {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 20%;
-  // width: 371.917px;
   background-color: rgba(0, 0, 0, 0.65);
-  // margin-left: 291px;
-}
-
-.text {
-  color: white;
-  font-size: 14px;
-  position: absolute;
-  top: 25%;
-  left: 25%;
-  // -webkit-transform: translate(-50%, -50%);
-  // -ms-transform: translate(-50%, -50%);
-  // transform: translate(-50%, -50%);
-  text-align: center;
 }
 
 .gear-setting {
@@ -222,7 +201,7 @@
   background: #f5f6f7;
   color: #262728;
 }
-.ant-list *{
+.ant-list * {
   border-radius: 8px;
 }
 

@@ -6,9 +6,9 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">
+      <!-- <h3 class="text-center font-weight-bold visible">
         Grand Visual Hotel Jakarta
-      </h3>
+      </h3> -->
       <a-row
         class="header-branding"
         :style="information"
@@ -47,7 +47,7 @@
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img
-            class="img-hotel float-right image"
+            class="img-hotel"
             src="../assets/GrandVisualHotel.png"
             alt="Image Loading"
           />
