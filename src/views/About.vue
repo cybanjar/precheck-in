@@ -15,7 +15,13 @@
         type="flex"
         justify="space-between"
       >
-        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
+        <a-col
+          class="pl-3 pt-3 invisible"
+          :span="15"
+          :md="15"
+          :xl="15"
+          :xs="24"
+        >
           <h1 class="mb-3 font-white font-weight-bold" :style="information">
             ONLINE CHECK-IN
           </h1>
@@ -45,7 +51,7 @@
             <strong>11020133</strong>
           </p>
         </a-col>
-        <a-col class="container" :span="9" :md="9" :xs="24">
+        <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img
             class="img-hotel"
             src="../assets/GrandVisualHotel.png"
