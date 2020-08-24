@@ -34,7 +34,7 @@
           <img
             @click="showModalGuestName"
             class="img-ota"
-            src="../assets/Name.svg"
+            src="../assets/name.svg"
           />
           <a-modal v-model="modalGuestName" title="Guest Name" @ok="handleOk">
             <a-form-item label="Guest Name">
@@ -49,7 +49,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            src="../assets/EmailAddress.svg"
+            src="../assets/emailaddress.svg"
           />
           <a-modal
             v-model="modalEmailAddress"
