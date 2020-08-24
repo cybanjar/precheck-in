@@ -11,9 +11,11 @@
           title="Term and Condition"
           :visible="termcondition"
           :confirm-loading="confirmLoading"
-          @ok="handleOk"
-          @cancel="handleCancel"
         >
+          <template slot="footer">
+            <a-button key="back" @click="handleCancel">Disagree</a-button>
+            <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
+          </template>
           <p>Check-In Time: 2:00 p.m.</p>
           <p>Check-Out Time: 12:00 p.m.</p>
           <p>Cancellation/No Show:</p>
