@@ -23,9 +23,9 @@ export default {
         null,
         (err, data) => {
           if (err) {
-            console.error(err.message);
+            // console.error(err.message);
           } else {
-            console.log(data);
+            // console.log(data);
           }
         }
       );
