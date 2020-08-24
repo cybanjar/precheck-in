@@ -383,8 +383,12 @@
             </a-row>
             <a-row :gutter="[16,8]">
               <a-col :span="12" :xl="12" :xs="24">
-                <a-checkbox v-model="pay">Skip deposit payment</a-checkbox>
-                <p>If you skip deposit payment, all your transaction will be cash basis</p>
+                <p>
+                  <a-checkbox v-model="pay">
+                    Skip deposit payment
+                    If you skip deposit payment, all your transaction will be cash basis
+                  </a-checkbox>
+                </p>
               </a-col>
             </a-row>
           </div>
