@@ -8,7 +8,7 @@
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img
             class="img-hotel float-right image"
-            src="https://source.unsplash.com/1366x786/?hotel"
+            src="../assets/GrandVisualHotel.png"
             alt="Image Loading"
           />
           <div class="overlay">
@@ -35,16 +35,29 @@
               @click="select(item)"
             >
               <h2
-                :class="item.isSelected == true ? 'selected pl-3 font-weight-bold' : 'notselected pl-3 font-weight-bold'"
-              >{{item.name}}</h2>
-              <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
+                :class="
+                  item.isSelected == true
+                    ? 'selected pl-3 font-weight-bold'
+                    : 'notselected pl-3 font-weight-bold'
+                "
+              >
+                {{ item.name }}
+              </h2>
+              <p v-if="item.description != ''" class="pl-3">
+                {{ item.description }}
+              </p>
               <p v-else class="pl-3">
                 <br />
               </p>
-              <p class="pl-3">Arrival: <span class="font-weight-bold">{{item.arrival}}</span> Departure: <span class="font-weight-bold">{{item.departure}}</span></p>
               <p class="pl-3">
-                {{item.adult}} Adult
-                <a-tag color="green">{{ item.tags}}</a-tag>
+                Arrival:
+                <span class="font-weight-bold">{{ item.arrival }}</span>
+                Departure:
+                <span class="font-weight-bold">{{ item.departure }}</span>
+              </p>
+              <p class="pl-3">
+                {{ item.adult }} Adult
+                <a-tag color="green">{{ item.tags }}</a-tag>
               </p>
             </a-card>
           </a-list-item>
@@ -56,7 +69,8 @@
           type="primary"
           :size="size"
           :disabled="selectedData == 0"
-        >Next</a-button>
+          >Next</a-button
+        >
       </router-link>
     </div>
   </div>
