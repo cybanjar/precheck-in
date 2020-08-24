@@ -392,6 +392,7 @@
                 },
                 ]"
                   :defaultValue="currDataPrepare['guest-email']"
+                  disabled
                 />
               </a-form-item>
             </a-col>
