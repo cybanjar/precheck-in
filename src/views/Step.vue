@@ -13,15 +13,15 @@
           :confirm-loading="confirmLoading"
         >
           <template slot="footer">
-            <a-button key="back" @click="handleCancel">Disagree</a-button>
+            <a-button key="back" @click="disagree">Disagree</a-button>
             <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
           </template>
           <p>Check-In Time: 2:00 p.m.</p>
           <p>Check-Out Time: 12:00 p.m.</p>
           <p>Cancellation/No Show:</p>
-          <p>Cancellation can be made 3 days prior to arrival or in case of no-show one night-stay per room will be charged - See Rate Rules</p>
+          <p>Cancellation can be made 3 days prior to arrival or in case of no-show one night-stay per room will be charged</p>
           <p>Early Checkout:</p>
-          <p>All night stay will be forfeited - See Rate Rules</p>
+          <p>All night stay will be forfeited</p>
           <p>Late Checkout:</p>
           <p>Based on availability extra charge may be applied- additional cost may apply</p>
         </a-modal>
@@ -787,6 +787,9 @@ export default {
       this.$nextTick(() => {
         this.form.validateFields(["nickname"], { force: true });
       });
+    },
+    disagree() {
+      router.push("ota");
     },
     handleBlur() {
       // console.log("blur");
