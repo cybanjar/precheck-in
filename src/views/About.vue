@@ -5,39 +5,24 @@
     </a-spin>
   </div>
   <div v-else>
+    {{currDataPrepare}}
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">
-        Grand Visual Hotel Jakarta
-      </h3>
-      <a-row
-        class="header-branding"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col
-          class="pl-3 pt-3 invisible"
-          :span="15"
-          :md="15"
-          :xl="15"
-          :xs="24"
-        >
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
+      <a-row class="header-branding" :style="information" type="flex" justify="space-between">
+        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
-            v-if="currDataPrepare.description !== ''"
+            v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >
-            {{ currDataPrepare.name }} | {{ currDataPrepare.description }}
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare['guest-member-name'] }}
           </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare.name }}
+          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }}
           </h2>
           <!-- <h4
             class="main-guest-title font-white font-weight-bold"
@@ -45,18 +30,14 @@
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
             Arrival:
-            <strong>{{ currDataPrepare.arrival }}</strong> Departure:
-            <strong>{{ currDataPrepare.departure }}</strong>
-            <br />Booking Code
-            <strong>11020133</strong>
+            <strong>{{ currDataPrepare.arrive }}</strong> Departure:
+            <strong>{{ currDataPrepare.depart }}</strong>
+            <br />Booking Code:
+            <strong>{{ currDataPrepare['rsv-number'] }}</strong>
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img
-            class="img-hotel"
-            src="../assets/GrandVisualHotel.png"
-            alt="Image Loading"
-          />
+          <img class="img-hotel" src="../assets/GrandVisualHotel.png" alt="Image Loading" />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -74,9 +55,9 @@
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-          <h2 class="main-guest-title font-white font-weight-bold">
-            {{ currDataPrepare.name }} | {{ currDataPrepare.description }}
-          </h2>
+          <h2
+            class="main-guest-title font-white font-weight-bold"
+          >{{ currDataPrepare.name }} | {{ currDataPrepare.description }}</h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white">
             Arrival:
@@ -98,89 +79,29 @@
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Background Color">
             <p>Standard Color</p>
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#1890ff')"
-              >Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#E8505B')"
-              >Red</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FBDB81')"
-              >Yellow</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('green')"
-              >Green</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('white')"
-              >White</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#D42A83')"
-              >Magenta</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#1B262C')"
-              >Black</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FA7D09')"
-              >Orange</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#901f90')"
-              >Purple</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#00D7FF')"
-              >Sky Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#E4E3E3')"
-              >Grey</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FFBF00')"
-              >Gold</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
 
             <p>Custom Back Color</p>
             <slider-picker
@@ -191,96 +112,32 @@
           </a-tab-pane>
           <a-tab-pane key="2" tab="Font Color" force-render>
             <p>Standard Color</p>
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#1890ff')"
-              >Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#E8505B')"
-              >Red</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FBDB81')"
-              >Yellow</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('green')"
-              >Green</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('white')"
-              >White</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#D42A83')"
-              >Magenta</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#1B262C')"
-              >Black</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FA7D09')"
-              >Orange</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#901f90')"
-              >Purple</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#00D7FF')"
-              >Sky Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#E4E3E3')"
-              >Grey</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FFBF00')"
-              >Gold</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
 
             <p>Custom Back Color</p>
-            <slider-picker
-              class="vc-slider"
-              v-model="information.color"
-              @input="customFontClass"
-            />
+            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
           </a-tab-pane>
           <a-tab-pane key="3" tab="Change Image" force-render>
             <label>URL Image</label>
@@ -291,9 +148,7 @@
                 fontStyle: 'italic',
                 fontSize: '0.75rem',
               }"
-            >
-              * Recommended resolution 1366 x 768 atau HD
-            </p>
+            >* Recommended resolution 1366 x 768 atau HD</p>
           </a-tab-pane>
         </a-tabs>
       </a-modal>
@@ -330,8 +185,7 @@
               <a-checkbox
                 :checked="showPickupRequest"
                 v-model="showPickupRequest"
-                >Use Pickup Request</a-checkbox
-              >
+              >Use Pickup Request</a-checkbox>
               <!-- @change="onChange" -->
             </p>
             <p>
@@ -372,24 +226,16 @@
               </a-input-group>
             </p>
             <p>
-              <label class="ml-2 font-weight-bold" for="checkbox"
-                >Room Preferences :</label
-              >
+              <label class="ml-2 font-weight-bold" for="checkbox">Room Preferences :</label>
             </p>
             <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor"
-                >Lower Floor & Higher Floor</a-checkbox
-              >
+              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
             </p>
             <p>
-              <a-checkbox :checked="showSmoking" v-model="showSmoking"
-                >Smoking & Non Smoking</a-checkbox
-              >
+              <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
             </p>
             <p>
-              <a-checkbox :checked="showBed" v-model="showBed"
-                >One Big Bed & Two Single Bed</a-checkbox
-              >
+              <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
             </p>
           </a-modal>
           <a-row class="ml-3" gutter="16">
@@ -404,33 +250,26 @@
             </a-col>
             <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
               <a-form-item label="Request">
-                <a-checkbox :checked="showPrice" v-model="showPrice"
-                  >Pickup Required</a-checkbox
-                >
+                <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item label="Price">
-                <label
-                  >{{ nilai === 3 ? "" : currency }}
+                <label>
+                  {{ nilai === 3 ? "" : currency }}
                   {{
-                    nilai === 3
-                      ? " "
-                      : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
-                  }}</label
-                >
+                  nilai === 3
+                  ? " "
+                  : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+                  }}
+                </label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
                 <span v-else>Free of Charge</span>
               </a-form-item>
             </a-col>
 
-            <a-col
-              v-show="showPrice && showPickupRequest"
-              :span="8"
-              :xl="8"
-              :xs="24"
-            >
+            <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
               <a-form-item label="Flight Details">
                 <a-input placeholder="Please input flight details" />
               </a-form-item>
@@ -441,9 +280,7 @@
               <p
                 class="font-weight-bold"
                 v-show="showSmoking || showFloor || showBed"
-              >
-                Room Preferences
-              </p>
+              >Room Preferences</p>
               <a-form-item label v-show="showSmoking">
                 <a-radio-group name="radioGroup">
                   <a-radio :value="1">
@@ -547,15 +384,14 @@
               <a-form-item label="Email">
                 <a-input
                   v-decorator="[
-                    'email',
-                    {
-                      rules: [
-                        { required: true, message: 'Please input your email' },
-                      ],
-                    },
-                  ]"
-                  :placeholder="currDataPrepare.email"
-                  disabled
+                'email',
+                {
+                rules: [
+                { required: true, message: 'Please input your email' },
+                ],
+                },
+                ]"
+                  :defaultValue="currDataPrepare['guest-email']"
                 />
               </a-form-item>
             </a-col>
@@ -570,6 +406,7 @@
                     },
                   ]"
                   @input="phoneInput"
+                  :defaultValue="currDataPrepare['guest-phone']"
                 ></vue-tel-input>
               </a-form-item>
             </a-col>
@@ -600,9 +437,7 @@
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi"
-                    >Arab Saudi</a-select-option
-                  >
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -652,9 +487,7 @@
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi"
-                    >Arab Saudi</a-select-option
-                  >
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -675,8 +508,7 @@
                       v-for="(item, keys) in filteredRegion"
                       :key="keys"
                       :value="filteredRegion[keys]['province']"
-                      >{{ filteredRegion[keys].province }}</a-select-option
-                    >
+                    >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </div>
@@ -730,10 +562,7 @@
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox
-                v-model="agree"
-                >{{(value == 'terma' ? term1 : term2)}}</a-checkbox
-              >
+              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
@@ -750,8 +579,7 @@
                 scrollToTop();
               "
               :disabled="!agree"
-              >Check-In Now</a-button
-            >
+            >Check-In Now</a-button>
           </a-col>
         </a-row>
       </div>
@@ -781,6 +609,7 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
+import ky from "ky";
 Vue.use(Antd);
 
 export default {
@@ -869,36 +698,58 @@ export default {
     },
   },
   created() {
-    const urlParams = new URLSearchParams(window.location.search);
-    // this.url = urlParams;
-    this.guests = urlParams.get("guests");
-    this.loading = false;
-    // console.log(this.guests);
-    // console.log(this.$route.params.id);
-    if (this.guests === "3") {
-      router.push("list");
-    } else if (this.$route.params.id != undefined) {
-      this.id = this.$route.params.id;
-      // this.counter = this.id.length;
+    (async () => {
+      const parsed = await ky
+        .post(
+          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+          {
+            json: {
+              request: {
+                encryptedText: "znwPv/sRp9R/aCNF0DRHIC2Qp1d6lALt+iOaertOf/A=",
+              },
+            },
+          }
+        )
+        .json();
+      console.log(parsed, "test");
 
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-    } else if (this.guests == null && this.$route.params.id == undefined) {
-      router.push("404");
-    } else {
-      this.currDataPrepare = {
-        key: 1,
-        name: "Sri Rahaju, Ms",
-        arrival: "14/01/2019",
-        departure: "15/01/2019",
-        adult: "1",
-        email: "s.sutji@gmail.com",
-        tags: "Suites",
-        rs: 0,
-        description: "",
-        isSelected: false,
-      };
-    }
+      this.loading = false;
+      this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
+    })();
+    // this.id = this.$route.params.id;
+    // this.counter = this.id.length;
+
+    // this.counter += 1;
+    // const urlParams = new URLSearchParams(window.location.search);
+    // // this.url = urlParams;
+    // this.guests = urlParams.get("guests");
+    // this.loading = false;
+    // // console.log(this.guests);
+    // // console.log(this.$route.params.id);
+    // if (this.guests === "3") {
+    //   router.push("list");
+    // } else if (this.$route.params.id != undefined) {
+    //   this.id = this.$route.params.id;
+    //   // this.counter = this.id.length;
+
+    //   this.currDataPrepare = this.id[this.counter];
+    //   this.counter += 1;
+    // } else if (this.guests == null && this.$route.params.id == undefined) {
+    //   router.push("404");
+    // } else {
+    //   this.currDataPrepare = {
+    //     key: 1,
+    //     name: "Sri Rahaju, Ms",
+    //     arrival: "14/01/2019",
+    //     departure: "15/01/2019",
+    //     adult: "1",
+    //     email: "s.sutji@gmail.com",
+    //     tags: "Suites",
+    //     rs: 0,
+    //     description: "",
+    //     isSelected: false,
+    //   };
+    // }
 
     // if (this.$route.params.id != undefined) {
     //   this.id = this.$route.params.id;
