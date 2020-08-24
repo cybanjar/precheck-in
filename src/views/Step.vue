@@ -6,6 +6,17 @@
   </div>
   <div v-else>
     <div class="home">
+      <div v-show="term">
+        <a-modal
+          title="Term"
+          :visible="termcondition"
+          :confirm-loading="confirmLoading"
+          @ok="handleOk"
+          @cancel="handleCancel"
+        >
+          <p>{{ ModalText }}</p>
+        </a-modal>
+      </div>
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
       <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
@@ -364,12 +375,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
-                <a-button
-                  class="font-weight-bold mt-3 mr-3"
-                  type="primary"
-                  @click="search()"
-                  >Pay</a-button
-                >
+                <a-button class="font-weight-bold mt-3 mr-3" type="primary" @click="search()">Pay</a-button>
                 <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -535,12 +541,14 @@ export default {
       country: "indonesia",
       purpose: "leisure",
       loading: true,
+      term: false,
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
       term2:
         "Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.",
       value: "terma",
       gambar: "https://source.unsplash.com/1366x786/?hotel",
+      termcondition: false,
       information: {
         backgroundColor: "$green",
         // border: "none",
@@ -563,7 +571,8 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     this.bookingcode = urlParams.get("bookingcode");
     this.loading = false;
-    // console.log(this.$route.params.id, "lempar");
+    this.termcondition = true;
+     // console.log(this.$route.params.id, "lempar");
     if (this.bookingcode === "982010") {
       router.push("listcheckin");
     } else {
@@ -580,6 +589,7 @@ export default {
         description: "Ariella Calista Ichwan",
         isSelected: false,
       };
+      term;
     }
     if (this.$route.params.id != undefined) {
       this.id = this.$route.params.id;
@@ -712,9 +722,6 @@ export default {
     masukinFoto(foto) {
       this.gambar = foto.target.value;
     },
-    masukinTerm(tulisan) {
-      this.term = tulisan.target.value;
-    },
     masukinUang(uang) {
       this.money = uang.target.value;
     },
@@ -750,6 +757,7 @@ export default {
         this.muncul = false;
         this.keluar = false;
         this.guest = false;
+        this.termcondition = false;
         this.confirmLoading = false;
       }, 300);
     },

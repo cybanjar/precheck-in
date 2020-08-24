@@ -526,26 +526,10 @@
             @ok="handleOk"
             @cancel="handleCancel"
           >
-            <label>Document ID Setup</label>
-            <br />
-            <a-checkbox-group @change="onID">
-              <a-checkbox value="id_card">E-KTP</a-checkbox>
-
-              <a-checkbox value="passport">Passport</a-checkbox>
-
-              <a-checkbox value="driving_license">Driving License</a-checkbox>
-
-              <a-checkbox value="other">Other</a-checkbox>
-            </a-checkbox-group>
-            <!-- <input v-model="message"  />
-            {{dataID[0] || dataID[1] || dataID[2] || dataID[3] == other}}-->
-            <br />
-            <br />
-
             <label>Term and Condition</label>
             <p>
               <a-radio-group v-model="value">
-                <a-radio value="terma">Local language</a-radio>
+                <a-radio value="terma">Current language</a-radio>
                 <a-textarea v-model="term1" @input="masukinTerm" :rows="3" />
                 <a-radio value="termb">Other language</a-radio>
                 <a-textarea v-model="term2" @input="masukinTerm" :rows="3" />
