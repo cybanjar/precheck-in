@@ -8,13 +8,20 @@
     <div class="home">
       <div v-show="term">
         <a-modal
-          title="Term"
+          title="Term and Condition"
           :visible="termcondition"
           :confirm-loading="confirmLoading"
           @ok="handleOk"
           @cancel="handleCancel"
         >
-          <p>{{ ModalText }}</p>
+          <p>Check-In Time: 2:00 p.m.</p>
+          <p>Check-Out Time: 12:00 p.m.</p>
+          <p>Cancellation/No Show:</p>
+          <p>Cancellation can be made 3 days prior to arrival or in case of no-show one night-stay per room will be charged - See Rate Rules</p>
+          <p>Early Checkout:</p>
+          <p>All night stay will be forfeited - See Rate Rules</p>
+          <p>Late Checkout:</p>
+          <p>Based on availability extra charge may be applied- additional cost may apply</p>
         </a-modal>
       </div>
       <!-- test -->
@@ -572,7 +579,7 @@ export default {
     this.bookingcode = urlParams.get("bookingcode");
     this.loading = false;
     this.termcondition = true;
-     // console.log(this.$route.params.id, "lempar");
+    // console.log(this.$route.params.id, "lempar");
     if (this.bookingcode === "982010") {
       router.push("listcheckin");
     } else {
