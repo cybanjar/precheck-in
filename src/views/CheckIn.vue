@@ -1,15 +1,22 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
     </a-spin>
   </div>
   <div v-else>
     <div class="home">
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
-      <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
+      <a-row
+        class="header-branding mb-3"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img
@@ -52,29 +59,89 @@
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Background Color">
             <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#1890ff')"
+              >Blue</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#E8505B')"
+              >Red</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#FBDB81')"
+              >Yellow</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('green')"
+              >Green</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('white')"
+              >White</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#D42A83')"
+              >Magenta</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#1B262C')"
+              >Black</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#FA7D09')"
+              >Orange</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#901f90')"
+              >Purple</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#00D7FF')"
+              >Sky Blue</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#E4E3E3')"
+              >Grey</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiHeaderClass('#FFBF00')"
+              >Gold</a
+            >
 
             <p>Custom Back Color</p>
             <slider-picker
@@ -85,39 +152,109 @@
           </a-tab-pane>
           <a-tab-pane key="2" tab="Font Color" force-render>
             <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#1890ff')"
+              >Blue</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#E8505B')"
+              >Red</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#FBDB81')"
+              >Yellow</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('green')"
+              >Green</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('white')"
+              >White</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#D42A83')"
+              >Magenta</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#1B262C')"
+              >Black</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#FA7D09')"
+              >Orange</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#901f90')"
+              >Purple</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#00D7FF')"
+              >Sky Blue</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#E4E3E3')"
+              >Grey</a
+            >
             <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
+            <a
+              href="#"
+              onclick="return false;"
+              @mouseenter="gantiFontClass('#FFBF00')"
+              >Gold</a
+            >
 
             <p>Custom Back Color</p>
-            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
+            <slider-picker
+              class="vc-slider"
+              v-model="information.color"
+              @input="customFontClass"
+            />
           </a-tab-pane>
           <a-tab-pane key="3" tab="Change Image" force-render>
             <label>URL Image</label>
             <a-input v-model="gambar" @input="masukinFoto" />
             <p
-              :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
-            >* Recommended resolution 1366 x 768 atau HD</p>
+              :style="{
+                color: '#E8505B',
+                fontStyle: 'italic',
+                fontSize: '0.75rem',
+              }"
+            >
+              * Recommended resolution 1366 x 768 atau HD
+            </p>
           </a-tab-pane>
         </a-tabs>
       </a-modal>
@@ -196,14 +333,18 @@
               </a-radio-group>
             </p>
           </a-modal>
-          <a-row class :gutter="[16,8]">
+          <a-row class :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Email">
                 <a-input
                   v-decorator="[
-                      'email',
-                      { rules: [{ required: true, message: 'Please input your email' }] },
-                    ]"
+                    'email',
+                    {
+                      rules: [
+                        { required: true, message: 'Please input your email' },
+                      ],
+                    },
+                  ]"
                   :placeholder="currDataPrepare.email"
                   disabled
                 />
@@ -214,29 +355,31 @@
                 <vue-tel-input
                   v-model="phone"
                   v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true}],
-          },
-        ]"
+                    'phone',
+                    {
+                      rules: [{ required: true }],
+                    },
+                  ]"
                   @input="phoneInput"
                 ></vue-tel-input>
               </a-form-item>
             </a-col>
           </a-row>
 
-          <a-row class :gutter="[16,8]">
+          <a-row class :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
                   v-decorator="[
-                  'nationality',
-          { initialValue: nationality,rules: [{ required: true }] },
-        ]"
+                    'nationality',
+                    { initialValue: nationality, rules: [{ required: true }] },
+                  ]"
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  <a-select-option value="arabsaudi"
+                    >Arab Saudi</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -279,14 +422,15 @@
                 <a-select
                   v-model="country"
                   v-decorator="[
-          'country',
-          { initialValue: country,
-          rules: [{ required: true }] },
-        ]"
+                    'country',
+                    { initialValue: country, rules: [{ required: true }] },
+                  ]"
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  <a-select-option value="arabsaudi"
+                    >Arab Saudi</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -307,7 +451,8 @@
                       v-for="(item, keys) in filteredRegion"
                       :key="keys"
                       :value="filteredRegion[keys]['province']"
-                    >{{ filteredRegion[keys].province }}</a-select-option>
+                      >{{ filteredRegion[keys].province }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </div>
@@ -316,9 +461,9 @@
                   <a-input
                     initial-value="Willy Wanta"
                     v-decorator="[
-                  'username',
-                  { rules: [{ required: false, message: '' }] },
-                ]"
+                      'username',
+                      { rules: [{ required: false, message: '' }] },
+                    ]"
                   />
                 </a-form-item>
               </div>
@@ -359,14 +504,14 @@
           </a-row>
 
           <!-- Address -->
-          <a-row class :gutter="[16,8]">
+          <a-row class :gutter="[16, 8]">
             <a-col :span="3" :xl="3" :xs="24">
               <a-form-item label="Purpose of Stay">
                 <a-select
                   v-decorator="[
-          'purpose',
-          { initialValue:purpose,rules: [{ required: true }] },
-        ]"
+                    'purpose',
+                    { initialValue: purpose, rules: [{ required: true }] },
+                  ]"
                 >
                   <a-select-option value="bussiness">Bussiness</a-select-option>
                   <a-select-option value="leisure">Leisure</a-select-option>
@@ -382,9 +527,9 @@
                   type="file"
                   @change="onFileChange"
                   v-decorator="[
-          'url',
-          { initialValue: '',rules: [{ required: true }] },
-        ]"
+                    'url',
+                    { initialValue: '', rules: [{ required: true }] },
+                  ]"
                 />
               </a-form-item>
               <img class="preview" v-if="url" :src="url" />
@@ -396,7 +541,9 @@
               <p
                 class="font-weight-bold"
                 v-show="showSmoking || showFloor || showBed"
-              >Room Preferences</p>
+              >
+                Room Preferences
+              </p>
               <ul>
                 <li>Non Smoking</li>
                 <li>Lower Floor</li>
@@ -422,42 +569,48 @@
               </a-row>
             </a-card>
           </a-row>
-          <a-row :gutter="[16,8]">
-            <a-col :span="12" :xl="12" :xs="12">
+          <a-row type="flex" justify="start" :gutter="[16, 8]">
+            <a-col :span="8" :xl="8" :xs="12">
               <a-form-item label="Deposit">
                 <h2>
                   <strong>Rp. 500,000</strong>
                 </h2>
               </a-form-item>
             </a-col>
-            <a-col :span="10" :xl="10" :xs="12">
-              <a-button class="font-weight-bold mt-3 mr-3" type="primary">Pay</a-button>
+            <a-col :span="7" :xl="7" :xs="12">
+              <a-button class="font-weight-bold mt-3 mr-3" type="primary"
+                >Pay</a-button
+              >
               <img
-                class="rounded float-right"
+                class="rounded"
                 src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
-                style="height:50px;width:50px; opacity: .65;"
+                style="height: 50px; width: 50px; opacity: 0.65;"
               />
             </a-col>
           </a-row>
-          <a-row :gutter="[16,8]">
+          <a-row :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
+              <a-checkbox
+                v-model="agree"
+                >{{(value == 'terma' ? term1 : term2)}}</a-checkbox
+              >
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="4" :xl="4" :xs="24">
+              <a-button
+                :xl="12"
+                class="font-weight-bold mt-3"
+                type="primary"
+                block
+                :size="size"
+                @click="search"
+                :disabled="!agree"
+                >Check-In Now</a-button
+              >
             </a-col>
           </a-row>
         </a-form>
-        <a-row class :gutter="[16,8]">
-          <a-col :span="4" :xl="4" :xs="24">
-            <a-button
-              :xl="12"
-              class="font-weight-bold mt-3"
-              type="primary"
-              block
-              :size="size"
-              @click="search"
-              :disabled="!agree"
-            >Check-In Now</a-button>
-          </a-col>
-        </a-row>
       </div>
     </div>
   </div>
@@ -785,4 +938,3 @@ export default {
   },
 };
 </script>
-
