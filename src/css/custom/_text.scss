@@ -13,15 +13,24 @@ h3 {
 .font-weight-normal {
   font-weight: normal;
 }
-.font-white{
+.font-white {
   color: white;
 }
 .text-white {
   color: #fff !important;
 }
 .text-secondary {
-  opacity: .65;
+  opacity: 0.65;
 }
 .font-black {
   color: #000000;
+}
+
+.text {
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  text-align: center;
+  top: 25%;
+  left: 25%;
 }
