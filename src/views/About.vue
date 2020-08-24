@@ -6,9 +6,9 @@
   </div>
   <div v-else>
     <div class="home">
-      <!-- <h3 class="text-center font-weight-bold visible">
+      <h3 class="text-center font-weight-bold visible">
         Grand Visual Hotel Jakarta
-      </h3> -->
+      </h3>
       <a-row
         class="header-branding"
         :style="information"
