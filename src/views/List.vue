@@ -41,41 +41,40 @@
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
-                {{ item.name }}
+                {{ item.name }},
               </h2>
-              <p v-if="item.description != ''" class="pl-3">
-                {{ item.description }}
-              </p>
+              <p v-if="item.description != ''" class="pl-3">{{ item.description }}</p>
               <p v-else class="pl-3">
                 <br />
               </p>
               <p class="pl-3">
                 Arrival:
-                <span class="font-weight-bold">{{ item.arrival }}</span>
+                <span class="font-weight-bold">{{ item.arrive }}</span>
                 Departure:
-                <span class="font-weight-bold">{{ item.departure }}</span>
+                <span class="font-weight-bold">{{ item.depart }}</span>
               </p>
               <p class="pl-3">
-                {{ item.adult }} Adult
-                <a-tag color="green">{{ item.tags }}</a-tag>
+                {{ item.rmqty }} Adult
+                <a-tag color="green">{{ item['rate-desc'] }}</a-tag>
               </p>
             </a-card>
           </a-list-item>
         </a-list>
       </div>
+      {{data}}
       <router-link :to="{ name: 'Home', params: { id: selectedData } }">
         <a-button
           class="fixed-bottom-right mr-3 float-right"
           type="primary"
           :size="size"
           :disabled="selectedData == 0"
-          >Next</a-button
-        >
+        >Next</a-button>
       </router-link>
     </div>
   </div>
 </template>
 <script>
+import router from "../router";
 import { Alert } from "ant-design-vue";
 const data = [
   {
@@ -162,9 +161,21 @@ export default {
   data() {
     return {
       data,
+      coba,
       selectedData: [],
     };
   },
+  // created() {
+  //   console.log(this.$route.params.foo, "nyampe");
+  //   this.coba = this.$route.params.foo;
+  //   for (const i in this.coba) {
+  //     this.coba[i].isSelected = false;
+  //     console.log(i);
+  //     this.coba[i].key = (i + 1);
+  //   }
+  //   this.data = this.coba;
+  //   console.log(this.data, "berubah");
+  // },
   methods: {
     select(client) {
       if (client.isSelected == false) {

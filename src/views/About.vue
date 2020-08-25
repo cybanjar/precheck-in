@@ -649,7 +649,7 @@ export default {
         valid: "",
         country: "",
       },
-      dataID: [],
+      dataGuest: [],
       max: 100,
       agree: false,
       text: "",
@@ -690,7 +690,6 @@ export default {
         // height: "5rem",
         // marginBottom: "1rem !important",
       },
-      // url: "",
     };
   },
   watch: {
@@ -712,10 +711,15 @@ export default {
           }
         )
         .json();
-      console.log(parsed.response.arrivalGuest["arrival-guest"].length, "test");
-      this.loading = false;
-      if (parsed.response.arrivalGuest["arrival-guest"].length !== "1") {
-        router.push("list");
+      console.log(parsed.response.arrivalGuest["arrival-guest"].length);
+
+      this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+
+      if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+        this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+        console.log(this.dataGuest, "coba");
+        // router.push("list");
+        router.push({ name: "List", params: { foo: this.dataGuest } });
       } else if (this.$route.params.id != undefined) {
         this.id = this.$route.params.id;
         // this.counter = this.id.length;
@@ -730,49 +734,8 @@ export default {
       } else {
         this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
       }
+      this.loading = false;
     })();
-    // this.id = this.$route.params.id;
-    // this.counter = this.id.length;
-
-    // this.counter += 1;
-    // const urlParams = new URLSearchParams(window.location.search);
-    // // this.url = urlParams;
-    // this.guests = urlParams.get("guests");
-    // this.loading = false;
-    // // console.log(this.guests);
-    // // console.log(this.$route.params.id);
-    // if (this.guests === "3") {
-    //   router.push("list");
-    // } else if (this.$route.params.id != undefined) {
-    //   this.id = this.$route.params.id;
-    //   // this.counter = this.id.length;
-
-    //   this.currDataPrepare = this.id[this.counter];
-    //   this.counter += 1;
-    // } else if (this.guests == null && this.$route.params.id == undefined) {
-    //   router.push("404");
-    // } else {
-    //   this.currDataPrepare = {
-    //     key: 1,
-    //     name: "Sri Rahaju, Ms",
-    //     arrival: "14/01/2019",
-    //     departure: "15/01/2019",
-    //     adult: "1",
-    //     email: "s.sutji@gmail.com",
-    //     tags: "Suites",
-    //     rs: 0,
-    //     description: "",
-    //     isSelected: false,
-    //   };
-    // }
-
-    // if (this.$route.params.id != undefined) {
-    //   this.id = this.$route.params.id;
-    //   // this.counter = this.id.length;
-
-    //   this.currDataPrepare = this.id[this.counter];
-    //   this.counter += 1;
-    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
@@ -809,9 +772,6 @@ export default {
       }
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
-    },
-    onID(checkedValues) {
-      this.dataID = checkedValues;
     },
     berubah(e) {
       this.nilai = e.target.value;
