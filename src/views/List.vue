@@ -41,9 +41,10 @@
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
-                {{ item.name }},
+                {{ item["guest-lname"] }},
+                {{ item["guest-pname"] }}
               </h2>
-              <p v-if="item.description != ''" class="pl-3">{{ item.description }}</p>
+              <p v-if="item['guest-member-name'] != ''" class="pl-3">{{ item['guest-member-name'] }}</p>
               <p v-else class="pl-3">
                 <br />
               </p>
@@ -61,13 +62,14 @@
           </a-list-item>
         </a-list>
       </div>
-      {{data}}
+      {{selectedData}}
+      <!-- {{data}} -->
       <router-link :to="{ name: 'Home', params: { id: selectedData } }">
         <a-button
           class="fixed-bottom-right mr-3 float-right"
           type="primary"
           :size="size"
-          :disabled="selectedData == 0"
+          :disabled="selectedData == 0 || selectedData == undefined"
         >Next</a-button>
       </router-link>
     </div>
@@ -75,107 +77,107 @@
 </template>
 <script>
 import router from "../router";
+import moment from "moment";
 import { Alert } from "ant-design-vue";
-const data = [
-  {
-    key: 1,
-    name: "Hanevi Djasri, Mr",
-    arrival: "14/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "h.djasri@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11423133",
-  },
-  {
-    key: 2,
-    name: "Haiying Li, Mrs",
-    arrival: "12/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "li.haiying@gmail.com",
-    tags: "Suites",
-    rs: 1,
-    description: "Chao Bao, Mr",
-    isSelected: false,
-    booking: "1120133",
-  },
-  {
-    key: 3,
-    name: "Yeoh Hui Jin, Mrs",
-    arrival: "13/01/2019",
-    departure: "14/01/2019",
-    adult: "1",
-    email: "jin.yeoh@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11022453",
-  },
-  {
-    key: 4,
-    name: "Saki Sato, Ms",
-    arrival: "12/01/2019",
-    departure: "14/01/2019",
-    adult: "1",
-    email: "saki.kato@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "110201",
-  },
-  {
-    key: 5,
-    name: "Rahmat, Mr",
-    arrival: "13/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "m.imdadun@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11034124",
-  },
-  {
-    key: 6,
-    name: "Sri Rahaju, Ms",
-    arrival: "14/01/2019",
-    departure: "15/01/2019",
-    adult: "1",
-    email: "s.sutji@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "1101423",
-  },
-];
+// const data = [
+//   {
+//     key: 1,
+//     name: "Hanevi Djasri, Mr",
+//     arrival: "14/01/2019",
+//     departure: "14/01/2019",
+//     adult: "2",
+//     email: "h.djasri@gmail.com",
+//     tags: "Suites",
+//     rs: 0,
+//     description: "",
+//     isSelected: false,
+//     booking: "11423133",
+//   },
+//   {
+//     key: 2,
+//     name: "Haiying Li, Mrs",
+//     arrival: "12/01/2019",
+//     departure: "14/01/2019",
+//     adult: "2",
+//     email: "li.haiying@gmail.com",
+//     tags: "Suites",
+//     rs: 1,
+//     description: "Chao Bao, Mr",
+//     isSelected: false,
+//     booking: "1120133",
+//   },
+//   {
+//     key: 3,
+//     name: "Yeoh Hui Jin, Mrs",
+//     arrival: "13/01/2019",
+//     departure: "14/01/2019",
+//     adult: "1",
+//     email: "jin.yeoh@gmail.com",
+//     tags: "Suites",
+//     rs: 0,
+//     description: "",
+//     isSelected: false,
+//     booking: "11022453",
+//   },
+//   {
+//     key: 4,
+//     name: "Saki Sato, Ms",
+//     arrival: "12/01/2019",
+//     departure: "14/01/2019",
+//     adult: "1",
+//     email: "saki.kato@gmail.com",
+//     tags: "Suites",
+//     rs: 0,
+//     description: "",
+//     isSelected: false,
+//     booking: "110201",
+//   },
+//   {
+//     key: 5,
+//     name: "Rahmat, Mr",
+//     arrival: "13/01/2019",
+//     departure: "14/01/2019",
+//     adult: "2",
+//     email: "m.imdadun@gmail.com",
+//     tags: "Suites",
+//     rs: 0,
+//     description: "",
+//     isSelected: false,
+//     booking: "11034124",
+//   },
+//   {
+//     key: 6,
+//     name: "Sri Rahaju, Ms",
+//     arrival: "14/01/2019",
+//     departure: "15/01/2019",
+//     adult: "1",
+//     email: "s.sutji@gmail.com",
+//     tags: "Suites",
+//     rs: 0,
+//     description: "",
+//     isSelected: false,
+//     booking: "1101423",
+//   },
+// ];
 
 export default {
   data() {
     return {
       data,
-      coba,
       selectedData: [],
     };
   },
-  // created() {
-  //   console.log(this.$route.params.foo, "nyampe");
-  //   this.coba = this.$route.params.foo;
-  //   for (const i in this.coba) {
-  //     this.coba[i].isSelected = false;
-  //     console.log(i);
-  //     this.coba[i].key = (i + 1);
-  //   }
-  //   this.data = this.coba;
-  //   console.log(this.data, "berubah");
-  // },
+  created() {
+    console.log(this.$route.params.foo, "nyampe");
+    this.data = this.$route.params.foo;
+    for (const i in this.data) {
+      this.data[i].isSelected = false;
+      console.log(i);
+      this.data[i].key = Number(i) + 1;
+    }
+    return this.data;
+    console.log(this.data, "berubah");
+  },
   methods: {
     select(client) {
       if (client.isSelected == false) {

@@ -698,44 +698,46 @@ export default {
     },
   },
   created() {
-    (async () => {
-      const parsed = await ky
-        .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
-          {
-            json: {
-              request: {
-                encryptedText: "znwPv/sRp9R/aCNF0DRHICW9qvNvzFKonopbqfyVf/8=",
+    if (this.$route.params.id != undefined) {
+      this.id = this.$route.params.id;
+      // this.counter = this.id.length;
+
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    } else {
+      (async () => {
+        const parsed = await ky
+          .post(
+            "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+            {
+              json: {
+                request: {
+                  encryptedText: "znwPv/sRp9R/aCNF0DRHICW9qvNvzFKonopbqfyVf/8=",
+                },
               },
-            },
-          }
-        )
-        .json();
-      console.log(parsed.response.arrivalGuest["arrival-guest"].length);
+            }
+          )
+          .json();
+        console.log(parsed.response.arrivalGuest["arrival-guest"].length);
 
-      this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
-      if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
-        this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-        console.log(this.dataGuest, "coba");
-        // router.push("list");
-        router.push({ name: "List", params: { foo: this.dataGuest } });
-      } else if (this.$route.params.id != undefined) {
-        this.id = this.$route.params.id;
-        // this.counter = this.id.length;
-
-        this.currDataPrepare = this.id[this.counter];
-        this.counter += 1;
-      } else if (
-        parsed.response.arrivalGuest["arrival-guest"].length == null &&
-        this.$route.params.id == undefined
-      ) {
-        router.push("404");
-      } else {
-        this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
-      }
-      this.loading = false;
-    })();
+        if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+          this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+          console.log(this.dataGuest, "coba");
+          // router.push("list");
+          router.push({ name: "List", params: { foo: this.dataGuest } });
+        }
+        // else if (this.$route.params.id == undefined) {
+        //   router.push("404");
+        // }
+        else {
+          this.currDataPrepare =
+            parsed.response.arrivalGuest["arrival-guest"][0];
+        }
+      })();
+    }
+    this.loading = false;
   },
   mounted() {
     this.filteredRegion = this.Region;
