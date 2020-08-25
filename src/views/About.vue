@@ -706,16 +706,30 @@ export default {
           {
             json: {
               request: {
-                encryptedText: "znwPv/sRp9R/aCNF0DRHIC2Qp1d6lALt+iOaertOf/A=",
+                encryptedText: "znwPv/sRp9R/aCNF0DRHICW9qvNvzFKonopbqfyVf/8=",
               },
             },
           }
         )
         .json();
-      console.log(parsed, "test");
-
+      console.log(parsed.response.arrivalGuest["arrival-guest"].length, "test");
       this.loading = false;
-      this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
+      if (parsed.response.arrivalGuest["arrival-guest"].length !== "1") {
+        router.push("list");
+      } else if (this.$route.params.id != undefined) {
+        this.id = this.$route.params.id;
+        // this.counter = this.id.length;
+
+        this.currDataPrepare = this.id[this.counter];
+        this.counter += 1;
+      } else if (
+        parsed.response.arrivalGuest["arrival-guest"].length == null &&
+        this.$route.params.id == undefined
+      ) {
+        router.push("404");
+      } else {
+        this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
+      }
     })();
     // this.id = this.$route.params.id;
     // this.counter = this.id.length;
