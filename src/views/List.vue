@@ -163,8 +163,7 @@ import { Alert } from "ant-design-vue";
 export default {
   data() {
     return {
-      data,
-      selectedData: any,
+      selectedData: [],
     };
   },
   created() {

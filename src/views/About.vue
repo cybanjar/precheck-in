@@ -30,8 +30,8 @@
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
             Arrival:
-            <strong>{{ currDataPrepare.arrive }}</strong> Departure:
-            <strong>{{ currDataPrepare.depart }}</strong>
+            <strong>{{formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />Booking Code:
             <strong>{{ currDataPrepare['rsv-number'] }}</strong>
           </p>
@@ -713,20 +713,19 @@ export default {
             {
               json: {
                 request: {
-                  encryptedText: tempParam.replace(/%2F/g, '/'),
+                  encryptedText: tempParam.replace(/%2F/g, "/"),
                 },
               },
             }
           )
           .json();
 
-        const tempMessResult = parsed.response.messResult.split(' ');
+        const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
-        if (tempMessResult[0] == '99') {
+        if (tempMessResult[0] == "99") {
           router.push("404");
-        }
-        else {
+        } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
             // router.push("list");
@@ -853,6 +852,13 @@ export default {
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
+    },
+    formatDate(datum) {
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
   },
   computed: {
