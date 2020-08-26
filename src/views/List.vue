@@ -50,9 +50,9 @@
               </p>
               <p class="pl-3">
                 Arrival:
-                <span class="font-weight-bold">{{ item.arrive }}</span>
+                <span class="font-weight-bold">{{ formatDate(item.arrive) }}</span>
                 Departure:
-                <span class="font-weight-bold">{{ item.depart }}</span>
+                <span class="font-weight-bold">{{ formatDate(item.depart) }}</span>
               </p>
               <p class="pl-3">
                 {{ item.rmqty }} Adult
@@ -164,7 +164,7 @@ export default {
   data() {
     return {
       data,
-      selectedData: [],
+      selectedData: any,
     };
   },
   created() {
@@ -181,6 +181,7 @@ export default {
   methods: {
     select(client) {
       if (client.isSelected == false) {
+      console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i].key == client.key) {
@@ -200,6 +201,9 @@ export default {
           }
         }
       }
+    },
+    formatDate(datum) {
+      return new Intl.DateTimeFormat(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(datum));
     },
   },
 };

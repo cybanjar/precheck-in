@@ -706,34 +706,39 @@ export default {
       this.counter += 1;
     } else {
       (async () => {
+        const tempParam = location.search.substring(1);
         const parsed = await ky
           .post(
             "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
             {
               json: {
                 request: {
-                  encryptedText: "znwPv/sRp9R/aCNF0DRHICW9qvNvzFKonopbqfyVf/8=",
+                  encryptedText: tempParam.replace(/%2F/g, '/'),
                 },
               },
             }
           )
           .json();
-        console.log(parsed.response.arrivalGuest["arrival-guest"].length);
 
+        const tempMessResult = parsed.response.messResult.split(' ');
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
-        if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
-          this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-          console.log(this.dataGuest, "coba");
-          // router.push("list");
-          router.push({ name: "List", params: { foo: this.dataGuest } });
+        if (tempMessResult[0] == '99') {
+          router.push("404");
         }
-        // else if (this.$route.params.id == undefined) {
-        //   router.push("404");
-        // }
         else {
-          this.currDataPrepare =
-            parsed.response.arrivalGuest["arrival-guest"][0];
+          if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+            this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+            // router.push("list");
+            router.push({ name: "List", params: { foo: this.dataGuest } });
+          }
+          // else if (this.$route.params.id == undefined) {
+          //   router.push("404");
+          // }
+          else {
+            this.currDataPrepare =
+              parsed.response.arrivalGuest["arrival-guest"][0];
+          }
         }
       })();
     }
