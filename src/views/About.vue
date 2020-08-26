@@ -713,7 +713,7 @@ export default {
             {
               json: {
                 request: {
-                  encryptedText: tempParam.replace(/%2F/g, "/"),
+                  encryptedText: tempParam.replace(/%2F/g, "/").replace(/%20/g, "+"),
                 },
               },
             }
