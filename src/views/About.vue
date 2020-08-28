@@ -6,39 +6,20 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">
-        Grand Visual Hotel Jakarta
-      </h3>
-      <a-row
-        class="header-branding"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col
-          class="pl-3 pt-3 invisible"
-          :span="15"
-          :md="15"
-          :xl="15"
-          :xs="24"
-        >
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
+      <a-row class="header-branding" :style="information" type="flex" justify="space-between">
+        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="currDataPrepare.description !== ''"
             class="main-guest-title font-white font-weight-bold"
             :style="information"
-          >
-            {{ currDataPrepare.name }} | {{ currDataPrepare.description }}
-          </h2>
+          >{{ currDataPrepare.name }} | {{ currDataPrepare.description }}</h2>
           <h2
             v-else
             class="main-guest-title font-white font-weight-bold"
             :style="information"
-          >
-            {{ currDataPrepare.name }}
-          </h2>
+          >{{ currDataPrepare.name }}</h2>
           <!-- <h4
             class="main-guest-title font-white font-weight-bold"
             :style="information"
@@ -52,11 +33,7 @@
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img
-            class="img-hotel"
-            src="../assets/GrandVisualHotel.png"
-            alt="Image Loading"
-          />
+          <img class="img-hotel" src="../assets/GrandVisualHotel.png" alt="Image Loading" />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -74,9 +51,9 @@
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-          <h2 class="main-guest-title font-white font-weight-bold">
-            {{ currDataPrepare.name }} | {{ currDataPrepare.description }}
-          </h2>
+          <h2
+            class="main-guest-title font-white font-weight-bold"
+          >{{ currDataPrepare.name }} | {{ currDataPrepare.description }}</h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white">
             Arrival:
@@ -98,89 +75,29 @@
         <a-tabs default-active-key="1" @change="callback">
           <a-tab-pane key="1" tab="Background Color">
             <p>Standard Color</p>
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#1890ff')"
-              >Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#E8505B')"
-              >Red</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FBDB81')"
-              >Yellow</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('green')"
-              >Green</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('white')"
-              >White</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#D42A83')"
-              >Magenta</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#1B262C')"
-              >Black</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FA7D09')"
-              >Orange</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#901f90')"
-              >Purple</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#00D7FF')"
-              >Sky Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#E4E3E3')"
-              >Grey</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiHeaderClass('#FFBF00')"
-              >Gold</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
 
             <p>Custom Back Color</p>
             <slider-picker
@@ -191,96 +108,32 @@
           </a-tab-pane>
           <a-tab-pane key="2" tab="Font Color" force-render>
             <p>Standard Color</p>
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#1890ff')"
-              >Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#E8505B')"
-              >Red</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FBDB81')"
-              >Yellow</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('green')"
-              >Green</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('white')"
-              >White</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#D42A83')"
-              >Magenta</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#1B262C')"
-              >Black</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FA7D09')"
-              >Orange</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#901f90')"
-              >Purple</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#00D7FF')"
-              >Sky Blue</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#E4E3E3')"
-              >Grey</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
             <br />
-            <a
-              href="#"
-              onclick="return false;"
-              @mouseenter="gantiFontClass('#FFBF00')"
-              >Gold</a
-            >
+            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
 
             <p>Custom Back Color</p>
-            <slider-picker
-              class="vc-slider"
-              v-model="information.color"
-              @input="customFontClass"
-            />
+            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
           </a-tab-pane>
           <a-tab-pane key="3" tab="Change Image" force-render>
             <label>URL Image</label>
@@ -291,9 +144,7 @@
                 fontStyle: 'italic',
                 fontSize: '0.75rem',
               }"
-            >
-              * Recommended resolution 1366 x 768 atau HD
-            </p>
+            >* Recommended resolution 1366 x 768 atau HD</p>
           </a-tab-pane>
         </a-tabs>
       </a-modal>
@@ -330,8 +181,7 @@
               <a-checkbox
                 :checked="showPickupRequest"
                 v-model="showPickupRequest"
-                >Use Pickup Request</a-checkbox
-              >
+              >Use Pickup Request</a-checkbox>
               <!-- @change="onChange" -->
             </p>
             <p>
@@ -372,28 +222,20 @@
               </a-input-group>
             </p>
             <p>
-              <label class="ml-2 font-weight-bold" for="checkbox"
-                >Room Preferences :</label
-              >
+              <label class="ml-2 font-weight-bold" for="checkbox">Room Preferences :</label>
             </p>
             <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor"
-                >Lower Floor & Higher Floor</a-checkbox
-              >
+              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
             </p>
             <p>
-              <a-checkbox :checked="showSmoking" v-model="showSmoking"
-                >Smoking & Non Smoking</a-checkbox
-              >
+              <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
             </p>
             <p>
-              <a-checkbox :checked="showBed" v-model="showBed"
-                >One Big Bed & Two Single Bed</a-checkbox
-              >
+              <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
             </p>
           </a-modal>
           <a-row class="ml-3" gutter="16">
-            <a-col :span="4" :xl="4" :xs="24">
+            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
                 <a-time-picker
                   :minute-step="30"
@@ -402,23 +244,21 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
+            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item label="Request">
-                <a-checkbox :checked="showPrice" v-model="showPrice"
-                  >Pickup Required</a-checkbox
-                >
+                <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :xs="24">
+            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
               <a-form-item label="Price">
-                <label
-                  >{{ nilai === 3 ? "" : currency }}
+                <label>
+                  {{ nilai === 3 ? "" : currency }}
                   {{
-                    nilai === 3
-                      ? " "
-                      : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
-                  }}</label
-                >
+                  nilai === 3
+                  ? " "
+                  : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+                  }}
+                </label>
                 <span v-if="nilai === 1">/ Pax</span>
                 <span v-else-if="nilai === 2">/ Car</span>
                 <span v-else>Free of Charge</span>
@@ -429,6 +269,8 @@
               v-show="showPrice && showPickupRequest"
               :span="8"
               :xl="8"
+              :lg="8"
+              :md="7"
               :xs="24"
             >
               <a-form-item label="Flight Details">
@@ -441,9 +283,7 @@
               <p
                 class="font-weight-bold"
                 v-show="showSmoking || showFloor || showBed"
-              >
-                Room Preferences
-              </p>
+              >Room Preferences</p>
               <a-form-item label v-show="showSmoking">
                 <a-radio-group name="radioGroup">
                   <a-radio :value="1">
@@ -477,7 +317,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="9" :xl="9" :xs="18">
+            <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
                   placeholder="Ex: Connecting Wifi"
@@ -559,7 +399,7 @@
             </p>
           </a-modal>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Email">
                 <a-input
                   v-decorator="[
@@ -575,7 +415,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
                 <vue-tel-input
                   v-model="phone"
@@ -591,7 +431,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="3" :xl="3" :xs="24">
+            <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
               <a-form-item label="Purpose of Stay">
                 <a-select
                   v-decorator="[
@@ -606,7 +446,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
                   v-decorator="[
@@ -616,9 +456,7 @@
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi"
-                    >Arab Saudi</a-select-option
-                  >
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -657,7 +495,7 @@
             </a-col>
           </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
                 <a-select
                   v-model="country"
@@ -668,14 +506,12 @@
                 >
                   <a-select-option value="indonesia">Indonesia</a-select-option>
                   <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi"
-                    >Arab Saudi</a-select-option
-                  >
+                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
 
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div v-if="country === 'indonesia'">
                 <a-form-item label="Region">
                   <a-select
@@ -691,8 +527,7 @@
                       v-for="(item, keys) in filteredRegion"
                       :key="keys"
                       :value="filteredRegion[keys]['province']"
-                      >{{ filteredRegion[keys].province }}</a-select-option
-                    >
+                    >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </div>
@@ -746,15 +581,12 @@
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox
-                v-model="agree"
-                >{{(value == 'terma' ? term1 : term2)}}</a-checkbox
-              >
+              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
         </a-form>
         <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="4" :xl="4" :xs="24">
+          <a-col :span="4" :xl="4" :lg="7" :xs="24">
             <a-button
               :xl="12"
               class="font-weight-bold mt-3"
@@ -766,8 +598,7 @@
                 scrollToTop();
               "
               :disabled="!agree"
-              >Check-In Now</a-button
-            >
+            >Check-In Now</a-button>
           </a-col>
         </a-row>
       </div>
