@@ -412,7 +412,7 @@
                       rules: [{ required: true }],
                     },
                   ]"
-                  @input="phoneInput"
+                  @input="phoneInput();isNumberKey();"
                 ></vue-tel-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>

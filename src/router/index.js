@@ -73,6 +73,11 @@ const routes = [
     name: "nicepay",
     component: () => import("../views/nicepay"),
   },
+  {
+    path: "/hp",
+    name: "HP",
+    component: () => import("../views/hp"),
+  },
 ];
 
 const router = new VueRouter({
