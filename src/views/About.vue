@@ -392,30 +392,29 @@
                 <a-input
                   v-decorator="[
                 'email',
-                {
-                rules: [
-                { required: true, message: 'Please input your email' },
-                ],
+                    {
+                      initialValue: currDataPrepare['guest-email'],
+                      rules: [  { required: true, message: 'Please input your email' },],
                 },
                 ]"
-                  :defaultValue="currDataPrepare['guest-email']"
                   disabled
                 />
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
-                <vue-tel-input
+                <!-- <vue-tel-input
                   v-model="phone"
                   v-decorator="[
                     'phone',
                     {
+                      initialValue:currDataPrepare['guest-phone'],
                       rules: [{ required: true }],
                     },
                   ]"
                   @input="phoneInput"
-                  :defaultValue="currDataPrepare['guest-phone']"
-                ></vue-tel-input>
+                ></vue-tel-input>-->
+                <vue-tel-input v-model="phone"></vue-tel-input>
               </a-form-item>
             </a-col>
           </a-row>
