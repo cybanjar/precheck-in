@@ -713,7 +713,9 @@ export default {
             {
               json: {
                 request: {
-                  encryptedText: tempParam.replace(/%2F/g, "/").replace(/%20/g, "+"),
+                  encryptedText: tempParam
+                    .replace(/%2F/g, "/")
+                    .replace(/%20/g, "+"),
                 },
               },
             }
@@ -771,6 +773,34 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
       this.agree = false;
+
+      // (async () => {
+      //   const tempParam = location.search.substring(1);
+      //   const parsed = await ky
+      //     .post("http://54.251.169.160:8080/logserver/rest/preCI/updateData", {
+      //       json: {
+      //         request: {
+      //           resNumber: 123,
+      //           reslineNumber: 12415,
+      //           estAT: 131,
+      //           pickrequest: true,
+      //           pickdetail: "wafaw",
+      //           roomPreferences: "wafaw",
+      //           specialReq: "wafaw",
+      //           guestPhnumber: "wafaw",
+      //           guestNationality: "wafaw",
+      //           guestCountry: "wafaw",
+      //           guestRegion: "wafaw",
+      //           agreedTerm: true,
+      //           purposeOfStay: "wafaw",
+      //         },
+      //       },
+      //     })
+      //     .json();
+
+      //   const tempMessResult = parsed.response.messResult.split(" ");
+      //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+      // })();
     },
     back() {
       if (this.counter == this.id.length) {
