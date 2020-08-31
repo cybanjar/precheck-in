@@ -117,6 +117,19 @@
         <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
       </a-select>
     </a-form-item>
+    <a-form-item label="Country">
+      <a-select
+        v-model="country"
+        v-decorator="[
+                    'country',
+                    { initialValue: country, rules: [{ required: true }] },
+                  ]"
+      >
+        <a-select-option value="indonesia">Indonesia</a-select-option>
+        <a-select-option value="america">America</a-select-option>
+        <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+      </a-select>
+    </a-form-item>
     <div v-if="country === 'indonesia'">
       <a-form-item label="Region">
         <a-select
