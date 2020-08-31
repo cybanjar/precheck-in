@@ -153,7 +153,7 @@
         </a-tabs>
       </a-modal>
       <div>
-        <a-form layout="vertical" :form="form">
+        <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
             <a-card class="header-card">
               <a-row>
@@ -242,6 +242,7 @@
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
                 <a-time-picker
+                  v-decorator="['time', { rules: [{ required: true }] }]"
                   :minute-step="30"
                   :default-value="moment('14:00', 'HH:mm')"
                   format="HH:mm"
@@ -255,7 +256,7 @@
             </a-col>
             <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
               <a-form-item label="Price">
-                <label>
+                <label v-decorator="['currency']">
                   {{ nilai === 3 ? "" : currency }}
                   {{
                   nilai === 3
@@ -278,17 +279,13 @@
               :xs="24"
             >
               <a-form-item label="Flight Details">
-                <a-input placeholder="Please input flight details" />
+                <a-input placeholder="Please input flight details" v-decorator="['flight']" />
               </a-form-item>
             </a-col>
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <p
-                class="font-weight-bold"
-                v-show="showSmoking || showFloor || showBed"
-              >Room Preferences</p>
-              <a-form-item label v-show="showSmoking">
+              <a-form-item label="Room Preferences" v-show="showSmoking">
                 <a-radio-group name="radioGroup">
                   <a-radio :value="1">
                     <span class="font-weight-normal">Non Smoking</span>
@@ -324,6 +321,7 @@
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
+                  v-decorator="['Request']"
                   placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
@@ -581,10 +579,7 @@
               type="primary"
               block
               :size="size"
-              @click="
-                save();
-                scrollToTop();
-              "
+              html-type="submit"
               :disabled="!agree"
             >Check-In Now</a-button>
           </a-col>
@@ -641,6 +636,7 @@ export default {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
       },
+      form: this.$form.createForm(this, { name: "coordinated" }),
       nilai: 2,
       setRegion: "Bali",
       Region: data.Indonesia.Region,
@@ -665,7 +661,6 @@ export default {
       showFloor: true,
       showPickupRequest: true,
       showPrice: false,
-      form: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -755,6 +750,14 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    handleSubmit(e) {
+      e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log("Received values of form: ", values);
+        }
+      });
+    },
     phoneInput(formattedNumber, { number, valid, country }) {
       console.log(number.international);
       console.log(valid);
