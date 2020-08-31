@@ -239,7 +239,7 @@
             </p>
           </a-modal>
           <a-row class="ml-3" gutter="16">
-            <a-col :span="4" :xl="4" :xs="24">
+            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
                 <a-time-picker
                   :minute-step="30"
@@ -248,12 +248,12 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :xs="24" v-show="showPickupRequest">
+            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item label="Request">
                 <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :xs="24">
+            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
               <a-form-item label="Price">
                 <label>
                   {{ nilai === 3 ? "" : currency }}
@@ -269,7 +269,14 @@
               </a-form-item>
             </a-col>
 
-            <a-col v-show="showPrice && showPickupRequest" :span="8" :xl="8" :xs="24">
+            <a-col
+              v-show="showPrice && showPickupRequest"
+              :span="8"
+              :xl="8"
+              :lg="8"
+              :md="7"
+              :xs="24"
+            >
               <a-form-item label="Flight Details">
                 <a-input placeholder="Please input flight details" />
               </a-form-item>
@@ -314,7 +321,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="9" :xl="9" :xs="18">
+            <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
                   placeholder="Ex: Connecting Wifi"
@@ -380,7 +387,7 @@
             </p>
           </a-modal>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Email">
                 <a-input
                   v-decorator="[
@@ -396,7 +403,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
                 <vue-tel-input
                   v-model="phone"
@@ -413,7 +420,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="3" :xl="3" :xs="24">
+            <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
               <a-form-item label="Purpose of Stay">
                 <a-select
                   v-decorator="[
@@ -428,7 +435,7 @@
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
                   v-decorator="[
@@ -477,7 +484,7 @@
             </a-col>
           </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
                 <a-select
                   v-model="country"
@@ -493,7 +500,7 @@
               </a-form-item>
             </a-col>
 
-            <a-col :span="5" :xl="5" :xs="24">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div v-if="country === 'indonesia'">
                 <a-form-item label="Region">
                   <a-select
@@ -568,7 +575,7 @@
           </a-row>
         </a-form>
         <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="4" :xl="4" :xs="24">
+          <a-col :span="4" :xl="4" :lg="7" :xs="24">
             <a-button
               :xl="12"
               class="font-weight-bold mt-3"
