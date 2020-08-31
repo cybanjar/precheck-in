@@ -403,7 +403,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
-                <!-- <vue-tel-input
+                <vue-tel-input
                   v-model="phone"
                   v-decorator="[
                     'phone',
@@ -413,8 +413,8 @@
                     },
                   ]"
                   @input="phoneInput"
-                ></vue-tel-input>-->
-                <vue-tel-input v-model="phone"></vue-tel-input>
+                ></vue-tel-input>
+                <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
             </a-col>
           </a-row>
@@ -756,9 +756,9 @@ export default {
   },
   methods: {
     phoneInput(formattedNumber, { number, valid, country }) {
-      //  console.log(number.international);
-      //  console.log(valid);
-      //  console.log(country && country.name);
+      console.log(number.international);
+      console.log(valid);
+      console.log(country && country.name);
       this.phone.number = number.international;
       this.phone.valid = valid;
       this.phone.country = country && country.name;
