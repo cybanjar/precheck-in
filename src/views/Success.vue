@@ -12,6 +12,7 @@
 
 <script>
 import QRCode from "qrcode";
+import ky from "ky";
 
 export default {
   data() {
@@ -20,7 +21,7 @@ export default {
   mounted() {
     console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
-    const success = this.data;
+    const success = btoa(this.data);
     this.taejin = success.substr(1, success.indexOf(";") - 1);
     QRCode.toCanvas(
       document.getElementById("canvas"),
@@ -38,8 +39,19 @@ export default {
       this.url = url.split(",")[1];
     });
 
-    const decodedString = atob(this.url);
-    console.log(decodedString,"decode");
+    (async () => {
+      const parsed = await ky
+        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/storeQRCode", {
+          json: {
+            request: {
+              base64image: this.url,
+              resno: this.taejin,
+            },
+          },
+        })
+        .json();
+      console.log(parsed);
+    })();
   },
 };
 </script>

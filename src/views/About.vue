@@ -730,7 +730,7 @@ export default {
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
         if (tempMessResult[0] == "99") {
-          router.push("404");
+          router.push("notfound");
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
@@ -784,7 +784,7 @@ export default {
           "{" +
           this.currDataPrepare["rsv-number"] +
           ";" +
-          moment(this.currDataPrepare.depart).format("MM/DD/YY") +
+          moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
           "}";
         console.log(mori, "be the one");
         router.push({ name: "Success", params: { jin: mori } });
