@@ -22,18 +22,27 @@ export default {
     };
   },
   mounted() {
-    const success = btoa(
-      "{" + this.resnr + ";" + this.htlCode + ";" + this.coDate + "}"
-    );
+    //const success = btoa(
+      //"{" + this.resnr + ";" + this.htlCode + ";" + this.coDate + "}"
+    //);
+    const success = "{" + this.resnr + ";" + this.coDate + "}";
+
+    QRCode.toDataURL(success)
+      .then(url => {
+        console.log(url.substring(url.indexOf(',') + 1))
+      })
+      .catch(err => {
+        console.error(err)
+      });
 
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { width: 250 }
-      // function (error) {
-      // if (error) console.error(error);
-      // console.log("success!");
-      // }
+      { width: 250 },
+       function (error) {
+       if (error) console.error(error);
+       console.log("success!");
+       }
     );
   },
 };
