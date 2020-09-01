@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>Booking Code : 982010</p>
+    <p>Booking Code : {{taejin}}</p>
     <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
     <p>
       <br />
@@ -15,26 +15,31 @@ import QRCode from "qrcode";
 
 export default {
   data() {
-    return {
-      resnr: 32453,
-      htlCode: "grand-visual",
-      coDate: "21/07/20",
-    };
+    return { taejin: "", url: "" };
   },
   mounted() {
-    const success = btoa(
-      "{" + this.resnr + ";" + this.htlCode + ";" + this.coDate + "}"
-    );
-
+    console.log(this.$route.params.jin, "nyampe");
+    this.data = this.$route.params.jin;
+    const success = this.data;
+    this.taejin = success.substr(1, success.indexOf(";") - 1);
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
+      { errorCorrectionLevel: "H" },
       { width: 250 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
       // }
     );
+
+    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
+      console.log(url.split(",")[1]);
+      this.url = url.split(",")[1];
+    });
+
+    const decodedString = atob(this.url);
+    console.log(decodedString,"decode");
   },
 };
 </script>

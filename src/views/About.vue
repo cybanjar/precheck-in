@@ -12,7 +12,10 @@
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
-            v-if="currDataPrepare['guest-member-name'] !== ''"
+            v-if="
+              currDataPrepare['guest-member-name'] !== '' ||
+              currDataPrepare['guest-member-name'] !== undefined
+            "
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >
@@ -579,7 +582,7 @@
               type="primary"
               block
               :size="size"
-              html-type="submit"
+              @click="save();scrollToTop();"
               :disabled="!agree"
             >Check-In Now</a-button>
           </a-col>
@@ -777,7 +780,16 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-        router.push("success");
+        const mori =
+          "{" +
+          this.currDataPrepare["rsv-number"] +
+          ";" +
+          moment(this.currDataPrepare.depart).format("MM/DD/YY") +
+          "}";
+        console.log(mori, "be the one");
+        router.push({ name: "Success", params: { jin: mori } });
+
+        // router.push("success");
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
