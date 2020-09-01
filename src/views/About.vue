@@ -13,8 +13,7 @@
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="
-              currDataPrepare['guest-member-name'] !== '' ||
-              currDataPrepare['guest-member-name'] !== undefined
+              currDataPrepare['guest-member-name'] !== '' 
             "
             class="main-guest-title font-white font-weight-bold"
             :style="information"
@@ -428,8 +427,8 @@
                     { initialValue: purpose, rules: [{ required: true }] },
                   ]"
                 >
-                  <a-select-option value="bussiness">Bussiness</a-select-option>
-                  <a-select-option value="leisure">Leisure</a-select-option>
+                  <a-select-option value="Business">Business</a-select-option>
+                  <a-select-option value="Leisure">Leisure</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -675,7 +674,7 @@ export default {
       keluar: false,
       currency: "Rp.",
       country: "indonesia",
-      purpose: "bussiness",
+      purpose: "Business",
       loading: true,
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
@@ -801,19 +800,19 @@ export default {
       //     .post("http://54.251.169.160:8080/logserver/rest/preCI/updateData", {
       //       json: {
       //         request: {
-      //           resNumber: 123,
-      //           reslineNumber: 12415,
-      //           estAT: 131,
-      //           pickrequest: true,
-      //           pickdetail: "wafaw",
-      //           roomPreferences: "wafaw",
-      //           specialReq: "wafaw",
-      //           guestPhnumber: "wafaw",
-      //           guestNationality: "wafaw",
-      //           guestCountry: "wafaw",
-      //           guestRegion: "wafaw",
+      //           resNumber: "27972",
+      //           reslineNumber: "1",
+      //           estAT: "14:00",
+      //           pickrequest: false,
+      //           pickdetail: " ",
+      //           roomPreferences: "NonSmoking$HigherFloor$OneBigBed",
+      //           specialReq: " ",
+      //           guestPhnumber: "0813-1104-1252",
+      //           guestNationality: "Indonesia",
+      //           guestCountry: "Indonesia",
+      //           guestRegion: "Bali",
       //           agreedTerm: true,
-      //           purposeOfStay: "wafaw",
+      //           purposeOfStay: "business",
       //         },
       //       },
       //     })

@@ -13,6 +13,9 @@
         format="HH:mm"
       />
     </a-form-item>
+    <a-form-item label="Request">
+      <a-checkbox :checked="showPrice" @change="onChange">Pickup Required</a-checkbox>
+    </a-form-item>
     <a-form-item label="Price">
       <label v-decorator="['currency', { initialValue: money }]">
         {{ nilai === 3 ? "" : currency }}
@@ -198,17 +201,68 @@ export default {
       text: "",
       kuy: "",
       Region: data.Indonesia.Region,
+      showPrice: false,
     };
   },
   mounted() {
     this.filteredRegion = this.Region;
   },
   methods: {
+    onChange(e) {
+      console.log(`checked = ${e.target.checked}`);
+      this.showPrice = e.target.checked;
+    },
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log("Received values of form: ", values);
+
+          console.log(
+            {
+              resNumber: "27972",
+              reslineNumber: "1",
+              estAT: values.time._i,
+              pickrequest: this.showPrice,
+              pickdetail: values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq: values.Request,
+              guestPhnumber: values.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          // (async () => {
+          //   const tempParam = location.search.substring(1);
+          //   const parsed = await ky
+          //     .post("http://54.251.169.160:8080/logserver/rest/preCI/updateData", {
+          //       json: {
+          //         request: {
+          //           resNumber: "27972",
+          //           reslineNumber: "1",
+          //           estAT: "14:00",
+          //           pickrequest: false,
+          //           pickdetail: " ",
+          //           roomPreferences: "NonSmoking$HigherFloor$OneBigBed",
+          //           specialReq: " ",
+          //           guestPhnumber: "0813-1104-1252",
+          //           guestNationality: "Indonesia",
+          //           guestCountry: "Indonesia",
+          //           guestRegion: "Bali",
+          //           agreedTerm: true,
+          //           purposeOfStay: "business",
+          //         },
+          //       },
+          //     })
+          //     .json();
+
+          //   const tempMessResult = parsed.response.messResult.split(" ");
+          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
         }
       });
     },

@@ -22,7 +22,7 @@ export default {
     console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
     const success = btoa(this.data);
-    this.taejin = success.substr(1, success.indexOf(";") - 1);
+    this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
