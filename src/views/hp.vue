@@ -103,8 +103,8 @@
                     { initialValue: purpose },
                   ]"
       >
-        <a-select-option value="bussiness">Bussiness</a-select-option>
-        <a-select-option value="leisure">Leisure</a-select-option>
+        <a-select-option value="Business">Bussiness</a-select-option>
+        <a-select-option value="Leisure">Leisure</a-select-option>
       </a-select>
     </a-form-item>
     <a-form-item label="Nationality">
@@ -115,9 +115,9 @@
                   ]"
         @change="Nationality"
       >
-        <a-select-option value="indonesia">Indonesia</a-select-option>
-        <a-select-option value="america">America</a-select-option>
-        <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+        <a-select-option value="Indonesia">Indonesia</a-select-option>
+        <a-select-option value="America">America</a-select-option>
+        <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
       </a-select>
     </a-form-item>
     <a-form-item label="Country">

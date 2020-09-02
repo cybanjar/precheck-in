@@ -19,7 +19,7 @@ export default {
     return { taejin: "", url: "" };
   },
   mounted() {
-    console.log(this.$route.params.jin, "nyampe");
+    // console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
@@ -35,7 +35,7 @@ export default {
     );
 
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      console.log(url.split(",")[1]);
+      // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
 

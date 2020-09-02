@@ -5,7 +5,6 @@
     </a-spin>
   </div>
   <div v-else>
-    {{currDataPrepare}}
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
@@ -45,13 +44,13 @@
           </div>
           <div class="invisible">
             <div class="gear-setting">
-              <a-icon
+              <!-- <a-icon
                 type="setting"
                 :style="{ fontSize: '1.5rem' }"
                 class="float-right align-self-center"
                 theme="filled"
                 @click="imageModal"
-              />
+              /> -->
             </div>
           </div>
         </a-col>
@@ -162,7 +161,7 @@
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Arrival</p>
                 </a-col>
-                <a-col :span="1" :xl="1" :xs="1">
+                <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
                     type="setting"
                     :style="{ fontSize: '1.5rem' }"
@@ -170,7 +169,7 @@
                     theme="filled"
                     @click="munculModal"
                   />
-                </a-col>
+                </a-col> -->
               </a-row>
             </a-card>
           </a-row>
@@ -188,7 +187,6 @@
                 :checked="showPickupRequest"
                 v-model="showPickupRequest"
               >Use Pickup Request</a-checkbox>
-              <!-- @change="onChange" -->
             </p>
             <p>
               <label>Pickup Request Type :</label>
@@ -244,21 +242,30 @@
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
                 <a-time-picker
-                  v-decorator="['time', { rules: [{ required: true }] }]"
+                  v-decorator="[
+                    'time',
+          {
+                      initialValue: moment('14:00', 'HH:mm'),
+            rules: [{ required: true }],
+                    },
+                  ]"
                   :minute-step="30"
-                  :default-value="moment('14:00', 'HH:mm')"
                   format="HH:mm"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item label="Request">
-                <a-checkbox :checked="showPrice" v-model="showPrice">Pickup Required</a-checkbox>
+                <a-checkbox
+                  :checked="showPrice"
+                  v-model="showPrice"
+                  @change="onChange"
+                >Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
               <a-form-item label="Price">
-                <label v-decorator="['currency']">
+                <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
                   nilai === 3
@@ -271,7 +278,6 @@
                 <span v-else>Free of Charge</span>
               </a-form-item>
             </a-col>
-
             <a-col
               v-show="showPrice && showPickupRequest"
               :span="8"
@@ -287,32 +293,32 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <a-form-item label="Room Preferences" v-show="showSmoking">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
+              <a-form-item label="Room Preferences">
+                <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
+                  <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
-                  <a-radio :value="2">
+                  <a-radio value="Smoking">
                     <span class="font-weight-normal">Smoking</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
-              <a-form-item label v-show="showFloor">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
+              <a-form-item label>
+                <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
+                  <a-radio value="LowerFloor">
                     <span class="font-weight-normal">Lower Floor</span>
                   </a-radio>
-                  <a-radio :value="2">
+                  <a-radio value="HigherFloor">
                     <span class="font-weight-normal">Higher Floor</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
-              <a-form-item label v-show="showBed">
-                <a-radio-group name="radioGroup">
-                  <a-radio :value="1">
+              <a-form-item label>
+                <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
+                  <a-radio value="OneBigBed">
                     <span class="font-weight-normal">One Big Bed</span>
                   </a-radio>
-                  <a-radio :value="2">
+                  <a-radio value="TwoSingleBeds">
                     <span class="font-weight-normal">Two Single Beds</span>
                   </a-radio>
                 </a-radio-group>
@@ -327,13 +333,7 @@
                   placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
-                  v-model="text"
                 />
-                <!-- <a-progress :percent="max-text.length">
-                  <template #format="percent">
-                    <span style="color: red">{{ percent }}</span>
-                  </template>
-                </a-progress>-->
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -356,7 +356,7 @@
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">Guest Details</p>
                 </a-col>
-                <a-col :span="1" :xl="1" :xs="1">
+                <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
                     type="setting"
                     :style="{ fontSize: '1.5rem' }"
@@ -364,7 +364,7 @@
                     theme="filled"
                     @click="guestModal"
                   />
-                </a-col>
+                </a-col> -->
               </a-row>
             </a-card>
           </a-row>
@@ -391,12 +391,14 @@
               <a-form-item label="Email">
                 <a-input
                   v-decorator="[
-                'email',
+                    'email',
                     {
                       initialValue: currDataPrepare['guest-email'],
-                      rules: [  { required: true, message: 'Please input your email' },],
-                },
-                ]"
+                      rules: [
+                        { required: true, message: 'Please input your email' },
+                      ],
+                    },
+                  ]"
                   disabled
                 />
               </a-form-item>
@@ -404,7 +406,6 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
                 <vue-tel-input
-                  v-model="phone"
                   v-decorator="[
                     'phone',
                     {
@@ -412,7 +413,7 @@
                       rules: [{ required: true }],
                     },
                   ]"
-                  @input="phoneInput();isNumberKey();"
+                  @input="phoneInput"
                 ></vue-tel-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
@@ -422,9 +423,10 @@
             <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
               <a-form-item label="Purpose of Stay">
                 <a-select
+                  @change="Kuy"
                   v-decorator="[
                     'purpose',
-                    { initialValue: purpose, rules: [{ required: true }] },
+                    { initialValue: purpose },
                   ]"
                 >
                   <a-select-option value="Business">Business</a-select-option>
@@ -439,12 +441,13 @@
                 <a-select
                   v-decorator="[
                     'nationality',
-                    { initialValue: nationality, rules: [{ required: true }] },
+                    { initialValue: nationality },
                   ]"
+                  @change="Nationality"
                 >
-                  <a-select-option value="indonesia">Indonesia</a-select-option>
-                  <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -492,20 +495,19 @@
                     { initialValue: country, rules: [{ required: true }] },
                   ]"
                 >
-                  <a-select-option value="indonesia">Indonesia</a-select-option>
-                  <a-select-option value="america">America</a-select-option>
-                  <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                  <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
 
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-if="country === 'indonesia'">
+              <div v-if="country === 'Indonesia'">
                 <a-form-item label="Region">
                   <a-select
-                    v-model="setRegion"
                     show-search
-                    @change="handleChangeProvince"
+                    @change="handleChangeRegion"
                     v-decorator="[
                       'region',
                       { initialValue: region, rules: [{ required: true }] },
@@ -572,20 +574,23 @@
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="4" :xl="4" :lg="7" :xs="24">
+              <a-form-item>
+                <a-button
+                  :xl="12"
+                  class="font-weight-bold mt-3"
+                  type="primary"
+                  block
+                  :size="size"
+                  :disabled="!agree"
+                  html-type="submit"
+                  @click=" save();scrollToTop();"
+                >Check-In Now</a-button>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="4" :xl="4" :lg="7" :xs="24">
-            <a-button
-              :xl="12"
-              class="font-weight-bold mt-3"
-              type="primary"
-              block
-              :size="size"
-              @click="save();scrollToTop();"
-              :disabled="!agree"
-            >Check-In Now</a-button>
-          </a-col>
-        </a-row>
       </div>
     </div>
   </div>
@@ -640,6 +645,10 @@ export default {
       },
       form: this.$form.createForm(this, { name: "coordinated" }),
       nilai: 2,
+      bed: "",
+      floor: "",
+      region: "",
+      room: "",
       setRegion: "Bali",
       Region: data.Indonesia.Region,
       City: data.Indonesia.City,
@@ -657,6 +666,7 @@ export default {
       max: 100,
       agree: false,
       text: "",
+      kuy: "",
       money: 100000,
       showSmoking: true,
       showBed: true,
@@ -673,7 +683,7 @@ export default {
       guests: "",
       keluar: false,
       currency: "Rp.",
-      country: "indonesia",
+      country: "Indonesia",
       purpose: "Business",
       loading: true,
       term1:
@@ -752,18 +762,34 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
-    handleSubmit(e) {
-      e.preventDefault();
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          console.log("Received values of form: ", values);
-        }
-      });
+    Room(e) {
+      this.room = e.target.value;
+      console.log(this.room);
+    },
+    Bed(e) {
+      this.bed = e.target.value;
+      console.log(this.bed);
+    },
+    Floor(e) {
+      this.floor = e.target.value;
+      console.log(this.floor);
+    },
+    Kuy(value) {
+      this.kuy = value;
+      console.log(this.kuy);
+    },
+    Nationality(value) {
+      this.nationality = value;
+      console.log(this.nationality);
+    },
+    handleChangeRegion(value) {
+      this.region = value;
+      console.log(this.region);
     },
     phoneInput(formattedNumber, { number, valid, country }) {
-      console.log(number.international);
-      console.log(valid);
-      console.log(country && country.name);
+      console.log(number.international, "inputan2");
+      // console.log(valid);
+      // console.log(country && country.name);
       this.phone.number = number.international;
       this.phone.valid = valid;
       this.phone.country = country && country.name;
@@ -777,6 +803,61 @@ export default {
     scrollToTop() {
       window.scrollTo(0, 0);
     },
+    handleSubmit(e) {
+      e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log("Received values of form: ", values);
+
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: values.time._i,
+              pickrequest: this.showPrice,
+              pickdetail: values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq: values.Request,
+              guestPhnumber: values.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: values.time._i,
+                    pickrequest: this.showPrice,
+                    pickdetail: values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq: values.Request,
+                    guestPhnumber: values.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            console.log(parsed, "inputan3");
+            // const tempMessResult = parsed.response.messResult.split(" ");
+            // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
+        }
+      });
+    },
     save() {
       if (this.counter == this.id.length) {
         const mori =
@@ -785,7 +866,7 @@ export default {
           ";" +
           moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
           "}";
-        console.log(mori, "be the one");
+        // console.log(mori, "be the one");
         router.push({ name: "Success", params: { jin: mori } });
 
         // router.push("success");
@@ -793,34 +874,6 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
       this.agree = false;
-
-      // (async () => {
-      //   const tempParam = location.search.substring(1);
-      //   const parsed = await ky
-      //     .post("http://54.251.169.160:8080/logserver/rest/preCI/updateData", {
-      //       json: {
-      //         request: {
-      //           resNumber: "27972",
-      //           reslineNumber: "1",
-      //           estAT: "14:00",
-      //           pickrequest: false,
-      //           pickdetail: " ",
-      //           roomPreferences: "NonSmoking$HigherFloor$OneBigBed",
-      //           specialReq: " ",
-      //           guestPhnumber: "0813-1104-1252",
-      //           guestNationality: "Indonesia",
-      //           guestCountry: "Indonesia",
-      //           guestRegion: "Bali",
-      //           agreedTerm: true,
-      //           purposeOfStay: "business",
-      //         },
-      //       },
-      //     })
-      //     .json();
-
-      //   const tempMessResult = parsed.response.messResult.split(" ");
-      //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-      // })();
     },
     back() {
       if (this.counter == this.id.length) {
@@ -880,8 +933,9 @@ export default {
       this.visible = false;
       this.muncul = false;
     },
-    onChange(date, dateString) {
-      data = 0;
+    onChange(e) {
+      // console.log(`checked = ${e.target.checked}`);
+      this.showPrice = e.target.checked;
     },
     moment,
     handleChange(e) {
