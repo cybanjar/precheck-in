@@ -1,13 +1,13 @@
 <template>
-  <a-result title="You already check in">
+  <a-result title="Sorry Data is Not Found">
     <template #icon>
-      <a-icon type="smile" theme="twoTone" />
+      <a-icon type="frown" theme="twoTone" two-tone-color="red" />
     </template>
     <!-- <template #extra>
       <a-button type="primary">
         Back
       </a-button>
-    </template> -->
+    </template>-->
   </a-result>
 </template>
 <script>

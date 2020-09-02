@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>Booking Code : 982010</p>
+    <p>Booking Code : {{taejin}}</p>
     <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
     <p>
       <br />
@@ -12,29 +12,46 @@
 
 <script>
 import QRCode from "qrcode";
+import ky from "ky";
 
 export default {
   data() {
-    return {
-      resnr: 32453,
-      htlCode: "grand-visual",
-      coDate: "21/07/20",
-    };
+    return { taejin: "", url: "" };
   },
   mounted() {
-    const success = btoa(
-      "{" + this.resnr + ";" + this.htlCode + ";" + this.coDate + "}"
-    );
-
+    // console.log(this.$route.params.jin, "nyampe");
+    this.data = this.$route.params.jin;
+    const success = btoa(this.data);
+    this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
+      { errorCorrectionLevel: "H" },
       { width: 250 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
       // }
     );
+
+    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
+      // console.log(url.split(",")[1]);
+      this.url = url.split(",")[1];
+    });
+
+    (async () => {
+      const parsed = await ky
+        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/storeQRCode", {
+          json: {
+            request: {
+              base64image: this.url,
+              resno: this.taejin,
+            },
+          },
+        })
+        .json();
+      console.log(parsed);
+    })();
   },
 };
 </script>
