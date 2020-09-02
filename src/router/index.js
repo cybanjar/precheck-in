@@ -64,7 +64,12 @@ const routes = [
     component: () => import("../views/Done"),
   },
   {
-    path: "/404",
+    path: "/notfound",
+    name: "NotFound",
+    component: () => import("../views/NotFound"),
+  },
+  {
+    path: "*",
     name: "404",
     component: () => import("../views/404"),
   },
@@ -72,6 +77,11 @@ const routes = [
     path: "/nicepay",
     name: "nicepay",
     component: () => import("../views/nicepay"),
+  },
+  {
+    path: "/hp",
+    name: "HP",
+    component: () => import("../views/hp"),
   },
 ];
 

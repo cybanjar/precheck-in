@@ -62,7 +62,6 @@
           </a-list-item>
         </a-list>
       </div>
-      {{selectedData}}
       <!-- {{data}} -->
       <router-link :to="{ name: 'Home', params: { id: selectedData } }">
         <a-button
@@ -163,25 +162,24 @@ import { Alert } from "ant-design-vue";
 export default {
   data() {
     return {
-      data,
-      selectedData: any,
+      selectedData: [],
     };
   },
   created() {
-    console.log(this.$route.params.foo, "nyampe");
+    // console.log(this.$route.params.foo, "nyampe");
     this.data = this.$route.params.foo;
     for (const i in this.data) {
       this.data[i].isSelected = false;
-      console.log(i);
+      // console.log(i);
       this.data[i].key = Number(i) + 1;
     }
     return this.data;
-    console.log(this.data, "berubah");
+    // console.log(this.data, "berubah");
   },
   methods: {
     select(client) {
       if (client.isSelected == false) {
-      console.log('BLAH', client);
+      // console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i].key == client.key) {

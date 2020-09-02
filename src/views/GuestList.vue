@@ -1,7 +1,7 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
     </a-spin>
   </div>
   <div v-else>
@@ -40,14 +40,18 @@
           :scroll="{ x: 'calc(600px + 50%)', y: 350 }"
         >
           <span slot="tags" slot-scope="tags">
-            <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{ tag }}</a-tag>
+            <a-tag v-for="tag in tags" :key="tag" :color="'green'">{{
+              tag
+            }}</a-tag>
           </span>
           <p
             slot="expandedRowRender"
             v-if="record.rs > 0"
             slot-scope="record"
             :style="{ margin: '0 0 0 60px' }"
-          >{{ record.description }}</p>
+          >
+            {{ record.description }}
+          </p>
         </a-table>
       </div>
 
@@ -57,17 +61,15 @@
           type="primary"
           :size="size"
           :disabled="selectedData == 0"
-        >Next</a-button>
+          >Next</a-button
+        >
       </router-link>
     </div>
   </div>
 </template>
 <script>
-
-
-
 const data = [];
-const bookingCode = '123';
+const bookingCode = "123";
 /*for (let i = 0; i < 100; i++) {
   data.push({
     key: i,
@@ -79,73 +81,73 @@ const bookingCode = '123';
     description: 'John Brown' + i,
   });
 }*/
-if (bookingCode == '123') {
+if (bookingCode == "123") {
   data.push({
     key: 1,
-    name: 'Hanevi Djasri, Mr',
-    arrival: '14/01/2019',
-    departure: '14/01/2019',
-    adult: '2',
-    email: 'h.djasri@gmail.com',
-    tags: ['Suites'],
+    name: "Hanevi Djasri, Mr",
+    arrival: "14/01/2019",
+    departure: "14/01/2019",
+    adult: "2",
+    email: "h.djasri@gmail.com",
+    tags: ["Suites"],
     rs: 0,
-    description: '',
+    description: "",
   });
   data.push({
     key: 2,
-    name: 'Haiying Li, Mrs',
-    arrival: '12/01/2019',
-    departure: '14/01/2019',
-    adult: '2',
-    email: 'li.haiying@gmail.com',
-    tags: ['Suites'],
+    name: "Haiying Li, Mrs",
+    arrival: "12/01/2019",
+    departure: "14/01/2019",
+    adult: "2",
+    email: "li.haiying@gmail.com",
+    tags: ["Suites"],
     rs: 1,
-    description: 'Chao Bao, Mr',
+    description: "Chao Bao, Mr",
   });
   data.push({
     key: 3,
-    name: 'Yeoh Hui Jin, Mrs',
-    arrival: '13/01/2019',
-    departure: '14/01/2019',
-    adult: '1',
-    email: 'jin.yeoh@gmail.com',
-    tags: ['Suites'],
+    name: "Yeoh Hui Jin, Mrs",
+    arrival: "13/01/2019",
+    departure: "14/01/2019",
+    adult: "1",
+    email: "jin.yeoh@gmail.com",
+    tags: ["Suites"],
     rs: 0,
-    description: '',
+    description: "",
   });
   data.push({
     key: 4,
-    name: 'Saki Sato, Ms',
-    arrival: '12/01/2019',
-    departure: '14/01/2019',
-    adult: '1',
-    email: 'saki.kato@gmail.com',
-    tags: ['Suites'],
+    name: "Saki Sato, Ms",
+    arrival: "12/01/2019",
+    departure: "14/01/2019",
+    adult: "1",
+    email: "saki.kato@gmail.com",
+    tags: ["Suites"],
     rs: 0,
-    description: '',
+    description: "",
   });
   data.push({
     key: 5,
-    name: 'Muhammad Imdadun Rahmat, Mr',
-    arrival: '13/01/2019',
-    departure: '14/01/2019',
-    adult: '2',
-    email: 'm.imdadun@gmail.com',
-    tags: ['Suites'],
+    name: "Muhammad Imdadun Rahmat, Mr",
+    arrival: "13/01/2019",
+    departure: "14/01/2019",
+    adult: "2",
+    email: "m.imdadun@gmail.com",
+    tags: ["Suites"],
     rs: 0,
-    description: '',
+    description: "",
   });
-} else if (bookingCode == '456') {
+} else if (bookingCode == "456") {
   data.push({
     key: 1,
-    name: 'Sri Sutji Rahaju, Ms',
-    arrival: '14/01/2019',
-    departure: '15/01/2019',
-    adult: '1',
-    email: 's.sutji@gmail.com',
-    tags: ['Suites'],
+    name: "Sri Sutji Rahaju, Ms",
+    arrival: "14/01/2019",
+    departure: "15/01/2019",
+    adult: "1",
+    email: "s.sutji@gmail.com",
+    tags: ["Suites"],
     rs: 0,
-    description: '',
+    description: "",
   });
 }
 
@@ -166,14 +168,14 @@ export default {
           key: "tags",
           scopedSlots: { customRender: "tags" },
         },
-],
+      ],
       data,
       loading: true,
       selectedRowKeys: "",
       selectedData: [],
     };
   },
-  created(){
+  created() {
     this.loading = false;
   },
   computed: {
@@ -181,16 +183,16 @@ export default {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selectedData = selectedRows;
-          
-          // selectedRows['index'] = selectedRowKeys; 
+
+          // selectedRows['index'] = selectedRowKeys;
 
           // const tempDataSelected = selectedRows;
-          // tempDataSelected['index'] = selectedRowKeys; 
-          
+          // tempDataSelected['index'] = selectedRowKeys;
+
           // this.selectedData = tempDataSelected;
         },
       };
     },
-    },
+  },
 };
 </script>
