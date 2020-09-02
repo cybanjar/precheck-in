@@ -83,6 +83,11 @@ const routes = [
     name: "HP",
     component: () => import("../views/hp"),
   },
+  {
+    path: "/setup",
+    name: "Setup",
+    component: () => import("../views/SetUp"),
+  },
 ];
 
 const router = new VueRouter({
