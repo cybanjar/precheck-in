@@ -50,22 +50,34 @@
                 class="float-right align-self-center"
                 theme="filled"
                 @click="imageModal"
-              /> -->
+              />-->
             </div>
           </div>
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
           <h2
+            v-if="
+              currDataPrepare['guest-member-name'] !== '' 
+            "
             class="main-guest-title font-white font-weight-bold"
-          >{{ currDataPrepare.name }} | {{ currDataPrepare.description }}</h2>
+            :style="information"
+          >
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare['guest-member-name'] }}
+          </h2>
+          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }}
+          </h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
-          <p class="ant-card-meta-description font-white">
+          <p class="ant-card-meta-description font-white" :style="information">
             Arrival:
-            <strong>{{ currDataPrepare.arrival }}</strong> Departure:
-            <strong>{{ currDataPrepare.departure }}</strong>
+            <strong>{{formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />Booking Code:
-            <strong>11020133</strong>
+            <strong>{{ currDataPrepare['rsv-number'] }}</strong>
           </p>
         </a-col>
       </a-row>
@@ -169,7 +181,7 @@
                     theme="filled"
                     @click="munculModal"
                   />
-                </a-col> -->
+                </a-col>-->
               </a-row>
             </a-card>
           </a-row>
@@ -294,7 +306,7 @@
           <a-row class="ml-3" gutter="16">
             <a-col>
               <a-form-item label="Room Preferences">
-                <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
+                <a-radio-group name="radioGroup">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
@@ -302,8 +314,8 @@
                     <span class="font-weight-normal">Smoking</span>
                   </a-radio>
                 </a-radio-group>
-              </a-form-item>
-              <a-form-item label>
+
+                <!-- <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
                   <a-radio value="LowerFloor">
                     <span class="font-weight-normal">Lower Floor</span>
@@ -321,7 +333,7 @@
                   <a-radio value="TwoSingleBeds">
                     <span class="font-weight-normal">Two Single Beds</span>
                   </a-radio>
-                </a-radio-group>
+                </a-radio-group>-->
               </a-form-item>
             </a-col>
           </a-row>
@@ -364,7 +376,7 @@
                     theme="filled"
                     @click="guestModal"
                   />
-                </a-col> -->
+                </a-col>-->
               </a-row>
             </a-card>
           </a-row>
@@ -426,11 +438,14 @@
                   @change="Kuy"
                   v-decorator="[
                     'purpose',
-                    { initialValue: purpose },
+                    { initialValue: purpose,rules: [{ required: true }] },
                   ]"
                 >
-                  <a-select-option value="Business">Business</a-select-option>
-                  <a-select-option value="Leisure">Leisure</a-select-option>
+                  <a-select-option
+                    v-for="item in FilterPurposeofStay"
+                    :key="item"
+                    :value="item.setupvalue"
+                  >{{ item.setupvalue }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -441,7 +456,7 @@
                 <a-select
                   v-decorator="[
                     'nationality',
-                    { initialValue: nationality },
+                    { initialValue: nationality, rules: [{ required: true }] },
                   ]"
                   @change="Nationality"
                 >
@@ -591,10 +606,13 @@
             </a-col>
           </a-row>
         </a-form>
+        <!-- {{groupby(3, 0)}} -->
+        {{tempRoomPreference}}
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import router from "../router";
@@ -621,11 +639,16 @@ import moment from "moment";
 import ky from "ky";
 Vue.use(Antd);
 
+const groupby = (paramnumber1, paramnumber2) => {
+  return [];
+};
+
 export default {
   components: {
     "slider-picker": Slider,
     "vue-tel-input": VueTelInput,
   },
+
   data() {
     return {
       addessHotel:
@@ -684,7 +707,7 @@ export default {
       keluar: false,
       currency: "Rp.",
       country: "Indonesia",
-      purpose: "Business",
+      purpose: "",
       loading: true,
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
@@ -703,6 +726,10 @@ export default {
         // height: "5rem",
         // marginBottom: "1rem !important",
       },
+      tempsetup: [],
+      totalnumber1: 0,
+      tempRoomPreferencelenght: [],
+      tempRoomPreference: [],
     };
   },
   watch: {
@@ -735,6 +762,8 @@ export default {
           )
           .json();
 
+        console.log(parsed.response.pciSetup["pci-setup"], "setup");
+        this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
@@ -964,6 +993,58 @@ export default {
         year: "numeric",
       }).format(new Date(datum));
     },
+    groupby(paramnumber1, paramnumber2) {
+      let lastnumber1 = 0;
+      let totalnumber1 = 0;
+      for (let i = 0; i < this.tempsetup.length; i++) {
+        const number1 = this.tempsetup[i]["number1"];
+        if (lastnumber1 != number1) {
+          totalnumber1 = totalnumber1 + 1;
+          lastnumber1 = number1;
+        }
+      }
+      // return totalnumber1;
+      const tempdata = [];
+      for (let i = 0; i < this.tempsetup.length; i++) {
+        if (this.tempsetup[i]["number1"] == paramnumber1) {
+          if (paramnumber2 != 0) {
+            const datarow = this.tempsetup[i];
+            if (datarow["number2"] == paramnumber2) {
+              tempdata.push(this.tempsetup[i]);
+            }
+          } else if (paramnumber2 == 0) {
+            tempdata.push(this.tempsetup[i]);
+          }
+        }
+      }
+      if (tempdata[0]["number1"] == 1) {
+        for (const a in tempdata) {
+          if (tempdata[a].setupflag == true) {
+            this.purpose = tempdata[a].setupvalue;
+          }
+        }
+      } else if (tempdata[0]["number1"] == 3) {
+        this.tempRoomPreferencelenght = [];
+        this.tempRoomPreference = [];
+        for (const b in tempdata) {
+          if (tempdata[b].setupflag == true) {
+            // isi 3
+            this.tempRoomPreferencelenght.push(tempdata[b]);
+            const coba = tempdata[b]["setupvalue"];
+            console.log(coba, "split1");
+            const splitcoba = coba.split(" & ");
+            console.log(splitcoba, "split2");
+
+            // isi 6
+            for (const c in splitcoba) {
+              this.tempRoomPreference.push(splitcoba[c]);
+            }
+          }
+        }
+        return this.tempRoomPreferencelenght;
+      }
+      return tempdata;
+    },
   },
   computed: {
     filteredCities() {
@@ -981,6 +1062,15 @@ export default {
       }
       return filteredCity;
     },
+    FilterPurposeofStay() {
+      return this.groupby(1, 0);
+    },
+  },
+  FilterRoomPreference() {
+    return this.groupby(3, 0);
+  },
+  FilterEstimatedArrivalTime() {
+    return this.groupby(8, 0);
   },
 };
 </script>
