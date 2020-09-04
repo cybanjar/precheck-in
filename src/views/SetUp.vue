@@ -4,11 +4,11 @@
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Background Color Mode">
-          <a-radio-group v-decoration="['radio-group']">
-            <a-radio value="default">
+          <a-radio-group>
+            <a-radio value="1">
               <span class="font-weight-normal">Default</span>
             </a-radio>
-            <a-radio value="custom">
+            <a-radio value="2">
               <span class="font-weight-normal">Custom</span>
             </a-radio>
           </a-radio-group>
@@ -17,7 +17,6 @@
           <a-input
             @click="showModal"
             v-decorator="[
-              'userName',
               { initialValue: bgColor, rules: [{ required: true, message: 'Input color hex' }] },
             ]"
             placeholder="Input colors hex code"
@@ -203,6 +202,7 @@
 
 <script>
 import moment from "moment";
+import ky from 'ky';
 export default {
   data() {
     return {
@@ -218,6 +218,23 @@ export default {
       visible: false,
       confirmLoading: false,
     }
+  },
+  created() {
+    (async () => {
+        const parsed = await ky
+          .post(
+            "http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup",
+            {
+              json: {
+                request: { 
+                  		"icase": 1
+                },
+              },
+            }
+          )
+          .json();
+    console.log(parsed, "parse");
+    })();
   },
   methods: {
     showModal() {
