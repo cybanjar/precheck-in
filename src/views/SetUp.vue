@@ -4,7 +4,7 @@
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Background Color Mode">
-          <a-radio-group>
+          <a-radio-group :default-value="colorPicker" @change="onChange">
             <a-radio value="1">
               <span class="font-weight-normal">Default</span>
             </a-radio>
@@ -13,26 +13,46 @@
             </a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item>
+        <!-- {{ response }} -->
+        <a-form-item v-if="colorPicker == '1'">
           <a-input
+            default-value="#1890FF"
             @click="showModal"
             v-decorator="[
-              { initialValue: bgColor, rules: [{ required: true, message: 'Input color hex' }] },
+              'username',
+              { 
+                initialValue: bgColor, 
+                rules: [{ required: true, message: 'Input color hex' }] },
             ]"
             placeholder="Input colors hex code"
           >
             <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
           </a-input>
         </a-form-item>
+        <a-form-item v-else>
+          <slider-picker style="width: 300px" class="vc-slider" v-model="info.backgroundColor" />
+        </a-form-item>
       </a-col>
       <a-modal
-        title="Select Color"
+        title="Select Standart Color"
         :visible="visible"
         :confirm-loading="confirmLoading"
         @ok="handleOk"
         @cancel="handleCancel"
       >
-        <p>{{ ModalText }}</p>
+        <!-- <p>{{ ModalText }}</p> -->
+        <div class="card-color blue">Blue</div>
+        <div class="card-color red">Red</div>
+        <div class="card-color yellow">Yellow</div>
+        <div class="card-color green">Green</div>
+        <div class="card-color white">White</div>
+        <div class="card-color magenta">Magenta</div>
+        <div class="card-color black">Black</div>
+        <div class="card-color orange">Orange</div>
+        <div class="card-color purple">Purple</div>
+        <div class="card-color bluesky">Blue Sky</div>
+        <div class="card-color grey">Grey</div>
+        <div class="card-color gold">Gold</div>
       </a-modal>
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Foreground Color Mode">
@@ -203,7 +223,12 @@
 <script>
 import moment from "moment";
 import ky from 'ky';
+import { Slider } from "vue-color";
+
 export default {
+  components: {
+    "slider-picker": Slider
+  },
   data() {
     return {
       pickuprate: 100000,
@@ -214,9 +239,15 @@ export default {
         pickupType: '1',
         desc: '',
       },
-      ModalText: 'Content of the modal',
+      ModalText: 'Standart Colors',
       visible: false,
       confirmLoading: false,
+      response: [],
+      colorPicker: '1',
+      info: {
+        backgroundColor: "$green",
+        color: "$white",
+      }
     }
   },
   created() {
@@ -234,9 +265,15 @@ export default {
           )
           .json();
     console.log(parsed, "parse");
+    this.response = parsed;
+    console.log(this.response, "response");
     })();
   },
   methods: {
+    onChange(e) {
+      console.log('radio checked', e.target.value);
+      this.colorPicker = e.target.value;
+    },
     showModal() {
       this.visible = true;
     },

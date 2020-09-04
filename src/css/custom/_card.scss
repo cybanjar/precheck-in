@@ -53,3 +53,67 @@
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.37);
   z-index: 2;
 }
+
+.card-color {
+  padding: 6px 20px;
+  border-radius: 4px;
+  width: 150px;
+  cursor: pointer;
+  margin-bottom: 4px;
+
+  &.blue {
+    background-color: $primary;
+    color: $white;
+  }
+  &.red {
+    background-color: $red;
+    color: $white;
+  }
+  &.yellow {
+    background-color: $yellow;
+    color: $black;
+  }
+  &.green {
+    background-color: $greenday;
+    color: $white;
+  }
+  &.white {
+    background-color: $white;
+    color: $black;
+  }
+  &.magenta {
+    background-color: $magenta;
+    color: $white;
+  }
+  &.black {
+    background-color: $black;
+    color: $white;
+  }
+  &.orange {
+    background-color: $orange;
+    color: $white;
+  }
+  &.purple {
+    background-color: $purple;
+    color: $white;
+  }
+  &.bluesky {
+    background-color: $bluesky;
+    color: $white;
+  }
+  &.grey {
+    background-color: $grey;
+    color: $black;
+  }
+  &.gold {
+    background-color: $gold;
+    color: $white;
+  }
+  
+}
+
+.card-color:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
+  border-radius: 50rem;
+  transition-duration: 1s;
+}
