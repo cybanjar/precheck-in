@@ -305,15 +305,32 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              isi: {{FilterRoomPreference}}
-              gokil: {{tempRoomPreference}}
+              isi: {{FilterRoomPreference.length}} 3
+              gokil: {{tempRoomPreference}} 6
+              computed: {{indexStrs}}
               <a-form-item label="Room Preferences">
-                <template v-for="index in FilterRoomPreference.length">
-                  <a-radio-group @change="onChange" :key="index">
-                    <a-radio :value="item" :key="item" v-for="item in tempRoomPreference">{{ item }}</a-radio>
-                  </a-radio-group>
-                </template>
+                <!-- <template v-for="index in FilterRoomPreference.length"> -->
+                <a-radio-group
+                  @change="onChange"
+                  v-for="index in FilterRoomPreference.length"
+                  :key="index"
+                >
+                  <!-- <template v-for="data in tempRoomPreference">
+                      <a-radio
+                        v-if="tempRoomPreference['key'] == index"
+                        :value="item"
+                        :key="data"
+                      >{{ tempRoomPreference }}</a-radio>
+                  </template>-->
+                  <a-radio :value="item" :key="item" v-for="(item) in 2">
+                    <!-- {{indexStrs}} -->
+                    {{ tempRoomPreference[indexStr] }}
+                  </a-radio>
 
+                  <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
+                  <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
+                </a-radio-group>
+                <!-- </template>A -->
                 <!-- <a-radio-group name="radioGroup">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
@@ -736,12 +753,17 @@ export default {
       totalnumber1: 0,
       tempRoomPreferencelenght: [],
       tempRoomPreference: [],
+      indexStr: -1,
     };
   },
   watch: {
     activeKey(key) {
       key;
     },
+    // indexStr: function () {
+    //   this.indexStr = this.indexStr + 1;
+    //   console.log("watch", this.indexStr);
+    // },
   },
   created() {
     if (this.$route.params.id != undefined) {
@@ -1038,13 +1060,18 @@ export default {
             // isi 3
             this.tempRoomPreferencelenght.push(tempdata[b]);
             const coba = tempdata[b]["setupvalue"];
+            // coba[b].key = Number(b);
+
             console.log(coba, "split1");
             const splitcoba = coba.split(" & ");
             console.log(splitcoba, "split2");
 
             // isi 6
             for (const c in splitcoba) {
-              this.tempRoomPreference.push(splitcoba[c]);
+              this.tempRoomPreference.push({
+                key: Number(b),
+                descr: splitcoba[c],
+              });
             }
           }
         }
@@ -1055,6 +1082,10 @@ export default {
         return tempdata[0]["setupvalue"];
       }
       return tempdata;
+    },
+    test() {
+      console.log("index", this.indexStr);
+      return (this.indexStr = this.indexStr + 1);
     },
   },
   computed: {
@@ -1081,6 +1112,18 @@ export default {
     },
     FilterEstimatedArrivalTime() {
       return this.groupby(8, 2);
+    },
+    indexStrs() {
+      // get: function () {
+      //   return this.indexStr;
+      //   console.log(this.indexStr, "be the one");
+      // },
+      // set: function (newIndex) {
+      //   this.indexStr = this.indexStr + 1;
+      //   console.log(this.indexStr, "be the one");
+      // },
+      console.log("masuk");
+      return this.test();
     },
   },
 };
