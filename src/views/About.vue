@@ -256,9 +256,9 @@
                 <a-time-picker
                   v-decorator="[
                     'time',
-          {
-                      initialValue: moment('14:00', 'HH:mm'),
-            rules: [{ required: true }],
+                    {
+                      initialValue: moment(FilterEstimatedArrivalTime, 'HH:mm'),
+                      rules: [{ required: true }],
                     },
                   ]"
                   :minute-step="30"
@@ -305,15 +305,23 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
+              isi: {{FilterRoomPreference}}
+              gokil: {{tempRoomPreference}}
               <a-form-item label="Room Preferences">
-                <a-radio-group name="radioGroup">
+                <template v-for="index in FilterRoomPreference.length">
+                  <a-radio-group @change="onChange" :key="index">
+                    <a-radio :value="item" :key="item" v-for="item in tempRoomPreference">{{ item }}</a-radio>
+                  </a-radio-group>
+                </template>
+
+                <!-- <a-radio-group name="radioGroup">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
                   <a-radio value="Smoking">
                     <span class="font-weight-normal">Smoking</span>
                   </a-radio>
-                </a-radio-group>
+                </a-radio-group>-->
 
                 <!-- <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
@@ -606,8 +614,6 @@
             </a-col>
           </a-row>
         </a-form>
-        <!-- {{groupby(3, 0)}} -->
-        {{tempRoomPreference}}
       </div>
     </div>
   </div>
@@ -1024,6 +1030,7 @@ export default {
           }
         }
       } else if (tempdata[0]["number1"] == 3) {
+        console.log("msk");
         this.tempRoomPreferencelenght = [];
         this.tempRoomPreference = [];
         for (const b in tempdata) {
@@ -1042,6 +1049,10 @@ export default {
           }
         }
         return this.tempRoomPreferencelenght;
+      } else if (tempdata[0]["number1"] == 8) {
+        console.log(tempdata[0]["setupvalue"], "gokil");
+
+        return tempdata[0]["setupvalue"];
       }
       return tempdata;
     },
@@ -1065,12 +1076,12 @@ export default {
     FilterPurposeofStay() {
       return this.groupby(1, 0);
     },
-  },
-  FilterRoomPreference() {
-    return this.groupby(3, 0);
-  },
-  FilterEstimatedArrivalTime() {
-    return this.groupby(8, 0);
+    FilterRoomPreference() {
+      return this.groupby(3, 0);
+    },
+    FilterEstimatedArrivalTime() {
+      return this.groupby(8, 2);
+    },
   },
 };
 </script>
