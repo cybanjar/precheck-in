@@ -275,7 +275,14 @@
                 >Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
+            <a-col
+              :span="4"
+              :xl="4"
+              :lg="5"
+              :md="5"
+              :xs="24"
+              v-show="showPrice && showPickupRequest"
+            >
               <a-form-item label="Price">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
@@ -324,7 +331,7 @@
                   </template>-->
                   <a-radio :value="item" :key="item" v-for="(item) in 2">
                     <!-- {{indexStrs}} -->
-                    {{ tempRoomPreference[indexStr] }}
+                    {{ tempRoomPreference[indexStrs] }}
                   </a-radio>
 
                   <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
@@ -442,7 +449,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
-                <vue-tel-input
+                <a-input
                   v-decorator="[
                     'phone',
                     {
@@ -450,8 +457,9 @@
                       rules: [{ required: true }],
                     },
                   ]"
-                  @input="phoneInput"
-                ></vue-tel-input>
+                  style="width: 100%"
+                  @keypress="isNumber($event)"
+                ></a-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
             </a-col>
@@ -642,7 +650,7 @@ import router from "../router";
 import data from "../components/json/indonesia";
 import Vue from "vue";
 import { Slider } from "vue-color";
-import { VueTelInput } from "vue-tel-input";
+// import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -669,7 +677,7 @@ const groupby = (paramnumber1, paramnumber2) => {
 export default {
   components: {
     "slider-picker": Slider,
-    "vue-tel-input": VueTelInput,
+    // "vue-tel-input": VueTelInput,
   },
 
   data() {
@@ -843,14 +851,14 @@ export default {
       this.region = value;
       console.log(this.region);
     },
-    phoneInput(formattedNumber, { number, valid, country }) {
-      console.log(number.international, "inputan2");
-      // console.log(valid);
-      // console.log(country && country.name);
-      this.phone.number = number.international;
-      this.phone.valid = valid;
-      this.phone.country = country && country.name;
-    },
+    // phoneInput(formattedNumber, { number, valid, country }) {
+    //   console.log(number.international, "inputan2");
+    //   // console.log(valid);
+    //   // console.log(country && country.name);
+    //   this.phone.number = number.international;
+    //   this.phone.valid = valid;
+    //   this.phone.country = country && country.name;
+    // },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
@@ -1013,6 +1021,19 @@ export default {
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
+    },
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      const charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     },
     formatDate(datum) {
       return new Intl.DateTimeFormat(navigator.language, {
