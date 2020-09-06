@@ -322,9 +322,11 @@
                         :key="data"
                       >{{ tempRoomPreference }}</a-radio>
                   </template>-->
-                  <a-radio :value="item" :key="item" v-for="(item) in 2">
+                  <!--<a-radio :value="item" :key="item" v-for="(item) in 2">-->
+                  <a-radio :value="item" :key="item" v-for="item in apalah(index)">
                     <!-- {{indexStrs}} -->
-                    {{ tempRoomPreference[indexStr] }}
+                    <!--{{ tempRoomPreference[indexStr] }}-->
+                    {{ item }}
                   </a-radio>
 
                   <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
@@ -754,6 +756,7 @@ export default {
       tempRoomPreferencelenght: [],
       tempRoomPreference: [],
       indexStr: -1,
+      acoPancenOye: [],
     };
   },
   watch: {
@@ -790,7 +793,6 @@ export default {
           )
           .json();
 
-        console.log(parsed.response.pciSetup["pci-setup"], "setup");
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
@@ -819,34 +821,34 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    apalah(param) {
+      this.acoPancenOye = [];
+      for (let x = 0; x < this.tempRoomPreference.length; x++) {
+        if (this.tempRoomPreference[x].key === param) {
+          this.acoPancenOye.push(this.tempRoomPreference[x].descr)
+        }
+      }
+      return this.acoPancenOye;
+    },
     Room(e) {
       this.room = e.target.value;
-      console.log(this.room);
     },
     Bed(e) {
       this.bed = e.target.value;
-      console.log(this.bed);
     },
     Floor(e) {
       this.floor = e.target.value;
-      console.log(this.floor);
     },
     Kuy(value) {
       this.kuy = value;
-      console.log(this.kuy);
     },
     Nationality(value) {
       this.nationality = value;
-      console.log(this.nationality);
     },
     handleChangeRegion(value) {
       this.region = value;
-      console.log(this.region);
     },
     phoneInput(formattedNumber, { number, valid, country }) {
-      console.log(number.international, "inputan2");
-      // console.log(valid);
-      // console.log(country && country.name);
       this.phone.number = number.international;
       this.phone.valid = valid;
       this.phone.country = country && country.name;
@@ -923,7 +925,6 @@ export default {
           ";" +
           moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
           "}";
-        // console.log(mori, "be the one");
         router.push({ name: "Success", params: { jin: mori } });
 
         // router.push("success");
@@ -991,7 +992,6 @@ export default {
       this.muncul = false;
     },
     onChange(e) {
-      // console.log(`checked = ${e.target.checked}`);
       this.showPrice = e.target.checked;
     },
     moment,
@@ -1002,10 +1002,10 @@ export default {
       });
     },
     handleBlur() {
-      // console.log("blur");
+      console.log('buat apaan sih ini?');
     },
     handleFocus() {
-      // console.log("focus");
+      console.log('buat apaan sih ini?');
     },
     filterOption(input, option) {
       return (
@@ -1052,7 +1052,6 @@ export default {
           }
         }
       } else if (tempdata[0]["number1"] == 3) {
-        console.log("msk");
         this.tempRoomPreferencelenght = [];
         this.tempRoomPreference = [];
         for (const b in tempdata) {
@@ -1062,14 +1061,12 @@ export default {
             const coba = tempdata[b]["setupvalue"];
             // coba[b].key = Number(b);
 
-            console.log(coba, "split1");
             const splitcoba = coba.split(" & ");
-            console.log(splitcoba, "split2");
 
             // isi 6
             for (const c in splitcoba) {
               this.tempRoomPreference.push({
-                key: Number(b),
+                key: Number(b) + 1,
                 descr: splitcoba[c],
               });
             }
@@ -1077,14 +1074,12 @@ export default {
         }
         return this.tempRoomPreferencelenght;
       } else if (tempdata[0]["number1"] == 8) {
-        console.log(tempdata[0]["setupvalue"], "gokil");
 
         return tempdata[0]["setupvalue"];
       }
       return tempdata;
     },
     test() {
-      console.log("index", this.indexStr);
       return (this.indexStr = this.indexStr + 1);
     },
   },
@@ -1122,7 +1117,6 @@ export default {
       //   this.indexStr = this.indexStr + 1;
       //   console.log(this.indexStr, "be the one");
       // },
-      console.log("masuk");
       return this.test();
     },
   },
