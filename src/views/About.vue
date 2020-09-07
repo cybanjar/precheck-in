@@ -607,7 +607,8 @@
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{FilterTerm}}</a-checkbox>
+              <a-checkbox v-model="agree" />
+              {{FilterTerm}}
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -673,7 +674,7 @@ export default {
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
-      plainOptions : ['Apple', 'Pear', 'Orange'],
+      plainOptions: ["Apple", "Pear", "Orange"],
       currDataPrepare: {},
       counter: 0,
       size: "large",
