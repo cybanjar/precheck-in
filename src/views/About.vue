@@ -38,7 +38,11 @@
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" src="../assets/GrandVisualHotel.png" alt="Image Loading" />
+          <img
+            class="img-hotel"
+            src="https://lh3.googleusercontent.com/wqo8m8WDhe-dztQh2MgRh5sbKVsLZOueAM5DCrnBHhvY920N0zaZSqUksK1PArxEiPD1SKMHCckwgifQRMmMs8MvP3U8js8o3nLWUGJTRVm5Dy4ukloJo24VrV4raOnNZ6Ym6Ctlz90JT0SEmbq5tx3PP-1LaauZF5cPy7bdh1ju4UWTa0NhNNUj4Ssx-Owz0C1WvXgVKh8vHdBNE9JY37_YURjhv4gj3-RohgxWfe_9fOuy4K3aoJXpjxsy8jcbcipsaiqjLI6THKeHVZSSKk7WukTarAbPMWt0c8Bom2-7dMeMxo61LdSJ7-4Wn5iOkQtakBZtQLMYJKzNoGkKk4umfe97ToGkd79p3R_vHkWXX-hOCE2THGcwxtDExjVp9z9hSjwSlSKOQpQYe1qyv64DWpC-yRNxMZeIrjTcK5P6AP6mh6vUtrOYFcLhbCqV7FFZB8RiXRA-73Neli0H1VvB-N7UhlmdeSIRogLSnS3TNxEy5wXUQwWZdWVPEU15Ntv45h9gQlwUPA2slLmchx30NO9TjVBfmjRqBzw2Hl02wWivIrjp0Kivrq5MdAKFePP9dIkA2_kpongV0Cq3W_SxJVXehrBRh2Lzpu-4aIj-RVFgoR-BfTMPgxjJbgqSLm8ZhsH2uv-XspapdsDBWYZXrcrEhznnUBIgkQP3uE2orqUNnP4zmuFDF0fgZA=w1281-h660-no?authuser=0"
+            alt="Image Loading"
+          />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -292,9 +296,7 @@
                   : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
                   }}
                 </label>
-                <span v-if="nilai === 1">/ Pax</span>
-                <span v-else-if="nilai === 2">/ Car</span>
-                <span v-else>Free of Charge</span>
+                <span>/ {{FilterRequestType}}</span>
               </a-form-item>
             </a-col>
             <a-col
@@ -1098,9 +1100,13 @@ export default {
         }
         return this.tempRoomPreferencelenght;
       } else if (tempdata[0]["number1"] == 8) {
-        console.log(tempdata[0]["setupvalue"], "gokil");
-
         return tempdata[0]["setupvalue"];
+      } else if (tempdata[0]["number1"] == 2) {
+        for (const natak in tempdata) {
+          if (tempdata[natak].setupflag == true) {
+            return tempdata[natak]["setupvalue"].split('PER ')[1]
+          }
+        }
       }
       return tempdata;
     },
@@ -1133,6 +1139,9 @@ export default {
     },
     FilterEstimatedArrivalTime() {
       return this.groupby(8, 2);
+    },
+    FilterRequestType() {
+      return this.groupby(2, 0);
     },
     indexStrs() {
       // get: function () {
