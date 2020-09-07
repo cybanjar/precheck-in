@@ -311,13 +311,13 @@
           <a-row class="ml-3" gutter="16">
             <a-col>
               <!-- isi: {{FilterRoomPreference.length}} 3
-              gokil: {{tempRoomPreference}} 6 -->
+              gokil: {{tempRoomPreference}} 6-->
               <a-form-item label="Room Preferences">
                 <!-- <template v-for="index in FilterRoomPreference.length"> -->
                 <a-radio-group
                   v-for="index in FilterRoomPreference.length"
                   :key="index"
-                  :options="apalah(index)"
+                  :options="plainOptions"
                   @change="Room"
                 />
 
@@ -673,7 +673,7 @@ export default {
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
-      plainOptions: ["Apple", "Pear", "Orange"],
+      plainOptions : ['Apple', 'Pear', 'Orange'],
       currDataPrepare: {},
       counter: 0,
       size: "large",
