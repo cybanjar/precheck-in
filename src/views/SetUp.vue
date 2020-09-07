@@ -4,7 +4,7 @@
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Background Color Mode">
-          <a-radio-group :default-value="colorPicker" @change="onChange">
+          <a-radio-group :default-value="colorPicker" @change="onChangeBC">
             <a-radio value="1">
               <span class="font-weight-normal">Default</span>
             </a-radio>
@@ -15,17 +15,7 @@
         </a-form-item>
         <!-- {{ response }} -->
         <a-form-item v-if="colorPicker == '1'">
-          <a-input
-            default-value="#1890FF"
-            @click="showModal"
-            v-decorator="[
-              'username',
-              { 
-                initialValue: bgColor, 
-                rules: [{ required: true, message: 'Input color hex' }] },
-            ]"
-            placeholder="Input colors hex code"
-          >
+          <a-input v-model="defaultBC" @click="showModalBC">
             <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
           </a-input>
         </a-form-item>
@@ -35,54 +25,124 @@
       </a-col>
       <a-modal
         title="Select Standart Color"
-        :visible="visible"
+        :visible="visibleBC"
         :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
+        @ok="handleOkBC"
+        @cancel="handleCancelBC"
       >
         <!-- <p>{{ ModalText }}</p> -->
-        <div class="card-color blue">Blue</div>
-        <div class="card-color red">Red</div>
-        <div class="card-color yellow">Yellow</div>
-        <div class="card-color green">Green</div>
-        <div class="card-color white">White</div>
-        <div class="card-color magenta">Magenta</div>
-        <div class="card-color black">Black</div>
-        <div class="card-color orange">Orange</div>
-        <div class="card-color purple">Purple</div>
-        <div class="card-color bluesky">Blue Sky</div>
-        <div class="card-color grey">Grey</div>
-        <div class="card-color gold">Gold</div>
+        <a-row>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#1488cc')" class="card-color blue">Blue</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#e85058')" class="card-color red">Red</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#fbdb81')" class="card-color yellow">Yellow</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#265C60')" class="card-color green">Green</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#ffffff')" class="card-color white">White</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#d42a83')" class="card-color magenta">Magenta</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#1b262c')" class="card-color black">Black</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#fa7d09')" class="card-color orange">Orange</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#901f90')" class="card-color purple">Purple</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#1488cc')" class="card-color bluesky">Blue Sky</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#e4e3e3')" class="card-color grey">Grey</div>
+          </a-col>
+          <a-col :span="8" :lg="8">
+            <div @click="mouseClicks('#ffbf00')" class="card-color gold">Gold</div>
+          </a-col>
+        </a-row>
       </a-modal>
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Foreground Color Mode">
-          <a-radio-group v-decoration="['radio-group']">
-            <a-radio value="default">
+          <a-radio-group :default-value="fontColor" @change="onChangeFC">
+            <a-radio value="3">
               <span class="font-weight-normal">Default</span>
             </a-radio>
-            <a-radio value="custom">
+            <a-radio value="4">
               <span class="font-weight-normal">Custom</span>
             </a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item>
-          <a-input
-            v-decorator="[
-              'userName',
-              { rules: [{ required: true, message: 'Input color hex' }] },
-            ]"
-            placeholder="Input colors hex code"
-          >
+        <a-form-item v-if="fontColor == '3'">
+          <a-input v-model="defaultFC" @click="showModalFC">
             <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
           </a-input>
         </a-form-item>
+        <a-form-item v-else>
+          <slider-picker style="width: 300px" class="vc-slider" v-model="info.backgroundColor" />
+        </a-form-item>
       </a-col>
     </a-row>
+    <a-modal
+      title="Select Standart Color"
+      :visible="visibleFC"
+      :confirm-loading="confirmLoading"
+      @ok="handleOkFC"
+      @cancel="handleCancelFC"
+    >
+      <!-- <p>{{ ModalText }}</p> -->
+      <a-row>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#1488cc')" class="card-color blue">Blue</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#e85058')" class="card-color red">Red</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#fbdb81')" class="card-color yellow">Yellow</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#265C60')" class="card-color green">Green</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#ffffff')" class="card-color white">White</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#d42a83')" class="card-color magenta">Magenta</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#1b262c')" class="card-color black">Black</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#fa7d09')" class="card-color orange">Orange</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#901f90')" class="card-color purple">Purple</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#1488cc')" class="card-color bluesky">Blue Sky</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#e4e3e3')" class="card-color grey">Grey</div>
+        </a-col>
+        <a-col :span="8" :lg="8">
+          <div @click="mouseClicksx('#ffbf00')" class="card-color gold">Gold</div>
+        </a-col>
+      </a-row>
+    </a-modal>
     <!-- <a-divider style="width: 50px" /> -->
     <a-row class="ml-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Enable Upload ID">
-          <a-radio-group v-decoration="['radio-group']">
+          <a-radio-group v-model="defaultUpload" v-decoration="['radio-group']">
             <a-radio value="yes">
               <span class="font-weight-normal">Yes</span>
             </a-radio>
@@ -95,6 +155,7 @@
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item layout="vertical" label="CheckIn Time">
           <a-time-picker
+            :default-value="moment('13:00', 'HH:mm')"
             v-decorator="[
               'time',{
                 initialValue: moment('14:00', 'HH:mm'),
@@ -138,15 +199,13 @@
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Pickup Rate">
           <a-input-number
-            :default-value="money"
+            :default-value="pickuprate"
             v-model="pickuprate"
             :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   "
             :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-            @input="masukinUang"
             :max="1000000"
-            @change="onChange"
           />
         </a-form-item>
       </a-col>
@@ -240,14 +299,20 @@ export default {
         desc: '',
       },
       ModalText: 'Standart Colors',
-      visible: false,
+      visibleBC: false,
+      visibleFC: false,
       confirmLoading: false,
       response: [],
       colorPicker: '1',
+      fontColor: '3',
       info: {
         backgroundColor: "$green",
         color: "$white",
-      }
+      },
+      mouseClick: null,
+      defaultBC: '#1890FF',
+      defaultFC: '#1B262C',
+      defaultUpload: 'yes'
     }
   },
   created() {
@@ -270,28 +335,58 @@ export default {
     })();
   },
   methods: {
-    onChange(e) {
+    onChangeBC(e) {
       console.log('radio checked', e.target.value);
       this.colorPicker = e.target.value;
     },
-    showModal() {
-      this.visible = true;
+    onChangeFC(e) {
+      console.log('radio checked', e.target.value);
+      this.fontColor = e.target.value;
     },
-    handleOk(e) {
+    showModalBC() {
+      this.visibleBC = true;
+    },
+    showModalFC() {
+      this.visibleFC = true;
+    },
+    handleOkBC(e) {
       this.ModalText = 'The modal will be closed after two seconds';
       this.confirmLoading = true;
       setTimeout(() => {
-        this.visible = false;
+        this.visibleBC = false;
         this.confirmLoading = false;
       }, 300);
     },
-    handleCancel(e) {
+    handleCancelBC(e) {
       console.log('Clicked cancel button');
-      this.visible = false;
+      this.defaultBC= '#1890FF';
+      this.visibleBC = false;
+    },
+    handleOkFC(e) {
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visibleFC = false;
+        this.confirmLoading = false;
+      }, 300);
+    },
+    handleCancelFC(e) {
+      console.log('Clicked cancel button');
+      this.defaultFC= '#1890FF';
+      this.visibleFC = false;
+    },
+    mouseClicks(color) {
+      this.defaultBC = color
+      document.getElementById("defaultBC").style.color = color;
+      console.log(color, 'color1');
+    },
+    mouseClicksx(color) {
+      this.defaultFC = color
+      document.getElementById("defaultFC").style.color = color;
     },
     moment,
     handleChange(e) {
-      this.checkNick = e.target.checked;
+      this.checkNick = e.target.value;
       this.$nextTick(() => {
         this.form.validateFields(["nickname"], { force: true });
       });
