@@ -38,7 +38,7 @@
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" src="../assets/GrandVisualHotel.png" alt="Image Loading" />
+          <img class="img-hotel" :src="FilterImageURL" alt="Image Loading" />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -55,7 +55,7 @@
           </div>
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="
               currDataPrepare['guest-member-name'] !== '' 
@@ -275,7 +275,14 @@
                 >Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24">
+            <a-col
+              :span="4"
+              :xl="4"
+              :lg="5"
+              :md="5"
+              :xs="24"
+              v-show="showPrice && showPickupRequest"
+            >
               <a-form-item label="Price">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
@@ -285,9 +292,7 @@
                   : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
                   }}
                 </label>
-                <span v-if="nilai === 1">/ Pax</span>
-                <span v-else-if="nilai === 2">/ Car</span>
-                <span v-else>Free of Charge</span>
+                <span>/ {{FilterRequestType}}</span>
               </a-form-item>
             </a-col>
             <a-col
@@ -305,15 +310,33 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              isi: {{FilterRoomPreference}}
-              gokil: {{tempRoomPreference}}
+              <!-- isi: {{FilterRoomPreference.length}} 3
+              gokil: {{tempRoomPreference}} 6-->
               <a-form-item label="Room Preferences">
-                <template v-for="index in FilterRoomPreference.length">
-                  <a-radio-group @change="onChange" :key="index">
-                    <a-radio :value="item" :key="item" v-for="item in tempRoomPreference">{{ item }}</a-radio>
-                  </a-radio-group>
-                </template>
+                <!-- <template v-for="index in FilterRoomPreference.length"> -->
+                <a-radio-group
+                  v-for="index in FilterRoomPreference.length"
+                  :key="index"
+                  :options="plainOptions"
+                  @change="Room"
+                />
 
+                <!-- <template v-for="data in tempRoomPreference">
+                      <a-radio
+                        v-if="tempRoomPreference['key'] == index"
+                        :value="item"
+                        :key="data"
+                      >{{ tempRoomPreference }}</a-radio>
+                </template>-->
+                <!-- <a-radio
+                    :value="item"
+                    :key="item"
+                    v-for="(item) in 2"
+                >{{ tempRoomPreference[indexStrs] }}</a-radio>-->
+                <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
+                <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
+                <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
+                <!-- </template>A -->
                 <!-- <a-radio-group name="radioGroup">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
@@ -425,7 +448,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Phone Number">
-                <vue-tel-input
+                <a-input
                   v-decorator="[
                     'phone',
                     {
@@ -433,8 +456,9 @@
                       rules: [{ required: true }],
                     },
                   ]"
-                  @input="phoneInput"
-                ></vue-tel-input>
+                  style="width: 100%"
+                  @keypress="isNumber($event)"
+                ></a-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
             </a-col>
@@ -526,7 +550,7 @@
             </a-col>
 
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-if="country === 'Indonesia'">
+              <div v-show="country === 'Indonesia'">
                 <a-form-item label="Region">
                   <a-select
                     show-search
@@ -542,17 +566,6 @@
                       :value="filteredRegion[keys]['province']"
                     >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
-                </a-form-item>
-              </div>
-              <div v-else>
-                <a-form-item label="State">
-                  <a-input
-                    initial-value="Willy Wanta"
-                    v-decorator="[
-                      'username',
-                      { rules: [{ required: false, message: '' }] },
-                    ]"
-                  />
                 </a-form-item>
               </div>
             </a-col>
@@ -594,7 +607,8 @@
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
+              <a-checkbox v-model="agree" />
+              {{FilterTerm}}
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -625,7 +639,7 @@ import router from "../router";
 import data from "../components/json/indonesia";
 import Vue from "vue";
 import { Slider } from "vue-color";
-import { VueTelInput } from "vue-tel-input";
+// import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -652,7 +666,7 @@ const groupby = (paramnumber1, paramnumber2) => {
 export default {
   components: {
     "slider-picker": Slider,
-    "vue-tel-input": VueTelInput,
+    // "vue-tel-input": VueTelInput,
   },
 
   data() {
@@ -660,6 +674,7 @@ export default {
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
+      plainOptions: ["Apple", "Pear", "Orange"],
       currDataPrepare: {},
       counter: 0,
       size: "large",
@@ -696,7 +711,7 @@ export default {
       agree: false,
       text: "",
       kuy: "",
-      money: 100000,
+      money: 10,
       showSmoking: true,
       showBed: true,
       showFloor: true,
@@ -736,12 +751,19 @@ export default {
       totalnumber1: 0,
       tempRoomPreferencelenght: [],
       tempRoomPreference: [],
+      indexStr: -1,
+      acoPancenOye: [],
+      requestpickup: "",
     };
   },
   watch: {
     activeKey(key) {
       key;
     },
+    // indexStr: function () {
+    //   this.indexStr = this.indexStr + 1;
+    //   console.log("watch", this.indexStr);
+    // },
   },
   created() {
     if (this.$route.params.id != undefined) {
@@ -768,8 +790,32 @@ export default {
           )
           .json();
 
-        console.log(parsed.response.pciSetup["pci-setup"], "setup");
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        console.log(this.tempsetup, "moccatune");
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const heaven in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+                console.log(jatah[heaven]["setupvalue"], "msk2");
+              }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const hell in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+                console.log(jatah[hell]["setupvalue"], "msk2");
+              }
+            }
+          }
+        }
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
@@ -797,6 +843,15 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    apalah(param) {
+      this.acoPancenOye = [];
+      for (let x = 0; x < this.tempRoomPreference.length; x++) {
+        if (this.tempRoomPreference[x].key === param) {
+          this.acoPancenOye.push(this.tempRoomPreference[x].descr);
+        }
+      }
+      return this.acoPancenOye;
+    },
     Room(e) {
       this.room = e.target.value;
       console.log(this.room);
@@ -821,14 +876,14 @@ export default {
       this.region = value;
       console.log(this.region);
     },
-    phoneInput(formattedNumber, { number, valid, country }) {
-      console.log(number.international, "inputan2");
-      // console.log(valid);
-      // console.log(country && country.name);
-      this.phone.number = number.international;
-      this.phone.valid = valid;
-      this.phone.country = country && country.name;
-    },
+    // phoneInput(formattedNumber, { number, valid, country }) {
+    //   console.log(number.international, "inputan2");
+    //   // console.log(valid);
+    //   // console.log(country && country.name);
+    //   this.phone.number = number.international;
+    //   this.phone.valid = valid;
+    //   this.phone.country = country && country.name;
+    // },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
@@ -972,6 +1027,7 @@ export default {
       // console.log(`checked = ${e.target.checked}`);
       this.showPrice = e.target.checked;
     },
+
     moment,
     handleChange(e) {
       this.checkNick = e.target.checked;
@@ -991,6 +1047,19 @@ export default {
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
+    },
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      const charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     },
     formatDate(datum) {
       return new Intl.DateTimeFormat(navigator.language, {
@@ -1038,23 +1107,54 @@ export default {
             // isi 3
             this.tempRoomPreferencelenght.push(tempdata[b]);
             const coba = tempdata[b]["setupvalue"];
+            // coba[b].key = Number(b);
+
             console.log(coba, "split1");
             const splitcoba = coba.split(" & ");
             console.log(splitcoba, "split2");
 
             // isi 6
             for (const c in splitcoba) {
-              this.tempRoomPreference.push(splitcoba[c]);
+              this.tempRoomPreference.push({
+                key: Number(b) + 1,
+                descr: splitcoba[c],
+              });
             }
           }
         }
         return this.tempRoomPreferencelenght;
       } else if (tempdata[0]["number1"] == 8) {
-        console.log(tempdata[0]["setupvalue"], "gokil");
-
+        return tempdata[0]["setupvalue"];
+      } else if (tempdata[0]["number1"] == 2) {
+        for (const natak in tempdata) {
+          if (tempdata[natak].setupflag == true) {
+            this.money = tempdata[natak]["price"];
+            this.currency = tempdata[natak]["remarks"];
+            return tempdata[natak]["setupvalue"].split("PER")[1];
+          }
+        }
+      } else if (tempdata[0]["number1"] == 7) {
+        return tempdata[0]["setupvalue"];
+      } else if (tempdata[0]["number1"] == 4) {
+        for (const heaven in tempdata) {
+          if (tempdata[heaven].setupflag == true) {
+            return tempdata[heaven]["setupvalue"];
+          }
+        }
+      } else if (tempdata[0]["number1"] == 5) {
+        for (const hell in tempdata) {
+          if (tempdata[hell].setupflag == true) {
+            return tempdata[hell]["setupvalue"];
+          }
+        }
+      } else if (tempdata[0]["number1"] == 6) {
         return tempdata[0]["setupvalue"];
       }
       return tempdata;
+    },
+    test() {
+      console.log("index", this.indexStr);
+      return (this.indexStr = this.indexStr + 1);
     },
   },
   computed: {
@@ -1081,6 +1181,33 @@ export default {
     },
     FilterEstimatedArrivalTime() {
       return this.groupby(8, 2);
+    },
+    FilterRequestType() {
+      return this.groupby(2, 0);
+    },
+    FilterImageURL() {
+      return this.groupby(7, 1);
+    },
+    FilterBackGroundColor() {
+      return this.groupby(4, 0);
+    },
+    FilterFontColor() {
+      return this.groupby(5, 0);
+    },
+    FilterTerm() {
+      return this.groupby(6, 2);
+    },
+    indexStrs() {
+      // get: function () {
+      //   return this.indexStr;
+      //   console.log(this.indexStr, "be the one");
+      // },
+      // set: function (newIndex) {
+      //   this.indexStr = this.indexStr + 1;
+      //   console.log(this.indexStr, "be the one");
+      // },
+      console.log("masuk");
+      return this.test();
     },
   },
 };
