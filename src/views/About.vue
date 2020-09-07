@@ -40,7 +40,7 @@
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img
             class="img-hotel"
-            src="https://lh3.googleusercontent.com/wqo8m8WDhe-dztQh2MgRh5sbKVsLZOueAM5DCrnBHhvY920N0zaZSqUksK1PArxEiPD1SKMHCckwgifQRMmMs8MvP3U8js8o3nLWUGJTRVm5Dy4ukloJo24VrV4raOnNZ6Ym6Ctlz90JT0SEmbq5tx3PP-1LaauZF5cPy7bdh1ju4UWTa0NhNNUj4Ssx-Owz0C1WvXgVKh8vHdBNE9JY37_YURjhv4gj3-RohgxWfe_9fOuy4K3aoJXpjxsy8jcbcipsaiqjLI6THKeHVZSSKk7WukTarAbPMWt0c8Bom2-7dMeMxo61LdSJ7-4Wn5iOkQtakBZtQLMYJKzNoGkKk4umfe97ToGkd79p3R_vHkWXX-hOCE2THGcwxtDExjVp9z9hSjwSlSKOQpQYe1qyv64DWpC-yRNxMZeIrjTcK5P6AP6mh6vUtrOYFcLhbCqV7FFZB8RiXRA-73Neli0H1VvB-N7UhlmdeSIRogLSnS3TNxEy5wXUQwWZdWVPEU15Ntv45h9gQlwUPA2slLmchx30NO9TjVBfmjRqBzw2Hl02wWivIrjp0Kivrq5MdAKFePP9dIkA2_kpongV0Cq3W_SxJVXehrBRh2Lzpu-4aIj-RVFgoR-BfTMPgxjJbgqSLm8ZhsH2uv-XspapdsDBWYZXrcrEhznnUBIgkQP3uE2orqUNnP4zmuFDF0fgZA=w1281-h660-no?authuser=0"
+            :src="FilterImageURL"
             alt="Image Loading"
           />
           <div class="overlay invisible">
@@ -314,9 +314,8 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              isi: {{FilterRoomPreference.length}} 3
-              gokil: {{tempRoomPreference}} 6
-              computed: {{indexStrs}}
+              <!-- isi: {{FilterRoomPreference.length}} 3
+              gokil: {{tempRoomPreference}} 6-->
               <a-form-item label="Room Preferences">
                 <!-- <template v-for="index in FilterRoomPreference.length"> -->
                 <a-radio-group
@@ -331,11 +330,12 @@
                         :key="data"
                       >{{ tempRoomPreference }}</a-radio>
                   </template>-->
-                  <a-radio :value="item" :key="item" v-for="(item) in 2">
-                    <!-- {{indexStrs}} -->
-                    {{ tempRoomPreference[indexStrs] }}
-                  </a-radio>
-
+                  <a-radio
+                    :value="item"
+                    :key="item"
+                    v-for="(item) in 2"
+                  >{{ tempRoomPreference[indexStrs] }}</a-radio>
+                  <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
                   <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
                   <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
                 </a-radio-group>
@@ -723,7 +723,7 @@ export default {
       agree: false,
       text: "",
       kuy: "",
-      money: 100000,
+      money: 10,
       showSmoking: true,
       showBed: true,
       showFloor: true,
@@ -765,6 +765,7 @@ export default {
       tempRoomPreference: [],
       indexStr: -1,
       acoPancenOye: [],
+      requestpickup: "",
     };
   },
   watch: {
@@ -1102,7 +1103,7 @@ export default {
             // isi 6
             for (const c in splitcoba) {
               this.tempRoomPreference.push({
-                key: Number(b),
+                key: Number(b) + 1,
                 descr: splitcoba[c],
               });
             }
@@ -1114,9 +1115,13 @@ export default {
       } else if (tempdata[0]["number1"] == 2) {
         for (const natak in tempdata) {
           if (tempdata[natak].setupflag == true) {
+            this.money = tempdata[natak]["price"];
+            this.currency = tempdata[natak]["remarks"];
             return tempdata[natak]["setupvalue"].split("PER")[1];
           }
         }
+      } else if (tempdata[0]["number1"] == 7) {
+        return tempdata[0]["setupvalue"];
       }
       return tempdata;
     },
@@ -1152,6 +1157,9 @@ export default {
     },
     FilterRequestType() {
       return this.groupby(2, 0);
+    },
+    FilterImageURL() {
+      return this.groupby(7, 1);
     },
     indexStrs() {
       // get: function () {
