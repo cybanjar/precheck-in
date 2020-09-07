@@ -5,6 +5,10 @@
     </a-spin>
   </div>
   <div v-else>
+    <!-- {{groupby(4, 0)}}
+    {{groupby(5, 0)}}
+    {{FilterBackGroundColor}}
+    {{FilterFontColor}} -->
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
@@ -38,11 +42,7 @@
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img
-            class="img-hotel"
-            :src="FilterImageURL"
-            alt="Image Loading"
-          />
+          <img class="img-hotel" :src="FilterImageURL" alt="Image Loading" />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -59,7 +59,7 @@
           </div>
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="
               currDataPrepare['guest-member-name'] !== '' 
@@ -621,7 +621,7 @@
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
+              <a-checkbox v-model="agree">{{FilterTerm}}</a-checkbox>
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -1122,6 +1122,20 @@ export default {
         }
       } else if (tempdata[0]["number1"] == 7) {
         return tempdata[0]["setupvalue"];
+      } else if (tempdata[0]["number1"] == 4) {
+        for (const heaven in tempdata) {
+          if (tempdata[heaven].setupflag == true) {
+            return tempdata[heaven]["setupvalue"];
+          }
+        }
+      } else if (tempdata[0]["number1"] == 5) {
+        for (const hell in tempdata) {
+          if (tempdata[hell].setupflag == true) {
+            return tempdata[hell]["setupvalue"];
+          }
+        }
+      } else if (tempdata[0]["number1"] == 6) {
+        return tempdata[0]["setupvalue"];
       }
       return tempdata;
     },
@@ -1160,6 +1174,15 @@ export default {
     },
     FilterImageURL() {
       return this.groupby(7, 1);
+    },
+    FilterBackGroundColor() {
+      return this.groupby(4, 0);
+    },
+    FilterFontColor() {
+      return this.groupby(5, 0);
+    },
+    FilterTerm() {
+      return this.groupby(6, 2);
     },
     indexStrs() {
       // get: function () {
