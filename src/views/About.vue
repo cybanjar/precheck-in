@@ -311,30 +311,31 @@
           <a-row class="ml-3" gutter="16">
             <a-col>
               <!-- isi: {{FilterRoomPreference.length}} 3
-              gokil: {{tempRoomPreference}} 6-->
+              gokil: {{tempRoomPreference}} 6 -->
               <a-form-item label="Room Preferences">
                 <!-- <template v-for="index in FilterRoomPreference.length"> -->
                 <a-radio-group
-                  @change="onChange"
                   v-for="index in FilterRoomPreference.length"
                   :key="index"
-                >
-                  <!-- <template v-for="data in tempRoomPreference">
+                  :options="apalah(index)"
+                  @change="Room"
+                />
+
+                <!-- <template v-for="data in tempRoomPreference">
                       <a-radio
                         v-if="tempRoomPreference['key'] == index"
                         :value="item"
                         :key="data"
                       >{{ tempRoomPreference }}</a-radio>
-                  </template>-->
-                  <a-radio
+                </template>-->
+                <!-- <a-radio
                     :value="item"
                     :key="item"
                     v-for="(item) in 2"
-                  >{{ tempRoomPreference[indexStrs] }}</a-radio>
-                  <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
-                  <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
-                  <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
-                </a-radio-group>
+                >{{ tempRoomPreference[indexStrs] }}</a-radio>-->
+                <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
+                <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
+                <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
                 <!-- </template>A -->
                 <!-- <a-radio-group name="radioGroup">
                   <a-radio value="NonSmoking">
@@ -549,7 +550,7 @@
             </a-col>
 
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-if="country === 'Indonesia'">
+              <div v-show="country === 'Indonesia'">
                 <a-form-item label="Region">
                   <a-select
                     show-search
@@ -565,17 +566,6 @@
                       :value="filteredRegion[keys]['province']"
                     >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
-                </a-form-item>
-              </div>
-              <div v-else>
-                <a-form-item label="State">
-                  <a-input
-                    initial-value="Willy Wanta"
-                    v-decorator="[
-                      'username',
-                      { rules: [{ required: false, message: '' }] },
-                    ]"
-                  />
                 </a-form-item>
               </div>
             </a-col>
@@ -683,6 +673,7 @@ export default {
       addessHotel:
         "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
+      plainOptions: ["Apple", "Pear", "Orange"],
       currDataPrepare: {},
       counter: 0,
       size: "large",
@@ -1035,6 +1026,7 @@ export default {
       // console.log(`checked = ${e.target.checked}`);
       this.showPrice = e.target.checked;
     },
+
     moment,
     handleChange(e) {
       this.checkNick = e.target.checked;
