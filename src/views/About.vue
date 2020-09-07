@@ -5,10 +5,6 @@
     </a-spin>
   </div>
   <div v-else>
-    <!-- {{groupby(4, 0)}}
-    {{groupby(5, 0)}}
-    {{FilterBackGroundColor}}
-    {{FilterFontColor}} -->
     <div class="home">
       <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
@@ -802,8 +798,32 @@ export default {
           )
           .json();
 
-        console.log(parsed.response.pciSetup["pci-setup"], "setup");
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        console.log(this.tempsetup, "moccatune");
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const heaven in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+                console.log(jatah[heaven]["setupvalue"], "msk2");
+              }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const hell in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+                console.log(jatah[hell]["setupvalue"], "msk2");
+              }
+            }
+          }
+        }
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
