@@ -764,6 +764,7 @@ export default {
       tempRoomPreferencelenght: [],
       tempRoomPreference: [],
       indexStr: -1,
+      acoPancenOye: [],
     };
   },
   watch: {
@@ -829,6 +830,15 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    apalah(param) {
+      this.acoPancenOye = [];
+      for (let x = 0; x < this.tempRoomPreference.length; x++) {
+        if (this.tempRoomPreference[x].key === param) {
+          this.acoPancenOye.push(this.tempRoomPreference[x].descr);
+        }
+      }
+      return this.acoPancenOye;
+    },
     Room(e) {
       this.room = e.target.value;
       console.log(this.room);
@@ -1104,7 +1114,7 @@ export default {
       } else if (tempdata[0]["number1"] == 2) {
         for (const natak in tempdata) {
           if (tempdata[natak].setupflag == true) {
-            return tempdata[natak]["setupvalue"].split('PER')[1]
+            return tempdata[natak]["setupvalue"].split("PER")[1];
           }
         }
       }
