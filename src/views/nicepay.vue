@@ -17,19 +17,25 @@ export default {
   methods: {
     search() {
       const jsonp = require("jsonp");
-
-      jsonp(
-        "https://dev.nicepay.co.id/nicepay/api/orderRegist.do",
-        null,
-        (err, data) => {
-          if (err) {
-            // console.error(err.message);
-          } else {
-            // console.log(data);
+      return new Promise((resolve,reject) => {
+        jsonp(
+          "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?iMid=IONPAYTEST&merchantToken=c92f07ee931b102ebe739675a71e3e0860229239db2f299b9bc7a83b5126b10a&payMethod=01&currency=IDR&amt=100&referenceNo=TRX2020090700000001&goodsNm=Kopi&callBackUrl=apalah&dbProcessUrl=&userIP=202.135.55.101&description=Kopi&billingNm=Michael&billingPhone=0812&billingEmail=michael@blah.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&instmntType=1&instmntMon=1&deliveryNm=Michael&deliveryPhone=0812&deliveryEmail=michael@blah.com&deliveryCity=Jakarta&deliveryState=JakSel&deliveryPostCd=16413&deliveryCountry=Indonesia&instmntType=1&instmntMon=1&userAgent=Mozilla&vat=0&fee=0&notaxAmt=0&reccurOpt=0&cartData=",
+          null,
+          (err, data) => {
+            if (err) {
+              reject(err);
+              console.error('BLAH', err.message);
+            } else {
+              resolve(data);
+              console.log('BLAH', data);
+            }
           }
-        }
-      );
+        );
+      })
     },
+    apalah(acoPancenOye) {
+      console.log(acoPancenOye);
+    }
   },
 };
 </script>
