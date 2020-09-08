@@ -19,7 +19,7 @@
             </a-form-item>
           </a-modal>
         </a-col>
-        <a-col :span="4" :xl="4" :xs="12">
+        <!-- <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
           <a-modal v-model="modalGuestName" title="Guest Name" @ok="handleOk">
             <a-form-item label="Guest Name">
@@ -40,7 +40,7 @@
               <a-date-picker @change="onChange" />
             </a-form-item>
           </a-modal>
-        </a-col>
+        </a-col>-->
         <a-col :span="4" :xl="4" :xs="12">
           <img class="img-ota" @click="showModalMembershipID" src="../assets/membership.svg" />
           <a-modal v-model="modalMembershipID" title="Membership ID" @ok="handleOk">
