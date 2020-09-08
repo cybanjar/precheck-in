@@ -87,7 +87,7 @@
           </a-input>
         </a-form-item>
         <a-form-item v-else>
-          <slider-picker style="width: 300px" class="vc-slider" v-model="info.backgroundColor" />
+          <slider-picker style="width: 300px" class="vc-slider" v-model="info.foregroundColor" />
         </a-form-item>
       </a-col>
     </a-row>
@@ -308,6 +308,7 @@ export default {
       info: {
         backgroundColor: "$green",
         color: "$white",
+        foregroundColor: "$green",
       },
       mouseClick: null,
       defaultBC: '#1890FF',
