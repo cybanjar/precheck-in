@@ -38,7 +38,7 @@
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" :src="FilterImageURL" alt="Image Loading" />
+          <img class="img-hotel" :src="gambar" alt="Image Loading" />
           <div class="overlay invisible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -438,7 +438,7 @@
                     {
                       initialValue: currDataPrepare['guest-email'],
                       rules: [
-                        { required: true, message: 'Please input your email' },
+                        { message: 'Please input your email' },
                       ],
                     },
                   ]"
@@ -622,7 +622,6 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                  @click=" save();scrollToTop();"
                 >Check-In Now</a-button>
               </a-form-item>
             </a-col>
@@ -766,13 +765,7 @@ export default {
     // },
   },
   created() {
-    if (this.$route.params.id != undefined) {
-      this.id = this.$route.params.id;
-      // this.counter = this.id.length;
-
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-    } else {
+    if (this.$route.params.id == undefined){
       (async () => {
         const tempParam = location.search.substring(1);
         const parsed = await ky
@@ -791,7 +784,6 @@ export default {
           .json();
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
-        console.log(this.tempsetup, "moccatune");
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
@@ -801,7 +793,6 @@ export default {
               console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
                 this.information.backgroundColor = jatah[heaven]["setupvalue"];
-                console.log(jatah[heaven]["setupvalue"], "msk2");
               }
             }
           } else if (this.tempsetup[i]["number1"] == 5) {
@@ -811,9 +802,13 @@ export default {
               console.log(jatah, "msk");
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
-                console.log(jatah[hell]["setupvalue"], "msk2");
               }
             }
+          } else if (
+            this.tempsetup[i]["number1"] == 7 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.gambar = this.tempsetup[i]["setupvalue"];
           }
         }
         const tempMessResult = parsed.response.messResult.split(" ");
@@ -823,9 +818,15 @@ export default {
           router.push("notfound");
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+            const nietos = [];
+            const obj = {};
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+            obj["01"] = this.gambar;
+            obj["02"] = this.information;
+            nietos.push(this.dataGuest);
+            nietos.push(obj);
             // router.push("list");
-            router.push({ name: "List", params: { foo: this.dataGuest } });
+            router.push({ name: "List", params: { foo: nietos } });
           }
           // else if (this.$route.params.id == undefined) {
           //   router.push("404");
@@ -833,10 +834,17 @@ export default {
           else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
+
           }
         }
       })();
-    }
+    } else {
+      this.id = this.$route.params.id;
+      // this.counter = this.id.length;
+
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+    } 
     this.loading = false;
   },
   mounted() {
@@ -1133,20 +1141,6 @@ export default {
             return tempdata[natak]["setupvalue"].split("PER")[1];
           }
         }
-      } else if (tempdata[0]["number1"] == 7) {
-        return tempdata[0]["setupvalue"];
-      } else if (tempdata[0]["number1"] == 4) {
-        for (const heaven in tempdata) {
-          if (tempdata[heaven].setupflag == true) {
-            return tempdata[heaven]["setupvalue"];
-          }
-        }
-      } else if (tempdata[0]["number1"] == 5) {
-        for (const hell in tempdata) {
-          if (tempdata[hell].setupflag == true) {
-            return tempdata[hell]["setupvalue"];
-          }
-        }
       } else if (tempdata[0]["number1"] == 6) {
         return tempdata[0]["setupvalue"];
       }
@@ -1184,15 +1178,6 @@ export default {
     },
     FilterRequestType() {
       return this.groupby(2, 0);
-    },
-    FilterImageURL() {
-      return this.groupby(7, 1);
-    },
-    FilterBackGroundColor() {
-      return this.groupby(4, 0);
-    },
-    FilterFontColor() {
-      return this.groupby(5, 0);
     },
     FilterTerm() {
       return this.groupby(6, 2);
