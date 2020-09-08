@@ -608,8 +608,19 @@
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree" />
-              {{FilterTerm}}
+              <!-- {{FilterTerm}} -->
+              I agree with the
+              <a @click="showModalTerm">Terms and Conditions</a> of Visual Grand Hotel Web Check-in.
             </a-col>
+            <a-modal
+              title="Term Of Condition"
+              :visible="visibleTerm"
+              :confirm-loading="confirmLoadingTerm"
+              @ok="handleOkTerm"
+              @cancel="handleCancelTerm"
+            >
+              <p>{{FilterTerm}}</p>
+            </a-modal>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :lg="7" :xs="24">
@@ -754,6 +765,9 @@ export default {
       indexStr: -1,
       acoPancenOye: [],
       requestpickup: "",
+      // FilterTem: "",
+      visibleTerm: false,
+      confirmLoadingTerm: false,
     };
   },
   watch: {
@@ -843,6 +857,20 @@ export default {
     this.filteredRegion = this.Region;
   },
   methods: {
+    showModalTerm() {
+      this.visibleTerm = true;
+    },
+    handleOkTerm(e) {
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visibleTerm = false;
+        this.confirmLoadingTerm = false;
+      }, 700);
+    },
+    handleCancelTerm(e) {
+      console.log('Clicked cancel button');
+      this.visibleTerm = false;
+    },
     apalah(param) {
       this.acoPancenOye = [];
       for (let x = 0; x < this.tempRoomPreference.length; x++) {

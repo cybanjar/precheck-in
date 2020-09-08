@@ -20,7 +20,7 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
+          <img @click="showModalGuestName" class="img-ota" src="../assets/name.svg" />
           <a-modal v-model="modalGuestName" title="Guest Name" @ok="handleOk">
             <a-form-item label="Guest Name">
               <a-input placeholder="Input your guest name" />
@@ -31,7 +31,7 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img class="img-ota" @click="showModalEmailAddress" src="../assets/EmailAddress.svg" />
+          <img class="img-ota" @click="showModalEmailAddress" src="../assets/emailaddress.svg" />
           <a-modal v-model="modalEmailAddress" title="Email Address" @ok="handleOk">
             <a-form-item label="Email Address">
               <a-input placeholder="Input your email address" />
