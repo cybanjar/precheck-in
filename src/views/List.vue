@@ -85,6 +85,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$route.params.foo,"nyampe");
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.gambar = this.setup["01"];

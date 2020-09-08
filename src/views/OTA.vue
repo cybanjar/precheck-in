@@ -21,9 +21,9 @@
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
-          <a-modal v-model="modalGuestName" title="Guest Name" @ok="handleOk">
-            <a-form-item label="Guest Name">
-              <a-input placeholder="Input your guest name" />
+          <a-modal v-model="modalGuestName" title="Last Name" @ok="handleOk">
+            <a-form-item label="Last Name">
+              <a-input placeholder="Input your last name" />
             </a-form-item>
             <a-form-item label="Checkout Date">
               <a-date-picker @change="onChange" />

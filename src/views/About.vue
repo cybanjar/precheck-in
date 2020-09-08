@@ -81,90 +81,6 @@
           </p>
         </a-col>
       </a-row>
-      <a-modal
-        v-model="keluar"
-        title="Color and Image Setting"
-        :visible="keluar"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        <a-tabs default-active-key="1" @change="callback">
-          <a-tab-pane key="1" tab="Background Color">
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
-
-            <p>Custom Back Color</p>
-            <slider-picker
-              class="vc-slider"
-              v-model="information.backgroundColor"
-              @input="customHeaderClass"
-            />
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="Font Color" force-render>
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
-
-            <p>Custom Back Color</p>
-            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="Change Image" force-render>
-            <label>URL Image</label>
-            <a-input v-model="gambar" @input="masukinFoto" />
-            <p
-              :style="{
-                color: '#E8505B',
-                fontStyle: 'italic',
-                fontSize: '0.75rem',
-              }"
-            >* Recommended resolution 1366 x 768 atau HD</p>
-          </a-tab-pane>
-        </a-tabs>
-      </a-modal>
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
@@ -185,71 +101,6 @@
               </a-row>
             </a-card>
           </a-row>
-          <a-modal
-            v-model="muncul"
-            title="Arrival Preference Setup"
-            :visible="muncul"
-            :confirm-loading="confirmLoading"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            centered
-          >
-            <p>
-              <a-checkbox
-                :checked="showPickupRequest"
-                v-model="showPickupRequest"
-              >Use Pickup Request</a-checkbox>
-            </p>
-            <p>
-              <label>Pickup Request Type :</label>
-              <a-radio-group
-                name="radioGroup"
-                :default-value="nilai"
-                @change="berubah"
-                :disabled="!showPickupRequest"
-              >
-                <a-radio :value="1">Per Pax</a-radio>
-                <a-radio :value="2">Per Car</a-radio>
-                <a-radio :value="3">Free</a-radio>
-              </a-radio-group>
-            </p>
-            <p v-if="nilai != 3">
-              <label>Pickup Rate :</label>
-              <a-input-group compact>
-                <a-select
-                  :disabled="!showPickupRequest"
-                  :default-value="currency"
-                  v-model="currency"
-                >
-                  <a-select-option value="Rp.">Rp.</a-select-option>
-                  <a-select-option value="$">$</a-select-option>
-                  <a-select-option value="€">€</a-select-option>
-                </a-select>
-                <a-input-number
-                  :disabled="!showPickupRequest"
-                  :default-value="money"
-                  v-model="money"
-                  :formatter="
-                    (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  "
-                  :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                  @input="masukinUang"
-                />
-              </a-input-group>
-            </p>
-            <p>
-              <label class="ml-2 font-weight-bold" for="checkbox">Room Preferences :</label>
-            </p>
-            <p>
-              <a-checkbox :checked="showFloor" v-model="showFloor">Lower Floor & Higher Floor</a-checkbox>
-            </p>
-            <p>
-              <a-checkbox :checked="showSmoking" v-model="showSmoking">Smoking & Non Smoking</a-checkbox>
-            </p>
-            <p>
-              <a-checkbox :checked="showBed" v-model="showBed">One Big Bed & Two Single Bed</a-checkbox>
-            </p>
-          </a-modal>
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" label="Estimated Arrival Time">
@@ -439,24 +290,6 @@
               </a-row>
             </a-card>
           </a-row>
-          <a-modal
-            v-model="guest"
-            title="Guest Preference Setup"
-            :visible="guest"
-            :confirm-loading="confirmLoading"
-            @ok="handleOk"
-            @cancel="handleCancel"
-          >
-            <label>Term and Condition</label>
-            <p>
-              <a-radio-group v-model="value">
-                <a-radio value="terma">Current language</a-radio>
-                <a-textarea v-model="term1" @input="masukinTerm" :rows="3" />
-                <a-radio value="termb">Other language</a-radio>
-                <a-textarea v-model="term2" @input="masukinTerm" :rows="3" />
-              </a-radio-group>
-            </p>
-          </a-modal>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Email">
@@ -676,8 +509,6 @@
 import router from "../router";
 import data from "../components/json/indonesia";
 import Vue from "vue";
-import { Slider } from "vue-color";
-// import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -702,11 +533,6 @@ const groupby = (paramnumber1, paramnumber2) => {
 };
 
 export default {
-  components: {
-    "slider-picker": Slider,
-    // "vue-tel-input": VueTelInput,
-  },
-
   data() {
     return {
       addessHotel:
@@ -889,6 +715,7 @@ export default {
             const nietos = [];
             const obj = {};
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+            console.log(this.gambar,"gambar");
             obj["01"] = this.gambar;
             obj["02"] = this.information;
             nietos.push(this.dataGuest);
@@ -1104,21 +931,6 @@ export default {
     },
     customFontClass(colour) {
       this.information.color = colour.hex;
-    },
-    handleOk(e) {
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.muncul = false;
-        this.keluar = false;
-        this.guest = false;
-        this.confirmLoading = false;
-      }, 300);
-    },
-    handleCancel(e) {
-      this.visible = false;
-      this.muncul = false;
     },
     onChange(e) {
       // console.log(`checked = ${e.target.checked}`);
