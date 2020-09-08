@@ -257,7 +257,7 @@
                   v-decorator="[
                     'time',
                     {
-                      initialValue: moment(FilterEstimatedArrivalTime, 'HH:mm'),
+                      initialValue: moment(hour, 'HH:mm'),
                       rules: [{ required: true }],
                     },
                   ]"
@@ -292,7 +292,7 @@
                   : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
                   }}
                 </label>
-                <span>/ {{FilterRequestType}}</span>
+                <span>/ {{per}}</span>
               </a-form-item>
             </a-col>
             <a-col
@@ -310,43 +310,17 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <!-- isi: {{FilterRoomPreference.length}} 3
-              gokil: {{tempRoomPreference}} 6-->
               <a-form-item label="Room Preferences">
-                <!-- <template v-for="index in FilterRoomPreference.length"> -->
-                <a-radio-group
-                  v-for="index in FilterRoomPreference.length"
-                  :key="index"
-                  :options="plainOptions"
-                  @change="Room"
-                />
-
-                <!-- <template v-for="data in tempRoomPreference">
-                      <a-radio
-                        v-if="tempRoomPreference['key'] == index"
-                        :value="item"
-                        :key="data"
-                      >{{ tempRoomPreference }}</a-radio>
-                </template>-->
-                <!-- <a-radio
-                    :value="item"
-                    :key="item"
-                    v-for="(item) in 2"
-                >{{ tempRoomPreference[indexStrs] }}</a-radio>-->
-                <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
-                <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
-                <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
-                <!-- </template>A -->
-                <!-- <a-radio-group name="radioGroup">
+                <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
                   <a-radio value="Smoking">
                     <span class="font-weight-normal">Smoking</span>
                   </a-radio>
-                </a-radio-group>-->
-
-                <!-- <a-form-item label>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
                   <a-radio value="LowerFloor">
                     <span class="font-weight-normal">Lower Floor</span>
@@ -364,8 +338,62 @@
                   <a-radio value="TwoSingleBeds">
                     <span class="font-weight-normal">Two Single Beds</span>
                   </a-radio>
-                </a-radio-group>-->
+                </a-radio-group>
               </a-form-item>
+              <!-- isi: {{FilterRoomPreference.length}} 3
+              gokil: {{tempRoomPreference}} 6-->
+              <!-- <template v-for="index in FilterRoomPreference.length"> -->
+              <!-- <a-radio-group
+                  v-for="index in FilterRoomPreference.length"
+                  :key="index"
+                  :options="plainOptions"
+                  @change="Room"
+              />-->
+
+              <!-- <template v-for="data in tempRoomPreference">
+                      <a-radio
+                        v-if="tempRoomPreference['key'] == index"
+                        :value="item"
+                        :key="data"
+                      >{{ tempRoomPreference }}</a-radio>
+              </template>-->
+              <!-- <a-radio
+                    :value="item"
+                    :key="item"
+                    v-for="(item) in 2"
+              >{{ tempRoomPreference[indexStrs] }}</a-radio>-->
+              <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
+              <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
+              <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
+              <!-- </template>A -->
+              <!-- <a-radio-group name="radioGroup">
+                  <a-radio value="NonSmoking">
+                    <span class="font-weight-normal">Non Smoking</span>
+                  </a-radio>
+                  <a-radio value="Smoking">
+                    <span class="font-weight-normal">Smoking</span>
+                  </a-radio>
+              </a-radio-group>-->
+
+              <!-- <a-form-item label>
+                <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
+                  <a-radio value="LowerFloor">
+                    <span class="font-weight-normal">Lower Floor</span>
+                  </a-radio>
+                  <a-radio value="HigherFloor">
+                    <span class="font-weight-normal">Higher Floor</span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label>
+                <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
+                  <a-radio value="OneBigBed">
+                    <span class="font-weight-normal">One Big Bed</span>
+                  </a-radio>
+                  <a-radio value="TwoSingleBeds">
+                    <span class="font-weight-normal">Two Single Beds</span>
+                  </a-radio>
+              </a-radio-group>-->
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -610,7 +638,7 @@
               <a-checkbox v-model="agree" />
               <!-- {{FilterTerm}} -->
               I agree with the
-              <a @click="showModalTerm">Terms and Conditions</a> of Visual Grand Hotel Web Check-in.
+              <a @click="showModalTerm">Terms and Conditions</a> of Web Pre Check-in.
             </a-col>
             <a-modal
               title="Term Of Condition"
@@ -619,7 +647,7 @@
               @ok="handleOkTerm"
               @cancel="handleCancelTerm"
             >
-              <p>{{FilterTerm}}</p>
+              <p>{{term}}</p>
             </a-modal>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -722,10 +750,9 @@ export default {
       text: "",
       kuy: "",
       money: 10,
-      showSmoking: true,
-      showBed: true,
-      showFloor: true,
-      showPickupRequest: true,
+      showSmoking: false,
+      showBed: false,
+      showFloor: false,
       showPrice: false,
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
@@ -740,22 +767,13 @@ export default {
       country: "Indonesia",
       purpose: "",
       loading: true,
-      term1:
-        "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
-      term2:
-        "Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.",
+      term1: "I agree with the Terms and Conditions of Web Pre Check-in.",
+      term: "",
       value: "terma",
       gambar: "https://source.unsplash.com/1366x786/?hotel",
       information: {
         backgroundColor: "$green",
-        // border: "none",
-        // borderBottom: "3px solid black",
         color: "$white",
-        // padding: "24px 0 0px 0",
-        // lineHeight: "0.625rem",
-        // padding: 0,
-        // height: "5rem",
-        // marginBottom: "1rem !important",
       },
       tempsetup: [],
       totalnumber1: 0,
@@ -764,9 +782,11 @@ export default {
       indexStr: -1,
       acoPancenOye: [],
       requestpickup: "",
-      // FilterTem: "",
+      per: "",
       visibleTerm: false,
       confirmLoadingTerm: false,
+      hour: "",
+      FilterPurposeofStay: [],
     };
   },
   watch: {
@@ -779,7 +799,7 @@ export default {
     // },
   },
   created() {
-    if (this.$route.params.id == undefined){
+    if (this.$route.params.id == undefined) {
       (async () => {
         const tempParam = location.search.substring(1);
         const parsed = await ky
@@ -822,7 +842,41 @@ export default {
             this.tempsetup[i]["number1"] == 7 &&
             this.tempsetup[i]["number2"] == 1
           ) {
-            this.gambar = this.tempsetup[i]["setupvalue"];
+            const lagi = this.tempsetup[i]["setupvalue"].substring(
+              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
+              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+            console.log(lagi, "change");
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.term = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 2) {
+            if (this.tempsetup[i].setupflag == true) {
+              this.money = this.tempsetup[i]["price"];
+              this.currency = this.tempsetup[i]["remarks"];
+              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.hour = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 1) {
+            this.FilterPurposeofStay.push(this.tempsetup[i]);
+            if (this.tempsetup[i].setupflag == true) {
+              this.purpose = this.tempsetup[i].setupvalue;
+            }
+          } else if (this.tempsetup[i]["number1"] == 3) {
+            if (this.tempsetup[i].number2 == 1) {
+              this.showBed = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 2) {
+              this.showSmoking = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 3) {
+              this.showFloor = this.tempsetup[i].setupflag;
+            }
           }
         }
         const tempMessResult = parsed.response.messResult.split(" ");
@@ -848,7 +902,14 @@ export default {
           else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
-
+            const string =
+              '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
+            const lagi = string.substring(
+              string.lastIndexOf("<img src=") + 10,
+              string.lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+            console.log(lagi, "change");
           }
         }
       })();
@@ -858,7 +919,7 @@ export default {
 
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
-    } 
+    }
     this.loading = false;
   },
   mounted() {
@@ -876,7 +937,7 @@ export default {
       }, 700);
     },
     handleCancelTerm(e) {
-      console.log('Clicked cancel button');
+      console.log("Clicked cancel button");
       this.visibleTerm = false;
     },
     apalah(param) {
@@ -1128,13 +1189,7 @@ export default {
           }
         }
       }
-      if (tempdata[0]["number1"] == 1) {
-        for (const a in tempdata) {
-          if (tempdata[a].setupflag == true) {
-            this.purpose = tempdata[a].setupvalue;
-          }
-        }
-      } else if (tempdata[0]["number1"] == 3) {
+      if (tempdata[0]["number1"] == 3) {
         console.log("msk");
         this.tempRoomPreferencelenght = [];
         this.tempRoomPreference = [];
@@ -1159,16 +1214,6 @@ export default {
           }
         }
         return this.tempRoomPreferencelenght;
-      } else if (tempdata[0]["number1"] == 8) {
-        return tempdata[0]["setupvalue"];
-      } else if (tempdata[0]["number1"] == 2) {
-        for (const natak in tempdata) {
-          if (tempdata[natak].setupflag == true) {
-            this.money = tempdata[natak]["price"];
-            this.currency = tempdata[natak]["remarks"];
-            return tempdata[natak]["setupvalue"].split("PER")[1];
-          }
-        }
       } else if (tempdata[0]["number1"] == 6) {
         return tempdata[0]["setupvalue"];
       }
@@ -1195,20 +1240,8 @@ export default {
       }
       return filteredCity;
     },
-    FilterPurposeofStay() {
-      return this.groupby(1, 0);
-    },
     FilterRoomPreference() {
       return this.groupby(3, 0);
-    },
-    FilterEstimatedArrivalTime() {
-      return this.groupby(8, 2);
-    },
-    FilterRequestType() {
-      return this.groupby(2, 0);
-    },
-    FilterTerm() {
-      return this.groupby(6, 2);
     },
     indexStrs() {
       // get: function () {
