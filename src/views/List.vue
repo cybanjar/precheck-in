@@ -1,22 +1,18 @@
 <template>
   <div>
     <div class="home">
-      <a-row class="header-brandings" type="flex" justify="space-between">
+      <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            src="../assets/GrandVisualHotel.png"
-            alt="Image Loading"
-          />
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
-              <p class="text-center">Online Check-In</p>
+              <p class="text-center" :style="information">Online Check-In</p>
             </div>
           </div>
         </a-col>
@@ -52,7 +48,9 @@
                 Arrival:
                 <span class="font-weight-bold">{{ formatDate(item.arrive) }}</span>
                 Departure:
-                <span class="font-weight-bold">{{ formatDate(item.depart) }}</span>
+                <span
+                  class="font-weight-bold"
+                >{{ formatDate(item.depart) }}</span>
               </p>
               <p class="pl-3">
                 {{ item.rmqty }} Adult
@@ -78,96 +76,20 @@
 import router from "../router";
 import moment from "moment";
 import { Alert } from "ant-design-vue";
-// const data = [
-//   {
-//     key: 1,
-//     name: "Hanevi Djasri, Mr",
-//     arrival: "14/01/2019",
-//     departure: "14/01/2019",
-//     adult: "2",
-//     email: "h.djasri@gmail.com",
-//     tags: "Suites",
-//     rs: 0,
-//     description: "",
-//     isSelected: false,
-//     booking: "11423133",
-//   },
-//   {
-//     key: 2,
-//     name: "Haiying Li, Mrs",
-//     arrival: "12/01/2019",
-//     departure: "14/01/2019",
-//     adult: "2",
-//     email: "li.haiying@gmail.com",
-//     tags: "Suites",
-//     rs: 1,
-//     description: "Chao Bao, Mr",
-//     isSelected: false,
-//     booking: "1120133",
-//   },
-//   {
-//     key: 3,
-//     name: "Yeoh Hui Jin, Mrs",
-//     arrival: "13/01/2019",
-//     departure: "14/01/2019",
-//     adult: "1",
-//     email: "jin.yeoh@gmail.com",
-//     tags: "Suites",
-//     rs: 0,
-//     description: "",
-//     isSelected: false,
-//     booking: "11022453",
-//   },
-//   {
-//     key: 4,
-//     name: "Saki Sato, Ms",
-//     arrival: "12/01/2019",
-//     departure: "14/01/2019",
-//     adult: "1",
-//     email: "saki.kato@gmail.com",
-//     tags: "Suites",
-//     rs: 0,
-//     description: "",
-//     isSelected: false,
-//     booking: "110201",
-//   },
-//   {
-//     key: 5,
-//     name: "Rahmat, Mr",
-//     arrival: "13/01/2019",
-//     departure: "14/01/2019",
-//     adult: "2",
-//     email: "m.imdadun@gmail.com",
-//     tags: "Suites",
-//     rs: 0,
-//     description: "",
-//     isSelected: false,
-//     booking: "11034124",
-//   },
-//   {
-//     key: 6,
-//     name: "Sri Rahaju, Ms",
-//     arrival: "14/01/2019",
-//     departure: "15/01/2019",
-//     adult: "1",
-//     email: "s.sutji@gmail.com",
-//     tags: "Suites",
-//     rs: 0,
-//     description: "",
-//     isSelected: false,
-//     booking: "1101423",
-//   },
-// ];
-
 export default {
   data() {
     return {
       selectedData: [],
+      gambar: "",
+      information: {},
     };
   },
   created() {
-    // console.log(this.$route.params.foo, "nyampe");
-    this.data = this.$route.params.foo;
+    this.data = this.$route.params.foo[0];
+    this.setup = this.$route.params.foo[1];
+    this.gambar = this.setup["01"];
+    this.information = this.setup["02"];
+
     for (const i in this.data) {
       this.data[i].isSelected = false;
       // console.log(i);
@@ -179,7 +101,7 @@ export default {
   methods: {
     select(client) {
       if (client.isSelected == false) {
-      // console.log('BLAH', client);
+        // console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i].key == client.key) {
@@ -201,7 +123,11 @@ export default {
       }
     },
     formatDate(datum) {
-      return new Intl.DateTimeFormat(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(datum));
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
   },
 };
