@@ -70,7 +70,7 @@
             <small>Ariella Calista Ichwan</small>
           </h2>-->
           <a-alert
-            :message="this.currDataPrepare.name"
+            :message="this.currDataPrepare['gast']"
             :description="this.currDataPrepare.description"
             type="info"
             show-icon
@@ -79,11 +79,11 @@
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
             Arrival:
-            <strong>{{this.currDataPrepare.arrival}}</strong>
+            <strong>{{formatDate(this.currDataPrepare.ci)}}</strong>
             Departure:
-            <strong>{{this.currDataPrepare.departure}}</strong>
+            <strong>{{formatDate(this.currDataPrepare.co)}}</strong>
             <br />Booking Code:
-            <strong>{{this.currDataPrepare.booking}}</strong>
+            <strong>{{this.currDataPrepare.resnr}}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
@@ -92,10 +92,14 @@
                 <a-form-item label="Email">
                   <a-input
                     v-decorator="[
-                      'email',
-                      { rules: [{  message: 'Please input your email' }] },
-                    ]"
-                    :placeholder="currDataPrepare.email"
+                    'email',
+                    {
+                      initialValue: currDataPrepare['guest-email'],
+                      rules: [
+                        { message: 'Please input your email' },
+                      ],
+                    },
+                  ]"
                     disabled
                   />
                 </a-form-item>
@@ -106,7 +110,7 @@
                     v-decorator="[
                     'phone',
                     {
-                      initialValue:currDataPrepare['guest-phone'],
+                      initialValue:currDataPrepare['guest-phnumber'],
                       rules: [{ required: true }],
                     },
                   ]"
@@ -150,15 +154,23 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Nationality">
                   <a-select
+                    show-search
                     v-decorator="[
-                  'nationality',
-          { initialValue: nationality,rules: [{ required: true }] },
-        ]"
+                    'nationality',
+                    { initialValue: currDataPrepare['guest-nation'], rules: [{ required: true }] },
+                  ]"
+                    @change="Nationality"
                   >
-                    <a-select-option value="indonesia">Indonesia</a-select-option>
-                    <a-select-option value="america">America</a-select-option>
-                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                    <a-select-option
+                      v-for="item in FilterCountry"
+                      :key="item"
+                      :value="item['alpha-3']"
+                    >{{ item.name }}</a-select-option>
                   </a-select>
+                  <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
+                  <!-- </a-select> -->
                 </a-form-item>
               </a-col>
               <!-- <a-col :span="5" :xl="5" :xs="24">
@@ -191,30 +203,41 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Country">
                   <a-select
+                    show-search
                     v-model="country"
                     v-decorator="[
-          'country',
-          { initialValue: country,
-          rules: [{ required: true }] },
-        ]"
+                    'country',
+                    {
+                      initialValue: currDataPrepare['guest-country'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
                   >
-                    <a-select-option value="indonesia">Indonesia</a-select-option>
-                    <a-select-option value="america">America</a-select-option>
-                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                    <a-select-option
+                      v-for="item in FilterCountry"
+                      :key="item"
+                      :value="item['alpha-3']"
+                    >{{ item.name }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
 
               <a-col :span="5" :xl="5" :xs="24">
-                <div v-if="country === 'indonesia'">
+                <div
+                  v-show="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  currDataPrepare['guest-country'] === 'ina' ||
+                  currDataPrepare['guest-country'] === 'INA'
+                "
+                >
                   <a-form-item label="Region">
                     <a-select
-                      v-model="setRegion"
                       show-search
-                      @change="handleChangeProvince"
+                      @change="handleChangeRegion"
                       v-decorator="[
                       'region',
-                      { initialValue: region, rules: [{ required: true }] },
+                      { initialValue: currDataPrepare['guest-region'], rules: [{ required: true }] },
                     ]"
                     >
                       <a-select-option
@@ -223,17 +246,6 @@
                         :value="filteredRegion[keys]['province']"
                       >{{ filteredRegion[keys].province }}</a-select-option>
                     </a-select>
-                  </a-form-item>
-                </div>
-                <div v-else>
-                  <a-form-item label="State">
-                    <a-input
-                      initial-value="Willy Wanta"
-                      v-decorator="[
-                  'username',
-                  { rules: [{ required: false, message: '' }] },
-                ]"
-                    />
                   </a-form-item>
                 </div>
               </a-col>
@@ -367,10 +379,10 @@
   </div>
 </template>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
+import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -440,11 +452,6 @@ export default {
       // filteredCity: [],
       filteredRegion: [],
       nationality: "Indonesia",
-      phone: {
-        number: "",
-        valid: "",
-        country: "",
-      },
       dataID: [],
       max: 100,
       agree: false,
@@ -495,6 +502,8 @@ export default {
       room: "",
       tempsetup: [],
       message: "",
+      FilterCountry: [],
+      countries: countries,
     };
   },
   watch: {
@@ -570,6 +579,9 @@ export default {
           .json();
 
         this.message = data["response"]["messResult"];
+        this.currDataPrepare =
+          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
+        console.log(this.currDataPrepare, "dataguest");
         this.informationterm = this.message.substring(
           this.message.lastIndexOf("- ") + 1,
           this.message.lastIndexOf("!")
@@ -644,17 +656,18 @@ export default {
         // if (this.message.substring(0, 2) == "00" || this.message.substring(0, 2) == "88") {
         //   this.informationmodal = true;
         // } else {
-          this.termcondition = true;
+        this.termcondition = true;
         // }
       })();
     }
   },
   mounted() {
     this.filteredRegion = this.Region;
+    this.FilterCountry = this.countries;
   },
   methods: {
-    goOTA(){
-      router.push('ota')
+    goOTA() {
+      router.push("ota");
     },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
@@ -739,14 +752,6 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-    },
-    phoneInput(formattedNumber, { number, valid, country }) {
-      //  console.log(number.international);
-      //  console.log(valid);
-      //  console.log(country && country.name);
-      this.phone.number = number.international;
-      this.phone.valid = valid;
-      this.phone.country = country && country.name;
     },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
@@ -850,6 +855,13 @@ export default {
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
+    },
+    formatDate(datum) {
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
   },
   computed: {

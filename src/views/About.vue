@@ -347,16 +347,23 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
+                  show-search
                   v-decorator="[
                     'nationality',
-                    { initialValue: nationality, rules: [{ required: true }] },
+                    { initialValue: currDataPrepare['guest-doc-nation'], rules: [{ required: true }] },
                   ]"
                   @change="Nationality"
                 >
-                  <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
+                  <a-select-option
+                    v-for="item in FilterCountry"
+                    :key="item"
+                    :value="item['alpha-3']"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
+                <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
+                <!-- </a-select> -->
               </a-form-item>
             </a-col>
             <!-- <a-col :span="5" :xl="5" :xs="24">
@@ -397,28 +404,41 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
                 <a-select
+                  show-search
                   v-model="country"
                   v-decorator="[
                     'country',
-                    { initialValue: country, rules: [{ required: true }] },
+                    {
+                      initialValue: currDataPrepare['guest-country'],
+                      rules: [{ required: true }],
+                    },
                   ]"
                 >
-                  <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
+                  <a-select-option
+                    v-for="item in FilterCountry"
+                    :key="item"
+                    :value="item['alpha-3']"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
 
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-show="country === 'Indonesia'">
+              <div
+                v-show="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  currDataPrepare['guest-country'] === 'ina' ||
+                  currDataPrepare['guest-country'] === 'INA'
+                "
+              >
                 <a-form-item label="Region">
                   <a-select
                     show-search
                     @change="handleChangeRegion"
                     v-decorator="[
                       'region',
-                      { initialValue: region, rules: [{ required: true }] },
+                      { initialValue: currDataPrepare['guest-prov'], rules: [{ required: true }] },
                     ]"
                   >
                     <a-select-option
@@ -509,6 +529,7 @@
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
+import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -565,12 +586,7 @@ export default {
       cities: "",
       // filteredCity: [],
       filteredRegion: [],
-      nationality: "Indonesia",
-      phone: {
-        number: "",
-        valid: "",
-        country: "",
-      },
+      nationality: "",
       dataGuest: [],
       max: 100,
       agree: false,
@@ -591,7 +607,7 @@ export default {
       guests: "",
       keluar: false,
       currency: "Rp.",
-      country: "Indonesia",
+      country: "",
       purpose: "",
       loading: true,
       term1: "I agree with the Terms and Conditions of Web Pre Check-in.",
@@ -614,6 +630,8 @@ export default {
       confirmLoadingTerm: false,
       hour: "",
       FilterPurposeofStay: [],
+      FilterCountry: [],
+      countries: countries,
     };
   },
   watch: {
@@ -705,6 +723,7 @@ export default {
             }
           }
         }
+
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
@@ -774,6 +793,7 @@ export default {
   },
   mounted() {
     this.filteredRegion = this.Region;
+    this.FilterCountry = this.countries;
   },
   methods: {
     showModalTerm() {
@@ -816,14 +836,6 @@ export default {
     handleChangeRegion(value) {
       this.region = value;
     },
-    // phoneInput(formattedNumber, { number, valid, country }) {
-    //   console.log(number.international, "inputan2");
-    //   // console.log(valid);
-    //   // console.log(country && country.name);
-    //   this.phone.number = number.international;
-    //   this.phone.valid = valid;
-    //   this.phone.country = country && country.name;
-    // },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
