@@ -21,6 +21,7 @@
     "qs": "^6.9.4",
     "smtpjs": "^0.0.1",
     "vue": "^2.6.11",
+    "vue-color": "^2.7.1",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {
