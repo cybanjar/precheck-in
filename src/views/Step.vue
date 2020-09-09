@@ -641,11 +641,11 @@ export default {
           }
         }
         this.loading = false;
-        if (this.message.substring(0, 2) == "00") {
-          this.information = true;
-        } else {
+        // if (this.message.substring(0, 2) == "00" || this.message.substring(0, 2) == "88") {
+        //   this.information = true;
+        // } else {
           this.termcondition = true;
-        }
+        // }
       })();
     }
   },

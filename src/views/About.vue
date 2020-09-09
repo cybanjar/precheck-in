@@ -477,9 +477,10 @@
               title="Term Of Condition"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
-              @ok="handleOkTerm"
-              @cancel="handleCancelTerm"
             >
+              <template slot="footer">
+                <a-button key="submit" type="primary" :loading="loading" @click="handleOkTerm">Close</a-button>
+              </template>
               <p>{{term}}</p>
             </a-modal>
           </a-row>
@@ -726,6 +727,7 @@ export default {
             obj["09"] = this.showSmoking;
             obj["10"] = this.showFloor;
             obj["11"] = this.hour;
+            obj["12"] = this.term;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             // router.push("list");
@@ -761,6 +763,7 @@ export default {
       this.showSmoking = this.$route.params.id["setup"]["09"];
       this.showFloor = this.$route.params.id["setup"]["10"];
       this.hour = this.$route.params.id["setup"]["11"];
+      this.term = this.$route.params.id["setup"]["12"];
       this.id = this.$route.params.id["data"];
       // this.counter = this.id.length;
 
