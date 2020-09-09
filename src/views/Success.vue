@@ -6,7 +6,8 @@
     <p>
       <br />
     </p>
-    <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p>
+    <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+    <p>Thank you for using our online check-in. Show this QR Code to get your keycard</p>
   </div>
 </template>
 
@@ -27,7 +28,7 @@ export default {
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 250 }
+      { width: 300 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");

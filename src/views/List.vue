@@ -60,15 +60,15 @@
           </a-list-item>
         </a-list>
       </div>
-      <!-- {{data}} -->
-      <router-link :to="{ name: 'Home', params: { id: selectedData } }">
-        <a-button
-          class="fixed-bottom-right mr-3 float-right"
-          type="primary"
-          :size="size"
-          :disabled="selectedData == 0 || selectedData == undefined"
-        >Next</a-button>
-      </router-link>
+      <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
+      <a-button
+        class="fixed-bottom-right mr-3 float-right"
+        type="primary"
+        :size="size"
+        :disabled="selectedData == 0 || selectedData == undefined"
+        @click="send"
+      >Next</a-button>
+      <!-- </router-link> -->
     </div>
   </div>
 </template>
@@ -82,11 +82,14 @@ export default {
       selectedData: [],
       gambar: "",
       information: {},
+      lemparsetup: [],
+      fairy: {},
     };
   },
   created() {
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
+    this.lemparsetup = this.$route.params.foo[1];
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
 
@@ -99,6 +102,11 @@ export default {
     // console.log(this.data, "berubah");
   },
   methods: {
+    send() {
+      this.fairy["data"] = this.selectedData;
+      this.fairy["setup"] = this.lemparsetup;
+      router.push({ name: "Home", params: { id: this.fairy } });
+    },
     select(client) {
       if (client.isSelected == false) {
         // console.log('BLAH', client);
