@@ -6,26 +6,25 @@
   </div>
   <div v-else>
     <div class="home">
-      <div v-show="term">
-        <a-modal
-          title="Term and Condition"
-          :visible="termcondition"
-          :confirm-loading="confirmLoading"
-        >
-          <template slot="footer">
-            <a-button key="back" @click="disagree">Disagree</a-button>
-            <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
-          </template>
-          <p>Check-In Time: 2:00 p.m.</p>
-          <p>Check-Out Time: 12:00 p.m.</p>
-          <p>Cancellation/No Show:</p>
-          <p>Cancellation can be made 3 days prior to arrival or in case of no-show one night-stay per room will be charged</p>
-          <p>Early Checkout:</p>
-          <p>All night stay will be forfeited</p>
-          <p>Late Checkout:</p>
-          <p>Based on availability extra charge may be applied- additional cost may apply</p>
-        </a-modal>
-      </div>
+      <!-- <div v-show="term"> -->
+      <a-modal
+        title="Term and Condition"
+        :visible="termcondition"
+        :confirm-loading="confirmLoading"
+      >
+        <template slot="footer">
+          <a-button key="back" @click="disagree">Disagree</a-button>
+          <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
+        </template>
+        <p>{{term}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="information" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{informationterm}}</p>
+      </a-modal>
+      <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
       <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
@@ -33,11 +32,7 @@
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            src="https://source.unsplash.com/1366x786/?hotel"
-            alt="Image Loading"
-          />
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay visible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -46,7 +41,7 @@
               <p class="text-center">Online Check-In</p>
             </div>
           </div>
-          <div class="invisible">
+          <!-- <div class="invisible">
             <div class="gear-setting">
               <a-icon
                 type="setting"
@@ -56,92 +51,13 @@
                 @click="imageModal"
               />
             </div>
-          </div>
+          </div>-->
         </a-col>
         <!-- <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>-->
       </a-row>
-      <a-modal
-        v-model="keluar"
-        title="Color and Image Setting"
-        :visible="keluar"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        <a-tabs default-active-key="1" @change="callback">
-          <a-tab-pane key="1" tab="Background Color">
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
 
-            <p>Custom Back Color</p>
-            <slider-picker
-              class="vc-slider"
-              v-model="information.backgroundColor"
-              @input="customHeaderClass"
-            />
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="Font Color" force-render>
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
-
-            <p>Custom Back Color</p>
-            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="Change Image" force-render>
-            <label>URL Image</label>
-            <a-input v-model="gambar" @input="masukinFoto" />
-            <p
-              :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
-            >* Recommended resolution 1366 x 768 atau HD</p>
-          </a-tab-pane>
-        </a-tabs>
-      </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">Guest Detail</h2>
@@ -177,7 +93,7 @@
                   <a-input
                     v-decorator="[
                       'email',
-                      { rules: [{ required: true, message: 'Please input your email' }] },
+                      { rules: [{  message: 'Please input your email' }] },
                     ]"
                     :placeholder="currDataPrepare.email"
                     disabled
@@ -186,16 +102,17 @@
               </a-col>
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Phone Number">
-                  <vue-tel-input
-                    v-model="phone"
+                  <a-input
                     v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true}],
-          },
-        ]"
-                    @input="phoneInput"
-                  ></vue-tel-input>
+                    'phone',
+                    {
+                      initialValue:currDataPrepare['guest-phone'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
+                    style="width: 100%"
+                    @keypress="isNumber($event)"
+                  ></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -355,7 +272,7 @@
               </a-col>-->
             </a-row>
           </div>
-          <div class="steps-content" v-show="current === 2">
+          <div class="steps-content" v-show="current === 2 ">
             <a-row class :gutter="[16, 8]">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Choose/Upload ID">
@@ -455,8 +372,6 @@
 import router from "../router";
 import data from "../components/json/indonesia";
 import Vue from "vue";
-import { Slider } from "vue-color";
-import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -478,13 +393,12 @@ import ky from "ky";
 Vue.use(Antd);
 
 export default {
-  components: {
-    "slider-picker": Slider,
-    "vue-tel-input": VueTelInput,
-  },
   data() {
     return {
       pay: false,
+      scanid: false,
+      information: false,
+      informationterm: "",
       current: 0,
       bookingcode: "",
       steps: [
@@ -554,7 +468,7 @@ export default {
       country: "indonesia",
       purpose: "leisure",
       loading: true,
-      term: false,
+      term: "",
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
       term2:
@@ -573,6 +487,14 @@ export default {
         // height: "5rem",
         // marginBottom: "1rem !important",
       },
+      hour: "",
+      FilterPurposeofStay: [],
+      bed: "",
+      floor: "",
+      region: "",
+      room: "",
+      tempsetup: [],
+      message: "",
     };
   },
   watch: {
@@ -580,48 +502,173 @@ export default {
       key;
     },
   },
-  created() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.bookingcode = urlParams.get("bookingcode");
-    this.loading = false;
-    this.termcondition = true;
-    // console.log(this.$route.params.id, "lempar");
-    if (this.bookingcode === "982010") {
-      router.push("listcheckin");
-    } else {
-      this.currDataPrepare = {
-        key: 1,
-        name: "R. Andito Rizky Pratama, Mr",
-        arrival: "12/12/2020",
-        departure: "15/12/2020",
-        adult: "2",
-        booking: "11020133",
-        email: "randitorizky@gmail.com",
-        tags: "Suites",
-        rs: 0,
-        description: "Ariella Calista Ichwan",
-        isSelected: false,
-      };
-      term;
-    }
-    if (this.$route.params.id != undefined) {
-      this.id = this.$route.params.id;
-      // this.counter = this.id.length;
+  // created() {
+  //   const urlParams = new URLSearchParams(window.location.search);
 
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
+  //   this.bookingcode = urlParams.get("bookingcode");
+  //   this.loading = false;
+  //   this.termcondition = true;
+  //   // console.log(this.$route.params.id, "lempar");
+  //   if (this.bookingcode === "982010") {
+  //     router.push("listcheckin");
+  //   } else {
+  //     this.currDataPrepare = {
+  //       key: 1,
+  //       name: "R. Andito Rizky Pratama, Mr",
+  //       arrival: "12/12/2020",
+  //       departure: "15/12/2020",
+  //       adult: "2",
+  //       booking: "11020133",
+  //       email: "randitorizky@gmail.com",
+  //       tags: "Suites",
+  //       rs: 0,
+  //       description: "Ariella Calista Ichwan",
+  //       isSelected: false,
+  //     };
+  //     term;
+  //   }
+  //   if (this.$route.params.id != undefined) {
+  //     this.id = this.$route.params.id;
+  //     // this.counter = this.id.length;
+
+  //     this.currDataPrepare = this.id[this.counter];
+  //     this.counter += 1;
+  //   }
+  //    }
+  // },
+  created() {
+    if (this.$route.params.id == undefined) {
+      (async () => {
+        const tempParam = location.search.substring(1);
+        const parsed = await ky
+          .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+            json: {
+              request: {
+                icase: 1,
+              },
+            },
+          })
+          .json();
+
+        const data = await ky
+          .post(
+            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+            {
+              json: {
+                request: {
+                  coDate: "01/15/19",
+                  bookCode: "28249",
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            }
+          )
+          .json();
+
+        this.message = data["response"]["messResult"];
+        this.informationterm = this.message.substring(
+          this.message.lastIndexOf("- ") + 1,
+          this.message.lastIndexOf("!")
+        );
+        this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const heaven in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+              }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const hell in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+              }
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 7 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            const lagi = this.tempsetup[i]["setupvalue"].substring(
+              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
+              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.term = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 2) {
+            if (this.tempsetup[i].setupflag == true) {
+              this.money = this.tempsetup[i]["price"];
+              this.currency = this.tempsetup[i]["remarks"];
+              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.hour = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.scanid = this.tempsetup[i]["setupflag"];
+          } else if (this.tempsetup[i]["number1"] == 1) {
+            this.FilterPurposeofStay.push(this.tempsetup[i]);
+            if (this.tempsetup[i].setupflag == true) {
+              this.purpose = this.tempsetup[i].setupvalue;
+            }
+          } else if (this.tempsetup[i]["number1"] == 3) {
+            if (this.tempsetup[i].number2 == 1) {
+              this.showBed = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 2) {
+              this.showSmoking = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 3) {
+              this.showFloor = this.tempsetup[i].setupflag;
+            }
+          }
+        }
+        this.loading = false;
+        if (this.message.substring(0, 2) == "00") {
+          this.information = true;
+        } else {
+          this.termcondition = true;
+        }
+      })();
     }
-    //  else {
-    //   router.push("guest-list");
-    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
   },
   methods: {
-    // checkin() {
-    //   router.push("successcheckin");
-    // },
+    goOTA(){
+      router.push('ota')
+    },
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      const charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     next() {
       this.current++;
     },
