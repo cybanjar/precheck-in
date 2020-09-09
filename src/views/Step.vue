@@ -46,7 +46,7 @@
               <p class="text-center">Online Check-In</p>
             </div>
           </div>
-          <div class="invisible">
+          <!-- <div class="invisible">
             <div class="gear-setting">
               <a-icon
                 type="setting"
@@ -56,92 +56,13 @@
                 @click="imageModal"
               />
             </div>
-          </div>
+          </div>-->
         </a-col>
         <!-- <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>-->
       </a-row>
-      <a-modal
-        v-model="keluar"
-        title="Color and Image Setting"
-        :visible="keluar"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-      >
-        <a-tabs default-active-key="1" @change="callback">
-          <a-tab-pane key="1" tab="Background Color">
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiHeaderClass('#FFBF00')">Gold</a>
 
-            <p>Custom Back Color</p>
-            <slider-picker
-              class="vc-slider"
-              v-model="information.backgroundColor"
-              @input="customHeaderClass"
-            />
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="Font Color" force-render>
-            <p>Standard Color</p>
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1890ff')">Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E8505B')">Red</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FBDB81')">Yellow</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('green')">Green</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('white')">White</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#D42A83')">Magenta</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#1B262C')">Black</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FA7D09')">Orange</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#901f90')">Purple</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#00D7FF')">Sky Blue</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#E4E3E3')">Grey</a>
-            <br />
-            <a href="#" onclick="return false;" @mouseenter="gantiFontClass('#FFBF00')">Gold</a>
-
-            <p>Custom Back Color</p>
-            <slider-picker class="vc-slider" v-model="information.color" @input="customFontClass" />
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="Change Image" force-render>
-            <label>URL Image</label>
-            <a-input v-model="gambar" @input="masukinFoto" />
-            <p
-              :style="{ color: '#E8505B', fontStyle: 'italic', fontSize: '0.75rem'}"
-            >* Recommended resolution 1366 x 768 atau HD</p>
-          </a-tab-pane>
-        </a-tabs>
-      </a-modal>
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">Guest Detail</h2>
@@ -177,7 +98,7 @@
                   <a-input
                     v-decorator="[
                       'email',
-                      { rules: [{ required: true, message: 'Please input your email' }] },
+                      { rules: [{  message: 'Please input your email' }] },
                     ]"
                     :placeholder="currDataPrepare.email"
                     disabled
@@ -186,16 +107,17 @@
               </a-col>
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Phone Number">
-                  <vue-tel-input
-                    v-model="phone"
+                  <a-input
                     v-decorator="[
-          'phone',
-          {
-            rules: [{ required: true}],
-          },
-        ]"
-                    @input="phoneInput"
-                  ></vue-tel-input>
+                    'phone',
+                    {
+                      initialValue:currDataPrepare['guest-phone'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
+                    style="width: 100%"
+                    @keypress="isNumber($event)"
+                  ></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -573,6 +495,13 @@ export default {
         // height: "5rem",
         // marginBottom: "1rem !important",
       },
+      hour: "",
+      FilterPurposeofStay: [],
+      bed: "",
+      floor: "",
+      region: "",
+      room: "",
+      tempsetup: [],
     };
   },
   watch: {
@@ -580,48 +509,92 @@ export default {
       key;
     },
   },
-  created() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.bookingcode = urlParams.get("bookingcode");
-    this.loading = false;
-    this.termcondition = true;
-    // console.log(this.$route.params.id, "lempar");
-    if (this.bookingcode === "982010") {
-      router.push("listcheckin");
-    } else {
-      this.currDataPrepare = {
-        key: 1,
-        name: "R. Andito Rizky Pratama, Mr",
-        arrival: "12/12/2020",
-        departure: "15/12/2020",
-        adult: "2",
-        booking: "11020133",
-        email: "randitorizky@gmail.com",
-        tags: "Suites",
-        rs: 0,
-        description: "Ariella Calista Ichwan",
-        isSelected: false,
-      };
-      term;
-    }
-    if (this.$route.params.id != undefined) {
-      this.id = this.$route.params.id;
-      // this.counter = this.id.length;
+  // created() {
+  //   const urlParams = new URLSearchParams(window.location.search);
 
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
+  //   this.bookingcode = urlParams.get("bookingcode");
+  //   this.loading = false;
+  //   this.termcondition = true;
+  //   // console.log(this.$route.params.id, "lempar");
+  //   if (this.bookingcode === "982010") {
+  //     router.push("listcheckin");
+  //   } else {
+  //     this.currDataPrepare = {
+  //       key: 1,
+  //       name: "R. Andito Rizky Pratama, Mr",
+  //       arrival: "12/12/2020",
+  //       departure: "15/12/2020",
+  //       adult: "2",
+  //       booking: "11020133",
+  //       email: "randitorizky@gmail.com",
+  //       tags: "Suites",
+  //       rs: 0,
+  //       description: "Ariella Calista Ichwan",
+  //       isSelected: false,
+  //     };
+  //     term;
+  //   }
+  //   if (this.$route.params.id != undefined) {
+  //     this.id = this.$route.params.id;
+  //     // this.counter = this.id.length;
+
+  //     this.currDataPrepare = this.id[this.counter];
+  //     this.counter += 1;
+  //   }
+  //    }
+  // },
+  created() {
+    if (this.$route.params.id == undefined) {
+      (async () => {
+        const tempParam = location.search.substring(1);
+        const parsed = await ky
+          .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+            json: {
+              request: {
+                icase: 1,
+              },
+            },
+          })
+          .json();
+
+        console.log(parsed.response.pciSetup["pci-setup"], "setup");
+        this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+            console.log(jatah, "setup5");
+
+            for (const heaven in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+                console.log(jatah[heaven]["setupvalue"], "setup2");
+              }
+            }
+          }
+        }
+      })();
+      this.loading = false;
     }
-    //  else {
-    //   router.push("guest-list");
-    // }
   },
   mounted() {
     this.filteredRegion = this.Region;
   },
   methods: {
-    // checkin() {
-    //   router.push("successcheckin");
-    // },
+    isNumber: function (evt) {
+      evt = evt ? evt : window.event;
+      const charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     next() {
       this.current++;
     },
