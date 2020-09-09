@@ -142,7 +142,7 @@
     <a-row class="ml-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Enable Upload ID">
-          <a-radio-group v-model="defaultUpload" v-decoration="['radio-group']">
+          <a-radio-group v-model="defaultUpload">
             <a-radio value="yes">
               <span class="font-weight-normal">Yes</span>
             </a-radio>
@@ -171,11 +171,11 @@
     <a-row class="ml-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Pickup">
-          <a-radio-group v-decoration="['radio-group']">
-            <a-radio value="yes">
+          <a-radio-group v-model="form.Pickup">
+            <a-radio value="1">
               <span class="font-weight-normal">Yes</span>
             </a-radio>
-            <a-radio value="no">
+            <a-radio value="2">
               <span class="font-weight-normal">No</span>
             </a-radio>
           </a-radio-group>
@@ -183,8 +183,8 @@
       </a-col>
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Pickup Type">
-          <a-radio-group v-decoration="['radio-group']">
-            <a-radio v-model="form.pickupType" value="1">
+          <a-radio-group v-model="form.pickupType">
+            <a-radio value="1">
               <span class="font-weight-normal">Per Pax</span>
             </a-radio>
             <a-radio value="2">
@@ -233,7 +233,7 @@
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Term and Condition">
-          <a-radio-group v-decoration="['radio-group']">
+          <a-radio-group v-model="form.TermEnglish">
             <a-radio value="1">
               <span class="font-weight-normal">English</span>
             </a-radio>
@@ -296,6 +296,8 @@ export default {
       form: {
         type: [],
         pickupType: '1',
+        Pickup: '1',
+        TermEnglish: '1',
         desc: '',
       },
       ModalText: 'Standart Colors',
@@ -330,9 +332,7 @@ export default {
             }
           )
           .json();
-    console.log(parsed, "parse");
     this.response = parsed;
-    console.log(this.response, "response");
     })();
   },
   methods: {
