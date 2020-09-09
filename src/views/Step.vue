@@ -587,7 +587,7 @@ export default {
         this.currDataPrepare =
           data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
         this.precheckin =
-          !data["response"]["arrivalGuestlist"]["arrival-guestlist"][0][
+          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0][
             "pre-checkin"
           ];
         if (this.precheckin == true) {

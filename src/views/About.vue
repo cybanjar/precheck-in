@@ -490,8 +490,10 @@
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree" />
               <!-- {{FilterTerm}} -->
-              I agree with the
-              <a @click="showModalTerm">Terms and Conditions</a> of Web Pre Check-in.
+              Check here to indicate that you have read and agree to the
+              <a
+                @click="showModalTerm"
+              >Terms and Conditions</a> Grand Visual Hotel Jakarta Agreement.
             </a-col>
             <a-modal
               title="Term Of Condition"
