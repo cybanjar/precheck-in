@@ -18,7 +18,7 @@
         </template>
         <p>{{term}}</p>
       </a-modal>
-      <a-modal title="Information" :visible="information" :confirm-loading="confirmLoading">
+      <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
           <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
         </template>
@@ -397,7 +397,7 @@ export default {
     return {
       pay: false,
       scanid: false,
-      information: false,
+      informationmodal: false,
       informationterm: "",
       current: 0,
       bookingcode: "",
@@ -642,7 +642,7 @@ export default {
         }
         this.loading = false;
         // if (this.message.substring(0, 2) == "00" || this.message.substring(0, 2) == "88") {
-        //   this.information = true;
+        //   this.informationmodal = true;
         // } else {
           this.termcondition = true;
         // }
