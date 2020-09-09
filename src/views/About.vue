@@ -155,7 +155,15 @@
               :xs="24"
             >
               <a-form-item label="Flight Details">
-                <a-input placeholder="Please input flight details" v-decorator="['flight']" />
+                <a-input
+                  placeholder="Please input flight details"
+                  v-decorator="[
+                    'flight',
+                    {
+                      rules: [{ message: 'Please input your flight details' }],
+                    },
+                  ]"
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -251,7 +259,7 @@
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
-                  v-decorator="['Request']"
+                  v-decorator="['Request', { rules: [{ message: 'Please input your Request' }] }]"
                   placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
@@ -400,6 +408,7 @@
               </a-form-item>
             </a-col>
           </a-row>-->
+          {{currDataPrepare['guest-country']}}
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
@@ -851,7 +860,7 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log("Received values of form: ", values);
+          console.log("inputan2 ", values);
 
           console.log(
             {
@@ -859,13 +868,26 @@ export default {
               reslineNumber: this.currDataPrepare["rsvline-number"],
               estAT: values.time._i,
               pickrequest: this.showPrice,
-              pickdetail: values.flight,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
               roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq: values.Request,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
               guestPhnumber: values.phone,
               guestNationality: values.nationality,
               guestCountry: values.country,
-              guestRegion: values.region,
+              guestRegion:
+                values.country != "INA" ||
+                values.country != "ina" ||
+                values.country != "Indonesia"
+                  ? ""
+                  : values.region,
               agreedTerm: true,
               purposeOfStay: values.purpose,
             },
@@ -881,14 +903,27 @@ export default {
                     reslineNumber: this.currDataPrepare["rsvline-number"],
                     estAT: values.time._i,
                     pickrequest: this.showPrice,
-                    pickdetail: values.flight,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
                     roomPreferences:
                       this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq: values.Request,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
                     guestPhnumber: values.phone,
                     guestNationality: values.nationality,
                     guestCountry: values.country,
-                    guestRegion: values.region,
+                    guestRegion:
+                      values.country != "INA" ||
+                      values.country != "ina" ||
+                      values.country != "Indonesia"
+                        ? ""
+                        : values.region,
                     agreedTerm: true,
                     purposeOfStay: values.purpose,
                   },
