@@ -33,40 +33,40 @@
         <!-- <p>{{ ModalText }}</p> -->
         <a-row>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1488cc')" class="card-color blue">Blue</div>
+            <div @click="mouseClicks('#1890FF')" class="card-color blue">Blue</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#e85058')" class="card-color red">Red</div>
+            <div @click="mouseClicks('#E85058')" class="card-color red">Red</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#fbdb81')" class="card-color yellow">Yellow</div>
+            <div @click="mouseClicks('#FBDB81')" class="card-color yellow">Yellow</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#265C60')" class="card-color green">Green</div>
+            <div @click="mouseClicks('#008800')" class="card-color green">Green</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#ffffff')" class="card-color white">White</div>
+            <div @click="mouseClicks('#FFFFFF')" class="card-color white">White</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#d42a83')" class="card-color magenta">Magenta</div>
+            <div @click="mouseClicks('#D42A83')" class="card-color magenta">Magenta</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1b262c')" class="card-color black">Black</div>
+            <div @click="mouseClicks('#1B262C')" class="card-color black">Black</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#fa7d09')" class="card-color orange">Orange</div>
+            <div @click="mouseClicks('#FA7D09')" class="card-color orange">Orange</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#901f90')" class="card-color purple">Purple</div>
+            <div @click="mouseClicks('#901F90')" class="card-color purple">Purple</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1488cc')" class="card-color bluesky">Blue Sky</div>
+            <div @click="mouseClicks('#1488CC')" class="card-color bluesky">Blue Sky</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#e4e3e3')" class="card-color grey">Grey</div>
+            <div @click="mouseClicks('#E4E3E3')" class="card-color grey">Grey</div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#ffbf00')" class="card-color gold">Gold</div>
+            <div @click="mouseClicks('#FFBF00')" class="card-color gold">Gold</div>
           </a-col>
         </a-row>
       </a-modal>
@@ -101,40 +101,40 @@
       <!-- <p>{{ ModalText }}</p> -->
       <a-row>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1488cc')" class="card-color blue">Blue</div>
+          <div @click="mouseClicksx('#1890FF')" class="card-color blue">Blue</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#e85058')" class="card-color red">Red</div>
+          <div @click="mouseClicksx('#E85058')" class="card-color red">Red</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#fbdb81')" class="card-color yellow">Yellow</div>
+          <div @click="mouseClicksx('#FBDB81')" class="card-color yellow">Yellow</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#265C60')" class="card-color green">Green</div>
+          <div @click="mouseClicksx('#008800')" class="card-color green">Green</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#ffffff')" class="card-color white">White</div>
+          <div @click="mouseClicksx('#FFFFFF')" class="card-color white">White</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#d42a83')" class="card-color magenta">Magenta</div>
+          <div @click="mouseClicksx('#D42A83')" class="card-color magenta">Magenta</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1b262c')" class="card-color black">Black</div>
+          <div @click="mouseClicksx('#1B262C')" class="card-color black">Black</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#fa7d09')" class="card-color orange">Orange</div>
+          <div @click="mouseClicksx('#FA7D09')" class="card-color orange">Orange</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#901f90')" class="card-color purple">Purple</div>
+          <div @click="mouseClicksx('#901F90')" class="card-color purple">Purple</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1488cc')" class="card-color bluesky">Blue Sky</div>
+          <div @click="mouseClicksx('#1488CC')" class="card-color bluesky">Blue Sky</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#e4e3e3')" class="card-color grey">Grey</div>
+          <div @click="mouseClicksx('#E4E3E3')" class="card-color grey">Grey</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#ffbf00')" class="card-color gold">Gold</div>
+          <div @click="mouseClicksx('#FFBF00')" class="card-color gold">Gold</div>
         </a-col>
       </a-row>
     </a-modal>
@@ -377,13 +377,10 @@ export default {
       this.visibleFC = false;
     },
     mouseClicks(color) {
-      this.defaultBC = color
-      document.getElementById("defaultBC").style.color = color;
-      console.log(color, 'color1');
+        this.defaultBC = color;
     },
     mouseClicksx(color) {
-      this.defaultFC = color
-      document.getElementById("defaultFC").style.color = color;
+      this.defaultFC = color;
     },
     moment,
     handleChange(e) {
