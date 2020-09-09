@@ -673,7 +673,6 @@ export default {
               this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
             );
             this.gambar = lagi;
-            console.log(lagi, "change");
           } else if (
             this.tempsetup[i]["number1"] == 6 &&
             this.tempsetup[i]["number2"] == 1
@@ -715,9 +714,18 @@ export default {
             const nietos = [];
             const obj = {};
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-            console.log(this.gambar,"gambar");
+            console.log(this.gambar, "gambar");
             obj["01"] = this.gambar;
             obj["02"] = this.information;
+            obj["03"] = this.money;
+            obj["04"] = this.currency;
+            obj["05"] = this.per;
+            obj["06"] = this.purpose;
+            obj["07"] = this.FilterPurposeofStay;
+            obj["08"] = this.showBed;
+            obj["09"] = this.showSmoking;
+            obj["10"] = this.showFloor;
+            obj["11"] = this.hour;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             // router.push("list");
@@ -741,7 +749,19 @@ export default {
         }
       })();
     } else {
-      this.id = this.$route.params.id;
+      console.log(this.$route.params.id, "punten");
+      this.gambar = this.$route.params.id["setup"]["01"];
+      this.information = this.$route.params.id["setup"]["02"];
+      this.money = this.$route.params.id["setup"]["03"];
+      this.currency = this.$route.params.id["setup"]["04"];
+      this.per = this.$route.params.id["setup"]["05"];
+      this.purpose = this.$route.params.id["setup"]["06"];
+      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
+      this.showBed = this.$route.params.id["setup"]["08"];
+      this.showSmoking = this.$route.params.id["setup"]["09"];
+      this.showFloor = this.$route.params.id["setup"]["10"];
+      this.hour = this.$route.params.id["setup"]["11"];
+      this.id = this.$route.params.id["data"];
       // this.counter = this.id.length;
 
       this.currDataPrepare = this.id[this.counter];
@@ -764,7 +784,6 @@ export default {
       }, 700);
     },
     handleCancelTerm(e) {
-      console.log("Clicked cancel button");
       this.visibleTerm = false;
     },
     apalah(param) {
@@ -778,27 +797,21 @@ export default {
     },
     Room(e) {
       this.room = e.target.value;
-      console.log(this.room);
     },
     Bed(e) {
       this.bed = e.target.value;
-      console.log(this.bed);
     },
     Floor(e) {
       this.floor = e.target.value;
-      console.log(this.floor);
     },
     Kuy(value) {
       this.kuy = value;
-      console.log(this.kuy);
     },
     Nationality(value) {
       this.nationality = value;
-      console.log(this.nationality);
     },
     handleChangeRegion(value) {
       this.region = value;
-      console.log(this.region);
     },
     // phoneInput(formattedNumber, { number, valid, country }) {
     //   console.log(number.international, "inputan2");
@@ -821,7 +834,7 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log("Received values of form: ", values);
+          // console.log("Received values of form: ", values);
 
           console.log(
             {
@@ -1002,7 +1015,6 @@ export default {
         }
       }
       if (tempdata[0]["number1"] == 3) {
-        console.log("msk");
         this.tempRoomPreferencelenght = [];
         this.tempRoomPreference = [];
         for (const b in tempdata) {
@@ -1012,9 +1024,7 @@ export default {
             const coba = tempdata[b]["setupvalue"];
             // coba[b].key = Number(b);
 
-            console.log(coba, "split1");
             const splitcoba = coba.split(" & ");
-            console.log(splitcoba, "split2");
 
             // isi 6
             for (const c in splitcoba) {
@@ -1032,7 +1042,6 @@ export default {
       return tempdata;
     },
     test() {
-      console.log("index", this.indexStr);
       return (this.indexStr = this.indexStr + 1);
     },
   },
@@ -1064,7 +1073,6 @@ export default {
       //   this.indexStr = this.indexStr + 1;
       //   console.log(this.indexStr, "be the one");
       // },
-      console.log("masuk");
       return this.test();
     },
   },
