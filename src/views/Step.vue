@@ -34,7 +34,7 @@
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay visible">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -510,6 +510,7 @@ export default {
       FilterCountry: [],
       countries: countries,
       precheckin: false,
+      hotelname: "",
     };
   },
   watch: {
@@ -663,6 +664,11 @@ export default {
             } else if (this.tempsetup[i].number2 == 3) {
               this.showFloor = this.tempsetup[i].setupflag;
             }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
         this.loading = false;

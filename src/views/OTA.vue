@@ -12,10 +12,31 @@
           <img @click="showModalBookingCode" class="img-ota" src="../assets/booking-code.svg" />
           <a-modal v-model="modalBookingCode" title="Booking Code" @ok="handleOk">
             <a-form-item label="Booking Code">
-              <a-input v-model="bookingcode" placeholder="Input your booking code" />
+              <a-input
+                v-model="bookingcode"
+                v-decorator="[
+                    'bookingcode',
+                    {
+                      rules: [
+                        { required: true ,message: 'Please input your email' },
+                      ],
+                    },
+                  ]"
+                placeholder="Input your booking code"
+              />
             </a-form-item>
             <a-form-item label="Checkout Date">
-              <a-date-picker @change="onChange" />
+              <a-date-picker
+                v-decorator="[
+                    'co',
+                    {
+                      rules: [
+                        { required: true ,message: 'Please input your Check Out Date' },
+                      ],
+                    },
+                  ]"
+                @change="onChange"
+              />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -89,7 +110,7 @@ export default {
     handleOk() {
       // console.log(e);
 
-      router.push({ path: "step", query: { bookingcode: this.bookingcode } });
+      // router.push({ path: "step", query: { bookingcode: this.bookingcode } });
 
       this.modalBookingCode = false;
       this.modalGuestName = false;

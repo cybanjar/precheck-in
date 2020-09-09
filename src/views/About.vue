@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
+      <h3 class="text-center font-weight-bold visible">{{hotelname}}</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
@@ -40,7 +40,7 @@
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img class="img-hotel" :src="gambar" alt="Image Loading" />
           <div class="overlay invisible">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="invisible">
             <div class="gear-setting">
@@ -493,7 +493,8 @@
               Check here to indicate that you have read and agree to the
               <a
                 @click="showModalTerm"
-              >Terms and Conditions</a> Grand Visual Hotel Jakarta Agreement.
+              >Terms and Conditions</a>
+              {{hotelname}} Agreement.
             </a-col>
             <a-modal
               title="Term Of Condition"
@@ -634,16 +635,8 @@ export default {
       FilterPurposeofStay: [],
       FilterCountry: [],
       countries: countries,
+      hotelname: "",
     };
-  },
-  watch: {
-    activeKey(key) {
-      key;
-    },
-    // indexStr: function () {
-    //   this.indexStr = this.indexStr + 1;
-    //   console.log("watch", this.indexStr);
-    // },
   },
   created() {
     if (this.$route.params.id == undefined) {
@@ -723,6 +716,11 @@ export default {
             } else if (this.tempsetup[i].number2 == 3) {
               this.showFloor = this.tempsetup[i].setupflag;
             }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
 
@@ -749,6 +747,7 @@ export default {
             obj["10"] = this.showFloor;
             obj["11"] = this.hour;
             obj["12"] = this.term;
+            obj["13"] = this.hotelname;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             // router.push("list");
@@ -785,6 +784,7 @@ export default {
       this.showFloor = this.$route.params.id["setup"]["10"];
       this.hour = this.$route.params.id["setup"]["11"];
       this.term = this.$route.params.id["setup"]["12"];
+      this.hotelname = this.$route.params.id["setup"]["13"];
       this.id = this.$route.params.id["data"];
       // this.counter = this.id.length;
 

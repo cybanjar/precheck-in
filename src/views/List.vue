@@ -8,7 +8,7 @@
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -81,6 +81,7 @@ export default {
     return {
       selectedData: [],
       gambar: "",
+      hotelname: "",
       information: {},
       lemparsetup: [],
       fairy: {},
@@ -92,6 +93,7 @@ export default {
     this.lemparsetup = this.$route.params.foo[1];
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
+    this.hotelname = this.setup["13"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
