@@ -6,26 +6,25 @@
   </div>
   <div v-else>
     <div class="home">
-      <div v-show="term">
-        <a-modal
-          title="Term and Condition"
-          :visible="termcondition"
-          :confirm-loading="confirmLoading"
-        >
-          <template slot="footer">
-            <a-button key="back" @click="disagree">Disagree</a-button>
-            <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
-          </template>
-          <p>Check-In Time: 2:00 p.m.</p>
-          <p>Check-Out Time: 12:00 p.m.</p>
-          <p>Cancellation/No Show:</p>
-          <p>Cancellation can be made 3 days prior to arrival or in case of no-show one night-stay per room will be charged</p>
-          <p>Early Checkout:</p>
-          <p>All night stay will be forfeited</p>
-          <p>Late Checkout:</p>
-          <p>Based on availability extra charge may be applied- additional cost may apply</p>
-        </a-modal>
-      </div>
+      <!-- <div v-show="term"> -->
+      <a-modal
+        title="Term and Condition"
+        :visible="termcondition"
+        :confirm-loading="confirmLoading"
+      >
+        <template slot="footer">
+          <a-button key="back" @click="disagree">Disagree</a-button>
+          <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
+        </template>
+        <p>{{term}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="information" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{informationterm}}</p>
+      </a-modal>
+      <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
       <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
@@ -33,11 +32,7 @@
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            src="https://source.unsplash.com/1366x786/?hotel"
-            alt="Image Loading"
-          />
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay visible">
             <div class="text">Grand Visual Hotel Jakarta</div>
           </div>
@@ -277,7 +272,7 @@
               </a-col>-->
             </a-row>
           </div>
-          <div class="steps-content" v-show="current === 2">
+          <div class="steps-content" v-show="current === 2 ">
             <a-row class :gutter="[16, 8]">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Choose/Upload ID">
@@ -377,8 +372,6 @@
 import router from "../router";
 import data from "../components/json/indonesia";
 import Vue from "vue";
-import { Slider } from "vue-color";
-import { VueTelInput } from "vue-tel-input";
 import Antd, {
   Row,
   Col,
@@ -400,13 +393,12 @@ import ky from "ky";
 Vue.use(Antd);
 
 export default {
-  components: {
-    "slider-picker": Slider,
-    "vue-tel-input": VueTelInput,
-  },
   data() {
     return {
       pay: false,
+      scanid: false,
+      information: false,
+      informationterm: "",
       current: 0,
       bookingcode: "",
       steps: [
@@ -476,7 +468,7 @@ export default {
       country: "indonesia",
       purpose: "leisure",
       loading: true,
-      term: false,
+      term: "",
       term1:
         "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
       term2:
@@ -502,6 +494,7 @@ export default {
       region: "",
       room: "",
       tempsetup: [],
+      message: "",
     };
   },
   watch: {
@@ -557,31 +550,112 @@ export default {
           })
           .json();
 
-        console.log(parsed.response.pciSetup["pci-setup"], "setup");
+        const data = await ky
+          .post(
+            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+            {
+              json: {
+                request: {
+                  coDate: "01/15/19",
+                  bookCode: "28249",
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            }
+          )
+          .json();
+
+        this.message = data["response"]["messResult"];
+        this.informationterm = this.message.substring(
+          this.message.lastIndexOf("- ") + 1,
+          this.message.lastIndexOf("!")
+        );
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
             jatah.push(this.tempsetup[i]);
-            console.log(jatah, "setup5");
 
             for (const heaven in jatah) {
               console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
                 this.information.backgroundColor = jatah[heaven]["setupvalue"];
-                console.log(jatah[heaven]["setupvalue"], "setup2");
               }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const hell in jatah) {
+              console.log(jatah, "msk");
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+              }
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 7 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            const lagi = this.tempsetup[i]["setupvalue"].substring(
+              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
+              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.term = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 2) {
+            if (this.tempsetup[i].setupflag == true) {
+              this.money = this.tempsetup[i]["price"];
+              this.currency = this.tempsetup[i]["remarks"];
+              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.hour = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.scanid = this.tempsetup[i]["setupflag"];
+          } else if (this.tempsetup[i]["number1"] == 1) {
+            this.FilterPurposeofStay.push(this.tempsetup[i]);
+            if (this.tempsetup[i].setupflag == true) {
+              this.purpose = this.tempsetup[i].setupvalue;
+            }
+          } else if (this.tempsetup[i]["number1"] == 3) {
+            if (this.tempsetup[i].number2 == 1) {
+              this.showBed = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 2) {
+              this.showSmoking = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 3) {
+              this.showFloor = this.tempsetup[i].setupflag;
             }
           }
         }
+        this.loading = false;
+        if (this.message.substring(0, 2) == "00") {
+          this.information = true;
+        } else {
+          this.termcondition = true;
+        }
       })();
-      this.loading = false;
     }
   },
   mounted() {
     this.filteredRegion = this.Region;
   },
   methods: {
+    goOTA(){
+      router.push('ota')
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
