@@ -57,7 +57,8 @@
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>-->
       </a-row>
-
+      precheckin: {{precheckin}}
+      scandID: {{scanid}}
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">Guest Detail</h2>
@@ -342,7 +343,10 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <a-button v-if="current > 0" @click="prev">Previous</a-button>
+            <div v-if="y">
+              <a-button v-if="current > 0" @click="prev">Previous</a-button>
+            </div>
+
             <a-button
               v-if="current < steps.length - 1"
               style="margin-left: 8px"
@@ -413,6 +417,7 @@ export default {
       informationterm: "",
       current: 0,
       bookingcode: "",
+      y: true,
       steps: [
         {
           title: "Guest Detail",
@@ -504,6 +509,7 @@ export default {
       message: "",
       FilterCountry: [],
       countries: countries,
+      precheckin: false,
     };
   },
   watch: {
@@ -548,7 +554,6 @@ export default {
   created() {
     if (this.$route.params.id == undefined) {
       (async () => {
-        const tempParam = location.search.substring(1);
         const parsed = await ky
           .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
             json: {
@@ -581,7 +586,14 @@ export default {
         this.message = data["response"]["messResult"];
         this.currDataPrepare =
           data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
-        console.log(this.currDataPrepare, "dataguest");
+        this.precheckin =
+          !data["response"]["arrivalGuestlist"]["arrival-guestlist"][0][
+            "pre-checkin"
+          ];
+        if (this.precheckin == true) {
+          this.current = 2;
+          this.y = false;
+        }
         this.informationterm = this.message.substring(
           this.message.lastIndexOf("- ") + 1,
           this.message.lastIndexOf("!")
@@ -636,7 +648,8 @@ export default {
             this.tempsetup[i]["number1"] == 8 &&
             this.tempsetup[i]["number2"] == 1
           ) {
-            this.scanid = this.tempsetup[i]["setupflag"];
+            this.scanid = !this.tempsetup[i]["setupflag"];
+            console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
@@ -684,8 +697,16 @@ export default {
     },
     next() {
       this.current++;
+      if (this.precheckin == true) {
+        this.y = true;
+      }
     },
     prev() {
+      if (this.precheckin == true) {
+        if (this.current == 3) {
+          this.y = false;
+        }
+      }
       this.current--;
     },
     search() {
