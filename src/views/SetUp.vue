@@ -313,9 +313,10 @@ export default {
         foregroundColor: "$green",
       },
       mouseClick: null,
-      defaultBC: '#1890FF',
+      defaultBC: '',
       defaultFC: '#1B262C',
       defaultUpload: 'yes',
+      tempsetup: [],      
     }
   },
   created() {
@@ -332,7 +333,11 @@ export default {
           }
         )
         .json();
-    this.response = parsed;    
+    this.response = parsed;
+  
+    this.tempsetup = parsed.response.pciSetup["pci-setup"][9].setupvalue;
+        console.log(this.tempsetup, 'tempsetup');
+        // this.defaultBC = this.tempsetup;
     })();
   },
   methods: {
