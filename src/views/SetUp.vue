@@ -313,26 +313,31 @@ export default {
         foregroundColor: "$green",
       },
       mouseClick: null,
-      defaultBC: '#1890FF',
+      defaultBC: '',
       defaultFC: '#1B262C',
-      defaultUpload: 'yes'
+      defaultUpload: 'yes',
+      tempsetup: [],      
     }
   },
   created() {
     (async () => {
-        const parsed = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup",
-            {
-              json: {
-                request: { 
-                  		"icase": 1
-                },
+      const parsed = await ky
+        .post(
+          "http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup",
+          {
+            json: {
+              request: { 
+                "icase": 1
               },
-            }
-          )
-          .json();
+            },
+          }
+        )
+        .json();
     this.response = parsed;
+  
+    this.tempsetup = parsed.response.pciSetup["pci-setup"][9].setupvalue;
+        console.log(this.tempsetup, 'tempsetup');
+        // this.defaultBC = this.tempsetup;
     })();
   },
   methods: {

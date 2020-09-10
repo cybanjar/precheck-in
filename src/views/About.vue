@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3>
+      <h3 class="text-center font-weight-bold visible">{{hotelname}}</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
@@ -40,7 +40,7 @@
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img class="img-hotel" :src="gambar" alt="Image Loading" />
           <div class="overlay invisible">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="invisible">
             <div class="gear-setting">
@@ -155,7 +155,15 @@
               :xs="24"
             >
               <a-form-item label="Flight Details">
-                <a-input placeholder="Please input flight details" v-decorator="['flight']" />
+                <a-input
+                  placeholder="Please input flight details"
+                  v-decorator="[
+                    'flight',
+                    {
+                      rules: [{ message: 'Please input your flight details' }],
+                    },
+                  ]"
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -251,7 +259,7 @@
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
-                  v-decorator="['Request']"
+                  v-decorator="['Request', { rules: [{ message: 'Please input your Request' }] }]"
                   placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
@@ -347,16 +355,23 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Nationality">
                 <a-select
+                  show-search
                   v-decorator="[
                     'nationality',
-                    { initialValue: nationality, rules: [{ required: true }] },
+                    { initialValue: currDataPrepare['guest-doc-nation'], rules: [{ required: true }] },
                   ]"
                   @change="Nationality"
                 >
-                  <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
+                  <a-select-option
+                    v-for="item in FilterCountry"
+                    :key="item"
+                    :value="item['alpha-3']"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
+                <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
+                <!-- </a-select> -->
               </a-form-item>
             </a-col>
             <!-- <a-col :span="5" :xl="5" :xs="24">
@@ -393,32 +408,46 @@
               </a-form-item>
             </a-col>
           </a-row>-->
+          {{currDataPrepare['guest-country']}}
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
                 <a-select
+                  show-search
                   v-model="country"
                   v-decorator="[
                     'country',
-                    { initialValue: country, rules: [{ required: true }] },
+                    {
+                      initialValue: currDataPrepare['guest-country'],
+                      rules: [{ required: true }],
+                    },
                   ]"
                 >
-                  <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>
+                  <a-select-option
+                    v-for="item in FilterCountry"
+                    :key="item"
+                    :value="item['alpha-3']"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
 
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-show="country === 'Indonesia'">
+              <div
+                v-show="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  currDataPrepare['guest-country'] === 'ina' ||
+                  currDataPrepare['guest-country'] === 'INA'
+                "
+              >
                 <a-form-item label="Region">
                   <a-select
                     show-search
                     @change="handleChangeRegion"
                     v-decorator="[
                       'region',
-                      { initialValue: region, rules: [{ required: true }] },
+                      { initialValue: currDataPrepare['guest-prov'], rules: [{ required: true }] },
                     ]"
                   >
                     <a-select-option
@@ -470,16 +499,20 @@
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree" />
               <!-- {{FilterTerm}} -->
-              I agree with the
-              <a @click="showModalTerm">Terms and Conditions</a> of Web Pre Check-in.
+              Check here to indicate that you have read and agree to the
+              <a
+                @click="showModalTerm"
+              >Terms and Conditions</a>
+              {{hotelname}} Agreement.
             </a-col>
             <a-modal
               title="Term Of Condition"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
-              @ok="handleOkTerm"
-              @cancel="handleCancelTerm"
             >
+              <template slot="footer">
+                <a-button key="submit" type="primary" :loading="loading" @click="handleOkTerm">Close</a-button>
+              </template>
               <p>{{term}}</p>
             </a-modal>
           </a-row>
@@ -508,6 +541,7 @@
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
+import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -564,12 +598,7 @@ export default {
       cities: "",
       // filteredCity: [],
       filteredRegion: [],
-      nationality: "Indonesia",
-      phone: {
-        number: "",
-        valid: "",
-        country: "",
-      },
+      nationality: "",
       dataGuest: [],
       max: 100,
       agree: false,
@@ -590,7 +619,7 @@ export default {
       guests: "",
       keluar: false,
       currency: "Rp.",
-      country: "Indonesia",
+      country: "",
       purpose: "",
       loading: true,
       term1: "I agree with the Terms and Conditions of Web Pre Check-in.",
@@ -613,16 +642,10 @@ export default {
       confirmLoadingTerm: false,
       hour: "",
       FilterPurposeofStay: [],
+      FilterCountry: [],
+      countries: countries,
+      hotelname: "",
     };
-  },
-  watch: {
-    activeKey(key) {
-      key;
-    },
-    // indexStr: function () {
-    //   this.indexStr = this.indexStr + 1;
-    //   console.log("watch", this.indexStr);
-    // },
   },
   created() {
     if (this.$route.params.id == undefined) {
@@ -702,8 +725,14 @@ export default {
             } else if (this.tempsetup[i].number2 == 3) {
               this.showFloor = this.tempsetup[i].setupflag;
             }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
+
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
 
@@ -726,6 +755,8 @@ export default {
             obj["09"] = this.showSmoking;
             obj["10"] = this.showFloor;
             obj["11"] = this.hour;
+            obj["12"] = this.term;
+            obj["13"] = this.hotelname;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             // router.push("list");
@@ -761,6 +792,8 @@ export default {
       this.showSmoking = this.$route.params.id["setup"]["09"];
       this.showFloor = this.$route.params.id["setup"]["10"];
       this.hour = this.$route.params.id["setup"]["11"];
+      this.term = this.$route.params.id["setup"]["12"];
+      this.hotelname = this.$route.params.id["setup"]["13"];
       this.id = this.$route.params.id["data"];
       // this.counter = this.id.length;
 
@@ -771,6 +804,7 @@ export default {
   },
   mounted() {
     this.filteredRegion = this.Region;
+    this.FilterCountry = this.countries;
   },
   methods: {
     showModalTerm() {
@@ -813,14 +847,6 @@ export default {
     handleChangeRegion(value) {
       this.region = value;
     },
-    // phoneInput(formattedNumber, { number, valid, country }) {
-    //   console.log(number.international, "inputan2");
-    //   // console.log(valid);
-    //   // console.log(country && country.name);
-    //   this.phone.number = number.international;
-    //   this.phone.valid = valid;
-    //   this.phone.country = country && country.name;
-    // },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
@@ -834,7 +860,7 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log("Received values of form: ", values);
+          console.log("inputan2 ", values);
 
           console.log(
             {
@@ -842,13 +868,26 @@ export default {
               reslineNumber: this.currDataPrepare["rsvline-number"],
               estAT: values.time._i,
               pickrequest: this.showPrice,
-              pickdetail: values.flight,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
               roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq: values.Request,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
               guestPhnumber: values.phone,
               guestNationality: values.nationality,
               guestCountry: values.country,
-              guestRegion: values.region,
+              guestRegion:
+                values.country != "INA" ||
+                values.country != "ina" ||
+                values.country != "Indonesia"
+                  ? ""
+                  : values.region,
               agreedTerm: true,
               purposeOfStay: values.purpose,
             },
@@ -864,14 +903,27 @@ export default {
                     reslineNumber: this.currDataPrepare["rsvline-number"],
                     estAT: values.time._i,
                     pickrequest: this.showPrice,
-                    pickdetail: values.flight,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
                     roomPreferences:
                       this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq: values.Request,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
                     guestPhnumber: values.phone,
                     guestNationality: values.nationality,
                     guestCountry: values.country,
-                    guestRegion: values.region,
+                    guestRegion:
+                      values.country != "INA" ||
+                      values.country != "ina" ||
+                      values.country != "Indonesia"
+                        ? ""
+                        : values.region,
                     agreedTerm: true,
                     purposeOfStay: values.purpose,
                   },

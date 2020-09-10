@@ -39,11 +39,6 @@ const routes = [
     component: () => import("../views/List"),
   },
   {
-    path: "/checkin",
-    name: "CheckIn",
-    component: () => import("../views/CheckIn"),
-  },
-  {
     path: "/step",
     name: "Step",
     component: () => import("../views/Step"),
@@ -77,11 +72,6 @@ const routes = [
     path: "/nicepay",
     name: "nicepay",
     component: () => import("../views/nicepay"),
-  },
-  {
-    path: "/hp",
-    name: "HP",
-    component: () => import("../views/hp"),
   },
   {
     path: "/setup",

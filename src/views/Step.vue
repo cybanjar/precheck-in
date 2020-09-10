@@ -18,7 +18,7 @@
         </template>
         <p>{{term}}</p>
       </a-modal>
-      <a-modal title="Information" :visible="information" :confirm-loading="confirmLoading">
+      <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
           <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
         </template>
@@ -34,7 +34,7 @@
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay visible">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -57,7 +57,8 @@
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>-->
       </a-row>
-
+      precheckin: {{precheckin}}
+      scandID: {{scanid}}
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">Guest Detail</h2>
@@ -70,7 +71,7 @@
             <small>Ariella Calista Ichwan</small>
           </h2>-->
           <a-alert
-            :message="this.currDataPrepare.name"
+            :message="this.currDataPrepare['gast']"
             :description="this.currDataPrepare.description"
             type="info"
             show-icon
@@ -79,11 +80,11 @@
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
             Arrival:
-            <strong>{{this.currDataPrepare.arrival}}</strong>
+            <strong>{{formatDate(this.currDataPrepare.ci)}}</strong>
             Departure:
-            <strong>{{this.currDataPrepare.departure}}</strong>
+            <strong>{{formatDate(this.currDataPrepare.co)}}</strong>
             <br />Booking Code:
-            <strong>{{this.currDataPrepare.booking}}</strong>
+            <strong>{{this.currDataPrepare.resnr}}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
@@ -92,10 +93,14 @@
                 <a-form-item label="Email">
                   <a-input
                     v-decorator="[
-                      'email',
-                      { rules: [{  message: 'Please input your email' }] },
-                    ]"
-                    :placeholder="currDataPrepare.email"
+                    'email',
+                    {
+                      initialValue: currDataPrepare['guest-email'],
+                      rules: [
+                        { message: 'Please input your email' },
+                      ],
+                    },
+                  ]"
                     disabled
                   />
                 </a-form-item>
@@ -106,7 +111,7 @@
                     v-decorator="[
                     'phone',
                     {
-                      initialValue:currDataPrepare['guest-phone'],
+                      initialValue:currDataPrepare['guest-phnumber'],
                       rules: [{ required: true }],
                     },
                   ]"
@@ -150,15 +155,23 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Nationality">
                   <a-select
+                    show-search
                     v-decorator="[
-                  'nationality',
-          { initialValue: nationality,rules: [{ required: true }] },
-        ]"
+                    'nationality',
+                    { initialValue: currDataPrepare['guest-nation'], rules: [{ required: true }] },
+                  ]"
+                    @change="Nationality"
                   >
-                    <a-select-option value="indonesia">Indonesia</a-select-option>
-                    <a-select-option value="america">America</a-select-option>
-                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                    <a-select-option
+                      v-for="item in FilterCountry"
+                      :key="item"
+                      :value="item['alpha-3']"
+                    >{{ item.name }}</a-select-option>
                   </a-select>
+                  <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
+                  <!-- </a-select> -->
                 </a-form-item>
               </a-col>
               <!-- <a-col :span="5" :xl="5" :xs="24">
@@ -191,30 +204,41 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item label="Country">
                   <a-select
+                    show-search
                     v-model="country"
                     v-decorator="[
-          'country',
-          { initialValue: country,
-          rules: [{ required: true }] },
-        ]"
+                    'country',
+                    {
+                      initialValue: currDataPrepare['guest-country'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
                   >
-                    <a-select-option value="indonesia">Indonesia</a-select-option>
-                    <a-select-option value="america">America</a-select-option>
-                    <a-select-option value="arabsaudi">Arab Saudi</a-select-option>
+                    <a-select-option
+                      v-for="item in FilterCountry"
+                      :key="item"
+                      :value="item['alpha-3']"
+                    >{{ item.name }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
 
               <a-col :span="5" :xl="5" :xs="24">
-                <div v-if="country === 'indonesia'">
+                <div
+                  v-show="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  currDataPrepare['guest-country'] === 'ina' ||
+                  currDataPrepare['guest-country'] === 'INA'
+                "
+                >
                   <a-form-item label="Region">
                     <a-select
-                      v-model="setRegion"
                       show-search
-                      @change="handleChangeProvince"
+                      @change="handleChangeRegion"
                       v-decorator="[
                       'region',
-                      { initialValue: region, rules: [{ required: true }] },
+                      { initialValue: currDataPrepare['guest-region'], rules: [{ required: true }] },
                     ]"
                     >
                       <a-select-option
@@ -223,17 +247,6 @@
                         :value="filteredRegion[keys]['province']"
                       >{{ filteredRegion[keys].province }}</a-select-option>
                     </a-select>
-                  </a-form-item>
-                </div>
-                <div v-else>
-                  <a-form-item label="State">
-                    <a-input
-                      initial-value="Willy Wanta"
-                      v-decorator="[
-                  'username',
-                  { rules: [{ required: false, message: '' }] },
-                ]"
-                    />
                   </a-form-item>
                 </div>
               </a-col>
@@ -330,7 +343,10 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <a-button v-if="current > 0" @click="prev">Previous</a-button>
+            <div v-if="y">
+              <a-button v-if="current > 0" @click="prev">Previous</a-button>
+            </div>
+
             <a-button
               v-if="current < steps.length - 1"
               style="margin-left: 8px"
@@ -367,10 +383,10 @@
   </div>
 </template>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
+import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -389,7 +405,6 @@ import Antd, {
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
-
 Vue.use(Antd);
 
 export default {
@@ -397,10 +412,11 @@ export default {
     return {
       pay: false,
       scanid: false,
-      information: false,
+      informationmodal: false,
       informationterm: "",
       current: 0,
       bookingcode: "",
+      y: true,
       steps: [
         {
           title: "Guest Detail",
@@ -440,11 +456,6 @@ export default {
       // filteredCity: [],
       filteredRegion: [],
       nationality: "Indonesia",
-      phone: {
-        number: "",
-        valid: "",
-        country: "",
-      },
       dataID: [],
       max: 100,
       agree: false,
@@ -495,6 +506,11 @@ export default {
       room: "",
       tempsetup: [],
       message: "",
+      FilterCountry: [],
+      countries: countries,
+      precheckin: false,
+      hotelname: "",
+      currData: [],
     };
   },
   watch: {
@@ -537,9 +553,13 @@ export default {
   //    }
   // },
   created() {
-    if (this.$route.params.id == undefined) {
+    this.currData = this.$route.params.foo;
+
+    console.log(this.currData, "lempar");
+    console.log(this.$route.params.foo != undefined, "lempar2");
+
+    if (this.$route.params.foo != undefined) {
       (async () => {
-        const tempParam = location.search.substring(1);
         const parsed = await ky
           .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
             json: {
@@ -557,7 +577,7 @@ export default {
               json: {
                 request: {
                   coDate: "01/15/19",
-                  bookCode: "28249",
+                  bookCode: "27078",
                   chName: " ",
                   earlyCI: "false",
                   maxRoom: "1",
@@ -570,6 +590,16 @@ export default {
           .json();
 
         this.message = data["response"]["messResult"];
+        this.currDataPrepare =
+          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
+        this.precheckin =
+          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0][
+            "pre-checkin"
+          ];
+        if (this.precheckin == true) {
+          this.current = 2;
+          this.y = false;
+        }
         this.informationterm = this.message.substring(
           this.message.lastIndexOf("- ") + 1,
           this.message.lastIndexOf("!")
@@ -624,7 +654,8 @@ export default {
             this.tempsetup[i]["number1"] == 8 &&
             this.tempsetup[i]["number2"] == 1
           ) {
-            this.scanid = this.tempsetup[i]["setupflag"];
+            this.scanid = !this.tempsetup[i]["setupflag"];
+            console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
@@ -638,23 +669,37 @@ export default {
             } else if (this.tempsetup[i].number2 == 3) {
               this.showFloor = this.tempsetup[i].setupflag;
             }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
-        this.loading = false;
-        if (this.message.substring(0, 2) == "00") {
-          this.information = true;
+        if (
+          this.message.substring(0, 2) == "01" ||
+          this.message.substring(0, 2) == "88" ||
+          this.message.substring(0, 2) == "9" ||
+          this.message.substring(0, 2) == "5" ||
+          this.message.substring(0, 2) == "2" ||
+          this.message.substring(0, 2) == "02" ||
+          this.message.substring(0, 2) == "0"
+        ) {
+          this.informationmodal = true;
         } else {
           this.termcondition = true;
         }
+        this.loading = false;
       })();
     }
   },
   mounted() {
     this.filteredRegion = this.Region;
+    this.FilterCountry = this.countries;
   },
   methods: {
-    goOTA(){
-      router.push('ota')
+    goOTA() {
+      router.push("ota");
     },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
@@ -671,8 +716,16 @@ export default {
     },
     next() {
       this.current++;
+      if (this.precheckin == true) {
+        this.y = true;
+      }
     },
     prev() {
+      if (this.precheckin == true) {
+        if (this.current == 3) {
+          this.y = false;
+        }
+      }
       this.current--;
     },
     search() {
@@ -739,14 +792,6 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-    },
-    phoneInput(formattedNumber, { number, valid, country }) {
-      //  console.log(number.international);
-      //  console.log(valid);
-      //  console.log(country && country.name);
-      this.phone.number = number.international;
-      this.phone.valid = valid;
-      this.phone.country = country && country.name;
     },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
@@ -850,6 +895,13 @@ export default {
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
+    },
+    formatDate(datum) {
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
   },
   computed: {

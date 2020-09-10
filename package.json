@@ -22,8 +22,7 @@
     "smtpjs": "^0.0.1",
     "vue": "^2.6.11",
     "vue-color": "^2.7.1",
-    "vue-router": "^3.2.0",
-    "vue-tel-input": "^4.4.0"
+    "vue-router": "^3.2.0"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.15.1",

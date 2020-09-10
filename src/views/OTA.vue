@@ -15,7 +15,7 @@
               <a-input v-model="bookingcode" placeholder="Input your booking code" />
             </a-form-item>
             <a-form-item label="Checkout Date">
-              <a-date-picker @change="onChange" />
+              <a-date-picker @change="onChange" :format="dateFormat" />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -59,6 +59,7 @@
 
 <script>
 import router from "../router";
+import moment from "moment";
 
 export default {
   data() {
@@ -68,11 +69,15 @@ export default {
       modalEmailAddress: false,
       modalMembershipID: false,
       bookingcode: "",
+      dateFormat: "MM/DD/YY",
+      date: "",
+      hour: "",
     };
   },
   methods: {
     onChange(date, dateString) {
       // console.log(date, dateString);
+      this.date = dateString;
     },
     showModalBookingCode() {
       this.modalBookingCode = true;
@@ -86,15 +91,44 @@ export default {
     showModalMembershipID() {
       this.modalMembershipID = true;
     },
+    errorbo() {
+      this.$message.error("Booking Code Cannot Empty");
+    },
+    errorco() {
+      this.$message.error("Check Out Date Cannot Empty");
+    },
+    error() {
+      this.$message.error("Cannot Empty");
+    },
     handleOk() {
       // console.log(e);
+      const reservation = [];
+      console.log(this.bookingcode, "bo");
+      console.log(this.date, "co");
+      this.hour = moment(new Date()).format("hh:mm");
+      console.log(this.hour, "jam");
 
-      router.push({ path: "step", query: { bookingcode: this.bookingcode } });
+      if (!this.bookingcode && !this.date) {
+        this.error();
+      } else if (!this.bookingcode) {
+        this.errorbo();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        reservation.push.apply(reservation, [
+          this.bookingcode,
+          this.date,
+          this.hour,
+        ]);
 
-      this.modalBookingCode = false;
-      this.modalGuestName = false;
-      this.modalEmailAddress = false;
-      this.modalMembershipID = false;
+        console.log(reservation, "reservation");
+        router.push({ name: "Step", params: { foo: reservation } });
+
+        this.modalBookingCode = false;
+        this.modalGuestName = false;
+        this.modalEmailAddress = false;
+        this.modalMembershipID = false;
+      }
     },
   },
 };
