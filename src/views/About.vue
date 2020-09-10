@@ -882,6 +882,7 @@ export default {
             // const tempMessResult = parsed.response.messResult.split(" ");
             // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
+        this.save();
         }
       });
     },
@@ -901,6 +902,8 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
       this.agree = false;
+      this.form.reset();
+      this.scrollToTop();
     },
     back() {
       if (this.counter == this.id.length) {
