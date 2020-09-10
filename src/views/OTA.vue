@@ -69,7 +69,7 @@ export default {
       modalEmailAddress: false,
       modalMembershipID: false,
       bookingcode: "",
-      dateFormat: "DD/MM/YYYY",
+      dateFormat: "MM/DD/YY",
       date: "",
       hour: "",
     };
@@ -97,24 +97,38 @@ export default {
     errorco() {
       this.$message.error("Check Out Date Cannot Empty");
     },
+    error() {
+      this.$message.error("Cannot Empty");
+    },
     handleOk() {
       // console.log(e);
+      const reservation = [];
       console.log(this.bookingcode, "bo");
       console.log(this.date, "co");
       this.hour = moment(new Date()).format("hh:mm");
       console.log(this.hour, "jam");
-      if (!this.bookingcode) {
-        this.errorbo();
-      }
-      if (!this.date) {
-        this.errorco();
-      }
-      // router.push({ path: "step", query: { bookingcode: this.bookingcode } });
 
-      this.modalBookingCode = false;
-      this.modalGuestName = false;
-      this.modalEmailAddress = false;
-      this.modalMembershipID = false;
+      if (!this.bookingcode && !this.date) {
+        this.error();
+      } else if (!this.bookingcode) {
+        this.errorbo();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        reservation.push.apply(reservation, [
+          this.bookingcode,
+          this.date,
+          this.hour,
+        ]);
+
+        console.log(reservation, "reservation");
+        router.push({ name: "Step", params: { foo: reservation } });
+
+        this.modalBookingCode = false;
+        this.modalGuestName = false;
+        this.modalEmailAddress = false;
+        this.modalMembershipID = false;
+      }
     },
   },
 };

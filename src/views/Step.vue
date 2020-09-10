@@ -405,7 +405,6 @@ import Antd, {
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
-
 Vue.use(Antd);
 
 export default {
@@ -511,6 +510,7 @@ export default {
       countries: countries,
       precheckin: false,
       hotelname: "",
+      currData: [],
     };
   },
   watch: {
@@ -553,7 +553,12 @@ export default {
   //    }
   // },
   created() {
-    if (this.$route.params.id == undefined) {
+    this.currData = this.$route.params.foo;
+
+    console.log(this.currData, "lempar");
+    console.log(this.$route.params.foo != undefined, "lempar2");
+
+    if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
           .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
@@ -572,7 +577,7 @@ export default {
               json: {
                 request: {
                   coDate: "01/15/19",
-                  bookCode: "28249",
+                  bookCode: "27078",
                   chName: " ",
                   earlyCI: "false",
                   maxRoom: "1",
@@ -671,7 +676,6 @@ export default {
             this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
-        this.loading = false;
         if (
           this.message.substring(0, 2) == "01" ||
           this.message.substring(0, 2) == "88" ||
@@ -685,6 +689,7 @@ export default {
         } else {
           this.termcondition = true;
         }
+        this.loading = false;
       })();
     }
   },
