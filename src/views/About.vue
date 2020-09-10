@@ -6,22 +6,37 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">{{hotelname}}</h3>
-      <a-row class="header-branding" :style="information" type="flex" justify="space-between">
-        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+      <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
+      <a-row
+        class="header-branding"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
+        <a-col
+          class="pl-3 pt-3 invisible"
+          :span="15"
+          :md="15"
+          :xl="15"
+          :xs="24"
+        >
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
           <h2
-            v-if="
-              currDataPrepare['guest-member-name'] !== '' 
-            "
+            v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare['guest-member-name'] }}
+            {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          <h2
+            v-else
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
@@ -31,16 +46,16 @@
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
             Arrival:
-            <strong>{{formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />Booking Code:
-            <strong>{{ currDataPrepare['rsv-number'] }}</strong>
+            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img class="img-hotel" :src="gambar" alt="Image Loading" />
           <div class="overlay invisible">
-            <div class="text">{{hotelname}}</div>
+            <div class="text">{{ hotelname }}</div>
           </div>
           <div class="invisible">
             <div class="gear-setting">
@@ -55,29 +70,33 @@
           </div>
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
           <h2
-            v-if="
-              currDataPrepare['guest-member-name'] !== '' 
-            "
+            v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
             :style="information"
           >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare['guest-member-name'] }}
+            {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          <h2
+            v-else
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white" :style="information">
             Arrival:
-            <strong>{{formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />Booking Code:
-            <strong>{{ currDataPrepare['rsv-number'] }}</strong>
+            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
       </a-row>
@@ -117,13 +136,21 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
+            <a-col
+              :span="4"
+              :xl="4"
+              :lg="5"
+              :md="6"
+              :xs="24"
+              v-show="showPickupRequest"
+            >
               <a-form-item label="Request">
                 <a-checkbox
                   :checked="showPrice"
                   v-model="showPrice"
                   @change="onChange"
-                >Pickup Required</a-checkbox>
+                  >Pickup Required</a-checkbox
+                >
               </a-form-item>
             </a-col>
             <a-col
@@ -138,12 +165,12 @@
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
-                  nilai === 3
-                  ? " "
-                  : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+                    nilai === 3
+                      ? " "
+                      : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
                   }}
                 </label>
-                <span>/ {{per}}</span>
+                <span>/ {{ per }}</span>
               </a-form-item>
             </a-col>
             <a-col
@@ -170,7 +197,11 @@
           <a-row class="ml-3" gutter="16">
             <a-col>
               <a-form-item label="Room Preferences">
-                <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
+                <a-radio-group
+                  name="radioGroup"
+                  v-show="showSmoking"
+                  @change="Room"
+                >
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
@@ -180,7 +211,11 @@
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
-                <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
+                <a-radio-group
+                  name="radioGroup"
+                  v-show="showFloor"
+                  @change="Floor"
+                >
                   <a-radio value="LowerFloor">
                     <span class="font-weight-normal">Lower Floor</span>
                   </a-radio>
@@ -259,7 +294,10 @@
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item label="Special Request">
                 <a-textarea
-                  v-decorator="['Request', { rules: [{ message: 'Please input your Request' }] }]"
+                  v-decorator="[
+                    'Request',
+                    { rules: [{ message: 'Please input your Request' }] },
+                  ]"
                   placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
@@ -306,9 +344,7 @@
                     'email',
                     {
                       initialValue: currDataPrepare['guest-email'],
-                      rules: [
-                        { message: 'Please input your email' },
-                      ],
+                      rules: [{ message: 'Please input your email' }],
                     },
                   ]"
                   disabled
@@ -321,11 +357,11 @@
                   v-decorator="[
                     'phone',
                     {
-                      initialValue:currDataPrepare['guest-phone'],
+                      initialValue: currDataPrepare['guest-phone'],
                       rules: [{ required: true }],
                     },
                   ]"
-                  style="width: 100%"
+                  style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
@@ -339,14 +375,15 @@
                   @change="Kuy"
                   v-decorator="[
                     'purpose',
-                    { initialValue: purpose,rules: [{ required: true }] },
+                    { initialValue: purpose, rules: [{ required: true }] },
                   ]"
                 >
                   <a-select-option
                     v-for="item in FilterPurposeofStay"
                     :key="item"
                     :value="item.setupvalue"
-                  >{{ item.setupvalue }}</a-select-option>
+                    >{{ item.setupvalue }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -358,7 +395,10 @@
                   show-search
                   v-decorator="[
                     'nationality',
-                    { initialValue: currDataPrepare['guest-doc-nation'], rules: [{ required: true }] },
+                    {
+                      initialValue: currDataPrepare['guest-doc-nation'],
+                      rules: [{ required: true }],
+                    },
                   ]"
                   @change="Nationality"
                 >
@@ -366,7 +406,8 @@
                     v-for="item in FilterCountry"
                     :key="item"
                     :value="item['alpha-3']"
-                  >{{ item.name }}</a-select-option>
+                    >{{ item.name }}</a-select-option
+                  >
                 </a-select>
                 <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -408,7 +449,7 @@
               </a-form-item>
             </a-col>
           </a-row>-->
-          {{currDataPrepare['guest-country']}}
+          {{ currDataPrepare["guest-country"] }}
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
@@ -427,7 +468,8 @@
                     v-for="item in FilterCountry"
                     :key="item"
                     :value="item['alpha-3']"
-                  >{{ item.name }}</a-select-option>
+                    >{{ item.name }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -447,14 +489,18 @@
                     @change="handleChangeRegion"
                     v-decorator="[
                       'region',
-                      { initialValue: currDataPrepare['guest-prov'], rules: [{ required: true }] },
+                      {
+                        initialValue: currDataPrepare['guest-prov'],
+                        rules: [{ required: true }],
+                      },
                     ]"
                   >
                     <a-select-option
                       v-for="(item, keys) in filteredRegion"
                       :key="keys"
                       :value="filteredRegion[keys]['province']"
-                    >{{ filteredRegion[keys].province }}</a-select-option>
+                      >{{ filteredRegion[keys].province }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </div>
@@ -496,14 +542,12 @@
 
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
-            <a-col :span="12" :xl="12" :xs="24">
+            <a-col :span="24" :xl="24" :xs="24">
               <a-checkbox v-model="agree" />
               <!-- {{FilterTerm}} -->
               Check here to indicate that you have read and agree to the
-              <a
-                @click="showModalTerm"
-              >Terms and Conditions</a>
-              {{hotelname}} Agreement.
+              <a @click="showModalTerm">Terms and Conditions</a>
+              {{ hotelname }} Agreement.
             </a-col>
             <a-modal
               title="Term Of Condition"
@@ -511,9 +555,15 @@
               :confirm-loading="confirmLoadingTerm"
             >
               <template slot="footer">
-                <a-button key="submit" type="primary" :loading="loading" @click="handleOkTerm">Close</a-button>
+                <a-button
+                  key="submit"
+                  type="primary"
+                  :loading="loading"
+                  @click="handleOkTerm"
+                  >Close</a-button
+                >
               </template>
-              <p>{{term}}</p>
+              <p>{{ term }}</p>
             </a-modal>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
@@ -527,7 +577,8 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                >Check-In Now</a-button>
+                  >Check-In Now</a-button
+                >
               </a-form-item>
             </a-col>
           </a-row>
@@ -536,7 +587,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import router from "../router";
@@ -934,7 +984,7 @@ export default {
             // const tempMessResult = parsed.response.messResult.split(" ");
             // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
-        this.save();
+          this.save();
         }
       });
     },
