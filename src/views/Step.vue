@@ -576,12 +576,12 @@ export default {
             {
               json: {
                 request: {
-                  coDate: "01/15/19",
-                  bookCode: "27078",
+                  coDate: this.currData["1"],
+                  bookCode: this.currData["0"],
                   chName: " ",
                   earlyCI: "false",
                   maxRoom: "1",
-                  citime: "14:00",
+                  citime: this.currData["2"],
                   groupFlag: "false",
                 },
               },
