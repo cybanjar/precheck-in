@@ -449,10 +449,6 @@
               </a-form-item>
             </a-col>
           </a-row>-->
-<<<<<<< HEAD
-          {{ currDataPrepare["guest-country"] }}
-=======
->>>>>>> 1c9bf5fd8e7b1ea8caa5c82831a90e99b63a7ba5
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
@@ -545,9 +541,10 @@
 
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
-            <a-col :span="24" :xl="24" :xs="24">
+            <a-col :span="1" :xl="1" :xs="2">
               <a-checkbox v-model="agree" />
-              <!-- {{FilterTerm}} -->
+            </a-col>
+            <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
               Check here to indicate that you have read and agree to the
               <a @click="showModalTerm">Terms and Conditions</a>
               {{ hotelname }} Agreement.
