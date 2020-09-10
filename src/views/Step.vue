@@ -576,12 +576,12 @@ export default {
             {
               json: {
                 request: {
-                  coDate: this.currData["1"],
-                  bookCode: this.currData["0"],
+                  coDate: this.currData['1'],
+                  bookCode: this.currData['0'],
                   chName: " ",
                   earlyCI: "false",
                   maxRoom: "1",
-                  citime: this.currData["2"],
+                  citime: "14:00",
                   groupFlag: "false",
                 },
               },
@@ -590,6 +590,7 @@ export default {
           .json();
 
         this.message = data["response"]["messResult"];
+        console.log(data["response"]["messResult"],"masuk2");
         this.currDataPrepare =
           data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
         this.precheckin =
@@ -606,6 +607,9 @@ export default {
         );
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
+
+        
+       
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
             jatah.push(this.tempsetup[i]);
@@ -679,7 +683,6 @@ export default {
         if (
           this.message.substring(0, 2) == "01" ||
           this.message.substring(0, 2) == "88" ||
-          this.message.substring(0, 2) == "9" ||
           this.message.substring(0, 2) == "5" ||
           this.message.substring(0, 2) == "2" ||
           this.message.substring(0, 2) == "02" ||
@@ -688,7 +691,8 @@ export default {
           this.informationmodal = true;
         } else {
           this.termcondition = true;
-        }
+        } 
+      
         this.loading = false;
       })();
     }

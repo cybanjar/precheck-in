@@ -437,7 +437,9 @@
                   country === 'INA' ||
                   country === 'ina' ||
                   currDataPrepare['guest-country'] === 'ina' ||
-                  currDataPrepare['guest-country'] === 'INA'
+                  currDataPrepare['guest-country'] === 'INA' ||
+                  currDataPrepare['guest-country'] === 'Indonesia' ||
+                  currDataPrepare['guest-country'] === 'indonesia'
                 "
               >
                 <a-form-item label="Region">
@@ -446,7 +448,7 @@
                     @change="handleChangeRegion"
                     v-decorator="[
                       'region',
-                      { initialValue: currDataPrepare['guest-prov'], rules: [{ required: true }] },
+                      { initialValue: currDataPrepare['guest-prov'], rules: [{ required: false }] },
                     ]"
                   >
                     <a-select-option
