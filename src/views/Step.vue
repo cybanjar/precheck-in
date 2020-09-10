@@ -672,11 +672,19 @@ export default {
           }
         }
         this.loading = false;
-        // if (this.message.substring(0, 2) == "00" || this.message.substring(0, 2) == "88") {
-        //   this.informationmodal = true;
-        // } else {
-        this.termcondition = true;
-        // }
+        if (
+          this.message.substring(0, 2) == "01" ||
+          this.message.substring(0, 2) == "88" ||
+          this.message.substring(0, 2) == "9" ||
+          this.message.substring(0, 2) == "5" ||
+          this.message.substring(0, 2) == "2" ||
+          this.message.substring(0, 2) == "02" ||
+          this.message.substring(0, 2) == "0"
+        ) {
+          this.informationmodal = true;
+        } else {
+          this.termcondition = true;
+        }
       })();
     }
   },

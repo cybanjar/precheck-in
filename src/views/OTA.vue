@@ -12,31 +12,10 @@
           <img @click="showModalBookingCode" class="img-ota" src="../assets/booking-code.svg" />
           <a-modal v-model="modalBookingCode" title="Booking Code" @ok="handleOk">
             <a-form-item label="Booking Code">
-              <a-input
-                v-model="bookingcode"
-                v-decorator="[
-                    'bookingcode',
-                    {
-                      rules: [
-                        { required: true ,message: 'Please input your email' },
-                      ],
-                    },
-                  ]"
-                placeholder="Input your booking code"
-              />
+              <a-input v-model="bookingcode" placeholder="Input your booking code" />
             </a-form-item>
             <a-form-item label="Checkout Date">
-              <a-date-picker
-                v-decorator="[
-                    'co',
-                    {
-                      rules: [
-                        { required: true ,message: 'Please input your Check Out Date' },
-                      ],
-                    },
-                  ]"
-                @change="onChange"
-              />
+              <a-date-picker @change="onChange" :format="dateFormat" />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -80,6 +59,7 @@
 
 <script>
 import router from "../router";
+import moment from "moment";
 
 export default {
   data() {
@@ -89,11 +69,15 @@ export default {
       modalEmailAddress: false,
       modalMembershipID: false,
       bookingcode: "",
+      dateFormat: "DD/MM/YYYY",
+      date: "",
+      hour: "",
     };
   },
   methods: {
     onChange(date, dateString) {
       // console.log(date, dateString);
+      this.date = dateString;
     },
     showModalBookingCode() {
       this.modalBookingCode = true;
@@ -107,9 +91,24 @@ export default {
     showModalMembershipID() {
       this.modalMembershipID = true;
     },
+    errorbo() {
+      this.$message.error("Booking Code Cannot Empty");
+    },
+    errorco() {
+      this.$message.error("Check Out Date Cannot Empty");
+    },
     handleOk() {
       // console.log(e);
-
+      console.log(this.bookingcode, "bo");
+      console.log(this.date, "co");
+      this.hour = moment(new Date()).format("hh:mm");
+      console.log(this.hour, "jam");
+      if (!this.bookingcode) {
+        this.errorbo();
+      }
+      if (!this.date) {
+        this.errorco();
+      }
       // router.push({ path: "step", query: { bookingcode: this.bookingcode } });
 
       this.modalBookingCode = false;
