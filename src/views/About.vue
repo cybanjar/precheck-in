@@ -408,7 +408,6 @@
               </a-form-item>
             </a-col>
           </a-row>-->
-          {{currDataPrepare['guest-country']}}
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item label="Country">
