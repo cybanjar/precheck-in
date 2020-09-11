@@ -335,9 +335,8 @@ export default {
         .json();
     this.response = parsed;
   
-    this.tempsetup = parsed.response.pciSetup["pci-setup"][9].setupvalue;
+    this.tempsetup = parsed.response.pciSetup["pci-setup"];
         console.log(this.tempsetup, 'tempsetup');
-        // this.defaultBC = this.tempsetup;
     })();
   },
   methods: {
