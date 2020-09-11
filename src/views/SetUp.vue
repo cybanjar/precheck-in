@@ -313,7 +313,7 @@ export default {
         foregroundColor: "$green",
       },
       mouseClick: null,
-      defaultBC: '',
+      defaultBC: '#1890FF',
       defaultFC: '#1B262C',
       defaultUpload: 'yes',
       tempsetup: [],      
