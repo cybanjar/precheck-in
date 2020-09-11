@@ -430,16 +430,11 @@
                 </a-select>
               </a-form-item>
             </a-col>
-
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div
                 v-show="
                   country === 'INA' ||
-                  country === 'ina' ||
-                  currDataPrepare['guest-country'] === 'ina' ||
-                  currDataPrepare['guest-country'] === 'INA' ||
-                  currDataPrepare['guest-country'] === 'Indonesia' ||
-                  currDataPrepare['guest-country'] === 'indonesia'
+                  country === 'ina' 
                 "
               >
                 <a-form-item label="Region">
@@ -613,6 +608,7 @@ export default {
       showBed: false,
       showFloor: false,
       showPrice: false,
+      showPickupRequest: false,
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -707,6 +703,7 @@ export default {
             this.term = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 2) {
             if (this.tempsetup[i].setupflag == true) {
+              this.showPickupRequest = this.tempsetup[i].setupflag;
               this.money = this.tempsetup[i]["price"];
               this.currency = this.tempsetup[i]["remarks"];
               this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
@@ -762,17 +759,15 @@ export default {
             obj["11"] = this.hour;
             obj["12"] = this.term;
             obj["13"] = this.hotelname;
+            obj["14"] = this.showPickupRequest;
             nietos.push(this.dataGuest);
             nietos.push(obj);
-            // router.push("list");
             router.push({ name: "List", params: { foo: nietos } });
-          }
-          // else if (this.$route.params.id == undefined) {
-          //   router.push("404");
-          // }
-          else {
+          } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
+            this.country = this.currDataPrepare["guest-country"];
+
             const string =
               '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
             const lagi = string.substring(
@@ -780,12 +775,10 @@ export default {
               string.lastIndexOf('g"') + 1
             );
             this.gambar = lagi;
-            console.log(lagi, "change");
           }
         }
       })();
     } else {
-      console.log(this.$route.params.id, "punten");
       this.gambar = this.$route.params.id["setup"]["01"];
       this.information = this.$route.params.id["setup"]["02"];
       this.money = this.$route.params.id["setup"]["03"];
@@ -799,10 +792,12 @@ export default {
       this.hour = this.$route.params.id["setup"]["11"];
       this.term = this.$route.params.id["setup"]["12"];
       this.hotelname = this.$route.params.id["setup"]["13"];
+      this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.id = this.$route.params.id["data"];
-      // this.counter = this.id.length;
 
       this.currDataPrepare = this.id[this.counter];
+      this.country = this.currDataPrepare["guest-country"];
+
       this.counter += 1;
     }
     this.loading = false;
@@ -887,12 +882,7 @@ export default {
               guestPhnumber: values.phone,
               guestNationality: values.nationality,
               guestCountry: values.country,
-              guestRegion:
-                values.country != "INA" ||
-                values.country != "ina" ||
-                values.country != "Indonesia"
-                  ? ""
-                  : values.region,
+              guestRegion: values.country != "INA" ? " " : values.region,
               agreedTerm: true,
               purposeOfStay: values.purpose,
             },
@@ -923,12 +913,7 @@ export default {
                     guestPhnumber: values.phone,
                     guestNationality: values.nationality,
                     guestCountry: values.country,
-                    guestRegion:
-                      values.country != "INA" ||
-                      values.country != "ina" ||
-                      values.country != "Indonesia"
-                        ? ""
-                        : values.region,
+                    guestRegion: values.country != "INA" ? " " : values.region,
                     agreedTerm: true,
                     purposeOfStay: values.purpose,
                   },

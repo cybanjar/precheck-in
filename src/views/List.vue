@@ -12,7 +12,7 @@
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
-              <p class="text-center" :style="information">Online Check-In</p>
+              <p class="text-center" >Online Check-In</p>
             </div>
           </div>
         </a-col>
