@@ -6,6 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
+      {{currDataPrepare}}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
@@ -299,14 +300,16 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <span>{{currDataPrepare["guest-email"]}}</span>
               <a-form-item label="Email">
                 <a-input
+                  :value="{email}"
                   v-decorator="[
                     'email',
                     {
-                      initialValue: currDataPrepare['guest-email'],
                       rules: [{ message: 'Please input your email' }],
                     },
+
                   ]"
                   disabled
                 />
@@ -645,6 +648,7 @@ export default {
       FilterCountry: [],
       countries: countries,
       hotelname: "",
+      email: "",
     };
   },
   created() {
@@ -766,7 +770,7 @@ export default {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
             this.country = this.currDataPrepare["guest-country"];
-
+            this.email = this.currDataPrepare["guest-email"];
             const string =
               '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
             const lagi = string.substring(
@@ -796,6 +800,7 @@ export default {
 
       this.currDataPrepare = this.id[this.counter];
       this.country = this.currDataPrepare["guest-country"];
+      this.email = this.currDataPrepare["guest-email"];
 
       this.counter += 1;
     }
@@ -923,7 +928,9 @@ export default {
             // const tempMessResult = parsed.response.messResult.split(" ");
             // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
+          this.scrollToTop();
           this.save();
+          this.form.reset();
         }
       });
     },
@@ -943,8 +950,6 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
       this.agree = false;
-      this.form.reset();
-      this.scrollToTop();
     },
     back() {
       if (this.counter == this.id.length) {
