@@ -740,6 +740,7 @@ export default {
 
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+        console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
           router.push("notfound");
