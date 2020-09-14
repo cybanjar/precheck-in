@@ -103,13 +103,13 @@ export default {
       this.modalMembershipID = true;
     },
     errorbo() {
-      this.$message.error("Booking Code Cannot Empty");
+      this.$message.error("Please input your Booking Code");
     },
     errorco() {
-      this.$message.error("Check Out Date Cannot Empty");
+      this.$message.error("Please input your Check Out Date");
     },
     error() {
-      this.$message.error("Cannot Empty");
+      this.$message.error("Please input your Booking Code and Check Out Date");
     },
     goOTA() {
       this.informationmodal = false;
@@ -147,7 +147,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: "14:00",
+                    citime: "10:00",
                     groupFlag: "false",
                   },
                 },
@@ -181,8 +181,8 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             console.log(reservation, "reservation");
+            router.push({ name: "Step", params: { foo: reservation } });
           }
-          router.push({ name: "Step", params: { foo: reservation } });
         })();
 
         this.modalBookingCode = false;

@@ -6,7 +6,10 @@
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>Thank you for using our online check-in. Show this QR Code to get your keycard</p>
+    <p>
+      Thank You for using our Online Check-In Service.
+      Scan this QR-Code at the Keycard Station to receive your room key
+    </p>
   </div>
 </template>
 
