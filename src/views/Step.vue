@@ -18,12 +18,12 @@
         </template>
         <p>{{term}}</p>
       </a-modal>
-      <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
+      <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
           <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
         </template>
         <p>{{informationterm}}</p>
-      </a-modal>
+      </a-modal>-->
       <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
@@ -57,8 +57,8 @@
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </a-col>-->
       </a-row>
-      precheckin: {{precheckin}}
-      scandID: {{scanid}}
+      <!-- precheckin: {{precheckin}}
+      scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">Guest Detail</h2>
@@ -97,11 +97,10 @@
                     {
                       initialValue: currDataPrepare['guest-email'],
                       rules: [
-                        { message: 'Please input your email' },
+                        {required: true, message: 'Please input your email' },
                       ],
                     },
                   ]"
-                    disabled
                   />
                 </a-form-item>
               </a-col>
@@ -130,13 +129,16 @@
           { initialValue:purpose,rules: [{ required: true }] },
         ]"
                   >
-                    <a-select-option value="bussiness">Bussiness</a-select-option>
-                    <a-select-option value="leisure">Leisure</a-select-option>
+                    <a-select-option
+                      v-for="item in FilterPurposeofStay"
+                      :key="item"
+                      :value="item.setupvalue"
+                    >{{ item.setupvalue }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row class gutter="16">
+            <!-- <a-row class gutter="16">
               <a-col>
                 <p
                   class="font-weight-bold"
@@ -148,7 +150,7 @@
                   <li>One Big Bed</li>
                 </ul>
               </a-col>
-            </a-row>
+            </a-row>-->
           </div>
           <div class="steps-content" v-show="current === 1">
             <a-row class :gutter="[16,8]">
@@ -412,7 +414,6 @@ export default {
     return {
       pay: false,
       scanid: false,
-      informationmodal: false,
       informationterm: "",
       current: 0,
       bookingcode: "",
@@ -554,10 +555,7 @@ export default {
   // },
   created() {
     this.currData = this.$route.params.foo;
-
-    console.log(this.currData, "lempar");
-    console.log(this.$route.params.foo != undefined, "lempar2");
-
+    console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -570,46 +568,14 @@ export default {
           })
           .json();
 
-        const data = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
-            {
-              json: {
-                request: {
-                  coDate: this.currData['1'],
-                  bookCode: this.currData['0'],
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
-                },
-              },
-            }
-          )
-          .json();
-
-        this.message = data["response"]["messResult"];
-        console.log(data["response"]["messResult"],"masuk2");
-        this.currDataPrepare =
-          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0];
-        this.precheckin =
-          data["response"]["arrivalGuestlist"]["arrival-guestlist"][0][
-            "pre-checkin"
-          ];
         if (this.precheckin == true) {
           this.current = 2;
           this.y = false;
         }
-        this.informationterm = this.message.substring(
-          this.message.lastIndexOf("- ") + 1,
-          this.message.lastIndexOf("!")
-        );
+
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
 
-        
-       
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
             jatah.push(this.tempsetup[i]);
@@ -680,21 +646,63 @@ export default {
             this.hotelname = this.tempsetup[i]["setupvalue"];
           }
         }
-        if (
-          this.message.substring(0, 2) == "01" ||
-          this.message.substring(0, 2) == "88" ||
-          this.message.substring(0, 2) == "5" ||
-          this.message.substring(0, 2) == "2" ||
-          this.message.substring(0, 2) == "02" ||
-          this.message.substring(0, 2) == "0"
-        ) {
-          this.informationmodal = true;
+
+        console.log(this.currData, "anjay");
+        console.log(this.currData["0"], "anjay");
+        if (this.currData["0"].length > 1) {
+          const nietos = [];
+          const obj = {};
+          this.dataGuest = this.currData["0"];
+          obj["01"] = this.gambar;
+          obj["02"] = this.information;
+          obj["03"] = this.money;
+          obj["04"] = this.currency;
+          obj["05"] = this.per;
+          obj["06"] = this.purpose;
+          obj["07"] = this.FilterPurposeofStay;
+          obj["08"] = this.showBed;
+          obj["09"] = this.showSmoking;
+          obj["10"] = this.showFloor;
+          obj["11"] = this.hour;
+          obj["12"] = this.term;
+          obj["13"] = this.hotelname;
+          obj["14"] = this.showPickupRequest;
+          nietos.push(this.dataGuest);
+          nietos.push(obj);
+          console.log(nietos, "tuwiiinnggg");
+          router.push({ name: "ListCheckIn", params: { foo: nietos } });
         } else {
-          this.termcondition = true;
-        } 
-      
+          this.currDataPrepare = this.currData["0"]["0"];
+          console.log(this.currDataPrepare, "kesini");
+
+          this.country = this.currDataPrepare["guest-country"];
+        }
+        this.termcondition = true;
         this.loading = false;
       })();
+    } else if (this.$route.params.id != undefined) {
+      this.gambar = this.$route.params.id["setup"]["01"];
+      this.information = this.$route.params.id["setup"]["02"];
+      this.money = this.$route.params.id["setup"]["03"];
+      this.currency = this.$route.params.id["setup"]["04"];
+      this.per = this.$route.params.id["setup"]["05"];
+      this.purpose = this.$route.params.id["setup"]["06"];
+      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
+      this.showBed = this.$route.params.id["setup"]["08"];
+      this.showSmoking = this.$route.params.id["setup"]["09"];
+      this.showFloor = this.$route.params.id["setup"]["10"];
+      this.hour = this.$route.params.id["setup"]["11"];
+      this.term = this.$route.params.id["setup"]["12"];
+      this.hotelname = this.$route.params.id["setup"]["13"];
+      this.showPickupRequest = this.$route.params.id["setup"]["14"];
+      this.currDataPrepare = this.$route.params.id["data"];
+
+      this.country = this.currDataPrepare["guest-country"];
+      this.email = this.currDataPrepare["guest-email"];
+      this.termcondition = true;
+      this.loading = false;
+    } else {
+      router.push("notfound");
     }
   },
   mounted() {
@@ -702,9 +710,6 @@ export default {
     this.FilterCountry = this.countries;
   },
   methods: {
-    goOTA() {
-      router.push("ota");
-    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
@@ -809,7 +814,14 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-        router.push("successcheckin");
+        const mori =
+          "{" +
+          this.currDataPrepare.resnr +
+          ";" +
+          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+          "}";
+        // console.log(mori, "be the one");
+        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;

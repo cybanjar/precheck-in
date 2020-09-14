@@ -1,6 +1,12 @@
 <template>
   <div>
     <div class="ota text-center">
+      <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{informationterm}}</p>
+      </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 class="text-white">Find Your Reservation</h1>
@@ -60,6 +66,7 @@
 <script>
 import router from "../router";
 import moment from "moment";
+import ky from "ky";
 
 export default {
   data() {
@@ -72,6 +79,10 @@ export default {
       dateFormat: "MM/DD/YY",
       date: "",
       hour: "",
+      informationmodal: false,
+      informationterm: "",
+      confirmLoading: false,
+      message: "",
     };
   },
   methods: {
@@ -100,6 +111,9 @@ export default {
     error() {
       this.$message.error("Cannot Empty");
     },
+    goOTA() {
+      this.informationmodal = false;
+    },
     handleOk() {
       // console.log(e);
       const reservation = [];
@@ -115,14 +129,61 @@ export default {
       } else if (!this.date) {
         this.errorco();
       } else {
-        reservation.push.apply(reservation, [
-          this.bookingcode,
-          this.date,
-          this.hour,
-        ]);
+        // reservation.push.apply(reservation, [
+        //   this.bookingcode,
+        //   this.date,
+        //   this.hour,
+        // ]);
 
-        console.log(reservation, "reservation");
-        router.push({ name: "Step", params: { foo: reservation } });
+        (async () => {
+          const data = await ky
+            .post(
+              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+              {
+                json: {
+                  request: {
+                    coDate: this.date,
+                    bookCode: this.bookingcode,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: "14:00",
+                    groupFlag: "false",
+                  },
+                },
+              }
+            )
+            .json();
+          this.message = data["response"]["messResult"];
+          console.log(data["response"]["messResult"], "masuk2");
+          this.informationterm = this.message.substring(
+            this.message.lastIndexOf("- ") + 1,
+            this.message.lastIndexOf("!")
+          );
+
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 " ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal = true;
+          } else {
+            console.log(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"],
+              "else1"
+            );
+            console.log(data["response"]["arrivalGuestlist"], "else2");
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            console.log(reservation, "reservation");
+          }
+          router.push({ name: "Step", params: { foo: reservation } });
+        })();
 
         this.modalBookingCode = false;
         this.modalGuestName = false;

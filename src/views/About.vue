@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      {{currDataPrepare}}
+      <!-- {{currDataPrepare}} -->
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <a-row class="header-branding" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
@@ -300,13 +300,13 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <span>{{currDataPrepare["guest-email"]}}</span>
+              <!-- <span>{{currDataPrepare["guest-email"]}}</span> -->
               <a-form-item label="Email">
                 <a-input
-                  :value="{email}"
                   v-decorator="[
                     'email',
                     {
+                      initialValue: email,
                       rules: [{ message: 'Please input your email' }],
                     },
 
