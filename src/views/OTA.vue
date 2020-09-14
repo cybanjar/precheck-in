@@ -119,7 +119,7 @@ export default {
       const reservation = [];
       console.log(this.bookingcode, "bo");
       console.log(this.date, "co");
-      this.hour = moment(new Date()).format("hh:mm");
+      this.hour = moment(new Date()).format("HH:MM");
       console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
@@ -147,7 +147,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: "10:00",
+                    citime: this.hour,
                     groupFlag: "false",
                   },
                 },

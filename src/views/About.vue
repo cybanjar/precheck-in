@@ -129,7 +129,7 @@
               :lg="5"
               :md="5"
               :xs="24"
-              v-show="showPrice && showPickupRequest"
+              v-show="showPickupRequest"
             >
               <a-form-item label="Price">
                 <label v-decorator="['currency', { initialValue: money }]">
