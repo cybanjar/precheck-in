@@ -12,13 +12,13 @@
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
-              <p class="text-center" >Online Check-In</p>
+              <p class="text-center">Online Check-In</p>
             </div>
           </div>
         </a-col>
       </a-row>
       <div>
-        <h1 class="mt-3 text-center">Guest List</h1>
+        <h1 class="mt-3 text-center">{{getLabels('guest_list')}}</h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -45,15 +45,17 @@
                 <br />
               </p>
               <p class="pl-3">
-                Arrival:
-                <span class="font-weight-bold">{{ formatDate(item.arrive) }}</span>
-                Departure:
+                {{getLabels('arrival')}}:
+                <span
+                  class="font-weight-bold"
+                >{{ formatDate(item.arrive) }}</span>
+                {{getLabels('departure')}}:
                 <span
                   class="font-weight-bold"
                 >{{ formatDate(item.depart) }}</span>
               </p>
               <p class="pl-3">
-                {{ item.rmqty }} Adult
+                {{ item.rmqty }} {{getLabels('adult')}}
                 <a-tag color="green">{{ item['rate-desc'] }}</a-tag>
               </p>
             </a-card>
@@ -67,7 +69,7 @@
         :size="size"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-      >Next</a-button>
+      >{{getLabels('next')}}</a-button>
       <!-- </router-link> -->
     </div>
   </div>
@@ -102,6 +104,9 @@ export default {
     }
     return this.data;
     // console.log(this.data, "berubah");
+  },
+  mounted() {
+    this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     send() {
@@ -138,6 +143,20 @@ export default {
         month: "2-digit",
         year: "numeric",
       }).format(new Date(datum));
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }
     },
   },
 };

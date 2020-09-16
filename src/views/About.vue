@@ -29,10 +29,12 @@
             :style="information"
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
-            Arrival:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            {{getLabels('arrival')}}:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            {{getLabels('departure')}}:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />Booking Code:
+            <br />
+            {{getLabels('book_code')}}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -70,10 +72,12 @@
           </h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white" :style="information">
-            Arrival:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
+            {{getLabels('arrival')}}:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            {{getLabels('departure')}}:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />Booking Code:
+            <br />
+            {{getLabels('book_code')}}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -84,7 +88,7 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Arrival</p>
+                  <p class="header-group">{{getLabels('arrival')}}</p>
                 </a-col>
                 <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
@@ -100,12 +104,12 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
-              <a-form-item layout="vertical" label="Estimated Arrival Time">
+              <a-form-item layout="vertical" :label="getLabels('eta')">
                 <a-time-picker
                   v-decorator="[
                     'time',
                     {
-                      initialValue: moment(hour, 'HH:mm'),
+                      initialValue: moment(hour, 'HH:MM'),
                       rules: [{ required: true }],
                     },
                   ]"
@@ -115,23 +119,16 @@
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
-              <a-form-item label="Request">
+              <a-form-item :label="getLabels('request')">
                 <a-checkbox
                   :checked="showPrice"
                   v-model="showPrice"
                   @change="onChange"
-                >Pickup Required</a-checkbox>
+                >{{ getLabels('pick_req') }}</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col
-              :span="4"
-              :xl="4"
-              :lg="5"
-              :md="5"
-              :xs="24"
-              v-show="showPickupRequest"
-            >
-              <a-form-item label="Price">
+            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24" v-show="showPickupRequest">
+              <a-form-item :label="getLabels('price')">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
@@ -151,7 +148,7 @@
               :md="7"
               :xs="24"
             >
-              <a-form-item label="Flight Details">
+              <a-form-item :label="getLabels('pick_detail')">
                 <a-input
                   placeholder="Please input flight details"
                   v-decorator="[
@@ -166,7 +163,7 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <a-form-item label="Room Preferences">
+              <a-form-item :label="getLabels('room_pref')">
                 <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">Non Smoking</span>
@@ -254,7 +251,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
-              <a-form-item label="Special Request">
+              <a-form-item :label="getLabels('special_request')">
                 <a-textarea
                   v-decorator="[
                     'Request',
@@ -284,7 +281,7 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">Guest Details</p>
+                  <p class="header-group">{{getLabels('guest_detail')}}</p>
                 </a-col>
                 <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
@@ -301,7 +298,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <!-- <span>{{currDataPrepare["guest-email"]}}</span> -->
-              <a-form-item label="Email">
+              <a-form-item :label="getLabels('email')">
                 <a-input
                   v-decorator="[
                     'email',
@@ -316,7 +313,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item label="Phone Number">
+              <a-form-item :label="getLabels('phone_number')">
                 <a-input
                   v-decorator="[
                     'phone',
@@ -334,7 +331,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
-              <a-form-item label="Purpose of Stay">
+              <a-form-item :label="getLabels('purpose_stay')">
                 <a-select
                   @change="Kuy"
                   v-decorator="[
@@ -353,7 +350,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item label="Nationality">
+              <a-form-item :label="getLabels('nationality')">
                 <a-select
                   show-search
                   v-decorator="[
@@ -413,7 +410,7 @@
           </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item label="Country">
+              <a-form-item :label="getLabels('country')">
                 <a-select
                   show-search
                   v-model="country"
@@ -440,7 +437,7 @@
                   country === 'ina' 
                 "
               >
-                <a-form-item label="Region">
+                <a-form-item :label="getLabels('region')">
                   <a-select
                     show-search
                     @change="handleChangeRegion"
@@ -502,10 +499,8 @@
               <a-checkbox v-model="agree" />
             </a-col>
             <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
-              Check here to indicate that you have read and agree to the
-              <a
-                @click="showModalTerm"
-              >Terms and Conditions</a>
+              {{getLabels('pci_tc')}}
+              <a @click="showModalTerm">{{getLabels('t_c')}}</a>
               {{ hotelname }} Agreement.
             </a-col>
             <a-modal
@@ -545,6 +540,7 @@ import router from "../router";
 import data from "../components/json/indonesia";
 import countries from "../components/json/country";
 import Vue from "vue";
+// import { getLabels } from "../helper/getLabels.helpers";
 import Antd, {
   Row,
   Col,
@@ -649,6 +645,7 @@ export default {
       countries: countries,
       hotelname: "",
       email: "",
+      labels: [],
     };
   },
   created() {
@@ -781,6 +778,12 @@ export default {
             this.gambar = lagi;
           }
         }
+        localStorage.removeItem("labels");
+        localStorage.setItem(
+          "labels",
+          JSON.stringify(parsed.response.languagesList["languages-list"])
+        );
+        this.labels = JSON.parse(localStorage.getItem("labels"));
       })();
     } else {
       this.gambar = this.$route.params.id["setup"]["01"];
@@ -810,6 +813,7 @@ export default {
   mounted() {
     this.filteredRegion = this.Region;
     this.FilterCountry = this.countries;
+    this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     showModalTerm() {
@@ -1093,6 +1097,20 @@ export default {
     },
     test() {
       return (this.indexStr = this.indexStr + 1);
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }
     },
   },
   computed: {
