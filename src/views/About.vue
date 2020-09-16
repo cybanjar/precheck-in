@@ -501,7 +501,7 @@
             <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
               {{getLabels('pci_tc')}}
               <a @click="showModalTerm">{{getLabels('t_c')}}</a>
-              {{ hotelname }} Agreement.
+              {{ hotelname }}.
             </a-col>
             <a-modal
               title="Term Of Condition"
