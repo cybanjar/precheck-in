@@ -1,18 +1,14 @@
 <template>
   <div>
     <div class="home">
-      <a-row class="header-brandings" type="flex" justify="space-between">
+      <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            src="https://source.unsplash.com/1366x786/?hotel"
-            alt="Image Loading"
-          />
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay">
-            <div class="text">Grand Visual Hotel Jakarta</div>
+            <div class="text">{{hotelname}}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -31,15 +27,15 @@
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card @click="select(item)">
-              <h2>{{item.name}}</h2>
+              <h2>{{item['gast']}}</h2>
               <p v-if="item.description != ''" class="pl-3">{{item.description}}</p>
               <p v-else class="pl-3">
                 <br />
               </p>
-              <p class="pl-3">From: {{item.arrival}} Until: {{item.departure}}</p>
+              <p class="pl-3">From: {{ formatDate(item.ci) }} Until: {{ formatDate(item.co) }}</p>
               <p class="pl-3">
                 {{item.adult}} Adult
-                <a-tag color="green">{{ item.tags}}</a-tag>
+                <a-tag color="green">{{ item['rmtype-str']}}</a-tag>
               </p>
             </a-card>
           </a-list-item>
@@ -59,97 +55,42 @@
 <script>
 import router from "../router";
 import { Alert } from "ant-design-vue";
-const data = [
-  {
-    key: 1,
-    name: "Hanevi Djasri, Mr",
-    arrival: "14/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "h.djasri@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11423133",
-  },
-  {
-    key: 2,
-    name: "Haiying Li, Mrs",
-    arrival: "12/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "li.haiying@gmail.com",
-    tags: "Suites",
-    rs: 1,
-    description: "Chao Bao, Mr",
-    isSelected: false,
-    booking: "1120133",
-  },
-  {
-    key: 3,
-    name: "Yeoh Hui Jin, Mrs",
-    arrival: "13/01/2019",
-    departure: "14/01/2019",
-    adult: "1",
-    email: "jin.yeoh@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11022453",
-  },
-  {
-    key: 4,
-    name: "Saki Sato, Ms",
-    arrival: "12/01/2019",
-    departure: "14/01/2019",
-    adult: "1",
-    email: "saki.kato@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "110201",
-  },
-  {
-    key: 5,
-    name: "Rahmat, Mr",
-    arrival: "13/01/2019",
-    departure: "14/01/2019",
-    adult: "2",
-    email: "m.imdadun@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "11034124",
-  },
-  {
-    key: 6,
-    name: "Sri Rahaju, Ms",
-    arrival: "14/01/2019",
-    departure: "15/01/2019",
-    adult: "1",
-    email: "s.sutji@gmail.com",
-    tags: "Suites",
-    rs: 0,
-    description: "",
-    isSelected: false,
-    booking: "1101423",
-  },
-];
+import moment from "moment";
 
 export default {
   data() {
     return {
-      data,
+      selectedData: [],
+      gambar: "",
+      hotelname: "",
+      information: {},
+      lemparsetup: [],
+      fairy: {},
     };
+  },
+  created() {
+    console.log(this.$route.params.foo[0], "goks");
+    this.data = this.$route.params.foo[0];
+    this.setup = this.$route.params.foo[1];
+    this.lemparsetup = this.$route.params.foo[1];
+    this.gambar = this.setup["01"];
+    this.information = this.setup["02"];
+    this.hotelname = this.setup["13"];
   },
   methods: {
     select(client) {
       // console.log(client);
-      router.push({ name: "Step", params: { id: [client] } });
+      this.fairy["data"] = client;
+      this.fairy["setup"] = this.lemparsetup;
+      console.log(this.fairy);
+      router.push({ name: "Step", params: { id: this.fairy } });
+    },
+    formatDate(datum) {
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
   },
 };
