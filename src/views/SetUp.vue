@@ -231,7 +231,7 @@
       </a-col>
     </a-row>
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
-      <a-col :span="6" :lg="6" :xs="24">
+      <a-col :span="12" :lg="12" :xs="24">
         <a-form-item label="Term and Condition">
           <a-radio-group v-model="form.TermEnglish">
             <a-radio value="1">
