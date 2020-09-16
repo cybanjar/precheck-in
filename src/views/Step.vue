@@ -555,7 +555,7 @@ export default {
   // },
   created() {
     this.currData = this.$route.params.foo;
-    console.log(this.$route.params.id, "nyamtuh");
+    // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -581,7 +581,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const heaven in jatah) {
-              console.log(jatah, "msk");
+              // console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
                 this.information.backgroundColor = jatah[heaven]["setupvalue"];
               }
@@ -590,7 +590,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const hell in jatah) {
-              console.log(jatah, "msk");
+              // console.log(jatah, "msk");
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
               }
@@ -625,7 +625,7 @@ export default {
             this.tempsetup[i]["number2"] == 1
           ) {
             this.scanid = !this.tempsetup[i]["setupflag"];
-            console.log(this.scanid, "scandid");
+            // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
@@ -647,8 +647,8 @@ export default {
           }
         }
 
-        console.log(this.currData, "anjay");
-        console.log(this.currData["0"], "anjay");
+        // console.log(this.currData, "anjay");
+        // console.log(this.currData["0"], "anjay");
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -669,11 +669,11 @@ export default {
           obj["14"] = this.showPickupRequest;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          console.log(nietos, "tuwiiinnggg");
+          // console.log(nietos, "tuwiiinnggg");
           router.push({ name: "ListCheckIn", params: { foo: nietos } });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
-          console.log(this.currDataPrepare, "kesini");
+          // console.log(this.currDataPrepare, "kesini");
 
           this.country = this.currDataPrepare["guest-country"];
         }
@@ -795,7 +795,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed, "test");
+        // console.log(parsed, "test");
       })();
     },
     onFileChange(e) {

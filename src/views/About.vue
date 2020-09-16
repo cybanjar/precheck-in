@@ -674,7 +674,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const heaven in jatah) {
-              console.log(jatah, "msk");
+              // console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
                 this.information.backgroundColor = jatah[heaven]["setupvalue"];
               }
@@ -683,7 +683,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const hell in jatah) {
-              console.log(jatah, "msk");
+              // console.log(jatah, "msk");
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
               }
@@ -737,7 +737,7 @@ export default {
 
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        console.log(this.guests, "guests");
+        // console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
           router.push("notfound");
@@ -746,7 +746,7 @@ export default {
             const nietos = [];
             const obj = {};
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-            console.log(this.gambar, "gambar");
+            // console.log(this.gambar, "gambar");
             obj["01"] = this.gambar;
             obj["02"] = this.information;
             obj["03"] = this.money;
@@ -869,34 +869,34 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log("inputan2 ", values);
+          // console.log("inputan2 ", values);
 
-          console.log(
-            {
-              resNumber: this.currDataPrepare["rsv-number"],
-              reslineNumber: this.currDataPrepare["rsvline-number"],
-              estAT: values.time._i,
-              pickrequest: this.showPrice,
-              pickdetail:
-                this.showPrice == false ||
-                values.flight == " " ||
-                values.flight == undefined
-                  ? ""
-                  : values.flight,
-              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
-              guestPhnumber: values.phone,
-              guestNationality: values.nationality,
-              guestCountry: values.country,
-              guestRegion: values.country != "INA" ? " " : values.region,
-              agreedTerm: true,
-              purposeOfStay: values.purpose,
-            },
-            "inputan"
-          );
+          // console.log(
+          //   {
+          //     resNumber: this.currDataPrepare["rsv-number"],
+          //     reslineNumber: this.currDataPrepare["rsvline-number"],
+          //     estAT: values.time._i,
+          //     pickrequest: this.showPrice,
+          //     pickdetail:
+          //       this.showPrice == false ||
+          //       values.flight == " " ||
+          //       values.flight == undefined
+          //         ? ""
+          //         : values.flight,
+          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+          //     specialReq:
+          //       values.Request == " " || values.Request == undefined
+          //         ? ""
+          //         : values.Request,
+          //     guestPhnumber: values.phone,
+          //     guestNationality: values.nationality,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     agreedTerm: true,
+          //     purposeOfStay: values.purpose,
+          //   },
+          //   "inputan"
+          // );
           (async () => {
             const tempParam = location.search.substring(1);
             const parsed = await ky
@@ -929,7 +929,7 @@ export default {
                 },
               })
               .json();
-            console.log(parsed, "inputan3");
+            // console.log(parsed, "inputan3");
             // const tempMessResult = parsed.response.messResult.split(" ");
             // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();

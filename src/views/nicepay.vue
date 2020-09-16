@@ -24,17 +24,17 @@ export default {
           (err, data) => {
             if (err) {
               reject(err);
-              console.error('BLAH', err.message);
+              // console.error('BLAH', err.message);
             } else {
               resolve(data);
-              console.log('BLAH', data);
+              // console.log('BLAH', data);
             }
           }
         );
       })
     },
     apalah(acoPancenOye) {
-      console.log(acoPancenOye);
+      // console.log(acoPancenOye);
     }
   },
 };

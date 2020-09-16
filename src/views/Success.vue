@@ -51,7 +51,7 @@ export default {
           },
         })
         .json();
-      console.log(parsed);
+      // console.log(parsed);
     })();
   },
 };
