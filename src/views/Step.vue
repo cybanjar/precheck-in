@@ -897,7 +897,7 @@ export default {
       });
     },
     disagree() {
-      router.push("ota");
+      router.push("mobilecheckin");
     },
     handleBlur() {
       // console.log("blur");

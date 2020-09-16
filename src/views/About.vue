@@ -109,7 +109,7 @@
                   v-decorator="[
                     'time',
                     {
-                      initialValue: moment(hour, 'HH:MM'),
+                      initialValue: moment(hour, 'HH:mm'),
                       rules: [{ required: true }],
                     },
                   ]"
@@ -166,30 +166,30 @@
               <a-form-item :label="getLabels('room_pref')">
                 <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
                   <a-radio value="NonSmoking">
-                    <span class="font-weight-normal">Non Smoking</span>
+                    <span class="font-weight-normal">{{getLabels('non_smoking')}}</span>
                   </a-radio>
                   <a-radio value="Smoking">
-                    <span class="font-weight-normal">Smoking</span>
+                    <span class="font-weight-normal">{{getLabels('smoking')}}</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
                   <a-radio value="LowerFloor">
-                    <span class="font-weight-normal">Lower Floor</span>
+                    <span class="font-weight-normal">{{getLabels('lower_floor')}}</span>
                   </a-radio>
                   <a-radio value="HigherFloor">
-                    <span class="font-weight-normal">Higher Floor</span>
+                    <span class="font-weight-normal">{{getLabels('higher_floor')}}</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
                   <a-radio value="OneBigBed">
-                    <span class="font-weight-normal">One Big Bed</span>
+                    <span class="font-weight-normal">{{getLabels('one_big_bed')}}</span>
                   </a-radio>
                   <a-radio value="TwoSingleBeds">
-                    <span class="font-weight-normal">Two Single Beds</span>
+                    <span class="font-weight-normal">{{getLabels('two_single_beds')}}</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
@@ -302,7 +302,7 @@
                 <a-input
                   v-decorator="[
                     'email',
-                    {
+                    {                      
                       initialValue: email,
                       rules: [{ message: 'Please input your email' }],
                     },

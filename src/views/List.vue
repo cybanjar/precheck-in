@@ -87,6 +87,7 @@ export default {
       information: {},
       lemparsetup: [],
       fairy: {},
+      labels: []
     };
   },
   created() {

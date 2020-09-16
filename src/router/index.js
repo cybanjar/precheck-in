@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/precheckin",
     name: "Home",
     component: Home,
   },
@@ -24,7 +24,7 @@ const routes = [
     component: () => import("../views/GuestList"),
   },
   {
-    path: "/ota",
+    path: "/mobilecheckin",
     name: "OTA",
     component: () => import("../views/OTA"),
   },
