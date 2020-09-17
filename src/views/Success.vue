@@ -8,7 +8,7 @@
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>Thank you for using our online check-in. Show this QR Code to get your keycard</p>
+    <p class="font20">Thank you for using our online check-in. Show this QR Code to get your keycard</p>
   </div>
 </template>
 
@@ -79,5 +79,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss" src="../css/style.scss"/>

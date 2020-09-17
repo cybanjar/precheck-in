@@ -114,7 +114,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
+            <a-col :span="6" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item label="Request">
                 <a-checkbox
                   :checked="showPrice"
