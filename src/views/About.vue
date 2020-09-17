@@ -1,7 +1,7 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
   <div v-else>
@@ -662,7 +662,6 @@ export default {
             }
           )
           .json();
-
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
         for (const i in this.tempsetup) {
@@ -760,6 +759,20 @@ export default {
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
+          } else if (
+            parsed.response.arrivalGuest["arrival-guest"]["0"][
+              "gcomment-desc"
+            ] == "GUEST ALREADY PCI"
+          ) {
+            this.currDataPrepare =
+              parsed.response.arrivalGuest["arrival-guest"][0];
+            const mori =
+              "{" +
+              this.currDataPrepare["rsv-number"] +
+              ";" +
+              moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+              "}";
+            router.push({ name: "Success", params: { jin: mori } });
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];

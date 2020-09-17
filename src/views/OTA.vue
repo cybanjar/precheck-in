@@ -5,55 +5,67 @@
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
         </template>
-        <p>{{informationterm}}</p>
+        <p>{{getLabels('early_checkin')}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="informationmodal1" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_found')}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="informationmodal2" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_ready')}}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">Find Your Reservation</h1>
-          <p class="text-white text-secondary">Search by One Option Below</p>
+          <h1 class="text-white">{{getLabels('find_rsv')}}</h1>
+          <p class="text-white text-secondary">{{getLabels('choose_option')}}</p>
         </a-col>
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalBookingCode" class="img-ota" src="../assets/booking-code.svg" />
-          <a-modal v-model="modalBookingCode" title="Booking Code" @ok="handleOk">
-            <a-form-item label="Booking Code">
+          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')" @ok="handleOk">
+            <a-form-item :label="getLabels('book_code')">
               <a-input v-model="bookingcode" placeholder="Input your booking code" />
             </a-form-item>
-            <a-form-item label="Checkout Date">
+            <a-form-item :label="getLabels('co_date')">
               <a-date-picker @change="onChange" :format="dateFormat" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
-          <a-modal v-model="modalGuestName" title="Last Name" @ok="handleOk">
-            <a-form-item label="Last Name">
+          <a-modal v-model="modalGuestName" :title="getLabels('last_name')" @ok="handleOk">
+            <a-form-item :label="getLabels('last_name')">
               <a-input placeholder="Input your last name" />
             </a-form-item>
-            <a-form-item label="Checkout Date">
+            <a-form-item :label="getLabels('co_date')">
               <a-date-picker @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img class="img-ota" @click="showModalEmailAddress" src="../assets/EmailAddress.svg" />
-          <a-modal v-model="modalEmailAddress" title="Email Address" @ok="handleOk">
-            <a-form-item label="Email Address">
+          <a-modal v-model="modalEmailAddress" :title="getLabels('email')" @ok="handleOk">
+            <a-form-item :label="getLabels('email')">
               <a-input placeholder="Input your email address" />
             </a-form-item>
-            <a-form-item label="Checkout Date">
+            <a-form-item :label="getLabels('co_date')">
               <a-date-picker @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img class="img-ota" @click="showModalMembershipID" src="../assets/membership.svg" />
-          <a-modal v-model="modalMembershipID" title="Membership ID" @ok="handleOk">
-            <a-form-item label="Membership ID">
+          <a-modal v-model="modalMembershipID" :title="getLabels('membership_id')" @ok="handleOk">
+            <a-form-item :label="getLabels('membership_id')">
               <a-input placeholder="Input your Membership ID" />
             </a-form-item>
-            <a-form-item label="Checkout Date">
+            <a-form-item :label="getLabels('co_date')">
               <a-date-picker @change="onChange" />
             </a-form-item>
           </a-modal>
@@ -80,10 +92,66 @@ export default {
       date: "",
       hour: "",
       informationmodal: false,
+      informationmodal1: false,
+      informationmodal2: false,
       informationterm: "",
       confirmLoading: false,
       message: "",
+      labels: [],
+      tempsetup: [],
+      checkin: "",
+      arrive: "",
     };
+  },
+  mounted() {
+    (async () => {
+      const tempParam = location.search.substring(1);
+      const parsed = await ky
+        .post(
+          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+          {
+            json: {
+              request: {
+                encryptedText: tempParam
+                  .replace(/%2F/g, "/")
+                  .replace(/%20/g, "+"),
+              },
+            },
+          }
+        )
+        .json();
+      localStorage.removeItem("labels");
+      localStorage.setItem(
+        "labels",
+        JSON.stringify(parsed.response.languagesList["languages-list"])
+      );
+      this.labels = JSON.parse(localStorage.getItem("labels"));
+
+      const setup = await ky
+        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+          json: {
+            request: {
+              icase: 1,
+            },
+          },
+        })
+        .json();
+      this.tempsetup = setup.response.pciSetup["pci-setup"];
+      for (const i in this.tempsetup) {
+        if (
+          this.tempsetup[i]["number1"] == 8 &&
+          this.tempsetup[i]["number2"] == 2
+        ) {
+          this.checkin = this.tempsetup[i]["setupvalue"];
+          console.log(this.checkin);
+        }
+      }
+      this.arrive = moment(new Date()).format("HH:mm");
+      console.log(this.arrive);
+      if (this.arrive != this.checkin) {
+        this.informationmodal = true;
+      }
+    })();
   },
   methods: {
     onChange(date, dateString) {
@@ -119,7 +187,7 @@ export default {
       const reservation = [];
       // console.log(this.bookingcode, "bo");
       // console.log(this.date, "co");
-      this.hour = moment(new Date()).format("HH:MM");
+      this.hour = moment(new Date()).format("HH:mm");
       // console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
@@ -147,7 +215,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: this.hour,
+                    citime: "14:00",
                     groupFlag: "false",
                   },
                 },
@@ -156,21 +224,25 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           // console.log(data["response"]["messResult"], "masuk2");
-          this.informationterm = this.message.substring(
-            this.message.lastIndexOf("- ") + 1,
-            this.message.lastIndexOf("!")
-          );
+          // this.informationterm = this.message.substring(
+          //   this.message.lastIndexOf("- ") + 1,
+          //   this.message.lastIndexOf("!")
+          // );
+          // console.log(this.message.substring(0, 2), "test");
 
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
           } else if (
             this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 " ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal = true;
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
           } else {
             // console.log(
             //   data["response"]["arrivalGuestlist"]["arrival-guestlist"],
@@ -189,6 +261,20 @@ export default {
         this.modalGuestName = false;
         this.modalEmailAddress = false;
         this.modalMembershipID = false;
+      }
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
       }
     },
   },

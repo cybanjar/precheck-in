@@ -61,10 +61,10 @@
       scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="current === 0">Guest Detail</h2>
-          <h2 v-show="current === 1">Address</h2>
-          <h2 v-show="current === 2">Scan ID</h2>
-          <h2 v-show="current === 3">Deposit Payment</h2>
+          <h2 v-show="current === 0">{{getLabels('guest_detail')}}</h2>
+          <h2 v-show="current === 1">{{getLabels('address')}}</h2>
+          <h2 v-show="current === 2">{{getLabels('scan_id')}}</h2>
+          <h2 v-show="current === 3">{{getLabels('deposit_payment')}}</h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -79,18 +79,19 @@
           />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
-            Arrival:
+            {{getLabels('arrival')}}:
             <strong>{{formatDate(this.currDataPrepare.ci)}}</strong>
-            Departure:
+            {{getLabels('departure')}}:
             <strong>{{formatDate(this.currDataPrepare.co)}}</strong>
-            <br />Booking Code:
+            <br />
+            {{getLabels('book_code')}}:
             <strong>{{this.currDataPrepare.resnr}}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
             <a-row class :gutter="[16,8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item label="Email">
+                <a-form-item :label="getLabels('email')">
                   <a-input
                     v-decorator="[
                     'email',
@@ -105,7 +106,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item label="Phone Number">
+                <a-form-item :label="getLabels('phone_number')">
                   <a-input
                     v-decorator="[
                     'phone',
@@ -122,7 +123,7 @@
             </a-row>
             <a-row class :gutter="[16,8]">
               <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item label="Purpose of Stay">
+                <a-form-item :label="getLabels('purpose_stay')">
                   <a-select
                     v-decorator="[
           'purpose',
@@ -155,7 +156,7 @@
           <div class="steps-content" v-show="current === 1">
             <a-row class :gutter="[16,8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item label="Nationality">
+                <a-form-item :label="getLabels('nationality')">
                   <a-select
                     show-search
                     v-decorator="[
@@ -204,7 +205,7 @@
             </a-row>
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item label="Country">
+                <a-form-item :label="getLabels('country')">
                   <a-select
                     show-search
                     v-model="country"
@@ -234,7 +235,7 @@
                   currDataPrepare['guest-country'] === 'INA'
                 "
                 >
-                  <a-form-item label="Region">
+                  <a-form-item :label="getLabels('region')">
                     <a-select
                       show-search
                       @change="handleChangeRegion"
@@ -290,7 +291,7 @@
           <div class="steps-content" v-show="current === 2 ">
             <a-row class :gutter="[16, 8]">
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item label="Choose/Upload ID">
+                <a-form-item :label="getLabels('upload_id')">
                   <input
                     class
                     type="file"
@@ -309,14 +310,18 @@
           <div class="steps-content" v-show="current === 3">
             <a-row :gutter="[16,8]" v-if="pay == false">
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item label="Deposit">
+                <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
                     <strong>Rp. 500,000</strong>
                   </h2>
                 </a-form-item>
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
-                <a-button class="font-weight-bold mt-3 mr-3" type="primary" @click="search()">Pay</a-button>
+                <a-button
+                  class="font-weight-bold mt-3 mr-3"
+                  type="primary"
+                  @click="search()"
+                >{{getLabels('pay')}}</a-button>
                 <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -328,7 +333,7 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Deposit">
                   <h2>
-                    <strong>Cash Basis</strong>
+                    <strong>{{getLabels('cash_basis')}}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -336,17 +341,14 @@
             <a-row :gutter="[16,8]">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
-                  <a-checkbox v-model="pay">
-                    Skip deposit payment
-                    If you skip deposit payment, all your transaction will be cash basis
-                  </a-checkbox>
+                  <a-checkbox v-model="pay">{{getLabels('term_cash_basis')}}</a-checkbox>
                 </p>
               </a-col>
             </a-row>
           </div>
           <div class="steps-action">
             <div v-if="y">
-              <a-button v-if="current > 0" @click="prev">Previous</a-button>
+              <a-button v-if="current > 0" @click="prev">{{getLabels('prev')}}</a-button>
             </div>
 
             <a-button
@@ -354,7 +356,7 @@
               style="margin-left: 8px"
               type="primary"
               @click="next"
-            >Next</a-button>
+            >{{getLabels('next')}}</a-button>
             <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
@@ -512,6 +514,7 @@ export default {
       precheckin: false,
       hotelname: "",
       currData: [],
+      labels: [],
     };
   },
   watch: {
@@ -555,6 +558,7 @@ export default {
   // },
   created() {
     this.currData = this.$route.params.foo;
+    this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
       (async () => {
@@ -675,7 +679,7 @@ export default {
           this.currDataPrepare = this.currData["0"]["0"];
           // console.log(this.currDataPrepare, "kesini");
 
-          this.country = this.currDataPrepare["guest-country"];
+          this.country = this.currDataPrepare["guest- "];
         }
         this.termcondition = true;
         this.loading = false;
@@ -816,7 +820,7 @@ export default {
       if (this.counter == this.id.length) {
         const mori =
           "{" +
-          this.currDataPrepare.resnr +
+          this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
           "}";
@@ -918,6 +922,20 @@ export default {
         month: "2-digit",
         year: "numeric",
       }).format(new Date(datum));
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }
     },
   },
   computed: {
