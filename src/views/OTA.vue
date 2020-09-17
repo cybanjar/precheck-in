@@ -7,6 +7,18 @@
         </template>
         <p>{{informationterm}}</p>
       </a-modal>
+      <a-modal title="Information" :visible="informationmodal1" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_found')}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="informationmodal2" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_ready')}}</p>
+      </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 class="text-white">{{getLabels('find_rsv')}}</h1>
@@ -80,6 +92,8 @@ export default {
       date: "",
       hour: "",
       informationmodal: false,
+      informationmodal1: false,
+      informationmodal2: false,
       informationterm: "",
       confirmLoading: false,
       message: "",
@@ -112,20 +126,6 @@ export default {
     })();
   },
   methods: {
-    getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
-        }
-      }
-    },
     onChange(date, dateString) {
       // console.log(date, dateString);
       this.date = dateString;
@@ -187,7 +187,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: this.hour,
+                    citime: "14:00",
                     groupFlag: "false",
                   },
                 },
@@ -200,17 +200,21 @@ export default {
             this.message.lastIndexOf("- ") + 1,
             this.message.lastIndexOf("!")
           );
+          console.log(this.message.substring(0, 2), "test");
 
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
           } else if (
             this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 " ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal = true;
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
           } else {
             // console.log(
             //   data["response"]["arrivalGuestlist"]["arrival-guestlist"],
@@ -229,6 +233,20 @@ export default {
         this.modalGuestName = false;
         this.modalEmailAddress = false;
         this.modalMembershipID = false;
+      }
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
       }
     },
   },

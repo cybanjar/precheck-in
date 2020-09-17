@@ -83,7 +83,8 @@
             <strong>{{formatDate(this.currDataPrepare.ci)}}</strong>
             {{getLabels('departure')}}:
             <strong>{{formatDate(this.currDataPrepare.co)}}</strong>
-            <br />{{getLabels('book_code')}}:
+            <br />
+            {{getLabels('book_code')}}:
             <strong>{{this.currDataPrepare.resnr}}</strong>
           </p>
 
@@ -316,7 +317,11 @@
                 </a-form-item>
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
-                <a-button class="font-weight-bold mt-3 mr-3" type="primary" @click="search()">{{getLabels('pay')}}</a-button>
+                <a-button
+                  class="font-weight-bold mt-3 mr-3"
+                  type="primary"
+                  @click="search()"
+                >{{getLabels('pay')}}</a-button>
                 <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -328,7 +333,7 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Deposit">
                   <h2>
-                    <strong>Cash Basis</strong>
+                    <strong>{{getLabels('term_cash_basis')}}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -336,9 +341,7 @@
             <a-row :gutter="[16,8]">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
-                  <a-checkbox v-model="pay">
-                   {{getLabels('cash_basis')}}
-                  </a-checkbox>
+                  <a-checkbox v-model="pay">{{getLabels('term_cash_basis')}}</a-checkbox>
                 </p>
               </a-col>
             </a-row>
