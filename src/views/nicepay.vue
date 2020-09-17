@@ -1,7 +1,7 @@
 <template>
   <div>
     <label>Register</label>
-    <a-button class="font-weight-bold mt-3 mr-3" type="primary" @click="search()">Pay</a-button>
+    <a-button class="font-weight-bold mt-3 mr-3" type="primary" @click="pay()">Pay</a-button>
   </div>
 </template>
 <script>
@@ -15,11 +15,14 @@ export default {
     return {};
   },
   methods: {
-    search() {
+    pay() {
       const jsonp = require("jsonp");
-      return new Promise((resolve,reject) => {
+      const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000210033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
+      const urlReg = "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=100&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=Michael&billingPhone=081212121212&billingEmail=michael@blah.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData=Deposit&callBackUrl=apalah&instmntType=1&instmntMon=1&reccurOpt=0";
+      //window.open(urlReg,"_self")
+      /*return new Promise((resolve,reject) => {
         jsonp(
-          "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?iMid=IONPAYTEST&merchantToken=c92f07ee931b102ebe739675a71e3e0860229239db2f299b9bc7a83b5126b10a&payMethod=01&currency=IDR&amt=100&referenceNo=TRX2020090700000001&goodsNm=Kopi&callBackUrl=apalah&dbProcessUrl=dbproc&userIP=202.135.55.101&description=Kopi&billingNm=Michael&billingPhone=0812&billingEmail=michael@blah.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&instmntType=1&instmntMon=1&deliveryNm=Michael&deliveryPhone=0812&deliveryEmail=michael@blah.com&deliveryCity=Jakarta&deliveryState=JakSel&deliveryPostCd=16413&deliveryCountry=Indonesia&instmntType=1&instmntMon=1&userAgent=Mozilla&vat=0&fee=0&notaxAmt=0&reccurOpt=0&cartData=Kopi",
+          urlReg,
           null,
           (err, data) => {
             if (err) {
@@ -31,11 +34,28 @@ export default {
             }
           }
         );
-      })
+      })*/
     },
     apalah(acoPancenOye) {
       // console.log(acoPancenOye);
     }
   },
 };
+</script>
+<script>
+import CryptoJS from "crypto-js";
+import moment from "moment";
+
+    function readResponse(response){
+        document.getElementsByTagName('SPAN')[0].innerHTML = response.feed.entry.length + ' entries returned';
+        console.log(response);
+    }
+    (function pay(){
+        const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000210033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
+        const urlReg = "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=100&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=Michael&billingPhone=081212121212&billingEmail=michael@blah.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData=Deposit&callBackUrl=readResponse&instmntType=1&instmntMon=1&reccurOpt=0";
+        console.log(urlReg);
+        const script = document.createElement('SCRIPT');
+        script.src = urlReg;
+        document.body.appendChild(script);
+    })();
 </script>
