@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('room_number')}} : {{taejin}}</p>
+    <p>{{getLabels('room_number')}} : <span class="font-weight-bold">{{taejin}}</span></p>
     <p>
       <br />
     </p>
@@ -27,8 +27,7 @@ export default {
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { errorCorrectionLevel: "H", width: 300, height: "auto" },
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");

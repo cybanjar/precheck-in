@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('book_code')}} : {{taejin}}</p>
-    <p>{{getLabels('co_date')}} : {{iplyo}}</p>
+    <p>{{getLabels('book_code')}} : <span class="font-weight-bold">{{taejin}}</span></p>
+    <p>{{getLabels('co_date')}} : <span class="font-weight-bold">{{iplyo}}</span></p>
     <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
     <p>
       <br />
