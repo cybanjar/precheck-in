@@ -2,6 +2,7 @@
   <div class="text-center">
     <canvas id="canvas"></canvas>
     <p>{{getLabels('book_code')}} : {{taejin}}</p>
+    <p>{{getLabels('co_date')}} : {{iplyo}}</p>
     <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
     <p>
       <br />
@@ -17,15 +18,20 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", url: "", labels: [] };
+    return { taejin: "", iplyo: "", url: "", labels: [] };
   },
   mounted() {
     // console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
+
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
+    this.iplyo = this.data.substring(
+      this.data.lastIndexOf(";") + 1,
+      this.data.lastIndexOf("}")
+    );
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
