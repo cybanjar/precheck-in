@@ -28,7 +28,11 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
               :class="item.isSelected == true ? 'selected' : 'notselected'"
-              @click="select(item)"
+              @click="
+                item['gcomment-desc'] != 'GUEST ALREADY PCI'
+                  ? select(item)
+                  : disabled
+              "
             >
               <h2
                 :class="
@@ -87,11 +91,12 @@ export default {
       information: {},
       lemparsetup: [],
       fairy: {},
-      labels: []
+      labels: [],
     };
   },
   created() {
     this.data = this.$route.params.foo[0];
+    console.log(this.data, "isi");
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
     this.gambar = this.setup["01"];
