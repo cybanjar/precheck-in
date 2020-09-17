@@ -7,7 +7,7 @@
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>Thank you for using our online check-in. Show this QR Code to get your keycard</p>
+    <p class="font20">Thank you for using our online check-in. Show this QR Code to get your keycard</p>
   </div>
 </template>
 
@@ -17,7 +17,14 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", url: "", labels: [] };
+    return { 
+      taejin: "", 
+      url: "", 
+      labels: [], 
+      moreStyles: {
+        'backaground-color': 'red'
+      } 
+    };
   },
   mounted() {
     // console.log(this.$route.params.jin, "nyampe");
@@ -74,5 +81,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss" src="../css/style.scss"/>
