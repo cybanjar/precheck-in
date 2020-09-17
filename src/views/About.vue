@@ -29,12 +29,10 @@
             :style="information"
           >{{currDataPrepare.description}}</h4>-->
           <p class="ant-card-meta-description font-white" :style="information">
-            {{getLabels('arrival')}}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{getLabels('departure')}}:
+            Arrival:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{getLabels('book_code')}}:
+            <br />Booking Code:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -72,12 +70,10 @@
           </h2>
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white" :style="information">
-            {{getLabels('arrival')}}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{getLabels('departure')}}:
+            Arrival:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong> Departure:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{getLabels('book_code')}}:
+            <br />Booking Code:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -88,7 +84,7 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">{{getLabels('arrival')}}</p>
+                  <p class="header-group">Arrival</p>
                 </a-col>
                 <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
@@ -104,7 +100,7 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
-              <a-form-item layout="vertical" :label="getLabels('eta')">
+              <a-form-item layout="vertical" label="Estimated Arrival Time">
                 <a-time-picker
                   v-decorator="[
                     'time',
@@ -118,17 +114,17 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
-              <a-form-item :label="getLabels('request')">
+            <a-col :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
+              <a-form-item label="Request">
                 <a-checkbox
                   :checked="showPrice"
                   v-model="showPrice"
                   @change="onChange"
-                >{{ getLabels('pick_req') }}</a-checkbox>
+                >Pickup Required</a-checkbox>
               </a-form-item>
             </a-col>
             <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24" v-show="showPickupRequest">
-              <a-form-item :label="getLabels('price')">
+              <a-form-item label="Price">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
@@ -142,13 +138,13 @@
             </a-col>
             <a-col
               v-show="showPrice && showPickupRequest"
-              :span="8"
-              :xl="8"
+              :span="6"
+              :xl="6"
               :lg="8"
               :md="7"
               :xs="24"
             >
-              <a-form-item :label="getLabels('pick_detail')">
+              <a-form-item label="Flight Details">
                 <a-input
                   placeholder="Please input flight details"
                   v-decorator="[
@@ -163,33 +159,33 @@
           </a-row>
           <a-row class="ml-3" gutter="16">
             <a-col>
-              <a-form-item :label="getLabels('room_pref')">
+              <a-form-item label="Room Preferences">
                 <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
                   <a-radio value="NonSmoking">
-                    <span class="font-weight-normal">{{getLabels('non_smoking')}}</span>
+                    <span class="font-weight-normal">Non Smoking</span>
                   </a-radio>
                   <a-radio value="Smoking">
-                    <span class="font-weight-normal">{{getLabels('smoking')}}</span>
+                    <span class="font-weight-normal">Smoking</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
                   <a-radio value="LowerFloor">
-                    <span class="font-weight-normal">{{getLabels('lower_floor')}}</span>
+                    <span class="font-weight-normal">Lower Floor</span>
                   </a-radio>
                   <a-radio value="HigherFloor">
-                    <span class="font-weight-normal">{{getLabels('higher_floor')}}</span>
+                    <span class="font-weight-normal">Higher Floor</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
                   <a-radio value="OneBigBed">
-                    <span class="font-weight-normal">{{getLabels('one_big_bed')}}</span>
+                    <span class="font-weight-normal">One Big Bed</span>
                   </a-radio>
                   <a-radio value="TwoSingleBeds">
-                    <span class="font-weight-normal">{{getLabels('two_single_beds')}}</span>
+                    <span class="font-weight-normal">Two Single Beds</span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
@@ -251,7 +247,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
-              <a-form-item :label="getLabels('special_request')">
+              <a-form-item label="Special Request">
                 <a-textarea
                   v-decorator="[
                     'Request',
@@ -281,7 +277,7 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">{{getLabels('guest_detail')}}</p>
+                  <p class="header-group">Guest Details</p>
                 </a-col>
                 <!-- <a-col :span="1" :xl="1" :xs="1">
                   <a-icon
@@ -298,11 +294,11 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <!-- <span>{{currDataPrepare["guest-email"]}}</span> -->
-              <a-form-item :label="getLabels('email')">
+              <a-form-item label="Email">
                 <a-input
                   v-decorator="[
                     'email',
-                    {                      
+                    {
                       initialValue: email,
                       rules: [{ message: 'Please input your email' }],
                     },
@@ -313,7 +309,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('phone_number')">
+              <a-form-item label="Phone Number">
                 <a-input
                   v-decorator="[
                     'phone',
@@ -331,7 +327,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('purpose_stay')">
+              <a-form-item label="Purpose of Stay">
                 <a-select
                   @change="Kuy"
                   v-decorator="[
@@ -350,7 +346,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('nationality')">
+              <a-form-item label="Nationality">
                 <a-select
                   show-search
                   v-decorator="[
@@ -410,7 +406,7 @@
           </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('country')">
+              <a-form-item label="Country">
                 <a-select
                   show-search
                   v-model="country"
@@ -437,7 +433,7 @@
                   country === 'ina' 
                 "
               >
-                <a-form-item :label="getLabels('region')">
+                <a-form-item label="Region">
                   <a-select
                     show-search
                     @change="handleChangeRegion"
@@ -499,9 +495,11 @@
               <a-checkbox v-model="agree" />
             </a-col>
             <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
-              {{getLabels('pci_tc')}}
-              <a @click="showModalTerm">{{getLabels('t_c')}}</a>
-              {{ hotelname }}.
+              Check here to indicate that you have read and agree to the
+              <a
+                @click="showModalTerm"
+              >Terms and Conditions</a>
+              {{ hotelname }} Agreement.
             </a-col>
             <a-modal
               title="Term Of Condition"
@@ -540,7 +538,6 @@ import router from "../router";
 import data from "../components/json/indonesia";
 import countries from "../components/json/country";
 import Vue from "vue";
-// import { getLabels } from "../helper/getLabels.helpers";
 import Antd, {
   Row,
   Col,
@@ -645,7 +642,6 @@ export default {
       countries: countries,
       hotelname: "",
       email: "",
-      labels: [],
     };
   },
   created() {
@@ -674,7 +670,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const heaven in jatah) {
-              // console.log(jatah, "msk");
+              console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
                 this.information.backgroundColor = jatah[heaven]["setupvalue"];
               }
@@ -683,7 +679,7 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const hell in jatah) {
-              // console.log(jatah, "msk");
+              console.log(jatah, "msk");
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
               }
@@ -737,7 +733,7 @@ export default {
 
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        // console.log(this.guests, "guests");
+        console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
           router.push("notfound");
@@ -746,7 +742,7 @@ export default {
             const nietos = [];
             const obj = {};
             this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-            // console.log(this.gambar, "gambar");
+            console.log(this.gambar, "gambar");
             obj["01"] = this.gambar;
             obj["02"] = this.information;
             obj["03"] = this.money;
@@ -778,12 +774,6 @@ export default {
             this.gambar = lagi;
           }
         }
-        localStorage.removeItem("labels");
-        localStorage.setItem(
-          "labels",
-          JSON.stringify(parsed.response.languagesList["languages-list"])
-        );
-        this.labels = JSON.parse(localStorage.getItem("labels"));
       })();
     } else {
       this.gambar = this.$route.params.id["setup"]["01"];
@@ -813,7 +803,6 @@ export default {
   mounted() {
     this.filteredRegion = this.Region;
     this.FilterCountry = this.countries;
-    this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     showModalTerm() {
@@ -869,34 +858,34 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log("inputan2 ", values);
+          console.log("inputan2 ", values);
 
-          // console.log(
-          //   {
-          //     resNumber: this.currDataPrepare["rsv-number"],
-          //     reslineNumber: this.currDataPrepare["rsvline-number"],
-          //     estAT: values.time._i,
-          //     pickrequest: this.showPrice,
-          //     pickdetail:
-          //       this.showPrice == false ||
-          //       values.flight == " " ||
-          //       values.flight == undefined
-          //         ? ""
-          //         : values.flight,
-          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-          //     specialReq:
-          //       values.Request == " " || values.Request == undefined
-          //         ? ""
-          //         : values.Request,
-          //     guestPhnumber: values.phone,
-          //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
-          //     agreedTerm: true,
-          //     purposeOfStay: values.purpose,
-          //   },
-          //   "inputan"
-          // );
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: values.time._i,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
+              guestPhnumber: values.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
           (async () => {
             const tempParam = location.search.substring(1);
             const parsed = await ky
@@ -929,7 +918,7 @@ export default {
                 },
               })
               .json();
-            // console.log(parsed, "inputan3");
+            console.log(parsed, "inputan3");
             // const tempMessResult = parsed.response.messResult.split(" ");
             // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
@@ -1097,20 +1086,6 @@ export default {
     },
     test() {
       return (this.indexStr = this.indexStr + 1);
-    },
-    getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
-        }
-      }
     },
   },
   computed: {

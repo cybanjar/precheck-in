@@ -1,6 +1,35 @@
 <template>
   <div class="mt-3">
     <h1 class="ml-3 font-weight-bold">Program Set Up</h1>
+    <a-row class="ml-3" :gutter="[16,8]">
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Enable Upload ID">
+          <a-radio-group v-model="defaultUpload">
+            <a-radio value="yes">
+              <span class="font-weight-normal">Yes</span>
+            </a-radio>
+            <a-radio value="no">
+              <span class="font-weight-normal">No</span>
+            </a-radio>
+          </a-radio-group>
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item layout="vertical" label="CheckIn Time">
+          <a-time-picker
+            :default-value="moment('14:00', 'HH:mm')"
+            v-decorator="[
+              'time',{
+                initialValue: moment('14:00', 'HH:mm'),
+                rules: [{ required: true }],
+              },
+            ]"
+            :minute-step="30"
+            format="HH:mm"
+          />
+        </a-form-item>
+      </a-col>
+    </a-row>
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-form-item label="Background Color Mode">
@@ -139,38 +168,10 @@
       </a-row>
     </a-modal>
     <!-- <a-divider style="width: 50px" /> -->
+
     <a-row class="ml-3" :gutter="[16,8]">
       <a-col :span="6" :lg="6" :xs="24">
-        <a-form-item label="Enable Upload ID">
-          <a-radio-group v-model="defaultUpload">
-            <a-radio value="yes">
-              <span class="font-weight-normal">Yes</span>
-            </a-radio>
-            <a-radio value="no">
-              <span class="font-weight-normal">No</span>
-            </a-radio>
-          </a-radio-group>
-        </a-form-item>
-      </a-col>
-      <a-col :span="6" :lg="6" :xs="24">
-        <a-form-item layout="vertical" label="CheckIn Time">
-          <a-time-picker
-            :default-value="moment('13:00', 'HH:mm')"
-            v-decorator="[
-              'time',{
-                initialValue: moment('14:00', 'HH:mm'),
-                rules: [{ required: true }],
-              },
-            ]"
-            :minute-step="30"
-            format="HH:mm"
-          />
-        </a-form-item>
-      </a-col>
-    </a-row>
-    <a-row class="ml-3" :gutter="[16,8]">
-      <a-col :span="6" :lg="6" :xs="24">
-        <a-form-item label="Pickup">
+        <a-form-item label="User Pickup Request">
           <a-radio-group v-model="form.Pickup">
             <a-radio value="1">
               <span class="font-weight-normal">Yes</span>
@@ -228,6 +229,85 @@
             <br />
           </a-checkbox-group>
         </a-form-model-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Purpose Stay">
+          <a-select
+            style="width: 100%"
+            default-value="Leasure"
+            @change="Kuy"
+            v-decorator="[
+              'purpose',
+              { initialValue: 'purpose', rules: [{ required: true }] },
+            ]"
+          >
+            <a-select-option
+              v-for="item in FilterPurposeofStay"
+              :key="item"
+              :value="item.setupvalue"
+            >Leasure</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+    </a-row>
+    <a-row class="ml-3" :gutter="[16,8]">
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Keycard Qty When CheckIn">
+          <a-input placeholder="Input Qty" />
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="IP">
+          <a-input placeholder="IP Address" />
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Type">
+          <a-select default-value="Jack" style="width: 100%" @change="handleType">
+            <a-select-option value="jack">Jack</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Port">
+          <a-input placeholder="Input your port" />
+        </a-form-item>
+      </a-col>
+    </a-row>
+    <a-row class="ml-3 mr-3" :gutter="[16,8]">
+      <a-col :span="12" :lg="12" :xs="24">
+        <a-checkbox
+          @change="changeDeposit"
+        >Allow skip deposit to defined reservation as cash basis reservation</a-checkbox>
+      </a-col>
+    </a-row>
+    <a-row class="ml-3" :gutter="[16,8]">
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Min Deposit Per Night">
+          <a-input placeholder="0" />
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Over One Night">
+          <a-input placeholder="0" />
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Max Deposit">
+          <a-input placeholder="0" />
+        </a-form-item>
+      </a-col>
+    </a-row>
+    <a-row class="ml-3" :gutter="[16,8]">
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Wifi Name/ Address">
+          <a-input placeholder="Input your wifi name" />
+        </a-form-item>
+      </a-col>
+      <a-col :span="6" :lg="6" :xs="24">
+        <a-form-item label="Wifi Password">
+          <a-input placeholder="Input your password wifi" />
+        </a-form-item>
       </a-col>
     </a-row>
     <a-row class="ml-3 mr-3" :gutter="[16,8]">
@@ -300,6 +380,8 @@ export default {
         TermEnglish: '1',
         desc: '',
       },
+      kuy: "",
+      FilterPurposeofStay: ['Leasure', 'Bussiness', 'Santuy'] ,
       ModalText: 'Standart Colors',
       visibleBC: false,
       visibleFC: false,
@@ -340,6 +422,15 @@ export default {
     })();
   },
   methods: {
+    Kuy(value) {
+      this.kuy = value;
+    },
+    changeDeposit(e) {
+      console.log(`deposit ${e}`);
+    },
+    handleType(value) {
+      console.log(`type ${value}`);
+    },
     onChangeBC(e) {
       // console.log('radio checked', e.target.value);
       this.colorPicker = e.target.value;
