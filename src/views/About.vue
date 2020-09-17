@@ -764,6 +764,21 @@ export default {
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
+          } else if (
+            parsed.response.arrivalGuest["arrival-guest"]["0"][
+              "gcomment-desc"
+            ] == "GUEST ALREADY PCI"
+          ) {
+            this.currDataPrepare =
+              parsed.response.arrivalGuest["arrival-guest"][0];
+            const mori =
+              "{" +
+              this.currDataPrepare["rsv-number"] +
+              ";" +
+              moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+              "}";
+            // console.log(mori, "be the one");
+            router.push({ name: "Success", params: { jin: mori } });
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
