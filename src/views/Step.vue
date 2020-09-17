@@ -333,7 +333,7 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item label="Deposit">
                   <h2>
-                    <strong>{{getLabels('term_cash_basis')}}</strong>
+                    <strong>{{getLabels('cash_basis')}}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -679,7 +679,7 @@ export default {
           this.currDataPrepare = this.currData["0"]["0"];
           // console.log(this.currDataPrepare, "kesini");
 
-          this.country = this.currDataPrepare["guest-country"];
+          this.country = this.currDataPrepare["guest- "];
         }
         this.termcondition = true;
         this.loading = false;
@@ -820,7 +820,7 @@ export default {
       if (this.counter == this.id.length) {
         const mori =
           "{" +
-          this.currDataPrepare.resnr +
+          this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
           "}";

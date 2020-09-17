@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('book_code')}} : {{taejin}}</p>
+    <p>{{getLabels('room_number')}} : {{taejin}}</p>
     <p>
       <br />
     </p>

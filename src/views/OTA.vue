@@ -5,7 +5,7 @@
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
         </template>
-        <p>{{informationterm}}</p>
+        <p>{{getLabels('early_checkin')}}</p>
       </a-modal>
       <a-modal title="Information" :visible="informationmodal1" :confirm-loading="confirmLoading">
         <template slot="footer">
@@ -98,6 +98,9 @@ export default {
       confirmLoading: false,
       message: "",
       labels: [],
+      tempsetup: [],
+      checkin: "",
+      arrive: "",
     };
   },
   mounted() {
@@ -123,6 +126,31 @@ export default {
         JSON.stringify(parsed.response.languagesList["languages-list"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
+
+      const setup = await ky
+        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+          json: {
+            request: {
+              icase: 1,
+            },
+          },
+        })
+        .json();
+      this.tempsetup = setup.response.pciSetup["pci-setup"];
+      for (const i in this.tempsetup) {
+        if (
+          this.tempsetup[i]["number1"] == 8 &&
+          this.tempsetup[i]["number2"] == 2
+        ) {
+          this.checkin = this.tempsetup[i]["setupvalue"];
+          console.log(this.checkin);
+        }
+      }
+      this.arrive = moment(new Date()).format("HH:mm");
+      console.log(this.arrive);
+      if (this.arrive != this.checkin) {
+        this.informationmodal = true;
+      }
     })();
   },
   methods: {
@@ -159,7 +187,7 @@ export default {
       const reservation = [];
       // console.log(this.bookingcode, "bo");
       // console.log(this.date, "co");
-      this.hour = moment(new Date()).format("HH:MM");
+      this.hour = moment(new Date()).format("HH:mm");
       // console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
@@ -196,11 +224,11 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           // console.log(data["response"]["messResult"], "masuk2");
-          this.informationterm = this.message.substring(
-            this.message.lastIndexOf("- ") + 1,
-            this.message.lastIndexOf("!")
-          );
-          console.log(this.message.substring(0, 2), "test");
+          // this.informationterm = this.message.substring(
+          //   this.message.lastIndexOf("- ") + 1,
+          //   this.message.lastIndexOf("!")
+          // );
+          // console.log(this.message.substring(0, 2), "test");
 
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
