@@ -5,7 +5,19 @@
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
         </template>
-        <p>{{informationterm}}</p>
+        <p>{{getLabels('early_checkin')}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="informationmodal1" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_found')}}</p>
+      </a-modal>
+      <a-modal title="Information" :visible="informationmodal2" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{getLabels('mci_error_not_ready')}}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
@@ -80,11 +92,66 @@ export default {
       date: "",
       hour: "",
       informationmodal: false,
+      informationmodal1: false,
+      informationmodal2: false,
       informationterm: "",
       confirmLoading: false,
       message: "",
       labels: [],
+      tempsetup: [],
+      checkin: "",
+      arrive: "",
     };
+  },
+  mounted() {
+    (async () => {
+      const tempParam = location.search.substring(1);
+      const parsed = await ky
+        .post(
+          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+          {
+            json: {
+              request: {
+                encryptedText: tempParam
+                  .replace(/%2F/g, "/")
+                  .replace(/%20/g, "+"),
+              },
+            },
+          }
+        )
+        .json();
+      localStorage.removeItem("labels");
+      localStorage.setItem(
+        "labels",
+        JSON.stringify(parsed.response.languagesList["languages-list"])
+      );
+      this.labels = JSON.parse(localStorage.getItem("labels"));
+
+      const setup = await ky
+        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+          json: {
+            request: {
+              icase: 1,
+            },
+          },
+        })
+        .json();
+      this.tempsetup = setup.response.pciSetup["pci-setup"];
+      for (const i in this.tempsetup) {
+        if (
+          this.tempsetup[i]["number1"] == 8 &&
+          this.tempsetup[i]["number2"] == 2
+        ) {
+          this.checkin = this.tempsetup[i]["setupvalue"];
+          console.log(this.checkin);
+        }
+      }
+      this.arrive = moment(new Date()).format("HH:mm");
+      console.log(this.arrive);
+      if (this.arrive != this.checkin) {
+        this.informationmodal = true;
+      }
+    })();
   },
   methods: {
     onChange(date, dateString) {
@@ -118,10 +185,10 @@ export default {
     handleOk() {
       // console.log(e);
       const reservation = [];
-      console.log(this.bookingcode, "bo");
-      console.log(this.date, "co");
-      this.hour = moment(new Date()).format("HH:MM");
-      console.log(this.hour, "jam");
+      // console.log(this.bookingcode, "bo");
+      // console.log(this.date, "co");
+      this.hour = moment(new Date()).format("HH:mm");
+      // console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
         this.error();
@@ -148,7 +215,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: this.hour,
+                    citime: "14:00",
                     groupFlag: "false",
                   },
                 },
@@ -156,32 +223,36 @@ export default {
             )
             .json();
           this.message = data["response"]["messResult"];
-          console.log(data["response"]["messResult"], "masuk2");
-          this.informationterm = this.message.substring(
-            this.message.lastIndexOf("- ") + 1,
-            this.message.lastIndexOf("!")
-          );
+          // console.log(data["response"]["messResult"], "masuk2");
+          // this.informationterm = this.message.substring(
+          //   this.message.lastIndexOf("- ") + 1,
+          //   this.message.lastIndexOf("!")
+          // );
+          // console.log(this.message.substring(0, 2), "test");
 
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
           } else if (
             this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 " ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal = true;
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
           } else {
-            console.log(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"],
-              "else1"
-            );
-            console.log(data["response"]["arrivalGuestlist"], "else2");
+            // console.log(
+            //   data["response"]["arrivalGuestlist"]["arrival-guestlist"],
+            //   "else1"
+            // );
+            // console.log(data["response"]["arrivalGuestlist"], "else2");
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            console.log(reservation, "reservation");
+            // console.log(reservation, "reservation");
             router.push({ name: "Step", params: { foo: reservation } });
           }
         })();

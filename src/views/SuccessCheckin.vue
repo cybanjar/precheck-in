@@ -1,15 +1,12 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>Booking Code : {{taejin}}</p>
+    <p>{{getLabels('room_number')}} : {{taejin}}</p>
     <p>
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>
-      Thank You for using our Online Check-In Service.
-      Scan this QR-Code at the Keycard Station to receive your room key
-    </p>
+    <p>{{getLabels('mci_success')}}</p>
   </div>
 </template>
 
@@ -19,11 +16,12 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", url: "" };
+    return { taejin: "", url: "", labels: [] };
   },
   mounted() {
     // console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
+    this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
     QRCode.toCanvas(
@@ -55,6 +53,22 @@ export default {
     //     .json();
     //   console.log(parsed);
     // })();
+  },
+  methods: {
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }
+    },
   },
 };
 </script>

@@ -69,7 +69,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.foo[0], "goks");
+    // console.log(this.$route.params.foo[0], "goks");
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
@@ -82,7 +82,7 @@ export default {
       // console.log(client);
       this.fairy["data"] = client;
       this.fairy["setup"] = this.lemparsetup;
-      console.log(this.fairy);
+      // console.log(this.fairy);
       router.push({ name: "Step", params: { id: this.fairy } });
     },
     formatDate(datum) {
