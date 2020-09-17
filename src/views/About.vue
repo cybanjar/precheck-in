@@ -950,7 +950,7 @@ export default {
           })();
           this.scrollToTop();
           this.save();
-          this.form.reset();
+          this.form.resetFields();
         }
       });
     },
