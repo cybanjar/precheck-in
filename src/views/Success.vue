@@ -18,18 +18,7 @@ import ky from "ky";
 
 export default {
   data() {
-<<<<<<< HEAD
-    return { 
-      taejin: "", 
-      url: "", 
-      labels: [], 
-      moreStyles: {
-        'backaground-color': 'red'
-      } 
-    };
-=======
     return { taejin: "", iplyo: "", url: "", labels: [] };
->>>>>>> 31fd8b6d478ff5134027e401e34974932ecc0d0a
   },
   mounted() {
     // console.log(this.$route.params.jin, "nyampe");
