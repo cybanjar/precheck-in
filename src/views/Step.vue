@@ -322,11 +322,11 @@
                   type="primary"
                   @click="search()"
                 >{{getLabels('pay')}}</a-button>
-                <img
+                <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
                   style="height:50px;width:50px; opacity: .65;"
-                />
+                /> -->
               </a-col>
             </a-row>
             <a-row :gutter="[16,8]" v-else>
