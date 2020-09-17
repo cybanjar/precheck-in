@@ -28,7 +28,11 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
               :class="item.isSelected == true ? 'selected' : 'notselected'"
-              @click="select(item)"
+              @click="
+                item['gcomment-desc'] != 'GUEST ALREADY PCI'
+                  ? select(item)
+                  : disabled
+              "
             >
               <h2
                 :class="
@@ -87,7 +91,7 @@ export default {
       information: {},
       lemparsetup: [],
       fairy: {},
-      labels: []
+      labels: [],
     };
   },
   created() {
