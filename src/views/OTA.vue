@@ -140,18 +140,18 @@ export default {
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       this.bahasa =
         parsed.response.languagesList["languages-list"]["0"]["lang-id"];
-      console.log(this.bahasa, "test");
+      // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
           this.tempsetup[i]["number2"] == 2
         ) {
           this.checkin = this.tempsetup[i]["setupvalue"];
-          console.log(this.checkin);
+          // console.log(this.checkin);
         }
       }
       this.arrive = moment(new Date()).format("HH:mm");
-      console.log(this.arrive);
+      // console.log(this.arrive);
       if (this.arrive != this.checkin) {
         this.informationmodal = true;
       }
@@ -257,7 +257,7 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             reservation.push(this.bahasa);
-            console.log(reservation, "reserve");
+            // console.log(reservation, "reserve");
             // console.log(reservation, "reservation");
             router.push({ name: "Step", params: { foo: reservation } });
           }
