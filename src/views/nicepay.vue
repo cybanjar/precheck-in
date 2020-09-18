@@ -51,8 +51,9 @@ export default {
 import CryptoJS from "crypto-js";
 import moment from "moment";
 
-    const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000210033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
-    const urlReg = "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=100&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=Michael&billingPhone=081212121212&billingEmail=michael@blah.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData=Deposit&callBackUrl=readResponse&instmntType=1&instmntMon=1&reccurOpt=0";
+    const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000230000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
+    const urlReg = "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=300000&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=Michael&billingPhone=081212121212&billingEmail=michael@somemail.com&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData={Deposit}&callBackUrl=readResponse&instmntType=1&instmntMon=1&reccurOpt=0";
+    console.log(urlReg);
     const script = document.createElement('SCRIPT');
     script.src = urlReg;
     document.body.appendChild(script);
