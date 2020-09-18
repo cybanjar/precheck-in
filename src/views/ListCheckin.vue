@@ -18,7 +18,7 @@
         </a-col>
       </a-row>
       <div>
-        <h1 class="mt-3 text-center">Guest List</h1>
+        <h1 class="mt-3 text-center">{{getLabels('guest_list')}}</h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -32,9 +32,11 @@
               <p v-else class="pl-3">
                 <br />
               </p>
-              <p class="pl-3">From: {{ formatDate(item.ci) }} Until: {{ formatDate(item.co) }}</p>
+              <p
+                class="pl-3"
+              >{{getLabels('arrival')}}: {{ formatDate(item.ci) }} {{getLabels('departure')}}: {{ formatDate(item.co) }}</p>
               <p class="pl-3">
-                {{item.adult}} Adult
+                {{item.adult}} {{getLabels('adult')}}
                 <a-tag color="green">{{ item['rmtype-str']}}</a-tag>
               </p>
             </a-card>
@@ -66,6 +68,7 @@ export default {
       information: {},
       lemparsetup: [],
       fairy: {},
+      labels: [],
     };
   },
   created() {
@@ -76,6 +79,9 @@ export default {
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
+  },
+  mounted() {
+    this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     select(client) {
@@ -91,6 +97,20 @@ export default {
         month: "2-digit",
         year: "numeric",
       }).format(new Date(datum));
+    },
+    getLabels(nameKey) {
+      for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["lang-variable"] === nameKey) {
+          const splitStr = this.labels[x]["lang-value"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }
     },
   },
 };
