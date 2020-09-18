@@ -1,9 +1,15 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('book_code')}} : {{taejin}}</p>
-    <p>{{getLabels('co_date')}} : {{iplyo}}</p>
-    <a href="https://precheckin-8392e.web.app/ota">https://precheckin-8392e.web.app/ota</a>
+    <p>
+      {{getLabels('book_code')}} :
+      <span class="font-weight-bold">{{taejin}}</span>
+    </p>
+    <p>
+      {{getLabels('co_date')}} :
+      <span class="font-weight-bold">{{iplyo}}</span>
+    </p>
+    <a-button type="primary" href="https://precheckin-8392e.web.app/ota" icon="export">Please visit</a-button>
     <p>
       <br />
     </p>
@@ -34,8 +40,7 @@ export default {
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { errorCorrectionLevel: "H", width: "300", height: "auto" }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -79,5 +84,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss" src="../css/style.scss"/>
