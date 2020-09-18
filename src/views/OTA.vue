@@ -101,6 +101,7 @@ export default {
       tempsetup: [],
       checkin: "",
       arrive: "",
+      bahasa: "",
     };
   },
   mounted() {
@@ -137,6 +138,9 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      this.bahasa =
+        parsed.response.languagesList["languages-list"]["0"]["lang-id"];
+      console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -252,6 +256,8 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
+            reservation.push(this.bahasa);
+            console.log(reservation, "reserve");
             // console.log(reservation, "reservation");
             router.push({ name: "Step", params: { foo: reservation } });
           }
