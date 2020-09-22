@@ -432,7 +432,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div
-                v-show="
+                v-if="
                   country === 'INA' ||
                   country === 'ina' 
                 "
@@ -455,6 +455,20 @@
                       :value="filteredRegion[keys]['province']"
                     >{{ filteredRegion[keys].province }}</a-select-option>
                   </a-select>
+                </a-form-item>
+              </div>
+              <div v-else>
+                <a-form-item :label="getLabels('state')">
+                  <a-input
+                    v-decorator="[
+                    'State',
+                    {                      
+                      initialValue: State,
+                      rules: [{ message: 'Please input your State' }],
+                    },
+
+                  ]"
+                  />
                 </a-form-item>
               </div>
             </a-col>
