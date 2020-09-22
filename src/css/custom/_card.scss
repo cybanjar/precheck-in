@@ -11,33 +11,42 @@
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
 }
-.ant-card-meta-description{
+
+.ant-card-meta-description {
   color: rgba(0, 0, 0, 0.45);
 }
+
 .ant-card-head-title {
   text-align: center;
+  font-weight: bold;
 }
+
 .ant-card-meta-detail {
   font-size: 1.375rem;
   font-weight: bold !important;
   text-transform: uppercase;
 }
+
 .ant-card-meta-title {
   font-weight: bolder !important;
 }
+
 .main-guest-title {
   letter-spacing: 0;
   text-transform: uppercase;
 }
+
 .ant-card-body {
   margin: 0;
   padding: 24px 0 0 0;
   zoom: 1;
 }
-.header-card{
+
+.header-card {
   border: none;
   border-bottom: 3px solid black;
 }
+
 .login-card {
   position: absolute;
   width: 350px;
@@ -65,51 +74,62 @@
     background-color: $primary;
     color: $white;
   }
+
   &.red {
     background-color: $red;
     color: $white;
   }
+
   &.yellow {
     background-color: $yellow;
     color: $black;
   }
+
   &.green {
     background-color: $greenday;
     color: $white;
   }
+
   &.white {
     background-color: $white;
     color: $black;
   }
+
   &.magenta {
     background-color: $magenta;
     color: $white;
   }
+
   &.black {
     background-color: $black;
     color: $white;
   }
+
   &.orange {
     background-color: $orange;
     color: $white;
   }
+
   &.purple {
     background-color: $purple;
     color: $white;
   }
+
   &.bluesky {
     background-color: $bluesky;
     color: $white;
   }
+
   &.grey {
     background-color: $grey;
     color: $black;
   }
+
   &.gold {
     background-color: $gold;
     color: $white;
   }
-  
+
 }
 
 .card-color:hover {
@@ -119,5 +139,9 @@
 }
 
 .card-color:active {
-   transform: scale(.90);
+  transform: scale(.90);
+}
+
+.ant-card-hoverable:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
 }

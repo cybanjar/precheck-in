@@ -4,8 +4,7 @@ import Home from "../views/About.vue";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/precheckin",
     name: "Home",
     component: Home,
@@ -78,6 +77,11 @@ const routes = [
     name: "Setup",
     component: () => import("../views/SetUp"),
   },
+  {
+    path: "/setup2",
+    name: "Setup2",
+    component: () => import("../views/SetUp2"),
+  },
 ];
 
 const router = new VueRouter({
@@ -85,7 +89,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
   scrollBehavior() {
-    return { x: 0, y: 0 };
+    return {
+      x: 0,
+      y: 0
+    };
   },
 });
 
