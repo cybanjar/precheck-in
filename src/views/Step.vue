@@ -341,7 +341,7 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row :gutter="[16, 8]" v-show="(skipDeposit != true)">
+            <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
                   <a-checkbox v-model="pay">{{getLabels('term_cash_basis')}}</a-checkbox>
