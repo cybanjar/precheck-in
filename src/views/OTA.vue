@@ -217,7 +217,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: "14:00",
+                    citime: this.hour,
                     groupFlag: "false",
                   },
                 },
