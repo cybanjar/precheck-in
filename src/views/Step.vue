@@ -249,10 +249,10 @@
                     ]"
                     >
                       <a-select-option
-                        v-for="(item, keys) in filteredRegion"
-                        :key="keys"
-                        :value="filteredRegion[keys]['province']"
-                      >{{ filteredRegion[keys].province }}</a-select-option>
+                        v-for="item in filteredRegion"
+                        :key="item"
+                        :value="item['descr']"
+                      >{{ item.setupvalue}}</a-select-option>
                     </a-select>
                   </a-form-item>
                 </div>
@@ -407,7 +407,7 @@
 
 <script>
 import router from "../router";
-import data from "../components/json/indonesia";
+// import data from "../components/json/indonesia";
 // import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
@@ -470,8 +470,6 @@ export default {
       },
       nilai: 2,
       setRegion: "Bali",
-      Region: data.Indonesia.Region,
-      City: data.Indonesia.City,
       cek: "",
       cities: "",
       // filteredCity: [],
@@ -523,7 +521,7 @@ export default {
       FilterPurposeofStay: [],
       bed: "",
       floor: "",
-      region: "",
+      region: [],
       room: "",
       tempsetup: [],
       message: "",
@@ -698,8 +696,14 @@ export default {
             bulbasur["descr"] = this.tempsetup[i]["descr"];
             bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.countries.push(bulbasur);
-            console.log(this.countries, "pikachu");
-            console.log(bulbasur, "pikachu2");
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 3
+          ) {
+            const air = {};
+            air["descr"] = this.tempsetup[i]["descr"];
+            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.region.push(air);
           }
         }
 
@@ -728,6 +732,7 @@ export default {
           obj["17"] = this.skipDeposit;
           obj["18"] = this.minimumDeposit;
           obj["19"] = this.countries;
+          obj["20"] = this.region;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
@@ -761,6 +766,7 @@ export default {
       this.skipDeposit = this.$route.params.id["setup"]["17"];
       this.minimumDeposit = this.$route.params.id["setup"]["18"];
       this.countries = this.$route.params.id["setup"]["19"];
+      this.region = this.$route.params.id["setup"]["20"];
       this.currDataPrepare = this.$route.params.id["data"];
 
       this.country = this.currDataPrepare["guest-country"];
@@ -772,7 +778,7 @@ export default {
     }
   },
   mounted() {
-    this.filteredRegion = this.Region;
+    this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
   },
   methods: {

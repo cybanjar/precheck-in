@@ -463,10 +463,10 @@
                     ]"
                   >
                     <a-select-option
-                      v-for="(item, keys) in filteredRegion"
-                      :key="keys"
-                      :value="filteredRegion[keys]['province']"
-                    >{{ filteredRegion[keys].province }}</a-select-option>
+                      v-for="item in filteredRegion"
+                      :key="item"
+                      :value="item['descr']"
+                    >{{ item.setupvalue}}</a-select-option>
                   </a-select>
                 </a-form-item>
               </div>
@@ -564,8 +564,6 @@
 
 <script>
 import router from "../router";
-import data from "../components/json/indonesia";
-// import countries from "../components/json/country";
 import Vue from "vue";
 // import { getLabels } from "../helper/getLabels.helpers";
 import Antd, {
@@ -614,10 +612,9 @@ export default {
       nilai: 2,
       bed: "",
       floor: "",
-      region: "",
+      region: [],
       room: "",
       setRegion: "Bali",
-      Region: data.Indonesia.Region,
       City: data.Indonesia.City,
       cek: "",
       cities: "",
@@ -769,6 +766,14 @@ export default {
             this.countries.push(bulbasur);
             console.log(this.countries, "pikachu");
             console.log(bulbasur, "pikachu2");
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 3
+          ) {
+            const air = {};
+            air["descr"] = this.tempsetup[i]["descr"];
+            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.region.push(air);
           }
         }
 
@@ -799,6 +804,7 @@ export default {
             obj["13"] = this.hotelname;
             obj["14"] = this.showPickupRequest;
             obj["15"] = this.countries;
+            obj["16"] = this.region;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
@@ -855,7 +861,8 @@ export default {
       this.term = this.$route.params.id["setup"]["12"];
       this.hotelname = this.$route.params.id["setup"]["13"];
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
-      this.countries = this.$route.params.id["setup"]["14"];
+      this.countries = this.$route.params.id["setup"]["15"];
+      this.region = this.$route.params.id["setup"]["16"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
@@ -867,7 +874,7 @@ export default {
     this.loading = false;
   },
   mounted() {
-    this.filteredRegion = this.Region;
+    this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
