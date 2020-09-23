@@ -118,7 +118,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
+            <a-col :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item :label="getLabels('request')">
                 <a-checkbox
                   :checked="showPrice"
@@ -150,11 +150,10 @@
             >
               <a-form-item :label="getLabels('pick_detail')">
                 <a-input
-                  placeholder="Please input flight details"
                   v-decorator="[
                     'flight',
                     {
-                      rules: [{ message: 'Please input your flight details' }],
+                      rules: [{  }],
                     },
                   ]"
                 />
@@ -257,7 +256,6 @@
                     'Request',
                     { rules: [{ message: 'Please input your Request' }] },
                   ]"
-                  placeholder="Ex: Connecting Wifi"
                   :rows="4"
                   :maxlength="max"
                 />
@@ -296,8 +294,8 @@
             </a-card>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <!-- <span>{{currDataPrepare["guest-email"]}}</span> -->
+            <a-col v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <span>{{currDataPrepare["guest-email"]}}</span>
               <a-form-item :label="getLabels('email')">
                 <a-input
                   v-decorator="[
@@ -309,6 +307,21 @@
 
                   ]"
                   disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <span>{{currDataPrepare["guest-email"]}}</span>
+              <a-form-item :label="getLabels('email')">
+                <a-input
+                  v-decorator="[
+                    'email',
+                    {                      
+                      initialValue: email,
+                      rules: [{ required: true }],
+                    },
+
+                  ]"
                 />
               </a-form-item>
             </a-col>
@@ -410,7 +423,7 @@
           </a-row>-->
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('country')">
+              <a-form-item :label="getLabels('country_of_residence')">
                 <a-select
                   show-search
                   v-model="country"
@@ -790,6 +803,8 @@ export default {
               this.currDataPrepare["rsv-number"] +
               ";" +
               moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+              "," +
+              this.hour +
               "}";
             // console.log(mori, "be the one");
             router.push({ name: "Success", params: { jin: mori } });
@@ -975,6 +990,8 @@ export default {
           this.currDataPrepare["rsv-number"] +
           ";" +
           moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+          "," +
+          this.hour +
           "}";
         // console.log(mori, "be the one");
         router.push({ name: "Success", params: { jin: mori } });

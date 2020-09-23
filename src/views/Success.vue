@@ -9,7 +9,15 @@
       {{getLabels('co_date')}} :
       <span class="font-weight-bold">{{iplyo}}</span>
     </p>
-    <a-button type="primary" href="https://precheckin-8392e.web.app/ota" icon="export">Please visit</a-button>
+    <p>
+      Check-In Time :
+      <span class="font-weight-bold">{{jegal}}</span>
+    </p>
+    <a-button
+      type="primary"
+      href="http://localhost:8080/mobilecheckin?idn"
+      icon="export"
+    >Please visit</a-button>
     <p>
       <br />
     </p>
@@ -24,10 +32,10 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", iplyo: "", url: "", labels: [] };
+    return { taejin: "", iplyo: "", jegal: "", url: "", labels: [] };
   },
   mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
+    console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
@@ -35,6 +43,10 @@ export default {
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,
+      this.data.lastIndexOf(",")
+    );
+    this.jegal = this.data.substring(
+      this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
     QRCode.toCanvas(
