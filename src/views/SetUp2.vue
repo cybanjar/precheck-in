@@ -43,7 +43,6 @@
         @ok="handleOkBC"
         @cancel="handleCancelBC"
       >
-        <!-- <p>{{ ModalText }}</p> -->
         <a-row>
           <a-col :span="8" :lg="8">
             <div @click="mouseClicks('#1890FF')" class="card-color blue">Blue</div>
@@ -347,7 +346,6 @@
       @ok="handleOkFC"
       @cancel="handleCancelFC"
     >
-      <!-- <p>{{ ModalText }}</p> -->
       <a-row>
         <a-col :span="8" :lg="8">
           <div @click="mouseClicksx('#1890FF')" class="card-color blue">Blue</div>
