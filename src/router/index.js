@@ -82,6 +82,11 @@ const routes = [{
     name: "Setup2",
     component: () => import("../views/SetUp2"),
   },
+  {
+    path: "/successdeposit",
+    name: "Successdeposit",
+    component: () => import("../views/SuccessDeposit"),
+  },
 ];
 
 const router = new VueRouter({
