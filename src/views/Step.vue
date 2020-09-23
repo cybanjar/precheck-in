@@ -341,7 +341,7 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row :gutter="[16,8]">
+            <a-row :gutter="[16, 8]" v-show="(skipDeposit != true)">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
                   <a-checkbox v-model="pay">{{getLabels('term_cash_basis')}}</a-checkbox>
@@ -520,6 +520,7 @@ export default {
       labels: [],
       wifiAddress: "",
       wiifiPassword: "",
+      skipDeposit: false,
     };
   },
   watch: {
@@ -663,6 +664,11 @@ export default {
             this.tempsetup[i]["number2"] == 9
           ) {
             this.wifiPassword = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 4
+          ) {
+            this.skipDeposit = this.tempsetup[i]["setupvalue"];
           }
         }
 
@@ -688,6 +694,7 @@ export default {
           obj["14"] = this.showPickupRequest;
           obj["15"] = this.wifiAddress;
           obj["16"] = this.wifiPassword;
+          obj["17"] = this.skipDeposit;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
@@ -718,6 +725,7 @@ export default {
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.wiifiAddress = this.$route.params.id["setup"]["15"];
       this.wifiPassword = this.$route.params.id["setup"]["16"];
+      this.skipDeposit = this.$route.params.id["setup"]["17"];
       this.currDataPrepare = this.$route.params.id["data"];
 
       this.country = this.currDataPrepare["guest-country"];
