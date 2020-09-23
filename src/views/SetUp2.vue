@@ -153,7 +153,6 @@
           <a slot="extra" href="#">
             <a-icon type="bg-colors" />
           </a>
-          <!-- {{ contentList[key] }} -->
           <div class="ml-3 mr-3" v-if="key === 'tab1'">
             <a-form-item>
               <a-radio-group :default-value="colorPicker" @change="onChangeBC">
