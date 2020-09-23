@@ -16,7 +16,8 @@
           <a-button key="back" @click="disagree">Disagree</a-button>
           <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
         </template>
-        <p>{{term}}</p>
+        <p v-if="eng">{{term}}</p>
+        <p v-else>{{term1}}</p>
       </a-modal>
       <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
@@ -499,10 +500,7 @@ export default {
       purpose: "leisure",
       loading: true,
       term: "",
-      term1:
-        "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
-      term2:
-        "Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.",
+      term1: "",
       value: "terma",
       gambar: "https://source.unsplash.com/1366x786/?hotel",
       termcondition: false,
@@ -633,6 +631,11 @@ export default {
             this.tempsetup[i]["number2"] == 1
           ) {
             this.term = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.term1 = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 2) {
             if (this.tempsetup[i].setupflag == true) {
               this.money = this.tempsetup[i]["price"];
@@ -733,6 +736,7 @@ export default {
           obj["18"] = this.minimumDeposit;
           obj["19"] = this.countries;
           obj["20"] = this.region;
+          obj["21"] = this.term1;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
@@ -767,6 +771,7 @@ export default {
       this.minimumDeposit = this.$route.params.id["setup"]["18"];
       this.countries = this.$route.params.id["setup"]["19"];
       this.region = this.$route.params.id["setup"]["20"];
+      this.term1 = this.$route.params.id["setup"]["21"];
       this.currDataPrepare = this.$route.params.id["data"];
 
       this.country = this.currDataPrepare["guest-country"];
