@@ -378,8 +378,8 @@
                   <a-select-option
                     v-for="item in FilterCountry"
                     :key="item"
-                    :value="item['alpha-3']"
-                  >{{ item.name }}</a-select-option>
+                    :value="item['descr']"
+                  >{{ item.setupvalue}}</a-select-option>
                 </a-select>
                 <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -438,8 +438,8 @@
                   <a-select-option
                     v-for="item in FilterCountry"
                     :key="item"
-                    :value="item['alpha-3']"
-                  >{{ item.name }}</a-select-option>
+                    :value="item['descr']"
+                  >{{ item.setupvalue}}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -565,7 +565,7 @@
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
-import countries from "../components/json/country";
+// import countries from "../components/json/country";
 import Vue from "vue";
 // import { getLabels } from "../helper/getLabels.helpers";
 import Antd, {
@@ -669,7 +669,7 @@ export default {
       hour: "",
       FilterPurposeofStay: [],
       FilterCountry: [],
-      countries: countries,
+      countries: [],
       hotelname: "",
       email: "",
       labels: [],
@@ -759,6 +759,16 @@ export default {
             this.tempsetup[i]["number2"] == 1
           ) {
             this.hotelname = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            const bulbasur = {};
+            bulbasur["descr"] = this.tempsetup[i]["descr"];
+            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.countries.push(bulbasur);
+            console.log(this.countries, "pikachu");
+            console.log(bulbasur, "pikachu2");
           }
         }
 
@@ -788,6 +798,7 @@ export default {
             obj["12"] = this.term;
             obj["13"] = this.hotelname;
             obj["14"] = this.showPickupRequest;
+            obj["15"] = this.countries;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
@@ -844,6 +855,7 @@ export default {
       this.term = this.$route.params.id["setup"]["12"];
       this.hotelname = this.$route.params.id["setup"]["13"];
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
+      this.countries = this.$route.params.id["setup"]["14"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];

@@ -171,8 +171,8 @@
                     <a-select-option
                       v-for="item in FilterCountry"
                       :key="item"
-                      :value="item['alpha-3']"
-                    >{{ item.name }}</a-select-option>
+                      :value="item['descr']"
+                    >{{ item.setupvalue}}</a-select-option>
                   </a-select>
                   <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -223,19 +223,17 @@
                     <a-select-option
                       v-for="item in FilterCountry"
                       :key="item"
-                      :value="item['alpha-3']"
-                    >{{ item.name }}</a-select-option>
+                      :value="item['descr']"
+                    >{{ item.setupvalue}}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
 
-              <a-col :span="5" :xl="5" :xs="24">
+              <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
                 <div
-                  v-show="
+                  v-if="
                   country === 'INA' ||
-                  country === 'ina' ||
-                  currDataPrepare['guest-country'] === 'ina' ||
-                  currDataPrepare['guest-country'] === 'INA'
+                  country === 'ina' 
                 "
                 >
                   <a-form-item :label="getLabels('region')">
@@ -244,7 +242,10 @@
                       @change="handleChangeRegion"
                       v-decorator="[
                       'region',
-                      { initialValue: currDataPrepare['guest-region'], rules: [{ required: true }] },
+                      {
+                        initialValue: currDataPrepare['guest-prov'],
+                        rules: [{ required: true }],
+                      },
                     ]"
                     >
                       <a-select-option
@@ -253,6 +254,20 @@
                         :value="filteredRegion[keys]['province']"
                       >{{ filteredRegion[keys].province }}</a-select-option>
                     </a-select>
+                  </a-form-item>
+                </div>
+                <div v-else>
+                  <a-form-item :label="getLabels('state')">
+                    <a-input
+                      v-decorator="[
+                    'State',
+                    {                      
+                      initialValue: State,
+                      rules: [{ message: 'Please input your State' }],
+                    },
+
+                  ]"
+                    />
                   </a-form-item>
                 </div>
               </a-col>
@@ -315,7 +330,7 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
-                    <strong>Rp. 500,000</strong>
+                    <strong>{{this.currDataPrepare['currency-usage']}} {{`${minimumDeposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -393,7 +408,7 @@
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
-import countries from "../components/json/country";
+// import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -513,7 +528,7 @@ export default {
       tempsetup: [],
       message: "",
       FilterCountry: [],
-      countries: countries,
+      countries: [],
       precheckin: false,
       hotelname: "",
       currData: [],
@@ -521,6 +536,7 @@ export default {
       wifiAddress: "",
       wiifiPassword: "",
       skipDeposit: false,
+      minimumDeposit: "",
     };
   },
   watch: {
@@ -669,6 +685,21 @@ export default {
             this.tempsetup[i]["number2"] == 4
           ) {
             this.skipDeposit = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 5
+          ) {
+            this.minimumDeposit = this.tempsetup[i]["price"];
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            const bulbasur = {};
+            bulbasur["descr"] = this.tempsetup[i]["descr"];
+            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.countries.push(bulbasur);
+            console.log(this.countries, "pikachu");
+            console.log(bulbasur, "pikachu2");
           }
         }
 
@@ -695,6 +726,8 @@ export default {
           obj["15"] = this.wifiAddress;
           obj["16"] = this.wifiPassword;
           obj["17"] = this.skipDeposit;
+          obj["18"] = this.minimumDeposit;
+          obj["19"] = this.countries;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
@@ -726,6 +759,8 @@ export default {
       this.wiifiAddress = this.$route.params.id["setup"]["15"];
       this.wifiPassword = this.$route.params.id["setup"]["16"];
       this.skipDeposit = this.$route.params.id["setup"]["17"];
+      this.minimumDeposit = this.$route.params.id["setup"]["18"];
+      this.countries = this.$route.params.id["setup"]["19"];
       this.currDataPrepare = this.$route.params.id["data"];
 
       this.country = this.currDataPrepare["guest-country"];
