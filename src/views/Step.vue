@@ -62,7 +62,7 @@
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">{{getLabels('guest_detail')}}</h2>
-          <h2 v-show="current === 1">{{getLabels('address')}}</h2>
+          <h2 v-show="current === 1">{{getLabels('guest_detail')}}</h2>
           <h2 v-show="current === 2">{{getLabels('scan_id')}}</h2>
           <h2 v-show="current === 3">{{getLabels('deposit_payment')}}</h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
@@ -86,6 +86,9 @@
             <br />
             {{getLabels('book_code')}}:
             <strong>{{this.currDataPrepare.resnr}}</strong>
+            <br />
+            {{getLabels('room_number')}} :
+            <strong>{{this.currDataPrepare.zinr}}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
@@ -515,7 +518,8 @@ export default {
       hotelname: "",
       currData: [],
       labels: [],
-      bahasa: "",
+      wifiAddress: "",
+      wiifiPassword: "",
     };
   },
   watch: {
@@ -649,6 +653,16 @@ export default {
             this.tempsetup[i]["number2"] == 1
           ) {
             this.hotelname = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 8
+          ) {
+            this.wifiAddress = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 9
+          ) {
+            this.wifiPassword = this.tempsetup[i]["setupvalue"];
           }
         }
 
@@ -672,6 +686,8 @@ export default {
           obj["12"] = this.term;
           obj["13"] = this.hotelname;
           obj["14"] = this.showPickupRequest;
+          obj["15"] = this.wifiAddress;
+          obj["16"] = this.wifiPassword;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
@@ -700,6 +716,8 @@ export default {
       this.term = this.$route.params.id["setup"]["12"];
       this.hotelname = this.$route.params.id["setup"]["13"];
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
+      this.wiifiAddress = this.$route.params.id["setup"]["15"];
+      this.wifiPassword = this.$route.params.id["setup"]["16"];
       this.currDataPrepare = this.$route.params.id["data"];
 
       this.country = this.currDataPrepare["guest-country"];
@@ -824,7 +842,11 @@ export default {
           this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "}";
+          "," +
+          this.wifiAddress +
+          "!" +
+          this.wiifiPassword;
+        ("}");
         // console.log(mori, "be the one");
         router.push({ name: "SuccessCheckIn", params: { jin: mori } });
       }
@@ -926,8 +948,8 @@ export default {
     },
     getLabels(nameKey) {
       for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
+        if (this.labels[x]["program-variable"] === nameKey) {
+          const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
             .split(" ");
           for (let y = 0; y < splitStr.length; y++) {

@@ -101,7 +101,6 @@ export default {
       tempsetup: [],
       checkin: "",
       arrive: "",
-      bahasa: "",
     };
   },
   mounted() {
@@ -109,13 +108,13 @@ export default {
       const tempParam = location.search.substring(1);
       const parsed = await ky
         .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
-                encryptedText: tempParam
-                  .replace(/%2F/g, "/")
-                  .replace(/%20/g, "+"),
+                countryId1: tempParam,
+                countryId2: "",
+                inpVariable: " ",
               },
             },
           }
@@ -124,7 +123,7 @@ export default {
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
-        JSON.stringify(parsed.response.languagesList["languages-list"])
+        JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
@@ -138,8 +137,7 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
-      this.bahasa =
-        parsed.response.languagesList["languages-list"]["0"]["lang-id"];
+
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
         if (
@@ -256,7 +254,6 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            reservation.push(this.bahasa);
             // console.log(reservation, "reserve");
             // console.log(reservation, "reservation");
             router.push({ name: "Step", params: { foo: reservation } });
@@ -271,8 +268,8 @@ export default {
     },
     getLabels(nameKey) {
       for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
+        if (this.labels[x]["program-variable"] === nameKey) {
+          const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
             .split(" ");
           for (let y = 0; y < splitStr.length; y++) {

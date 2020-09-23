@@ -100,8 +100,8 @@ export default {
     },
     getLabels(nameKey) {
       for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
+        if (this.labels[x]["program-variable"] === nameKey) {
+          const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
             .split(" ");
           for (let y = 0; y < splitStr.length; y++) {
