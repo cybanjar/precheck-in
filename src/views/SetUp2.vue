@@ -261,22 +261,24 @@
           <div class="ml-3 mr-3">
             <a-form-item label="Wifi Name/ SSID">
               <a-input
+                v-model="ssid"
                 v-decorator="[
                 'ssid',
-                { rules: [{ required: false }] },
+                { 
+                  rules: [{ required: false }] 
+                },
                 ]"
-                placeholder="Input SSID"
               >
                 <a-icon slot="prefix" type="wifi" />
               </a-input>
             </a-form-item>
             <a-form-item label="Wifi Password">
               <a-input
+                v-model="wifipass"
                 v-decorator="[
                 'wifipass',
                 { rules: [{ required: false }] },
                 ]"
-                placeholder="Password Wifi"
               >
                 <a-icon slot="prefix" type="lock" />
               </a-input>
@@ -300,7 +302,17 @@
               <a-input placeholder="Input URL Footer" />
             </a-form-item>
             <a-form-item label="Website Hotel">
-              <a-input placeholder="Input Website Hotel" />
+              <a-input
+                default-value="sindata.net"
+                v-decorator="[
+                    'email',
+                    {                      
+                      initialValue: 'this.tempsetup',
+                      rules: [{ message: 'Please input your email' }],
+                    },
+
+                  ]"
+              />
             </a-form-item>
             <a-form-item label="URL Precheck-In Website">
               <a-input placeholder="Input Precheck-In Website" />
@@ -433,6 +445,8 @@ export default {
       mouseClick: null,
       defaultBC: "#1890FF",
       defaultFC: "#1B262C",
+      ssid: "",
+      wifipass: "",
       defaultUpload: true,
       defaultKiosk: false,
       tempsetup: [],
@@ -473,7 +487,37 @@ export default {
       this.response = parsed;
 
       this.tempsetup = parsed.response.pciSetup["pci-setup"];
-      // console.log(this.tempsetup, 'tempsetup');
+      console.log(this.tempsetup, "tempsetup"); // Semua data
+
+      const ssid = [];
+      const wifipass = [];
+      for (const i in this.tempsetup) {
+        if (
+          this.tempsetup[i]["number1"] == 8 &&
+          this.tempsetup[i]["number2"] == 8
+        ) {
+          ssid.push(this.tempsetup[i]);
+
+          for (const ssi in ssid) {
+            console.log(ssid, "ssid");
+            if (ssid[ssi].setupflag == true) {
+              this.ssid = ssid[ssi]["setupvalue"];
+            }
+          }
+        } else if (
+          this.tempsetup[i]["number1"] == 8 &&
+          this.tempsetup[i]["number2"] == 9
+        ) {
+          wifipass.push(this.tempsetup[i]);
+
+          for (const wifipas in wifipass) {
+            console.log(wifipass, "wifipass");
+            if (wifipass[wifipas].setupflag == true) {
+              this.wifipass = wifipass[wifipas]["setupvalue"];
+            }
+          }
+        }
+      }
     })();
   },
   methods: {
