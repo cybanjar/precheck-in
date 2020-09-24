@@ -37,8 +37,32 @@
           :data-source="data"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-card @click="select(item)">
-              <h2>{{ item["gast"] }}</h2>
+            {{ item["l-selected"] }}
+            <a-card
+              :class="
+                item['l-selected'] == true
+                  ? 'selected'
+                  : item['room-status'] != '0 Ready To Checkin'
+                  ? 'notready'
+                  : 'notselected'
+              "
+              @click="
+                item['room-status'] == '0 Ready To Checkin'
+                  ? select(item)
+                  : disabled
+              "
+            >
+              <h2
+                :class="
+                  item['l-selected'] == true
+                    ? 'selected pl-3 font-weight-bold'
+                    : item['room-status'] != '0 Ready To Checkin'
+                    ? 'notready pl-3 font-weight-bold'
+                    : 'notselected pl-3 font-weight-bold'
+                "
+              >
+                {{ item["gast"] }}
+              </h2>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}
               </p>
@@ -53,6 +77,13 @@
                 {{ item.adult }} {{ getLabels("adult") }}
                 <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
               </p>
+              <p
+                v-if="item['room-status'] != '0 Ready To Checkin'"
+                class="pl-3"
+              >
+                {{ item["room-status"].substr(2, item["room-status"].length) }}
+              </p>
+              <p v-else></p>
             </a-card>
           </a-list-item>
         </a-list>
@@ -99,23 +130,23 @@ export default {
   },
   methods: {
     select(client) {
-      // console.log(client);
-      if (client.isSelected == false) {
+      if (client["l-selected"] == false) {
         // console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = true;
+          if (this.data[i]["i-counter"] == client["i-counter"]) {
+            this.data[i]["l-selected"] = true;
+            console.log(this.data[i]);
           }
         }
       } else {
         for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = false;
+          if (this.data[i]["i-counter"] == client["i-counter"]) {
+            this.data[i]["l-selected"] = false;
           }
         }
         for (const x in this.selectedData) {
-          if (this.selectedData[x].key == client.key) {
+          if (this.selectedData[x]["i-counter"] == client["i-counter"]) {
             // console.log("msk");
             this.selectedData.splice(x, 1);
           }
@@ -125,7 +156,7 @@ export default {
     },
     send() {
       // console.log(this.selectedData['0']);
-      this.fairy["data"] = this.selectedData['0'];
+      this.fairy["data"] = this.selectedData["0"];
       this.fairy["setup"] = this.lemparsetup;
       // console.log(this.fairy);
       router.push({ name: "Step", params: { id: this.fairy } });
