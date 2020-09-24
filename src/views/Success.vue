@@ -39,7 +39,9 @@ export default {
   mounted() {
     this.data = this.$route.params.jin;
     this.flagKiosk = this.$route.params.jun;
+    console.log(this.$route.params.jun + ' ' + this.$route.params.jen);
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    console.log(this.$route.params.jun + ' ' + this.labels);
 
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);

@@ -101,6 +101,7 @@ export default {
       tempsetup: [],
       checkin: "",
       arrive: "",
+      langID:"",
     };
   },
   mounted() {
@@ -120,7 +121,7 @@ export default {
           this.handleOk();
         }
       }
-      console.log(tempParam);
+      this.langID = tempParam.lang;
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -268,9 +269,7 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            // console.log(reservation, "reserve");
-            // console.log(reservation, "reservation");
-            router.push({ name: "Step", params: { foo: reservation } });
+            router.push({ name: "Step", params: { foo: reservation, fighter: this.langID } });
           }
         })();
 

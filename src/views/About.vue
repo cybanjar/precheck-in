@@ -360,7 +360,6 @@
               :md="10"
               :xs="24"
             >
-              <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email')">
                 <a-input
                   v-decorator="[
@@ -592,7 +591,7 @@
               {{ hotelname }}.
             </a-col>
             <a-modal
-              title="Term Of Condition"
+              :title="getLabels('t_c')"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
             >
@@ -602,7 +601,7 @@
                   type="primary"
                   :loading="loading"
                   @click="handleOkTerm"
-                  >Close</a-button
+                  >{{ getLabels("close") }}</a-button
                 >
               </template>
               <p>{{ term }}</p>
@@ -619,7 +618,7 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                  >Check-In Now</a-button
+                  >{{ getLabels("ci_now") }}</a-button
                 >
               </a-form-item>
             </a-col>
@@ -743,6 +742,8 @@ export default {
       hotelname: "",
       email: "",
       labels: [],
+      flagKiosk: false,
+      langID: "",
     };
   },
   created() {
@@ -763,6 +764,15 @@ export default {
             }
           )
           .json();
+
+        localStorage.removeItem("labels");
+        localStorage.setItem(
+          "labels",
+          JSON.stringify(parsed.response.languagesList["languages-list"])
+        );
+        this.labels = JSON.parse(localStorage.getItem("labels"));
+        this.langID =
+          parsed.response.languagesList["languages-list"][0]["lang-id"];
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
@@ -796,7 +806,7 @@ export default {
             this.gambar = lagi;
           } else if (
             this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 1
+            this.tempsetup[i]["setupflag"] == true
           ) {
             this.term = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 2) {
@@ -805,6 +815,7 @@ export default {
               this.money = this.tempsetup[i]["price"];
               this.currency = this.tempsetup[i]["remarks"];
               this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+              this.per = this.getLabels(this.per.toLowerCase().trim());
             }
           } else if (
             this.tempsetup[i]["number1"] == 8 &&
@@ -812,6 +823,9 @@ export default {
           ) {
             this.hour = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 1) {
+            this.tempsetup[i].setupvalue = this.getLabels(
+              this.tempsetup[i].setupvalue.toLowerCase()
+            );
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -845,7 +859,11 @@ export default {
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.province.push(air);
-            console.log(this.province, "region");
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 10
+          ) {
+            this.flagKiosk = this.tempsetup[i]["setupflag"];
           }
         }
 
@@ -896,7 +914,10 @@ export default {
               this.hour +
               "}";
             // console.log(mori, "be the one");
-            router.push({ name: "Success", params: { jin: mori } });
+            router.push({
+              name: "Success",
+              params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+            });
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
@@ -911,12 +932,6 @@ export default {
             this.gambar = lagi;
           }
         }
-        localStorage.removeItem("labels");
-        localStorage.setItem(
-          "labels",
-          JSON.stringify(parsed.response.languagesList["languages-list"])
-        );
-        this.labels = JSON.parse(localStorage.getItem("labels"));
       })();
     } else {
       this.gambar = this.$route.params.id["setup"]["01"];

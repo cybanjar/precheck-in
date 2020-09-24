@@ -1,14 +1,15 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('room_number')}} : {{taejin}}</p>
-    <p>{{getLabels('wifi_address')}} : {{wifiAddress}}</p>
-    <p>{{getLabels('wifi_password')}} : {{wifiPassword}}</p>
+    <p>{{ getLabels("room_number") }} : {{ taejin }}</p>
+    <p>{{ getLabels("wifi_address") }} : {{ wifiAddress }}</p>
+    <p>{{ getLabels("wifi_password") }} : {{ wifiPassword }}</p>
+    <p>{{ getLabels("arrangement") }} : {{ arrangement }}</p>
     <p>
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{getLabels('mci_success')}}</p>
+    <p>{{ getLabels("mci_success") }}</p>
   </div>
 </template>
 
@@ -23,6 +24,7 @@ export default {
       url: "",
       wifiAddress: "",
       wifiPassword: "",
+      arrangement: "",
       labels: [],
     };
   },
@@ -38,6 +40,10 @@ export default {
     );
     this.wifiPassword = this.data.substring(
       this.data.lastIndexOf("!") + 1,
+      this.data.lastIndexOf("?")
+    );
+    this.arrangement = this.data.substring(
+      this.data.lastIndexOf("?") + 1,
       this.data.lastIndexOf("}")
     );
     QRCode.toCanvas(

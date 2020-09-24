@@ -24,8 +24,9 @@
             >{{ getLabels("agree") }}</a-button
           >
         </template>
-        <p v-if="eng">{{ term }}</p>
-        <p v-else>{{ term1 }}</p>
+        <p>{{ terms }}</p>
+        <!--<p v-if="langID == 'ENG'">{{term1}}</p>
+        <p v-else>{{term}}</p>-->
       </a-modal>
       <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
@@ -365,18 +366,12 @@
                     >
                   </h2>
                 </a-form-item>
-                <a-modal
-                  :title="getLabels('information')"
-                  :visible="paymentModal"
-                  :confirm-loading="confirmLoading"
-                >
+                <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
                   <template slot="footer">
-                    <a-button key="submit" type="primary" @click="closeModal">{{
-                      getLabels("close")
-                    }}</a-button>
+                    <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
                   </template>
-                  <p>{{ getLabels("payment_error") }}</p>
-                </a-modal>
+                  <p>{{getLabels('payment_error')}}</p>
+                </a-modal>-->
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
                 <a-button
@@ -584,11 +579,13 @@ export default {
       currData: [],
       labels: [],
       wifiAddress: "",
-      wiifiPassword: "",
+      wifiPassword: "",
       skipDeposit: false,
       minimumDeposit: "",
       paymentStatus: false,
       paymentModal: false,
+      langID: "",
+      terms: "",
     };
   },
   watch: {
@@ -632,6 +629,7 @@ export default {
   // },
   created() {
     this.currData = this.$route.params.foo;
+    this.langID = this.$route.params.fighter;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
@@ -709,6 +707,9 @@ export default {
             this.scanid = !this.tempsetup[i]["setupflag"];
             // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
+            this.tempsetup[i].setupvalue = this.getLabels(
+              this.tempsetup[i].setupvalue.toLowerCase()
+            );
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -731,13 +732,11 @@ export default {
             this.tempsetup[i]["number2"] == 8
           ) {
             this.wifiAddress = this.tempsetup[i]["setupvalue"];
-            // console.log(this.wifiAddress, "be the one 2");
           } else if (
             this.tempsetup[i]["number1"] == 8 &&
             this.tempsetup[i]["number2"] == 9
           ) {
             this.wifiPassword = this.tempsetup[i]["setupvalue"];
-            // console.log(this.wifiPassword, "be the one 3");
           } else if (
             this.tempsetup[i]["number1"] == 8 &&
             this.tempsetup[i]["number2"] == 4
@@ -797,7 +796,10 @@ export default {
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
-          router.push({ name: "ListCheckIn", params: { foo: nietos } });
+          router.push({
+            name: "ListCheckIn",
+            params: { foo: nietos, fighter: this.langID },
+          });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
           // console.log(this.currDataPrepare, "kesini");
@@ -842,6 +844,11 @@ export default {
   mounted() {
     this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
+    if (this.langID == "eng" || this.langID == "ENG") {
+      this.terms = this.term;
+    } else {
+      this.terms = this.term1;
+    }
   },
   methods: {
     isNumber: function (evt) {
@@ -862,6 +869,7 @@ export default {
       if (this.precheckin == true) {
         this.y = true;
       }
+      // console.log(this.form.validateFields(["email"], { force: true }));
     },
     prev() {
       if (this.precheckin == true) {
@@ -902,14 +910,14 @@ export default {
           );
           this.resReg = JSON.parse(resp);
           if (this.resReg.data["resultCd"] == "0000") {
-            // console.log("masuk payment");
+            // console.log('masuk payment');
             const urlInq =
               "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
               this.resReg.data["tXid"] +
               "&optDisplayCB=1&optDisplayBL=0";
             window.open(urlInq, "_blank");
           } else {
-            // console.log("error payment");
+            // console.log('error payment');
           }
         });
     },
@@ -935,10 +943,10 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            // console.log("payment valid");
+            // console.log('payment valid');
           } else {
             this.paymentStatus = false;
-            // console.log("payment invalid");
+            // console.log('payment invalid');
           }
         });
     },
@@ -970,15 +978,16 @@ export default {
           this.wifiAddress +
           "!" +
           this.wifiPassword +
+          "?" +
+          this.currDataPrepare["argt-str"] +
           "}";
-        // console.log(mori, "be the one");
-        this.check();
-        if (this.paymentStatus) {
-          // console.log(this.paymentStatus);
-          router.push({ name: "SuccessCheckIn", params: { jin: mori } });
-        } else {
-          this.paymentModal = true;
-        }
+        //this.check();
+        //if (this.paymentStatus) {
+        //console.log(this.paymentStatus);
+        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        //} else {
+        //this.paymentModal = true;
+        //}
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
@@ -1054,7 +1063,8 @@ export default {
       });
     },
     disagree() {
-      router.push("mobilecheckin");
+      router.push({ path: "mobilecheckin", query: { lang: this.langID } });
+      // router.push("mobilecheckin");
     },
     handleBlur() {
       // console.log("blur");

@@ -37,7 +37,6 @@
           :data-source="data"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            {{ item["l-selected"] }}
             <a-card
               :class="
                 item['l-selected'] == true
@@ -81,7 +80,8 @@
                 v-if="item['room-status'] != '0 Ready To Checkin'"
                 class="pl-3"
               >
-                {{ item["room-status"].substr(2, item["room-status"].length) }}
+                {{ getLabels("mci_error_not_ready") }}
+                <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
               </p>
               <p v-else></p>
             </a-card>
@@ -114,6 +114,7 @@ export default {
       lemparsetup: [],
       fairy: {},
       labels: [],
+      langID: "",
     };
   },
   created() {
@@ -121,6 +122,7 @@ export default {
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
+    this.langID = this.$route.params.fighter;
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
@@ -184,7 +186,7 @@ export default {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       // console.log(this.fairy);
-      router.push({ name: "Step", params: { id: this.fairy } });
+      router.push({ name: "Step", params: { id: this.fairy, fighter: this.langID } });
     },
     formatDate(datum) {
       return new Intl.DateTimeFormat(navigator.language, {
