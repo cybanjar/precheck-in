@@ -130,33 +130,58 @@ export default {
   },
   methods: {
     select(client) {
+      this.selectedData = client;
       if (client["l-selected"] == false) {
-        // console.log('BLAH', client);
-        this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i]["i-counter"] == client["i-counter"]) {
             this.data[i]["l-selected"] = true;
-            console.log(this.data[i]);
-          }
-        }
-      } else {
-        for (const i in this.data) {
-          if (this.data[i]["i-counter"] == client["i-counter"]) {
+          } else {
             this.data[i]["l-selected"] = false;
           }
         }
-        for (const x in this.selectedData) {
-          if (this.selectedData[x]["i-counter"] == client["i-counter"]) {
-            // console.log("msk");
-            this.selectedData.splice(x, 1);
-          }
-        }
-      }
-      // console.log(this.fairy);
+      } 
+      // else {
+      //   for (const i in this.data) {
+      //     if (this.data[i]["i-counter"] == client["i-counter"]) {
+      //       this.data[i]["l-selected"] = false;
+      //     }
+      //   }
+      // }
+      // console.log(client["l-selected"], "awal");
+      // if (client["l-selected"] == false) {
+      //   console.log(client["l-selected"], "kedua");
+      //   for (const i in this.data) {
+      //     console.log(client["l-selected"], "ketiga");
+      //     console.log(client["i-counter"], "aneh");
+      //     if (this.data[i]["i-counter"] != client["i-counter"]) {
+      //       console.log(client["i-counter"], "aneh2");
+      //       console.log(this.data[i]["i-counter"], "aneh2");
+
+      //       this.data[i]["l-selected"] = false;
+      //       console.log(this.data[i]["l-selected"], "datagagal");
+      //       this.selectedData = [];
+      //       console.log("msk1");
+      //     } else {
+      //       this.data[i]["l-selected"] = true;
+      //       console.log(this.data[i]["l-selected"], "databener");
+      //       this.selectedData.push(client);
+      //       console.log("msk2");
+      //       console.log(client, "client");
+      //     }
+      //   }
+      // } else {
+      //   for (const i in this.data) {
+      //     // if (this.data[i]["i-counter"] == client["i-counter"]) {
+      //     this.data[i]["l-selected"] = false;
+      //     this.selectedData = [];
+      //     console.log("msk3");
+      //     // }
+      //   }
+      // }
     },
     send() {
       // console.log(this.selectedData['0']);
-      this.fairy["data"] = this.selectedData["0"];
+      this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       // console.log(this.fairy);
       router.push({ name: "Step", params: { id: this.fairy } });
