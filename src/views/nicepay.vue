@@ -30,11 +30,11 @@ export default {
         const resp = data.contents.substr(data.contents.indexOf('{'), data.contents.length);
         this.resReg = JSON.parse(resp);
         if (this.resReg.data['resultCd'] == '0000') {
-          console.log('masuk payment');
+          // console.log('masuk payment');
           const urlInq = "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" + this.resReg.data['tXid'] + "&optDisplayCB=1&optDisplayBL=0";
           window.open(urlInq, '_blank');
         } else {
-          console.log('error payment');
+          // console.log('error payment');
         }
       });
     },
@@ -50,9 +50,9 @@ export default {
       .then(data => {
         this.resPaid = JSON.parse(data.contents);
         if (this.resPaid.resultCd == '0000') {
-          console.log('payment valid');
+          // console.log('payment valid');
         } else {
-          console.log('payment invalid');
+          // console.log('payment invalid');
         }
       });
     },

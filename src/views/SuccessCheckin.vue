@@ -2,8 +2,8 @@
   <div class="text-center">
     <canvas id="canvas"></canvas>
     <p>{{getLabels('room_number')}} : {{taejin}}</p>
-    <p>Wifi Address : {{taejin}}</p>
-    <p>Wifi Password : {{taejin}}</p>
+    <p>{{getLabels('wifi_address')}} : {{wifiAddress}}</p>
+    <p>{{getLabels('wifi_password')}} : {{wifiPassword}}</p>
     <p>
       <br />
     </p>

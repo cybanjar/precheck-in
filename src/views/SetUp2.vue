@@ -531,17 +531,17 @@ export default {
       });
     },
     onTabChange(key, type) {
-      console.log(key, type);
+      // console.log(key, type);
       this[type] = key;
     },
     onToggle() {
       this.disabled = !this.disabled;
     },
     handlePurpose(value) {
-      console.log(`selected ${value}`);
+      // console.log(`selected ${value}`);
     },
     changeDeposit(e) {
-      console.log(`checked = ${e.target.checked}`);
+      // console.log(`checked = ${e.target.checked}`);
     },
   },
 };

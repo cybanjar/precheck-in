@@ -295,7 +295,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <span>{{currDataPrepare["guest-email"]}}</span>
+              <!--<span>{{currDataPrepare["guest-email"]}}</span>-->
               <a-form-item :label="getLabels('email')">
                 <a-input
                   v-decorator="[
@@ -531,12 +531,12 @@
               {{ hotelname }}.
             </a-col>
             <a-modal
-              title="Term Of Condition"
+              :title="getLabels('t_c')"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
             >
               <template slot="footer">
-                <a-button key="submit" type="primary" :loading="loading" @click="handleOkTerm">Close</a-button>
+                <a-button key="submit" type="primary" :loading="loading" @click="handleOkTerm">{{getLabels('close')}}</a-button>
               </template>
               <p>{{ term }}</p>
             </a-modal>
@@ -552,7 +552,7 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                >Check-In Now</a-button>
+                >{{getLabels('ci_now')}}</a-button>
               </a-form-item>
             </a-col>
           </a-row>
@@ -670,6 +670,8 @@ export default {
       hotelname: "",
       email: "",
       labels: [],
+      flagKiosk: false,
+      langID: "",
     };
   },
   created() {
@@ -692,6 +694,7 @@ export default {
           .json();
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        this.langID = parsed.response.languagesList["languages-list"][0]["lang-id"];
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
@@ -723,7 +726,7 @@ export default {
             this.gambar = lagi;
           } else if (
             this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 1
+            this.tempsetup[i]["setupflag"] == true
           ) {
             this.term = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 2) {
@@ -757,6 +760,11 @@ export default {
           ) {
             this.hotelname = this.tempsetup[i]["setupvalue"];
           } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 10
+          ) {
+            this.flagKiosk = this.tempsetup[i]["setupflag"]
+          } else if (
             this.tempsetup[i]["number1"] == 9 &&
             this.tempsetup[i]["number2"] == 2
           ) {
@@ -764,8 +772,8 @@ export default {
             bulbasur["descr"] = this.tempsetup[i]["descr"];
             bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.countries.push(bulbasur);
-            console.log(this.countries, "pikachu");
-            console.log(bulbasur, "pikachu2");
+            // console.log(this.countries, "pikachu");
+            // console.log(bulbasur, "pikachu2");
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
             this.tempsetup[i]["number2"] == 3
@@ -823,8 +831,7 @@ export default {
               "," +
               this.hour +
               "}";
-            // console.log(mori, "be the one");
-            router.push({ name: "Success", params: { jin: mori } });
+            router.push({ name: "Success", params: { jin: mori, jun: this.flagKiosk, jon: this.langID } });
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];

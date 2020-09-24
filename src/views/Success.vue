@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" v-show="(flagKiosk)"></canvas>
     <p>
       {{getLabels('book_code')}} :
       <span class="font-weight-bold">{{taejin}}</span>
@@ -10,19 +10,21 @@
       <span class="font-weight-bold">{{iplyo}}</span>
     </p>
     <p>
-      Check-In Time :
+      {{getLabels('ci_time')}} :
       <span class="font-weight-bold">{{jegal}}</span>
     </p>
-    <a-button
-      type="primary"
-      href="http://localhost:8080/mobilecheckin?idn"
-      icon="export"
-    >Please visit</a-button>
+    <p>
+      <a-button
+        type="primary"
+        :href="urlMCI"
+        icon="export"
+      >{{getLabels('ci_now')}}</a-button>
+    </p>
     <p>
       <br />
     </p>
-    <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>Thank you for using our online check-in. Show this QR Code to get your keycard</p>
+    <p v-show="(!flagKiosk)">{{getLabels('success_wo_kiosk')}}</p>
+    <p v-show="(flagKiosk)">{{getLabels('success_w_kiosk')}}</p>
   </div>
 </template>
 
@@ -32,11 +34,11 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", iplyo: "", jegal: "", url: "", labels: [] };
+    return { taejin: "", iplyo: "", jegal: "", url: "", labels: [], flagKiosk: false, urlMCI: "", };
   },
   mounted() {
-    console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
+    this.flagKiosk = this.$route.params.jun;
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
@@ -49,6 +51,7 @@ export default {
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
+    this.urlMCI = "http://localhost:8080/mobilecheckin?lang=" + this.$route.params.jon + "&book=" + this.taejin + "&codate=" + this.iplyo + "&citime=" + this.jegal;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
