@@ -38,7 +38,7 @@ export default {
   },
   mounted() {
     this.data = this.$route.params.jin;
-    this.flagKiosk = this.$route.params.jun;
+    this.flagKiosk = this.$route.params.jen;
     // console.log(this.$route.params.jun + ' ' + this.$route.params.jen);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.jun + ' ' + this.labels);
@@ -53,7 +53,7 @@ export default {
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
-    this.urlMCI = "http://localhost:8080/mobilecheckin?lang=" + this.$route.params.jon + "&book=" + this.taejin + "&codate=" + this.iplyo + "&citime=" + this.jegal;
+    this.urlMCI = "http://localhost:8080/mobilecheckin?lang=" + this.$route.params.jun + "&book=" + this.taejin + "&codate=" + this.iplyo + "&citime=" + this.jegal;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,

@@ -1,72 +1,178 @@
 <template>
   <div>
     <div class="ota text-center">
-      <a-modal :title="getLabels('information')" :visible="informationmodal" :confirm-loading="confirmLoading">
+      <a-modal
+        :title="getLabels('information')"
+        :visible="informationmodal"
+        :confirm-loading="confirmLoading"
+      >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{
+            getLabels("close")
+          }}</a-button>
         </template>
-        <p>{{getLabels('early_checkin')}}{{checkin}}</p>
+        <p>{{ getLabels("early_checkin") }}{{ checkin }}</p>
       </a-modal>
-      <a-modal :title="getLabels('information')" :visible="informationmodal1" :confirm-loading="confirmLoading">
+      <a-modal
+        :title="getLabels('information')"
+        :visible="informationmodal1"
+        :confirm-loading="confirmLoading"
+      >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{
+            getLabels("close")
+          }}</a-button>
         </template>
-        <p>{{getLabels('mci_error_not_found')}}</p>
+        <p>{{ getLabels("mci_error_not_found") }}</p>
       </a-modal>
-      <a-modal :title="getLabels('information')" :visible="informationmodal2" :confirm-loading="confirmLoading">
+      <a-modal
+        :title="getLabels('information')"
+        :visible="informationmodal2"
+        :confirm-loading="confirmLoading"
+      >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{
+            getLabels("close")
+          }}</a-button>
         </template>
-        <p>{{getLabels('mci_error_not_ready')}}</p>
+        <p>{{ getLabels("mci_error_not_ready") }}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">{{getLabels('find_rsv')}}</h1>
-          <p class="text-white text-secondary">{{getLabels('choose_option')}}</p>
+          <h1 class="text-white">{{ getLabels("find_rsv") }}</h1>
+          <p class="text-white text-secondary">
+            {{ getLabels("choose_option") }}
+          </p>
         </a-col>
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
-          <img @click="showModalBookingCode" class="img-ota" src="../assets/booking-code.svg" />
-          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')" @ok="handleOk">
+          <img
+            @click="showModalBookingCode"
+            class="img-ota"
+            src="../assets/booking-code.svg"
+          />
+          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                :loading="loading"
+                @click="handleOk"
+              >
+                {{ getLabels("submit") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('book_code')">
-              <a-input v-model="bookingcode" :placeholder="getLabels('input_bookcode')" />
+              <a-input
+                v-model="bookingcode"
+                :placeholder="getLabels('input_bookcode')"
+              />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" :format="dateFormat" />
+              <a-date-picker
+                :placeholder="getLabels('select_date')"
+                @change="onChange"
+                :format="dateFormat"
+              />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
-          <a-modal v-model="modalGuestName" :title="getLabels('last_name')" @ok="handleOk">
+          <img
+            @click="showModalGuestName"
+            class="img-ota"
+            src="../assets/Name.svg"
+          />
+          <a-modal v-model="modalGuestName" :title="getLabels('last_name')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                :loading="loading"
+                @click="handleOk"
+              >
+                {{ getLabels("submit") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('last_name')">
               <a-input :placeholder="getLabels('input_lastname')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker
+                :placeholder="getLabels('select_date')"
+                @change="onChange"
+              />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img class="img-ota" @click="showModalEmailAddress" src="../assets/EmailAddress.svg" />
-          <a-modal v-model="modalEmailAddress" :title="getLabels('email')" @ok="handleOk">
+          <img
+            class="img-ota"
+            @click="showModalEmailAddress"
+            src="../assets/EmailAddress.svg"
+          />
+          <a-modal v-model="modalEmailAddress" :title="getLabels('email')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                :loading="loading"
+                @click="handleOk"
+              >
+                {{ getLabels("submit") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('email')">
               <a-input :placeholder="getLabels('input_email')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker
+                :placeholder="getLabels('select_date')"
+                @change="onChange"
+              />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img class="img-ota" @click="showModalMembershipID" src="../assets/membership.svg" />
-          <a-modal v-model="modalMembershipID" :title="getLabels('membership_id')" @ok="handleOk">
+          <img
+            class="img-ota"
+            @click="showModalMembershipID"
+            src="../assets/membership.svg"
+          />
+          <a-modal
+            v-model="modalMembershipID"
+            :title="getLabels('membership_id')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                :loading="loading"
+                @click="handleOk"
+              >
+                {{ getLabels("submit") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('membership_id')">
               <a-input :placeholder="getLabels('input_membership')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker
+                :placeholder="getLabels('select_date')"
+                @change="onChange"
+              />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -101,19 +207,28 @@ export default {
       tempsetup: [],
       checkin: "",
       arrive: "",
-      langID:"",
+      langID: "",
     };
   },
   mounted() {
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
-      location.search.split('&').toString().substr(1).split(",").forEach(item => {
-          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]) ?  item.split("=")[1]: "No query strings available" ;
-      });
+      location.search
+        .split("&")
+        .toString()
+        .substr(1)
+        .split(",")
+        .forEach((item) => {
+          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
+            ? item.split("=")[1]
+            : "No query strings available";
+        });
+      this.arrive = moment(new Date()).format("HH:mm");
+
       if (tempParam.book != undefined) {
         this.checkin = tempParam.citime.replace(/%3A/g, ":");
-        if (this.arrive < this.checkin) {
+        if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
           this.bookingcode = tempParam.book;
@@ -163,9 +278,7 @@ export default {
           this.checkin = this.tempsetup[i]["setupvalue"];
         }
       }
-      this.arrive = moment(new Date()).format("HH:mm");
-      // console.log(this.arrive);
-      if (this.arrive < this.checkin) {
+      if ("14:00" < this.checkin) {
         this.informationmodal = true;
       }
     })();
@@ -188,13 +301,15 @@ export default {
       this.modalMembershipID = true;
     },
     errorbo() {
-      this.$message.error(this.getLabels('input_bookcode'));
+      this.$message.error(this.getLabels("input_bookcode"));
     },
     errorco() {
-      this.$message.error(this.getLabels('input_codate'));
+      this.$message.error(this.getLabels("input_codate"));
     },
     error() {
-      this.$message.error(this.getLabels('input_bookcode') + ', ' + this.getLabels('input_codate'));
+      this.$message.error(
+        this.getLabels("input_bookcode") + ", " + this.getLabels("input_codate")
+      );
     },
     goOTA() {
       this.informationmodal = false;
@@ -204,7 +319,7 @@ export default {
       const reservation = [];
       // console.log(this.bookingcode, "bo");
       // console.log(this.date, "co");
-      this.hour = moment(new Date()).format("HH:mm");
+      // this.hour = moment(new Date()).format("HH:mm");
       // console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
@@ -232,7 +347,7 @@ export default {
                     chName: " ",
                     earlyCI: "false",
                     maxRoom: "1",
-                    citime: this.checkin,
+                    citime: "14:00",
                     groupFlag: "false",
                   },
                 },
@@ -269,7 +384,10 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({ name: "Step", params: { foo: reservation, fighter: this.langID } });
+            router.push({
+              name: "Step",
+              params: { foo: reservation, fighter: this.langID },
+            });
           }
         })();
 
@@ -278,6 +396,12 @@ export default {
         this.modalEmailAddress = false;
         this.modalMembershipID = false;
       }
+    },
+    handleCancel() {
+      this.modalBookingCode = false;
+      this.modalGuestName = false;
+      this.modalEmailAddress = false;
+      this.modalMembershipID = false;
     },
     getLabels(nameKey) {
       for (let x = 0; x < this.labels.length; x++) {

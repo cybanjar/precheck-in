@@ -895,6 +895,7 @@ export default {
             obj["14"] = this.showPickupRequest;
             obj["15"] = this.countries;
             obj["16"] = this.province;
+            obj["17"] = this.flagKiosk;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
@@ -950,6 +951,7 @@ export default {
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
+      this.flagKiosk = this.$route.params.id["setup"]["17"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
@@ -1100,7 +1102,7 @@ export default {
           "," +
           this.hour +
           "}";
-        // console.log(mori, "be the one");
+        console.log(mori, "be the one");
         router.push({ name: "Success", params: { jin: mori } });
 
         // router.push("success");
