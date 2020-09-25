@@ -644,11 +644,6 @@ export default {
           })
           .json();
 
-        if (this.precheckin == true) {
-          this.current = 2;
-          this.y = false;
-        }
-
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
 
@@ -802,11 +797,20 @@ export default {
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
-          // console.log(this.currDataPrepare, "kesini");
+          this.precheckin = this.currDataPrepare["pre-checkin"];
+          if (this.langID == "eng" || this.langID == "ENG") {
+            this.terms = this.term;
+          } else {
+            this.terms = this.term1;
+          }
 
-          this.country = this.currDataPrepare["guest- "];
+          this.country = this.currDataPrepare["guest-country"];
         }
         this.termcondition = true;
+        if (this.precheckin == true) {
+          this.current = 2;
+          this.y = false;
+        }
         this.loading = false;
       })();
     } else if (this.$route.params.id != undefined) {
@@ -832,10 +836,20 @@ export default {
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
       this.currDataPrepare = this.$route.params.id["data"];
+      this.precheckin = this.currDataPrepare["pre-checkin"];
 
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
+      if (this.langID == "eng" || this.langID == "ENG") {
+        this.terms = this.term;
+      } else {
+        this.terms = this.term1;
+      }
       this.termcondition = true;
+      if (this.precheckin == true) {
+        this.current = 2;
+        this.y = false;
+      }
       this.loading = false;
     } else {
       router.push("notfound");
@@ -844,11 +858,6 @@ export default {
   mounted() {
     this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
-    if (this.langID == "eng" || this.langID == "ENG") {
-      this.terms = this.term;
-    } else {
-      this.terms = this.term1;
-    }
   },
   methods: {
     isNumber: function (evt) {
