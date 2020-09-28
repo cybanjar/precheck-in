@@ -14,11 +14,7 @@
       <span class="font-weight-bold">{{jegal}}</span>
     </p>
     <p>
-      <a-button
-        type="primary"
-        :href="urlMCI"
-        icon="export"
-      >{{getLabels('ci_now')}}</a-button>
+      <a-button type="primary" :href="urlMCI">{{getLabels('ci_now')}}</a-button>
     </p>
     <p>
       <br />
@@ -34,7 +30,15 @@ import ky from "ky";
 
 export default {
   data() {
-    return { taejin: "", iplyo: "", jegal: "", url: "", labels: [], flagKiosk: false, urlMCI: "", };
+    return {
+      taejin: "",
+      iplyo: "",
+      jegal: "",
+      url: "",
+      labels: [],
+      flagKiosk: false,
+      urlMCI: "",
+    };
   },
   mounted() {
     this.data = this.$route.params.jin;
@@ -53,7 +57,15 @@ export default {
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
-    this.urlMCI = "http://localhost:8080/mobilecheckin?lang=" + this.$route.params.jun + "&book=" + this.taejin + "&codate=" + this.iplyo + "&citime=" + this.jegal;
+    this.urlMCI =
+      "http://localhost:8080/mobilecheckin?lang=" +
+      this.$route.params.jun +
+      "&book=" +
+      this.taejin +
+      "&codate=" +
+      this.iplyo +
+      "&citime=" +
+      this.jegal;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
