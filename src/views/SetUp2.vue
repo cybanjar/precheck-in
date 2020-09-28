@@ -13,7 +13,6 @@
                 :default-value="moment('13:00', 'HH:mm')"
                 v-decorator="[
               'time',{
-                initialValue: moment('14:00', 'HH:mm'),
                 rules: [{ required: true }],
               },
             ]"
@@ -22,7 +21,7 @@
               />
             </a-form-item>
             <a-form-item label="Enable Upload ID">
-              <a-switch v-model="defaultUpload" checked-children="Yes" un-checked-children="No" />
+              <a-switch v-model="uploadID" checked-children="Yes" un-checked-children="No" />
             </a-form-item>
             <a-form-item label="Default Purpose of Stay">
               <a-select default-value="leisure" style="width: 100%" @change="handlePurpose">
@@ -31,7 +30,7 @@
               </a-select>
             </a-form-item>
             <a-form-item label="Using KIOSK Check-In">
-              <a-switch v-model="defaultKiosk" checked-children="Yes" un-checked-children="No" />
+              <a-switch v-model="kiosk" checked-children="Yes" un-checked-children="No" />
             </a-form-item>
           </div>
         </a-card>
@@ -90,7 +89,7 @@
           <div class="ml-3 mr-3">
             <a-form-model-item label="Room Preferences">
               <a-checkbox-group v-model="form.type">
-                <a-checkbox value="1" name="type">
+                <a-checkbox v-model="floor" value="1" name="type">
                   <span class="font-weight-normal">Lower Floor/ Higher Floor</span>
                 </a-checkbox>
                 <br />
@@ -104,9 +103,9 @@
               </a-checkbox-group>
             </a-form-model-item>
             <a-form-item label="Pickup">
-              <a-switch v-model="showPickup" checked-children="Yes" un-checked-children="No" />
+              <a-switch v-model="pickupRequest" checked-children="Yes" un-checked-children="No" />
             </a-form-item>
-            <div v-if="showPickup">
+            <div v-if="pickupRequest">
               <a-form-item label="Pickup Type">
                 <a-radio-group>
                   <a-radio value="1">
@@ -123,8 +122,7 @@
               <a-form-item label="Pickup Rate">
                 <a-input-number
                   style="width: 100%"
-                  :default-value="pickuprate"
-                  v-model="pickuprate"
+                  v-model="perPax"
                   :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   "
@@ -134,7 +132,7 @@
               </a-form-item>
             </div>
             <a-form-item label="Keycard Qty">
-              <a-input-number id="inputNumber" :min="1" :max="10" />
+              <a-input-number v-model="keyCard" id="inputNumber" :min="1" :max="10" />
             </a-form-item>
           </div>
         </a-card>
@@ -164,7 +162,7 @@
               </a-radio-group>
             </a-form-item>
             <a-form-item v-if="colorPicker == '1'">
-              <a-input v-model="defaultBC" @click="showModalBC">
+              <a-input v-model="bgColor" @click="showModalBC">
                 <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
               </a-input>
             </a-form-item>
@@ -184,7 +182,7 @@
               </a-radio-group>
             </a-form-item>
             <a-form-item v-if="fontColor == '3'">
-              <a-input v-model="defaultFC" @click="showModalFC">
+              <a-input v-model="fgColor" @click="showModalFC">
                 <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
               </a-input>
             </a-form-item>
@@ -207,17 +205,16 @@
             <a-form-item label="Deposit Parameters">
               <a-row>
                 <a-col :span="2">
-                  <a-checkbox @change="changeDeposit" />
+                  <a-checkbox v-model="allowDepositChecklist" @change="changeDeposit" />
                 </a-col>
                 <a-col :span="22">
-                  <p>{{ allowDeposit }}</p>
+                  <p>{{ this.allowDepositDescr }}</p>
                 </a-col>
               </a-row>
             </a-form-item>
             <a-form-item label="Min Deposit Per Night">
               <a-input-number
                 style="width: 100%"
-                :default-value="minDeposit"
                 v-model="minDeposit"
                 :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -229,7 +226,6 @@
             <a-form-item label="Over One Night">
               <a-input-number
                 style="width: 100%"
-                :default-value="overDeposit"
                 v-model="overDeposit"
                 :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -241,7 +237,6 @@
             <a-form-item label="Over One Night">
               <a-input-number
                 style="width: 100%"
-                :default-value="maxDeposit"
                 v-model="maxDeposit"
                 :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -293,29 +288,19 @@
           </a>
           <div class="ml-3 mr-3">
             <a-form-item label="URL Image Hotel">
-              <a-input placeholder="Input URL image hotel" />
+              <a-input v-model="urlhotelimage" />
             </a-form-item>
             <a-form-item label="URL Header Image">
-              <a-input placeholder="Input URL Header" />
+              <a-input v-model="urliamgeheader" />
             </a-form-item>
             <a-form-item label="URL Footer">
-              <a-input placeholder="Input URL Footer" />
+              <a-input v-model="urliamgefooter" />
             </a-form-item>
             <a-form-item label="Website Hotel">
-              <a-input
-                default-value="sindata.net"
-                v-decorator="[
-                    'email',
-                    {                      
-                      initialValue: 'this.tempsetup',
-                      rules: [{ message: 'Please input your email' }],
-                    },
-
-                  ]"
-              />
+              <a-input v-model="urlwebsite" />
             </a-form-item>
             <a-form-item label="URL Precheck-In Website">
-              <a-input placeholder="Input Precheck-In Website" />
+              <a-input v-model="urlprecheckin" />
             </a-form-item>
           </div>
         </a-card>
@@ -332,17 +317,17 @@
             <a-row :gutter="[16,8]">
               <a-col :span="8" :xl="8" :xs="24">
                 <a-form-item label="Default Language [English]">
-                  <a-textarea placeholder :rows="4" />
+                  <a-textarea v-model="tempEng" :rows="6" />
                 </a-form-item>
               </a-col>
               <a-col :span="8" :xl="8" :xs="24">
                 <a-form-item label="Other Language [Local Language]">
-                  <a-textarea placeholder :rows="4" />
+                  <a-textarea v-model="tempOther" :rows="6" />
                 </a-form-item>
               </a-col>
               <a-col :span="8" :xl="8" :xs="24">
                 <a-form-item label="Other Term & Condition">
-                  <a-textarea placeholder :rows="4" />
+                  <a-textarea v-model="tempLocal" :rows="6" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -418,10 +403,9 @@ export default {
   data() {
     return {
       pickuprate: 100000,
-      minDeposit: 300000,
-      overDeposit: 500000,
-      maxDeposit: 700000,
-      bgColor: "#1890ff",
+      minDeposit: "",
+      overDeposit: "",
+      maxDeposit: "",
       value: [],
       form: {
         type: [],
@@ -443,12 +427,8 @@ export default {
         foregroundColor: "$green",
       },
       mouseClick: null,
-      defaultBC: "#1890FF",
-      defaultFC: "#1B262C",
       ssid: "",
       wifipass: "",
-      defaultUpload: true,
-      defaultKiosk: false,
       tempsetup: [],
       tabList: [
         {
@@ -469,8 +449,25 @@ export default {
       noTitleKey: "app",
       disabled: true,
       showPickup: false,
-      allowDeposit:
-        "Allow skip deposit to defined reservation as cash basis reservation",
+      checkinTime: "",
+      urlwebsite: "",
+      urlhotelimage: "",
+      urliamgefooter: "",
+      urliamgeheader: "",
+      urlprecheckin: "",
+      tempEng: "",
+      tempLocal: "",
+      tempOther: "",
+      allowDepositChecklist: "",
+      allowDepositDescr: "",
+      uploadID: "",
+      kiosk: "",
+      floor: "",
+      pickupRequest: "",
+      perPax: "",
+      keyCard: "",
+      bgColor: "",
+      fgColor: "",
     };
   },
   created() {
@@ -487,38 +484,111 @@ export default {
       this.response = parsed;
 
       this.tempsetup = parsed.response.pciSetup["pci-setup"];
-      // console.log(this.tempsetup, "tempsetup"); 
-      // Semua data
+      // console.log(this.tempsetup, "tempsetup");
 
-      const ssid = [];
-      const wifipass = [];
-      for (const i in this.tempsetup) {
-        if (
-          this.tempsetup[i]["number1"] == 8 &&
-          this.tempsetup[i]["number2"] == 8
-        ) {
-          ssid.push(this.tempsetup[i]);
+      // --
+      for (let i = 0; i < this.tempsetup.length; i++) {
+        const datarow = this.tempsetup[i];
+        const tempNumber1 = datarow["number1"];
+        const tempNumber2 = datarow["number2"];
 
-          for (const ssi in ssid) {
-            // console.log(ssid, "ssid");
-            if (ssid[ssi].setupflag == true) {
-              this.ssid = ssid[ssi]["setupvalue"];
-            }
-          }
-        } else if (
-          this.tempsetup[i]["number1"] == 8 &&
-          this.tempsetup[i]["number2"] == 9
-        ) {
-          wifipass.push(this.tempsetup[i]);
+        if (tempNumber1 === 8 && tempNumber2 === 2) {
+          // FIXME: checktime & purpose blm bisa
+          this.checkinTime = datarow["setupvalue"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 1) {
+          this.uploadID = datarow["setupflag"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 10) {
+          this.kiosk = datarow["setupflag"];
+        }
 
-          for (const wifipas in wifipass) {
-            // console.log(wifipass, "wifipass");
-            if (wifipass[wifipas].setupflag == true) {
-              this.wifipass = wifipass[wifipas]["setupvalue"];
-            }
-          }
+        if (tempNumber1 === 3 && tempNumber2 === 3) {
+          // FIXME: Room preference blm berdasarkan API
+          this.floor = datarow["setupflag"];
+        } else if (tempNumber1 === 2 && tempNumber2 === 1) {
+          this.pickupRequest = datarow["setupflag"];
+          // TODO: Pickup Type Descr masih hardcore
+        } else if (tempNumber1 === 2 && tempNumber2 === 1) {
+          this.perPax = datarow["price"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 3) {
+          this.keyCard = datarow["setupvalue"];
+        }
+
+        if (tempNumber1 === 4 && tempNumber2 === 1) {
+          this.bgColor = datarow["setupvalue"];
+        } else if (tempNumber1 === 5 && tempNumber2 === 1) {
+          this.fgColor = datarow["setupvalue"];
+        }
+
+        if (tempNumber1 === 8 && tempNumber2 === 8) {
+          this.ssid = datarow["setupvalue"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 9) {
+          this.wifipass = datarow["setupvalue"];
+        }
+
+        if (tempNumber1 === 7 && tempNumber2 === 1) {
+          this.urlhotelimage = datarow["setupvalue"];
+        } else if (tempNumber1 === 7 && tempNumber2 === 3) {
+          this.urliamgeheader = datarow["setupvalue"];
+        } else if (tempNumber1 === 7 && tempNumber2 === 4) {
+          this.urliamgefooter = datarow["setupvalue"];
+        } else if (tempNumber1 === 7 && tempNumber2 === 2) {
+          this.urlwebsite = datarow["setupvalue"];
+        } else if (tempNumber1 === 7 && tempNumber2 === 5) {
+          this.urlprecheckin = datarow["setupvalue"];
+        }
+
+        if (tempNumber1 === 6 && tempNumber2 === 1) {
+          this.tempEng = datarow["setupvalue"];
+        } else if (tempNumber1 === 6 && tempNumber2 === 3) {
+          this.tempLocal = datarow["setupvalue"];
+        } else if (tempNumber1 === 6 && tempNumber2 === 2) {
+          this.tempOther = datarow["setupvalue"];
+        }
+
+        if (tempNumber1 === 8 && tempNumber2 === 4) {
+          this.allowDepositChecklist = datarow["setupflag"];
+          this.allowDepositDescr = datarow["descr"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 5) {
+          this.minDeposit = datarow["price"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 6) {
+          this.overDeposit = datarow["price"];
+        } else if (tempNumber1 === 8 && tempNumber2 === 7) {
+          this.maxDeposit = datarow["price"];
         }
       }
+
+      // console.log("this.ssid : ", this.ssid);
+      // console.log("this.wifipass : ", this.wifipass);
+      // --
+      // const ssid = [];
+      // const wifipass = [];
+      // for (const i in this.tempsetup) {
+      //   if (
+      //     this.tempsetup[i]["number1"] == 8 &&
+      //     this.tempsetup[i]["number2"] == 8
+      //   ) {
+      //     ssid.push(this.tempsetup[i]);
+
+      //     for (const ssi in ssid) {
+      //       // console.log(ssid, "ssid");
+      //       if (ssid[ssi].setupflag == true) {
+      //         this.ssid = ssid[ssi]["setupvalue"];
+      //       }
+      //     }
+      //   } else if (
+      //     this.tempsetup[i]["number1"] == 8 &&
+      //     this.tempsetup[i]["number2"] == 9
+      //   ) {
+      //     wifipass.push(this.tempsetup[i]);
+
+      //     for (const wifipas in wifipass) {
+      //       // console.log(wifipass, "wifipass");
+      //       if (wifipass[wifipas].setupflag == true) {
+      //         this.wifipass = wifipass[wifipas]["setupvalue"];
+      //       }
+      //     }
+      //   }
+      // }
     })();
   },
   methods: {
@@ -546,7 +616,7 @@ export default {
     },
     handleCancelBC(e) {
       // console.log('Clicked cancel button');
-      this.defaultBC = "#1890FF";
+      this.bgColor = "#1890FF";
       this.visibleBC = false;
     },
     handleOkFC(e) {
@@ -563,7 +633,7 @@ export default {
       this.visibleFC = false;
     },
     mouseClicks(color) {
-      this.defaultBC = color;
+      this.bgColor = color;
     },
     mouseClicksx(color) {
       this.defaultFC = color;
