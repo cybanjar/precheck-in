@@ -400,6 +400,7 @@
                   style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input>
+                <input type="text" /> 
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
             </a-col>
