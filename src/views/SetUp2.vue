@@ -88,18 +88,30 @@
           </a>
           <div class="ml-3 mr-3">
             <a-form-model-item label="Room Preferences">
-              <a-checkbox-group v-model="form.type">
-                <a-checkbox v-model="floor" value="1" name="type">
+              <a-checkbox-group
+                v-for="datarow in dataPreferences"
+                :key="datarow.number2"
+                v-model="form.type"
+              >
+                <!-- {{datarow.setupvalue}} -->
+                <!-- <template v-for="datarow in dataPreferences">
+                  <a-checkbox v-model="floor" value="1" name="type">
                   <span class="font-weight-normal">Lower Floor/ Higher Floor</span>
                 </a-checkbox>
+                </template>-->
+
+                <a-checkbox checked="datarow.setupflag" value="['datarow.number2']" name="type">
+                  <span class="font-weight-normal">{{ datarow.setupvalue }}</span>
+                </a-checkbox>
                 <br />
+                <!-- 
                 <a-checkbox value="2" name="type">
                   <span class="font-weight-normal">Smoking/ Non Smoking</span>
                 </a-checkbox>
                 <br />
                 <a-checkbox value="3" name="type">
                   <span class="font-weight-normal">One Big Bed/ Two Big Bed</span>
-                </a-checkbox>
+                </a-checkbox>-->
               </a-checkbox-group>
             </a-form-model-item>
             <a-form-item label="Pickup">
@@ -430,6 +442,7 @@ export default {
       ssid: "",
       wifipass: "",
       tempsetup: [],
+      dataPreferences: [],
       tabList: [
         {
           key: "tab1",
@@ -501,8 +514,9 @@ export default {
           this.kiosk = datarow["setupflag"];
         }
 
-        if (tempNumber1 === 3 && tempNumber2 === 3) {
+        if (tempNumber1 === 3) {
           // FIXME: Room preference blm berdasarkan API
+          this.dataPreferences.push(datarow);
           this.floor = datarow["setupflag"];
         } else if (tempNumber1 === 2 && tempNumber2 === 1) {
           this.pickupRequest = datarow["setupflag"];
@@ -556,6 +570,8 @@ export default {
           this.maxDeposit = datarow["price"];
         }
       }
+
+      console.log("dataPreferences : ", this.dataPreferences);
 
       // console.log("this.ssid : ", this.ssid);
       // console.log("this.wifipass : ", this.wifipass);
