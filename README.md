@@ -1,24 +1,19 @@
-# precheckin-antd
+# Quasar App
 
-## Project setup
-```
-yarn install
-```
+> A Quasar project
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Build Setup
 
-### Compiles and minifies for production
-```
-yarn build
-```
+``` bash
+# install dependencies
+$ npm install
 
-### Lints and fixes files
-```
-yarn lint
-```
+# serve with hot reload at localhost:8080
+$ quasar dev
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# build for production with minification
+$ quasar build
+
+# lint code
+$ quasar lint
+```

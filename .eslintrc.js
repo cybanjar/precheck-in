@@ -1,28 +1,39 @@
 module.exports = {
   root: true,
-  extends: [
-    'plugin:vue/strongly-recommended',
-    '@vue/typescript/recommended',
-    '@vue/prettier',
-    '@vue/prettier/@typescript-eslint',
-  ],
+  parser: 'babel-eslint',
+  parserOptions: {
+    sourceType: 'module'
+  },
   env: {
-    browser: true,
-    node: true,
+    browser: true
   },
+  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
+  extends: [
+    'standard'
+  ],
+  // required to lint *.vue files
+  plugins: [
+    'html',
+    'import'
+  ],
   globals: {
-    ga: true, // Google Analytics
-    cordova: true,
-    __statics: true,
-    process: true,
+    'cordova': true,
+    'DEV': true,
+    'PROD': true,
+    '__THEME': true
   },
-  rules: {
-    'prefer-promise-reject-errors': 'off',
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'vue/component-name-in-template-casing': ['error', 'kebab-case'],
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 0,
-    '@typescript-eslint/no-var-requires': 0,
-  },
-};
+  // add your custom rules here
+  'rules': {
+    // allow paren-less arrow functions
+    'arrow-parens': 0,
+    'one-var': 0,
+    'import/first': 0,
+    'import/named': 2,
+    'import/namespace': 2,
+    'import/default': 2,
+    'import/export': 2,
+    // allow debugger during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'brace-style': [2, 'stroustrup', { 'allowSingleLine': true }]
+  }
+}
