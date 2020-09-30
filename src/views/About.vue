@@ -41,15 +41,12 @@
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
-          <!-- <h4
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >{{currDataPrepare.description}}</h4>-->
+
           <p class="ant-card-meta-description font-white" :style="information">
             {{ getLabels("arrival") }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            <strong>{{ currDataPrepare.arrive }}</strong>
             {{ getLabels("departure") }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
+            <strong>{{ currDataPrepare.depart }}</strong>
             <br />
             {{ getLabels("book_code") }}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
@@ -61,15 +58,7 @@
             <div class="text">{{ hotelname }}</div>
           </div>
           <div class="invisible">
-            <div class="gear-setting">
-              <!-- <a-icon
-                type="setting"
-                :style="{ fontSize: '1.5rem' }"
-                class="float-right align-self-center"
-                theme="filled"
-                @click="imageModal"
-              />-->
-            </div>
+            <div class="gear-setting"></div>
           </div>
         </a-col>
         <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
@@ -93,12 +82,11 @@
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
-          <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p class="ant-card-meta-description font-white" :style="information">
             {{ getLabels("arrival") }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            <strong>{{ currDataPrepare.arrive }}</strong>
             {{ getLabels("departure") }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
+            <strong>{{ currDataPrepare.depart }}</strong>
             <br />
             {{ getLabels("book_code") }}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
@@ -113,15 +101,6 @@
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">{{ getLabels("arrival") }}</p>
                 </a-col>
-                <!-- <a-col :span="1" :xl="1" :xs="1">
-                  <a-icon
-                    type="setting"
-                    :style="{ fontSize: '1.5rem' }"
-                    class="float-right align-self-center"
-                    theme="filled"
-                    @click="munculModal"
-                  />
-                </a-col>-->
               </a-row>
             </a-card>
           </a-row>
@@ -129,13 +108,7 @@
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" :label="getLabels('eta')">
                 <a-time-picker
-                  v-decorator="[
-                    'time',
-                    {
-                      initialValue: moment(hour, 'HH:mm'),
-                      rules: [{ required: true }],
-                    },
-                  ]"
+                  v-model="hour"
                   :minute-step="30"
                   format="HH:mm"
                 />
@@ -250,86 +223,16 @@
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
-              <!-- isi: {{FilterRoomPreference.length}} 3
-              gokil: {{tempRoomPreference}} 6-->
-              <!-- <template v-for="index in FilterRoomPreference.length"> -->
-              <!-- <a-radio-group
-                  v-for="index in FilterRoomPreference.length"
-                  :key="index"
-                  :options="plainOptions"
-                  @change="Room"
-              />-->
-
-              <!-- <template v-for="data in tempRoomPreference">
-                      <a-radio
-                        v-if="tempRoomPreference['key'] == index"
-                        :value="item"
-                        :key="data"
-                      >{{ tempRoomPreference }}</a-radio>
-              </template>-->
-              <!-- <a-radio
-                    :value="item"
-                    :key="item"
-                    v-for="(item) in 2"
-              >{{ tempRoomPreference[indexStrs] }}</a-radio>-->
-              <!-- micahel <a-radio :value="item" :key="item" v-for="item in apalah(index)">{{ item }}</a-radio> -->
-              <!-- <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs] }}</a-radio>
-              <a-radio :value="item" :key="item">{{ tempRoomPreference[indexStrs + 1] }}</a-radio>-->
-              <!-- </template>A -->
-              <!-- <a-radio-group name="radioGroup">
-                  <a-radio value="NonSmoking">
-                    <span class="font-weight-normal">Non Smoking</span>
-                  </a-radio>
-                  <a-radio value="Smoking">
-                    <span class="font-weight-normal">Smoking</span>
-                  </a-radio>
-              </a-radio-group>-->
-
-              <!-- <a-form-item label>
-                <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
-                  <a-radio value="LowerFloor">
-                    <span class="font-weight-normal">Lower Floor</span>
-                  </a-radio>
-                  <a-radio value="HigherFloor">
-                    <span class="font-weight-normal">Higher Floor</span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label>
-                <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
-                  <a-radio value="OneBigBed">
-                    <span class="font-weight-normal">One Big Bed</span>
-                  </a-radio>
-                  <a-radio value="TwoSingleBeds">
-                    <span class="font-weight-normal">Two Single Beds</span>
-                  </a-radio>
-              </a-radio-group>-->
             </a-col>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request')">
-                <a-textarea
-                  v-decorator="[
-                    'Request',
-                    { rules: [{ message: 'Please input your Request' }] },
-                  ]"
-                  :rows="4"
-                  :maxlength="max"
-                />
+                <a-textarea v-model="text" :rows="4" :maxlength="max" />
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
               <span v-text="text.length + '/' + max"></span>
-              <!-- <a-progress
-                type="circle"
-                :percent="max-text.length"   
-                :width="30"             
-              >
-                <template #format="percent">
-                  <span style="color: red">{{ percent }}</span>
-                </template>
-              </a-progress>-->
             </a-col>
           </a-row>
 
@@ -339,15 +242,6 @@
                 <a-col :span="23" :xl="23" :xs="23">
                   <p class="header-group">{{ getLabels("guest_detail") }}</p>
                 </a-col>
-                <!-- <a-col :span="1" :xl="1" :xs="1">
-                  <a-icon
-                    type="setting"
-                    :style="{ fontSize: '1.5rem' }"
-                    class="float-right align-self-center"
-                    theme="filled"
-                    @click="guestModal"
-                  />
-                </a-col>-->
               </a-row>
             </a-card>
           </a-row>
@@ -361,30 +255,13 @@
               :xs="24"
             >
               <a-form-item :label="getLabels('email')">
-                <a-input
-                  v-decorator="[
-                    'email',
-                    {
-                      initialValue: email,
-                      rules: [{ message: 'Please input your email' }],
-                    },
-                  ]"
-                  disabled
-                />
+                <a-input v-model="email" disabled />
               </a-form-item>
             </a-col>
             <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email')">
-                <a-input
-                  v-decorator="[
-                    'email',
-                    {
-                      initialValue: email,
-                      rules: [{ required: true }],
-                    },
-                  ]"
-                />
+                <a-input v-model="email" />
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
@@ -400,8 +277,7 @@
                   style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input>
-                <input type="text" /> 
-                <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
+                <input type="text" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -446,46 +322,10 @@
                     >{{ item.setupvalue }}</a-select-option
                   >
                 </a-select>
-                <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
-                <!-- </a-select> -->
               </a-form-item>
             </a-col>
-            <!-- <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Choose of Document ID">
-                <a-select default-value="E-KTP">
-                  <a-select-option value="id_card">E-KTP</a-select-option>
-                  <a-select-option value="passport">Passport</a-select-option>
-                  <a-select-option value="driving_license">Driving License</a-select-option>
-                  <a-select-option value="kitas">KITAS</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="ID Number">
-                <a-input placeholder="Please input " />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Expiry Date">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Date of Birth">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-            </a-col>-->
           </a-row>
-          <!-- Country -->
-          <!-- <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="10" :xl="10" :xs="24">
-              <a-form-item label="Address">
-                <a-textarea placeholder="Input Address" :rows="4" />
-              </a-form-item>
-            </a-col>
-          </a-row>-->
+
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('country_of_residence')">
@@ -515,10 +355,10 @@
                   <a-select
                     show-search
                     @change="handleChangeRegion"
+                    v-model="currDataPrepare['guest-prov']"
                     v-decorator="[
                       'region',
                       {
-                        initialValue: currDataPrepare['guest-prov'],
                         rules: [{ required: true }],
                       },
                     ]"
@@ -534,51 +374,10 @@
               </div>
               <div v-else>
                 <a-form-item :label="getLabels('state')">
-                  <a-input
-                    v-decorator="[
-                      'State',
-                      {
-                        initialValue: State,
-                        rules: [{ message: 'Please input your State' }],
-                      },
-                    ]"
-                  />
+                  <a-input v-model="state" />
                 </a-form-item>
               </div>
             </a-col>
-            <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
-              <a-form-item label="City">
-                <a-select
-                  show-search
-                  v-model="city"
-                  v-decorator="[
-                    'city',
-                    { initialValue: city, rules: [{ required: true }] },]"
-                >
-                  <a-select-option
-                    v-for="(item, key) in filteredCities"
-                    :key="key"
-                    :value="filteredCities[key].city_name"
-                  >{{ filteredCities[key].city_name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24" v-else>
-              <a-form-item label="City">
-                <a-input
-                  initial-value="Willy Wanta"
-                  v-decorator="[
-                  'username',
-                  { rules: [{ required: true, message: '' }] },
-                ]"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="12">
-              <a-form-item label="Postal Code">
-                <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
-              </a-form-item>
-            </a-col>-->
           </a-row>
 
           <!-- Address -->
@@ -633,9 +432,7 @@
 <script>
 import router from "../router";
 import data from "../components/json/indonesia";
-// import countries from "../components/json/country";
 import Vue from "vue";
-// import { getLabels } from "../helper/getLabels.helpers";
 import Antd, {
   Row,
   Col,
@@ -685,8 +482,6 @@ export default {
       region: "",
       room: "",
       setRegion: "Bali",
-      Region: data.Indonesia.Region,
-      City: data.Indonesia.City,
       cek: "",
       cities: "",
       // filteredCity: [],
@@ -745,6 +540,7 @@ export default {
       labels: [],
       flagKiosk: false,
       langID: "",
+      state: "",
     };
   },
   created() {
@@ -822,7 +618,7 @@ export default {
             this.tempsetup[i]["number1"] == 8 &&
             this.tempsetup[i]["number2"] == 2
           ) {
-            this.hour = this.tempsetup[i]["setupvalue"];
+            this.hour = moment(this.tempsetup[i]["setupvalue"], "HH:mm");
           } else if (this.tempsetup[i]["number1"] == 1) {
             this.tempsetup[i].setupvalue = this.getLabels(
               this.tempsetup[i].setupvalue.toLowerCase()
@@ -1051,45 +847,46 @@ export default {
           //   },
           //   "inputan"
           // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: values.time._i,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq:
-                      values.Request == " " || values.Request == undefined
-                        ? ""
-                        : values.Request,
-                    guestPhnumber: values.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-            // console.log(parsed, "inputan3");
-            // const tempMessResult = parsed.response.messResult.split(" ");
-            // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
-          this.scrollToTop();
-          this.save();
-          this.form.resetFields();
+          // (async () => {
+          console.log(this.hour);
+          // const tempParam = location.search.substring(1);
+          // const parsed = await ky
+          //   .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/updateData", {
+          //     json: {
+          //       request: {
+          //         resNumber: this.currDataPrepare["rsv-number"],
+          //         reslineNumber: this.currDataPrepare["rsvline-number"],
+          //         estAT: values.time._i,
+          //         pickrequest: this.showPrice,
+          //         pickdetail:
+          //           this.showPrice == false ||
+          //           values.flight == " " ||
+          //           values.flight == undefined
+          //             ? ""
+          //             : values.flight,
+          //         roomPreferences:
+          //           this.room + "$" + this.floor + "$" + this.bed,
+          //         specialReq:
+          //           values.Request == " " || values.Request == undefined
+          //             ? ""
+          //             : values.Request,
+          //         guestPhnumber: values.phone,
+          //         guestNationality: values.nationality,
+          //         guestCountry: values.country,
+          //         guestRegion: values.country != "INA" ? " " : values.region,
+          //         agreedTerm: true,
+          //         purposeOfStay: values.purpose,
+          // },
+          // },
+          // })
+          // .json();
+          // console.log(parsed, "inputan3");
+          // const tempMessResult = parsed.response.messResult.split(" ");
+          // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
+          // this.scrollToTop();
+          // this.save();
+          // this.form.resetFields();
         }
       });
     },
