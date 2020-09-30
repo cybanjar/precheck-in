@@ -17,76 +17,76 @@ const routes = [{
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // },
-  {
-    path: "/guest-list",
-    name: "Guest List",
-    component: () => import("../views/GuestList"),
-  },
-  {
-    path: "/mobilecheckin",
-    name: "OTA",
-    component: () => import("../views/OTA"),
-  },
-  {
-    path: "/success",
-    name: "Success",
-    component: () => import("../views/Success"),
-  },
-  {
-    path: "/list",
-    name: "List",
-    component: () => import("../views/List"),
-  },
-  {
-    path: "/step",
-    name: "Step",
-    component: () => import("../views/Step"),
-  },
-  {
-    path: "/successcheckin",
-    name: "SuccessCheckIn",
-    component: () => import("../views/SuccessCheckin"),
-  },
-  {
-    path: "/listcheckin",
-    name: "ListCheckIn",
-    component: () => import("../views/ListCheckin"),
-  },
-  {
-    path: "/done",
-    name: "Done",
-    component: () => import("../views/Done"),
-  },
-  {
-    path: "/notfound",
-    name: "NotFound",
-    component: () => import("../views/NotFound"),
-  },
+  // {
+  //   path: "/guest-list",
+  //   name: "Guest List",
+  //   component: () => import("../views/GuestList"),
+  // },
+  // {
+  //   path: "/mobilecheckin",
+  //   name: "OTA",
+  //   component: () => import("../views/OTA"),
+  // },
+  // {
+  //   path: "/success",
+  //   name: "Success",
+  //   component: () => import("../views/Success"),
+  // },
+  // {
+  //   path: "/list",
+  //   name: "List",
+  //   component: () => import("../views/List"),
+  // },
+  // {
+  //   path: "/step",
+  //   name: "Step",
+  //   component: () => import("../views/Step"),
+  // },
+  // {
+  //   path: "/successcheckin",
+  //   name: "SuccessCheckIn",
+  //   component: () => import("../views/SuccessCheckin"),
+  // },
+  // {
+  //   path: "/listcheckin",
+  //   name: "ListCheckIn",
+  //   component: () => import("../views/ListCheckin"),
+  // },
+  // {
+  //   path: "/done",
+  //   name: "Done",
+  //   component: () => import("../views/Done"),
+  // },
+  // {
+  //   path: "/notfound",
+  //   name: "NotFound",
+  //   component: () => import("../views/NotFound"),
+  // },
   {
     path: "*",
     name: "404",
     component: () => import("../views/404"),
   },
-  {
-    path: "/nicepay",
-    name: "nicepay",
-    component: () => import("../views/nicepay"),
-  },
-  {
-    path: "/setup",
-    name: "Setup",
-    component: () => import("../views/SetUp"),
-  },
-  {
-    path: "/setup2",
-    name: "Setup2",
-    component: () => import("../views/SetUp2"),
-  },
-  {
-    path: "/successdeposit",
-    name: "Successdeposit",
-    component: () => import("../views/SuccessDeposit"),
-  },
+  // {
+  //   path: "/nicepay",
+  //   name: "nicepay",
+  //   component: () => import("../views/nicepay"),
+  // },
+  // {
+  //   path: "/setup",
+  //   name: "Setup",
+  //   component: () => import("../views/SetUp"),
+  // },
+  // {
+  //   path: "/setup2",
+  //   name: "Setup2",
+  //   component: () => import("../views/SetUp2"),
+  // },
+  // {
+  //   path: "/successdeposit",
+  //   name: "Successdeposit",
+  //   component: () => import("../views/SuccessDeposit"),
+  // },
 ];
 
 const router = new VueRouter({
