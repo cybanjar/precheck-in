@@ -8,22 +8,9 @@
     <div class="home">
       {{currDataPrepare}}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
-      <div
-        class="row header-branding"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <div
-          class="col pl-3 pt-3 invisible"
-          :span="15"
-          :md="15"
-          :xl="15"
-          :xs="24"
-        >
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+      <div class="row header-branding" :style="information" type="flex" justify="space-between">
+        <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
@@ -33,11 +20,7 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
+          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
@@ -62,9 +45,7 @@
           </div>
         </div>
         <div class="col pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
@@ -74,11 +55,7 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
+          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
@@ -206,7 +183,7 @@ export default {
   created() {
     (async () => {
       const tempParam = location.search.substring(1);
-      console.log(location.search,"param");
+      console.log(location.search, "param");
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
@@ -222,7 +199,7 @@ export default {
         )
         .json();
 
-      console.log(parsed,"masuk");
+      console.log(parsed, "masuk");
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
@@ -423,3 +400,5 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus" src="../css/style.scss"></style>
