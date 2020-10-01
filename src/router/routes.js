@@ -20,7 +20,7 @@ const routes = [
     component: () => import("pages/Ota.vue")
   },
   {
-    path: "/",
+    path: "/precheckin",
     component: () => import("pages/About.vue")
   },
   {
