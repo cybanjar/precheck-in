@@ -70,7 +70,7 @@
           </p>
         </div>
       </div>
-      <div>test</div>
+      <div class="text-uppercase">test</div>
     </div>
   </div>
 </template>
@@ -400,5 +400,3 @@ export default {
   },
 };
 </script>
-
-<style lang="stylus" src="../css/style.scss"></style>
