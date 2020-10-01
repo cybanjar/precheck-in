@@ -1,9 +1,9 @@
 const routes = [
-  {
-    path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/Index.vue") }]
-  },
+  // {
+  //   path: "/",
+  //   component: () => import("layouts/MainLayout.vue"),
+  //   children: [{ path: "", component: () => import("pages/Index.vue") }]
+  // },
 
   // Always leave this as last one,
   // but you can also remove it
@@ -18,6 +18,10 @@ const routes = [
   {
     path: "/ota",
     component: () => import("pages/Ota.vue")
+  },
+  {
+    path: "/",
+    component: () => import("pages/About.vue")
   },
   {
     path: "/success",
