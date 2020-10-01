@@ -251,17 +251,17 @@
             </div>
           </div>
 
-          <a-row class="ml-4 mr-3 mb-3">
+          <div class="row ml-4 mr-3 mb-3">
             <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
+              <div class="row">
+                <div class="col" :span="23" :xl="23" :xs="23">
                   <p class="header-group">{{ getLabels("guest_detail") }}</p>
-                </a-col>
-              </a-row>
+                </div>
+              </div>
             </a-card>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col
+          </div>
+          <div class="row ml-3" :gutter="[16, 8]">
+            <div class="col"
               v-if="email != ''"
               :span="5"
               :xl="5"
@@ -281,8 +281,8 @@
                   disabled
                 />
               </a-form-item>
-            </a-col>
-            <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            </div>
+            <div class="col" v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email')">
                 <a-input
@@ -300,8 +300,8 @@
                   ]"
                 />
               </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            </div>
+            <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('phone_number')">
                 <a-input
                   v-decorator="[
@@ -316,10 +316,10 @@
                 ></a-input>
                 <!-- <vue-tel-input v-model="phone"></vue-tel-input> -->
               </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
+            </div>
+          </div>
+          <div class="row ml-3" :gutter="[16, 8]">
+            <div class="col" :span="3" :xl="3" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('purpose_stay')">
                 <a-select
                   @change="Kuy"
@@ -336,10 +336,10 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            </div>
+          </div>
+          <div class="row ml-3" :gutter="[16, 8]">
+            <div :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('nationality')">
                 <a-select
                   show-search
@@ -360,11 +360,11 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-          </a-row>
+            </div>
+          </div>
 
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+          <div class="row ml-3" :gutter="[16, 8]">
+            <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('country_of_residence')">
                 <a-select
                   show-search
@@ -385,8 +385,8 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            </div>
+            <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div v-if="country === 'INA' || country === 'ina'">
                 <a-form-item :label="getLabels('region')">
                   <a-select
@@ -422,18 +422,18 @@
                   />
                 </a-form-item>
               </div>
-            </a-col>
-          </a-row>
+            </div>
+          </div>
 
-          <a-row class="ml-3 mb-3" :gutter="[16, 8]">
-            <a-col :span="1" :xl="1" :xs="2">
+          <div class="row ml-3 mb-3" :gutter="[16, 8]">
+            <col class="col" :span="1" :xl="1" :xs="2">
               <a-checkbox v-model="agree" />
-            </a-col>
-            <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
+          </div>
+            <div  class="col fix-agreement" :span="23" :xl="23" :xs="22">
               {{ getLabels("pci_tc") }}
               <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
               {{ hotelname }}.
-            </a-col>
+            </div>
             <a-modal
               :title="getLabels('t_c')"
               :visible="visibleTerm"
@@ -450,9 +450,9 @@
               </template>
               <p>{{ term }}</p>
             </a-modal>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="4" :xl="4" :lg="7" :xs="24">
+    </div>
+          <div class="row ml-3" :gutter="[16, 8]">
+            <div class="col" :span="4" :xl="4" :lg="7" :xs="24">
               <a-form-item>
                 <a-button
                   :xl="12"
