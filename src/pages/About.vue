@@ -1,12 +1,11 @@
 <template>
   <div class="spin-load-table" v-if="loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
-    </a-spin>
+    <q-spinner color="primary" size="3em" :thickness="10" />
   </div>
   <div v-else>
     <div class="home">
-      {{currDataPrepare}}
+      {{ currDataPrepare }}
+      {{ hotelname }}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div
         class="row header-branding"
@@ -206,7 +205,7 @@ export default {
   created() {
     (async () => {
       const tempParam = location.search.substring(1);
-      console.log(location.search,"param");
+      console.log(location.search, "param");
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
@@ -222,7 +221,7 @@ export default {
         )
         .json();
 
-      console.log(parsed,"masuk");
+      console.log(parsed, "masuk");
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
@@ -423,3 +422,15 @@ export default {
   },
 };
 </script>
+<style lang="stylus" scoped>
+@import "./custom/_variables";
+ @import "./custom/_card";
+ @import "./custom/_utilities";
+ @import "./custom/_sections";
+ @import "./custom/_text";
+ @import "./custom/_form";
+ @import "./custom/_tables";
+ @import "./custom/_images";
+ @import "./custom/_pages";
+ 
+</style>
