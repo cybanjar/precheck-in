@@ -2,7 +2,7 @@
   "name": "precheckin_quasar",
   "version": "0.0.1",
   "description": "VHP Online",
-  "productName": "checkin",
+  "productName": "VHP Online",
   "author": "cybanjar <cybanjar@gmail.com>",
   "private": true,
   "scripts": {
