@@ -295,16 +295,14 @@
                 >{{ item.setupvalue }}</a-select-option
               >
             </a-select> -->
-            {{FilterCountry}}
+            {{ FilterCountry }}
             <q-select
               filled
-              v-model="currDataPrepare['guest-doc-nation']"
               use-input
               hide-selected
               fill-input
               input-debounce="0"
               :options="FilterCountry"
-              @filter="filterFn"
               style="width: 250px; padding-bottom: 32px"
             >
               <template v-slot:no-option>
@@ -602,10 +600,7 @@ export default {
           this.tempsetup[i]["number1"] == 9 &&
           this.tempsetup[i]["number2"] == 2
         ) {
-          const bulbasur = {};
-          bulbasur["descr"] = this.tempsetup[i]["descr"];
-          bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
-          this.countries.push(bulbasur);
+          this.countries.push(this.tempsetup[i]);
         } else if (
           this.tempsetup[i]["number1"] == 9 &&
           this.tempsetup[i]["number2"] == 3
@@ -663,10 +658,10 @@ export default {
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
     this.Country = this.countries;
-    console.log(this.Country,"kota2");
-    this.FilterCountry = this.mapWithNationality(this.Country, "number2");
+    console.log(this.Country, "kota2");
+    this.FilterCountry = this.mapWithNationality(this.Country, "descr");
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    console.log(this.FilterCountry,"kota");
+    console.log(this.FilterCountry, "kota");
   },
   methods: {
     showModalTerm() {
@@ -716,15 +711,16 @@ export default {
       return itemReturn;
     },
     mapWithNationality(items, key) {
-        console.log(items,"datang");
-        console.log(key,"datang3");
+      console.log(items, "datang");
+      console.log(key, "datang3");
       let itemReturn = items
         ? items.map((item) => ({
-            label: `${item[key]} - ${item[setupvalue]}`,
-            value: item[descr],
+            label: `${item["setupvalue"]}`,
+
+            value: item[key],
           }))
         : [];
-        console.log(itemReturn,"datang2");
+      console.log(itemReturn, "datang2");
       return itemReturn;
     },
     getLabels(nameKey) {
