@@ -12,13 +12,17 @@
 
  */
 
- @import "./custom/_variables";
- @import "./custom/_card";
- @import "./custom/_utilities";
- @import "./custom/_sections";
- @import "./custom/_text";
- @import "./custom/_form";
- @import "./custom/_tables";
- @import "./custom/_images";
- @import "./custom/_pages";
+ @import "./custom/_card.scss";
+ @import "./custom/_form.scss";
+ @import "./custom/_images.scss";
+ @import "./custom/_pages.scss";
+ @import "./custom/_sections.scss";
+ @import "./custom/_tables.scss";
+ @import "./custom/_text.scss";
+ @import "./custom/_utilities.scss";
+ @import "./custom/_variables.scss";
  
+<<<<<<< HEAD
+=======
+// $primary    : #1890FF;
+>>>>>>> 02abe07a43f8f10a20674bd0370b5209d4b88d1d
