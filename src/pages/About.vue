@@ -4,8 +4,7 @@
   </div>
   <div v-else>
     <div class="home">
-      {{ currDataPrepare }}
-      {{ hotelname }}
+     
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div
         class="row header-branding"
@@ -92,7 +91,73 @@
           </p>
         </div>
       </div>
-      <div>test</div>
+      <div>
+        <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
+          <q-card class="header-card">
+            <div>
+              <div class="col" :span="23" :xl="23" :xs="23">
+                <p class="header-group">{{ getLabels("arrival") }}</p>
+              </div>
+            </div>
+          </q-card>
+        </div>
+        <div class="row ml-3" gutter="16">
+          <div class="col" :span="4" :xl="4" :lg="5" :md="6" :xs="24">
+            <p>{{ getLabels("eta") }}</p>
+            <vue-timepicker :minute-interval="10"></vue-timepicker>
+          </div>
+          <div
+            class="col"
+            :span="4"
+            :xl="6"
+            :lg="5"
+            :md="6"
+            :xs="24"
+            v-show="showPickupRequest"
+          >
+            <p>{{ getLabels("request") }}</p>
+            <q-checkbox
+              :checked="showPrice"
+              v-model="showPrice"
+              @change="onChange"
+              :label="getLabels('pick_req')"
+            />
+          </div>
+          <div
+            class="col"
+            :span="4"
+            :xl="4"
+            :lg="5"
+            :md="5"
+            :xs="24"
+            v-show="showPickupRequest"
+          >
+            <p>{{ getLabels("price") }}</p>
+            {{ nilai === 3 ? "" : currency }}
+            {{
+              nilai === 3
+                ? " "
+                : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+            }}
+            <span>/ {{ per }}</span>
+          </div>
+          <div
+            class="col"
+            v-show="showPrice && showPickupRequest"
+            :span="8"
+            :xl="8"
+            :lg="8"
+            :md="7"
+            :xs="24"
+          >
+            <q-input
+              filled
+              v-model="flight"
+              :label="getLabels('pick_detail')"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +181,8 @@ import Vue from "vue";
 // import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
+import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
+
 // Vue.use(Antd);
 
 export default {
@@ -205,14 +272,13 @@ export default {
   created() {
     (async () => {
       const tempParam = location.search.substring(1);
-      console.log(location.search, "param");
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
           {
             json: {
               request: {
-                encryptedText: "vylzwFFWQi9rPgLGo2CwQ8xM6R9zEqcwENAsdod9KGI="
+                encryptedText: tempParam
                   .replace(/%2F/g, "/")
                   .replace(/%20/g, "+"),
               },
