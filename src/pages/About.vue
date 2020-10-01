@@ -214,14 +214,6 @@
           <div class="col" :span="9" :xl="9" :lg="9" :md="12" :xs="18">
             <p>{{ getLabels("special_request") }}</p>
             <q-input v-model="text" filled autogrow :maxlength="max" />
-            <!-- <a-textarea
-              v-decorator="[
-                'Request',
-                { rules: [{ message: 'Please input your Request' }] },
-              ]"
-              :rows="4"
-              :maxlength="max"
-            /> -->
           </div>
           <div class="col max-breaker" :span="3" :xl="3" :xs="6">
             <span v-text="text.length + '/' + max"></span>
@@ -262,36 +254,69 @@
           </div>
           <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
             <p>{{ getLabels("phone_number") }}</p>
-            <!-- <q-input outlined v-model="phone" label="Outlined" disabled /> -->
             <q-input
               outlined
               v-model="phone"
               :label="getLabels('phone_number')"
-              mask="(####) #### - #####"
+              mask="#### - #### - #####"
               unmasked-value
-              hint="Mask: (####) #### - #####"
+              hint="Mask: #### - #### - #####"
             />
           </div>
         </div>
-        <!-- <div class="row ml-3" :gutter="[16, 8]">
+        <div class="row ml-3" :gutter="[16, 8]">
           <div class="col" :span="3" :xl="3" :lg="7" :md="10" :xs="24">
             <p>{{ getLabels("purpose_stay") }}</p>
-            <a-select
-              @change="Kuy"
+            <q-select
+              outlined
+              v-model="purpose"
+              :options="FilterPurposeofStay"
+            />
+          </div>
+        </div>
+        <div class="row ml-3" :gutter="[16, 8]">
+          <div :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            <p>{{ getLabels("nationality") }}</p>
+            <!-- <a-select
+              show-search
               v-decorator="[
-                'purpose',
-                { initialValue: purpose, rules: [{ required: true }] },
+                'nationality',
+                {
+                  initialValue: currDataPrepare['guest-doc-nation'],
+                  rules: [{ required: true }],
+                },
               ]"
+              @change="Nationality"
             >
               <a-select-option
-                v-for="item in FilterPurposeofStay"
+                v-for="item in FilterCountry"
                 :key="item"
-                :value="item.setupvalue"
+                :value="item['descr']"
                 >{{ item.setupvalue }}</a-select-option
               >
-            </a-select>
+            </a-select> -->
+            {{FilterCountry}}
+            <q-select
+              filled
+              v-model="currDataPrepare['guest-doc-nation']"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :options="FilterCountry"
+              @filter="filterFn"
+              style="width: 250px; padding-bottom: 32px"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
           </div>
-        </div> -->
+        </div>
 
         <div class="row ml-3 mb-3" :gutter="[16, 8]">
           <div class="col" :span="1" :xl="1" :xs="2">
@@ -302,22 +327,6 @@
             <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
             {{ hotelname }}.
           </div>
-          <!-- <a-modal
-            :title="getLabels('t_c')"
-            :visible="visibleTerm"
-            :confirm-loading="confirmLoadingTerm"
-          >
-            <template slot="footer">
-              <a-button
-                key="submit"
-                type="primary"
-                :loading="loading"
-                @click="handleOkTerm"
-                >{{ getLabels("close") }}</a-button
-              >
-            </template>
-            <p>{{ term }}</p>
-          </a-modal> -->
           <q-dialog v-model="visibleTerm">
             <q-card>
               <q-card-section>
@@ -352,7 +361,8 @@
               block
               :size="size"
               :disabled="!agree"
-            >{{ getLabels("ci_now") }}</q-btn>
+              >{{ getLabels("ci_now") }}</q-btn
+            >
 
             <!-- <a-button
               :xl="12"
@@ -450,7 +460,7 @@ export default {
       keluar: false,
       currency: "Rp.",
       country: "",
-      purpose: "",
+      purpose: null,
       loading: true,
       term1: "I agree with the Terms and Conditions of Web Pre Check-in.",
       term: "",
@@ -471,7 +481,9 @@ export default {
       visibleTerm: false,
       confirmLoadingTerm: false,
       hour: "",
+      PurposeofStay: [],
       FilterPurposeofStay: [],
+      Country: [],
       FilterCountry: [],
       countries: [],
       hotelname: "",
@@ -561,9 +573,17 @@ export default {
           this.tempsetup[i].setupvalue = this.getLabels(
             this.tempsetup[i].setupvalue.toLowerCase()
           );
-          this.FilterPurposeofStay.push(this.tempsetup[i]);
+          this.PurposeofStay.push(this.tempsetup[i]);
+          this.FilterPurposeofStay = this.mapWithPurpose(
+            this.PurposeofStay,
+            "number2"
+          );
           if (this.tempsetup[i].setupflag == true) {
-            this.purpose = this.tempsetup[i].setupvalue;
+            // this.purpose = this.tempsetup[i].setupvalue;
+            this.purpose = {
+              label: this.tempsetup[i].setupvalue,
+              value: this.tempsetup[i].number2,
+            };
           }
         } else if (this.tempsetup[i]["number1"] == 3) {
           if (this.tempsetup[i].number2 == 1) {
@@ -642,8 +662,11 @@ export default {
   mounted() {
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
-    this.FilterCountry = this.countries;
+    this.Country = this.countries;
+    console.log(this.Country,"kota2");
+    this.FilterCountry = this.mapWithNationality(this.Country, "number2");
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    console.log(this.FilterCountry,"kota");
   },
   methods: {
     showModalTerm() {
@@ -682,6 +705,27 @@ export default {
         month: "2-digit",
         year: "numeric",
       }).format(new Date(datum));
+    },
+    mapWithPurpose(items, key) {
+      let itemReturn = items
+        ? items.map((item) => ({
+            label: `${item["setupvalue"]} `,
+            value: item[key],
+          }))
+        : [];
+      return itemReturn;
+    },
+    mapWithNationality(items, key) {
+        console.log(items,"datang");
+        console.log(key,"datang3");
+      let itemReturn = items
+        ? items.map((item) => ({
+            label: `${item[key]} - ${item[setupvalue]}`,
+            value: item[descr],
+          }))
+        : [];
+        console.log(itemReturn,"datang2");
+      return itemReturn;
     },
     getLabels(nameKey) {
       for (let x = 0; x < this.labels.length; x++) {
