@@ -1,0 +1,90 @@
+.img-hero {
+  width: 100%;
+  height: auto;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay-bg {
+  background-color: rgba(0, 0, 0, 0.37);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
+img.preview {
+  width: 200px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+.img-ota {
+  width: 100px;
+}
+
+.img-hotel {
+  z-index: 1;
+}
+
+@media screen and (max-width: 576px) {
+  .img-hotel {
+    width: 89vw;
+    // height: 195px;
+  }
+
+  .invisible {
+    display: none !important;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .img-hotel {
+    height: 171px;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .img-hotel {
+    height: 171px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .invisible {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .img-hotel {
+    // width: auto;
+    height: 195px;
+  }
+
+  .visible {
+    display: none;
+  }
+
+  .fix-agreement {
+    padding: 4px 0;
+    left: -25px;
+  }
+}
