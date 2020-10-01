@@ -4,7 +4,6 @@
   </div>
   <div v-else>
     <div class="home">
-     
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div
         class="row header-branding"
@@ -104,7 +103,7 @@
         <div class="row ml-3" gutter="16">
           <div class="col" :span="4" :xl="4" :lg="5" :md="6" :xs="24">
             <p>{{ getLabels("eta") }}</p>
-            <vue-timepicker :minute-interval="10"></vue-timepicker>
+            <vue-timepicker :minute-interval="30"></vue-timepicker>
           </div>
           <div
             class="col"
@@ -115,13 +114,9 @@
             :xs="24"
             v-show="showPickupRequest"
           >
+            {{ showPrice }}
             <p>{{ getLabels("request") }}</p>
-            <q-checkbox
-              :checked="showPrice"
-              v-model="showPrice"
-              @change="onChange"
-              :label="getLabels('pick_req')"
-            />
+            <q-checkbox v-model="showPrice" :label="getLabels('pick_req')" />
           </div>
           <div
             class="col"
@@ -150,11 +145,225 @@
             :md="7"
             :xs="24"
           >
-            <q-input
-              filled
-              v-model="flight"
-              :label="getLabels('pick_detail')"
+            <p>{{ getLabels("pick_detail") }}</p>
+            <q-input filled v-model="flight" />
+          </div>
+        </div>
+        <div class="row ml-3" gutter="16">
+          <div class="col">
+            <p>{{ getLabels("room_pref") }}</p>
+            <q-option-group
+              v-model="group"
+              :options="options"
+              color="primary"
+              v-show="showSmoking"
+              @change="Room"
+              inline
             />
+            <!-- <a-radio-group
+                name="radioGroup"
+                v-show="showSmoking"
+                @change="Room"
+              >
+                <a-radio value="NonSmoking">
+                  <span class="font-weight-normal">{{
+                    getLabels("non_smoking")
+                  }}</span>
+                </a-radio>
+                <a-radio value="Smoking">
+                  <span class="font-weight-normal">{{
+                    getLabels("smoking")
+                  }}</span>
+                </a-radio>
+              </a-radio-group> -->
+            <!-- <a-form-item label>
+              <a-radio-group
+                name="radioGroup"
+                v-show="showFloor"
+                @change="Floor"
+              >
+                <a-radio value="LowerFloor">
+                  <span class="font-weight-normal">{{
+                    getLabels("lower_floor")
+                  }}</span>
+                </a-radio>
+                <a-radio value="HigherFloor">
+                  <span class="font-weight-normal">{{
+                    getLabels("higher_floor")
+                  }}</span>
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
+            <a-form-item label>
+              <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
+                <a-radio value="OneBigBed">
+                  <span class="font-weight-normal">{{
+                    getLabels("one_big_bed")
+                  }}</span>
+                </a-radio>
+                <a-radio value="TwoSingleBeds">
+                  <span class="font-weight-normal">{{
+                    getLabels("two_single_beds")
+                  }}</span>
+                </a-radio>
+              </a-radio-group>
+            </a-form-item> -->
+          </div>
+        </div>
+        <div class="row ml-3" :gutter="[16, 8]">
+          <div class="col" :span="9" :xl="9" :lg="9" :md="12" :xs="18">
+            <p>{{ getLabels("special_request") }}</p>
+            <q-input v-model="text" filled autogrow :maxlength="max" />
+            <!-- <a-textarea
+              v-decorator="[
+                'Request',
+                { rules: [{ message: 'Please input your Request' }] },
+              ]"
+              :rows="4"
+              :maxlength="max"
+            /> -->
+          </div>
+          <div class="col max-breaker" :span="3" :xl="3" :xs="6">
+            <span v-text="text.length + '/' + max"></span>
+          </div>
+        </div>
+
+        <div class="row ml-4 mr-3 mb-3">
+          <q-card class="header-card">
+            <div class="row">
+              <div class="col" :span="23" :xl="23" :xs="23">
+                <p class="header-group">{{ getLabels("guest_detail") }}</p>
+              </div>
+            </div>
+          </q-card>
+        </div>
+        <div class="row ml-3" :gutter="[16, 8]">
+          <div
+            class="col"
+            v-if="email != ''"
+            :span="5"
+            :xl="5"
+            :lg="7"
+            :md="10"
+            :xs="24"
+          >
+            <p>{{ getLabels("email") }}</p>
+            <q-input outlined v-model="email" label="Outlined" disabled />
+          </div>
+          <div class="col" v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            <span>{{ currDataPrepare["guest-email"] }}</span>
+            <p>{{ getLabels("email") }}</p>
+            <q-input
+              outlined
+              v-model="email"
+              label="Outlined"
+              :rules="[(val) => !!val || getLabels('required_email')]"
+            />
+          </div>
+          <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            <p>{{ getLabels("phone_number") }}</p>
+            <!-- <q-input outlined v-model="phone" label="Outlined" disabled /> -->
+            <q-input
+              outlined
+              v-model="phone"
+              :label="getLabels('phone_number')"
+              mask="(####) #### - #####"
+              unmasked-value
+              hint="Mask: (####) #### - #####"
+            />
+          </div>
+        </div>
+        <!-- <div class="row ml-3" :gutter="[16, 8]">
+          <div class="col" :span="3" :xl="3" :lg="7" :md="10" :xs="24">
+            <p>{{ getLabels("purpose_stay") }}</p>
+            <a-select
+              @change="Kuy"
+              v-decorator="[
+                'purpose',
+                { initialValue: purpose, rules: [{ required: true }] },
+              ]"
+            >
+              <a-select-option
+                v-for="item in FilterPurposeofStay"
+                :key="item"
+                :value="item.setupvalue"
+                >{{ item.setupvalue }}</a-select-option
+              >
+            </a-select>
+          </div>
+        </div> -->
+
+        <div class="row ml-3 mb-3" :gutter="[16, 8]">
+          <div class="col" :span="1" :xl="1" :xs="2">
+            <q-checkbox v-model="agree" />
+          </div>
+          <div class="col fix-agreement" :span="23" :xl="23" :xs="22">
+            {{ getLabels("pci_tc") }}
+            <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
+            {{ hotelname }}.
+          </div>
+          <!-- <a-modal
+            :title="getLabels('t_c')"
+            :visible="visibleTerm"
+            :confirm-loading="confirmLoadingTerm"
+          >
+            <template slot="footer">
+              <a-button
+                key="submit"
+                type="primary"
+                :loading="loading"
+                @click="handleOkTerm"
+                >{{ getLabels("close") }}</a-button
+              >
+            </template>
+            <p>{{ term }}</p>
+          </a-modal> -->
+          <q-dialog v-model="visibleTerm">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">{{ getLabels("t_c") }}</div>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-section style="max-height: 50vh" class="scroll">
+                <p>{{ term }}</p>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-actions align="right">
+                <q-btn
+                  flat
+                  :label="getLabels('close')"
+                  color="primary"
+                  @click="handleOkTerm"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
+        <div class="row ml-3" :gutter="[16, 8]">
+          <div class="col" :span="4" :xl="4" :lg="7" :xs="24">
+            <q-btn
+              color="primary"
+              :xl="12"
+              class="font-weight-bold mt-3"
+              block
+              :size="size"
+              :disabled="!agree"
+            >{{ getLabels("ci_now") }}</q-btn>
+
+            <!-- <a-button
+              :xl="12"
+              class="font-weight-bold mt-3"
+              type="primary"
+              block
+              :size="size"
+              :disabled="!agree"
+              html-type="submit"
+              >{{ getLabels("ci_now") }}</a-button
+            > -->
           </div>
         </div>
       </div>
@@ -186,6 +395,9 @@ import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
 // Vue.use(Antd);
 
 export default {
+  components: {
+    "vue-timepicker": VueTimepicker,
+  },
   data() {
     return {
       addessHotel:
