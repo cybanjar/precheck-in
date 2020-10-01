@@ -295,7 +295,6 @@
                 >{{ item.setupvalue }}</a-select-option
               >
             </a-select> -->
-            {{ FilterCountry }}
             <q-select
               filled
               use-input
@@ -303,6 +302,7 @@
               fill-input
               input-debounce="0"
               :options="FilterCountry"
+              @filter="filterFn"
               style="width: 250px; padding-bottom: 32px"
             >
               <template v-slot:no-option>
@@ -601,6 +601,13 @@ export default {
           this.tempsetup[i]["number2"] == 2
         ) {
           this.countries.push(this.tempsetup[i]);
+          //   for (const i in this.countries) {
+          //     this.countries[i].key = Number(i) + 1;
+          //   }
+          //   return this.countries;
+          this.Country = this.countries;
+          console.log(this.Country, "kota2");
+          this.FilterCountry = this.mapWithNationality(this.Country, "descr");
         } else if (
           this.tempsetup[i]["number1"] == 9 &&
           this.tempsetup[i]["number2"] == 3
@@ -609,6 +616,7 @@ export default {
           air["descr"] = this.tempsetup[i]["descr"];
           air["setupvalue"] = this.tempsetup[i]["setupvalue"];
           this.province.push(air);
+          this.filteredProvince = this.province;
         } else if (
           this.tempsetup[i]["number1"] == 8 &&
           this.tempsetup[i]["number2"] == 10
@@ -652,16 +660,9 @@ export default {
         this.gambar = lagi;
       }
     })();
-    this.loading = false;
-  },
-  mounted() {
-    this.filteredRegion = this.Region;
-    this.filteredProvince = this.province;
-    this.Country = this.countries;
-    console.log(this.Country, "kota2");
-    this.FilterCountry = this.mapWithNationality(this.Country, "descr");
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    console.log(this.FilterCountry, "kota");
+
+    this.loading = false;
   },
   methods: {
     showModalTerm() {
@@ -700,6 +701,17 @@ export default {
         month: "2-digit",
         year: "numeric",
       }).format(new Date(datum));
+    },
+    filterFn(val, update, abort) {
+      update(() => {
+        console.log("msk", val);
+        const needle = val.toLowerCase();
+        this.FilterCountry = this.Country.filter(function (itm) {
+          //   return val.indexOf(itm.setupvalue) > -1;
+          return itm ;
+        });
+        console.log(this.FilterCountry, "searching");
+      });
     },
     mapWithPurpose(items, key) {
       let itemReturn = items
