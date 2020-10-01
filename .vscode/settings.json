@@ -1,4 +1,4 @@
 {
-    "typescript.format.enable": false,
-    "typescript.enablePromptUseWorkspaceTsdk": true
+  
+  "vetur.experimental.templateInterpolationService": true
 }
