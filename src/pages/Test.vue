@@ -1,9 +1,11 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div
+    class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
+  >
     <div>
       <div style="font-size: 30vh">Achooo!</div>
 
-      <div class="text-h2" style="opacity:.4">Testing Routing...</div>
+      <div class="text-h2" style="opacity: 0.4">Testing Routing...</div>
 
       <q-btn
         class="q-mt-xl"

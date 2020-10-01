@@ -2,8 +2,8 @@
   "name": "precheckin_quasar",
   "version": "0.0.1",
   "description": "VHP Online",
-  "productName": "VHP Online",
-  "author": "cybanjar <cybanjar@gmail.com>",
+  "productName": "checkin",
+  "author": "R Andito Rizky Pratama <randitorizkypratama@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "quasar dev",
@@ -13,6 +13,16 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
+    "jsonp": "^0.2.1",
+    "ky": "^0.23.0",
+    "moment": "^2.27.0",
+    "qrcode": "^1.4.4",
+    "qs": "^6.9.4",
+    "vue": "^2.6.11",
+    "vue-color": "^2.7.1",
+    "vue-router": "^3.2.0",
+    "crypto-js": "^4.0.0",
+    "@inotom/vue-go-top": "^1.3.0",
     "quasar": "^1.0.0"
   },
   "devDependencies": {
