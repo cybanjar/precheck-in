@@ -18,6 +18,10 @@ const routes = [
   {
     path: "/ota",
     component: () => import("pages/Ota.vue")
+  },
+  {
+    path: "/success",
+    component: () => import("pages/Success.vue")
   }
 ];
 
