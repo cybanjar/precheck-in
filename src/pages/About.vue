@@ -7,9 +7,22 @@
       {{ currDataPrepare }}
       {{ hotelname }}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
-      <div class="row header-branding" :style="information" type="flex" justify="space-between">
-        <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+      <div
+        class="row header-branding"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
+        <div
+          class="col pl-3 pt-3 invisible"
+          :span="15"
+          :md="15"
+          :xl="15"
+          :xs="24"
+        >
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
@@ -19,7 +32,11 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          <h2
+            v-else
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
@@ -44,7 +61,9 @@
           </div>
         </div>
         <div class="col pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="main-guest-title font-white font-weight-bold"
@@ -54,7 +73,11 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          <h2
+            v-else
+            class="main-guest-title font-white font-weight-bold"
+            :style="information"
+          >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h2>
@@ -69,7 +92,7 @@
           </p>
         </div>
       </div>
-      <div class="text-uppercase">test</div>
+      <div>test</div>
     </div>
   </div>
 </template>
@@ -399,18 +422,4 @@ export default {
   },
 };
 </script>
-<<<<<<< HEAD
-<style lang="stylus" scoped>
-@import "./custom/_variables";
- @import "./custom/_card";
- @import "./custom/_utilities";
- @import "./custom/_sections";
- @import "./custom/_text";
- @import "./custom/_form";
- @import "./custom/_tables";
- @import "./custom/_images";
- @import "./custom/_pages";
- 
-</style>
-=======
->>>>>>> 02abe07a43f8f10a20674bd0370b5209d4b88d1d
+
