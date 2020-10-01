@@ -1,19 +1,22 @@
-# Quasar App
+# checkin (precheckin_quasar)
 
-> A Quasar project
+VHP Online
 
-## Build Setup
-
-``` bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:8080
-$ quasar dev
-
-# build for production with minification
-$ quasar build
-
-# lint code
-$ quasar lint
+## Install the dependencies
+```bash
+yarn
 ```
+
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+```bash
+quasar dev
+```
+
+
+### Build the app for production
+```bash
+quasar build
+```
+
+### Customize the configuration
+See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
