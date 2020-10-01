@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <!-- {{currDataPrepare}} -->
+      {{currDataPrepare}}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div
         class="row header-branding"
@@ -213,7 +213,7 @@ export default {
           {
             json: {
               request: {
-                encryptedText: tempParam
+                encryptedText: "vylzwFFWQi9rPgLGo2CwQ8xM6R9zEqcwENAsdod9KGI="
                   .replace(/%2F/g, "/")
                   .replace(/%20/g, "+"),
               },
