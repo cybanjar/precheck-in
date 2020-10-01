@@ -17,6 +17,10 @@ const routes = [
   {
     path: '/test',
     component: () => import('pages/Test.vue')
+  },
+  {
+    path: '/ota',
+    component: () => import('pages/Ota.vue')
   }
 ]
 
