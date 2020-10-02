@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home">
-      <div class="row" :style="information" type="flex" justify="space-between">
+      <!-- <div class="row" :style="information" type="flex" justify="space-between">
         <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </div>
@@ -16,7 +16,21 @@
             </div>
           </div>
         </div>
+      </div>-->
+      <div :style="information" class="text-white row rounded-4 justify-between">
+        <div class="col-4">
+          <h4 class="q-ma-sm text-uppercase font-weight-bold">Online Check-in</h4>
+          <br />
+        </div>
+        <div class="col-4">
+          <q-card flat class="my-card">
+            <q-img :src="gambar" basic>
+              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
+            </q-img>
+          </q-card>
+        </div>
       </div>
+
       <div>
         <h4 class="mt-3 text-center">{{ getLabels("guest_list") }}</h4>
       </div>
@@ -78,7 +92,7 @@
               "
             >
               <q-item-section>
-                <h2
+                <h6
                   :class="
                     item.isSelected == true
                       ? 'selected pl-3 font-weight-bold'
@@ -87,7 +101,7 @@
                 >
                   {{ item["guest-lname"] }},
                   {{ item["guest-pname"] }}
-                </h2>
+                </h6>
                 <p
                   v-if="item['guest-member-name'] != ''"
                   class="pl-3"
