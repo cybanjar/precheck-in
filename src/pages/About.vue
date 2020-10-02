@@ -4,6 +4,7 @@
   </div>
   <div v-else>
     <div class="home">
+      <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
       <div :style="information" class="row rounded-4 justify-between">
         <div class="col-4">
           <h4 class="q-ma-sm font-weight-bold">Online Check-in</h4>
@@ -38,7 +39,6 @@
           </q-card>
         </div>
       </div>
-      <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
 
       <!-- <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
       <div class="row rounded-4 justify-between" :style="information">
@@ -107,7 +107,7 @@
 
       <!-- Arrival -->
       <div>
-        <h4 class="ml-3 full-border-bottom">{{ getLabels("arrival") }}</h4>
+        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("arrival") }}</h5>
         <!-- <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
           <q-card flat class="header-card">
             <div>
@@ -118,16 +118,16 @@
           </q-card>
         </div>-->
         <div class="row ml-3" gutter="16">
-          <div class="col" :span="4" :xl="4" :lg="5" :md="6" :xs="24">
+          <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("eta") }}</p>
             <vue-timepicker :minute-interval="30"></vue-timepicker>
           </div>
-          <div class="col" :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
-            {{ showPrice }}
+          <div class="col-md-3 col-xs-12" v-show="showPickupRequest">
+            <!-- {{ showPrice }} -->
             <p>{{ getLabels("request") }}</p>
             <q-checkbox v-model="showPrice" :label="getLabels('pick_req')" />
           </div>
-          <div class="col" :span="4" :xl="4" :lg="5" :md="5" :xs="24" v-show="showPickupRequest">
+          <div class="col-md-2 col-xs-12" v-show="showPickupRequest">
             <p>{{ getLabels("price") }}</p>
             {{ nilai === 3 ? "" : currency }}
             {{
@@ -137,17 +137,9 @@
             }}
             <span>/ {{ per }}</span>
           </div>
-          <div
-            class="col"
-            v-show="showPrice && showPickupRequest"
-            :span="8"
-            :xl="8"
-            :lg="8"
-            :md="7"
-            :xs="24"
-          >
+          <div class="col-md-3 col-xs-12" v-show="showPrice && showPickupRequest">
             <p>{{ getLabels("pick_detail") }}</p>
-            <q-input filled v-model="flight" />
+            <q-input outlined filled v-model="flight" />
           </div>
         </div>
         <div class="row ml-3" gutter="16">
@@ -211,17 +203,18 @@
             </a-form-item>-->
           </div>
         </div>
-        <div class="row ml-3" :gutter="[16, 8]">
-          <div class="col" :span="9" :xl="9" :lg="9" :md="12" :xs="18">
+        <div class="row ml-3">
+          <div class="col">
             <p>{{ getLabels("special_request") }}</p>
             <q-input v-model="text" filled autogrow :maxlength="max" />
           </div>
-          <div class="col max-breaker" :span="3" :xl="3" :xs="6">
+          <div class="col max-breaker">
             <span v-text="text.length + '/' + max"></span>
           </div>
         </div>
 
-        <div class="row ml-4 mr-3 mb-3">
+        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("guest_detail") }}</h5>
+        <!-- <div class="row ml-4 mr-3 mb-3">
           <q-card class="header-card">
             <div class="row">
               <div class="col" :span="23" :xl="23" :xs="23">
@@ -229,23 +222,21 @@
               </div>
             </div>
           </q-card>
-        </div>
-        <div class="row ml-3" :gutter="[16, 8]">
-          <div class="col" v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+        </div>-->
+        <div class="row ml-3">
+          <div class="col-md-3 col-xs-12" v-if="email != ''">
             <p>{{ getLabels("email") }}</p>
-            <q-input outlined v-model="email" label="Outlined" disabled />
+            <q-input outlined v-model="email" disable readonly />
           </div>
-          <div class="col" v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <span>{{ currDataPrepare["guest-email"] }}</span>
+          <div class="col-md-3 col-xs-12" v-else>
             <p>{{ getLabels("email") }}</p>
             <q-input
               outlined
               v-model="email"
-              label="Outlined"
               :rules="[(val) => !!val || getLabels('required_email')]"
             />
           </div>
-          <div class="col" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+          <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("phone_number") }}</p>
             <q-input
               outlined
@@ -257,14 +248,14 @@
             />
           </div>
         </div>
-        <div class="row ml-3" :gutter="[16, 8]">
-          <div class="col" :span="3" :xl="3" :lg="7" :md="10" :xs="24">
+        <div class="row ml-3">
+          <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("purpose_stay") }}</p>
             <q-select outlined v-model="purpose" :options="FilterPurposeofStay" />
           </div>
         </div>
-        <div class="row ml-3" :gutter="[16, 8]">
-          <div :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+        <div class="row ml-3">
+          <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("nationality") }}</p>
             <!-- <a-select
               show-search
@@ -303,15 +294,22 @@
           </div>
         </div>
 
-        <div class="row ml-3 mb-3" :gutter="[16, 8]">
-          <div class="col" :span="1" :xl="1" :xs="2">
+        <div class="row ml-3 mb-3">
+          <!-- <div class="col-md-1 col-xs-1">
             <q-checkbox v-model="agree" />
+          </div>-->
+
+          <div class="q-gutter-sm">
+            <q-checkbox v-model="agree" />
+            <a @click="showModalTerm">{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a>
+            {{ hotelname }}.
           </div>
-          <div class="col fix-agreement" :span="23" :xl="23" :xs="22">
+
+          <!-- <div class="col-md-5 col-xs-12">
             {{ getLabels("pci_tc") }}
             <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
             {{ hotelname }}.
-          </div>
+          </div>-->
           <q-dialog v-model="visibleTerm">
             <q-card>
               <q-card-section>
@@ -332,8 +330,8 @@
             </q-card>
           </q-dialog>
         </div>
-        <div class="row ml-3" :gutter="[16, 8]">
-          <div class="col" :span="4" :xl="4" :lg="7" :xs="24">
+        <div class="row ml-3">
+          <div class="col-md-3 col-xs-12">
             <q-btn
               color="primary"
               :xl="12"
@@ -611,7 +609,7 @@ export default {
         // console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
-           this.$router.push("notfound").catch(()=>{});
+          this.$router.push("notfound").catch(() => {});
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
             const nietos = [];
@@ -636,7 +634,9 @@ export default {
             obj["16"] = this.province;
             nietos.push(this.dataGuest);
             nietos.push(obj);
-            this.$router.push({ name: "List", params: { foo: nietos } }).catch(()=>{});
+            this.$router
+              .push({ name: "List", params: { foo: nietos } })
+              .catch(() => {});
           } else if (
             parsed.response.arrivalGuest["arrival-guest"]["0"][
               "gcomment-desc"
@@ -653,10 +653,12 @@ export default {
               this.hour +
               "}";
             // console.log(mori, "be the one");
-            this.$router.push({
-              name: "Success",
-              params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
-            }).catch(()=>{});
+            this.$router
+              .push({
+                name: "Success",
+                params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+              })
+              .catch(() => {});
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];
