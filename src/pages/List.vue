@@ -1,23 +1,12 @@
 <template>
   <div>
     <div class="home">
-      <div
-        class="row header-brandings"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
+      <div class="row" :style="information" type="flex" justify="space-between">
         <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
         </div>
         <div class="col container" :span="9" :md="9" :xs="24">
-          <q-img
-            class="img-hotel float-right image"
-            :src="gambar"
-            alt="Image Loading"
-          />
+          <q-img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay">
             <div class="text">{{ hotelname }}</div>
           </div>
@@ -29,9 +18,9 @@
         </div>
       </div>
       <div>
-        <h1 class="mt-3 text-center">{{ getLabels("guest_list") }}</h1>
+        <h4 class="mt-3 text-center">{{ getLabels("guest_list") }}</h4>
       </div>
-      <div class="ml-3 mt-3 mr-3">
+      <div>
         <!-- <q-list
           :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
           :data-source="data"
@@ -75,7 +64,7 @@
               </p>
             </q-card>
           </q-item>
-        </q-list> -->
+        </q-list>-->
         <q-list bordered>
           <div v-for="item in data" :key="item">
             <q-item
@@ -99,21 +88,26 @@
                   {{ item["guest-lname"] }},
                   {{ item["guest-pname"] }}
                 </h2>
-                <p v-if="item['guest-member-name'] != ''" class="pl-3">
-                  {{ item["guest-member-name"] }}
-                </p>
+                <p
+                  v-if="item['guest-member-name'] != ''"
+                  class="pl-3"
+                >{{ item["guest-member-name"] }}</p>
                 <p v-else class="pl-3">
                   <br />
                 </p>
                 <p class="pl-3">
                   {{ getLabels("arrival") }}:
-                  <span class="font-weight-bold">{{
+                  <span class="font-weight-bold">
+                    {{
                     formatDate(item.arrive)
-                  }}</span>
+                    }}
+                  </span>
                   {{ getLabels("departure") }}:
-                  <span class="font-weight-bold">{{
+                  <span class="font-weight-bold">
+                    {{
                     formatDate(item.depart)
-                  }}</span>
+                    }}
+                  </span>
                 </p>
                 <p class="pl-3">
                   {{ item.rmqty }} {{ getLabels("adult") }}
@@ -123,9 +117,7 @@
                     color="green"
                     text-color="white"
                     icon="bookmark"
-                  >
-                    {{ item["rate-desc"] }}
-                  </q-chip>
+                  >{{ item["rate-desc"] }}</q-chip>
                 </p>
               </q-item-section>
             </q-item>
@@ -137,8 +129,7 @@
         type="primary"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-        >{{ getLabels("next") }}</q-btn
-      >
+      >{{ getLabels("next") }}</q-btn>
       <!-- </router-link> -->
     </div>
   </div>

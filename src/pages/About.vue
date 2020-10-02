@@ -66,7 +66,7 @@
           </div>
           <div class="col-md-3 col-xs-12" v-show="showPrice && showPickupRequest">
             <p>{{ getLabels("pick_detail") }}</p>
-            <q-input outlined v-model="flight" />
+            <q-input outlined />
           </div>
         </div>
         <div class="row ml-3">
