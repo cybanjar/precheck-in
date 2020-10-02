@@ -4,7 +4,9 @@
   </div>
   <div v-else>
     <div class="home">
-      <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
+      <h6 class="q-ma-none text-center font-weight-bold visible">
+        {{ hotelname }}
+      </h6>
       <div :style="information" class="row rounded-4 justify-between">
         <div class="col-4">
           <h4 class="q-ma-sm font-weight-bold">Online Check-in</h4>
@@ -17,7 +19,11 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h6>
-          <h6 v-else class="q-ma-sm main-guest-title font-weight-bold" :style="information">
+          <h6
+            v-else
+            class="q-ma-sm main-guest-title font-weight-bold"
+            :style="information"
+          >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h6>
@@ -34,7 +40,9 @@
         <div class="col-4">
           <q-card flat class="my-card">
             <q-img :src="gambar" basic>
-              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
+              <div class="absolute-bottom text-subtitle2 text-center">
+                {{ hotelname }}
+              </div>
             </q-img>
           </q-card>
         </div>
@@ -107,7 +115,9 @@
 
       <!-- Arrival -->
       <div>
-        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("arrival") }}</h5>
+        <h5 class="ml-3 font-weight-bold full-border-bottom">
+          {{ getLabels("arrival") }}
+        </h5>
         <!-- <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
           <q-card flat class="header-card">
             <div>
@@ -131,13 +141,16 @@
             <p>{{ getLabels("price") }}</p>
             {{ nilai === 3 ? "" : currency }}
             {{
-            nilai === 3
-            ? " "
-            : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+              nilai === 3
+                ? " "
+                : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
             }}
             <span>/ {{ per }}</span>
           </div>
-          <div class="col-md-3 col-xs-12" v-show="showPrice && showPickupRequest">
+          <div
+            class="col-md-3 col-xs-12"
+            v-show="showPrice && showPickupRequest"
+          >
             <p>{{ getLabels("pick_detail") }}</p>
             <q-input outlined filled v-model="flight" />
           </div>
@@ -213,7 +226,9 @@
           </div>
         </div>
 
-        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("guest_detail") }}</h5>
+        <h5 class="ml-3 font-weight-bold full-border-bottom">
+          {{ getLabels("guest_detail") }}
+        </h5>
         <!-- <div class="row ml-4 mr-3 mb-3">
           <q-card class="header-card">
             <div class="row">
@@ -251,7 +266,11 @@
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("purpose_stay") }}</p>
-            <q-select outlined v-model="purpose" :options="FilterPurposeofStay" />
+            <q-select
+              outlined
+              v-model="purpose"
+              :options="FilterPurposeofStay"
+            />
           </div>
         </div>
         <div class="row ml-3">
@@ -301,7 +320,9 @@
 
           <div class="q-gutter-sm">
             <q-checkbox v-model="agree" />
-            <a @click="showModalTerm">{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a>
+            <a @click="showModalTerm"
+              >{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a
+            >
             {{ hotelname }}.
           </div>
 
@@ -325,7 +346,12 @@
               <q-separator />
 
               <q-card-actions align="right">
-                <q-btn flat :label="getLabels('close')" color="primary" @click="handleOkTerm" />
+                <q-btn
+                  flat
+                  :label="getLabels('close')"
+                  color="primary"
+                  @click="handleOkTerm"
+                />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -339,7 +365,8 @@
               block
               :size="size"
               :disabled="!agree"
-            >{{ getLabels("ci_now") }}</q-btn>
+              >{{ getLabels("ci_now") }}</q-btn
+            >
 
             <!-- <a-button
               :xl="12"
@@ -695,6 +722,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
+      this.labels = JSON.parse(localStorage.getItem("labels"));
 
       this.counter += 1;
     }
