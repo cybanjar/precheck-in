@@ -8,7 +8,7 @@
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{getLabels('mci_success')}}</p>
+    <p>{{ getLabels("mci_success") }}</p>
   </div>
 </template>
 

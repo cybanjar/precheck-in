@@ -37,14 +37,25 @@
       <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
-      <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
+      <a-row
+        class="header-branding mb-3"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
+          <img
+            class="img-hotel float-right image"
+            :src="gambar"
+            alt="Image Loading"
+          />
           <div class="overlay visible">
-            <div class="text">{{hotelname}}</div>
+            <div class="text">{{ hotelname }}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -71,10 +82,10 @@
       scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="current === 0">{{getLabels('guest_detail')}}</h2>
-          <h2 v-show="current === 1">{{getLabels('guest_detail')}}</h2>
-          <h2 v-show="current === 2">{{getLabels('scan_id')}}</h2>
-          <h2 v-show="current === 3">{{getLabels('deposit_payment')}}</h2>
+          <h2 v-show="current === 0">{{ getLabels("guest_detail") }}</h2>
+          <h2 v-show="current === 1">{{ getLabels("guest_detail") }}</h2>
+          <h2 v-show="current === 2">{{ getLabels("scan_id") }}</h2>
+          <h2 v-show="current === 3">{{ getLabels("deposit_payment") }}</h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -89,20 +100,20 @@
           />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
-            {{getLabels('arrival')}}:
-            <strong>{{formatDate(this.currDataPrepare.ci)}}</strong>
-            {{getLabels('departure')}}:
-            <strong>{{formatDate(this.currDataPrepare.co)}}</strong>
+            {{ getLabels("arrival") }}:
+            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
+            {{ getLabels("departure") }}:
+            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
             <br />
-            {{getLabels('book_code')}}:
-            <strong>{{this.currDataPrepare.resnr}}</strong>
+            {{ getLabels("book_code") }}:
+            <strong>{{ this.currDataPrepare.resnr }}</strong>
             <br />
-            {{getLabels('room_number')}} :
-            <strong>{{this.currDataPrepare.zinr}}</strong>
+            {{ getLabels("room_number") }} :
+            <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
-            <a-row class :gutter="[16,8]">
+            <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item :label="getLabels('email')">
                   <a-input
@@ -134,20 +145,21 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row class :gutter="[16,8]">
+            <a-row class :gutter="[16, 8]">
               <a-col :span="3" :xl="3" :xs="24">
                 <a-form-item :label="getLabels('purpose_stay')">
                   <a-select
                     v-decorator="[
-          'purpose',
-          { initialValue:purpose,rules: [{ required: true }] },
-        ]"
+                      'purpose',
+                      { initialValue: purpose, rules: [{ required: true }] },
+                    ]"
                   >
                     <a-select-option
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
-                    >{{ item.setupvalue }}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -167,15 +179,18 @@
             </a-row>-->
           </div>
           <div class="steps-content" v-show="current === 1">
-            <a-row class :gutter="[16,8]">
+            <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item :label="getLabels('nationality')">
                   <a-select
                     show-search
                     v-decorator="[
-                    'nationality',
-                    { initialValue: currDataPrepare['guest-nation'], rules: [{ required: true }] },
-                  ]"
+                      'nationality',
+                      {
+                        initialValue: currDataPrepare['guest-nation'],
+                        rules: [{ required: true }],
+                      },
+                    ]"
                     @change="Nationality"
                   >
                     <a-select-option
@@ -223,12 +238,12 @@
                     show-search
                     v-model="country"
                     v-decorator="[
-                    'country',
-                    {
-                      initialValue: currDataPrepare['guest-country'],
-                      rules: [{ required: true }],
-                    },
-                  ]"
+                      'country',
+                      {
+                        initialValue: currDataPrepare['guest-country'],
+                        rules: [{ required: true }],
+                      },
+                    ]"
                   >
                     <a-select-option
                       v-for="item in FilterCountry"
@@ -316,7 +331,7 @@
               </a-col>-->
             </a-row>
           </div>
-          <div class="steps-content" v-show="current === 2 ">
+          <div class="steps-content" v-show="current === 2">
             <a-row class :gutter="[16, 8]">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('upload_id')">
@@ -336,7 +351,7 @@
             </a-row>
           </div>
           <div class="steps-content" v-show="current === 3">
-            <a-row :gutter="[16,8]" v-if="pay == false">
+            <a-row :gutter="[16, 8]" v-if="pay == false">
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
@@ -355,7 +370,8 @@
                   class="font-weight-bold mt-3 mr-3"
                   type="primary"
                   @click="search()"
-                >{{getLabels('pay')}}</a-button>
+                  >{{ getLabels("pay") }}</a-button
+                >
                 <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -363,11 +379,11 @@
                 />-->
               </a-col>
             </a-row>
-            <a-row :gutter="[16,8]" v-else>
+            <a-row :gutter="[16, 8]" v-else>
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit')">
                   <h2>
-                    <strong>{{getLabels('cash_basis')}}</strong>
+                    <strong>{{ getLabels("cash_basis") }}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -375,22 +391,27 @@
             <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
-                  <a-checkbox v-model="pay">{{getLabels('term_cash_basis')}}</a-checkbox>
+                  <a-checkbox v-model="pay">{{
+                    getLabels("term_cash_basis")
+                  }}</a-checkbox>
                 </p>
               </a-col>
             </a-row>
           </div>
           <div class="steps-action">
             <div v-if="y">
-              <a-button v-if="current > 0" @click="prev">{{getLabels('prev')}}</a-button>
+              <a-button v-if="current > 0" @click="prev">{{
+                getLabels("prev")
+              }}</a-button>
             </div>
 
             <a-button
               v-if="current < steps.length - 1"
-              style="margin-left: 8px"
+              style="margin-left: 8px;"
               type="primary"
               @click="next"
-            >{{getLabels('next')}}</a-button>
+              >{{ getLabels("next") }}</a-button
+            >
             <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
@@ -844,6 +865,7 @@ export default {
           this.form.validateFields(['region']);
         }
       }
+      // console.log(this.form.validateFields(["email"], { force: true }));
     },
     prev() {
       if (this.precheckin == true) {

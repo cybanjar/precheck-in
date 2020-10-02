@@ -11,18 +11,20 @@
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
         </template>
-        <p>{{getLabels('mci_error_not_found')}}</p>
+        <p>{{ getLabels("mci_error_not_found") }}</p>
       </a-modal>
       <a-modal :title="getLabels('information')" :visible="informationmodal2" >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
         </template>
-        <p>{{getLabels('mci_error_not_ready')}}</p>
+        <p>{{ getLabels("mci_error_not_ready") }}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">{{getLabels('find_rsv')}}</h1>
-          <p class="text-white text-secondary">{{getLabels('choose_option')}}</p>
+          <h1 class="text-white">{{ getLabels("find_rsv") }}</h1>
+          <p class="text-white text-secondary">
+            {{ getLabels("choose_option") }}
+          </p>
         </a-col>
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
