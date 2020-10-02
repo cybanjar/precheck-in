@@ -655,7 +655,9 @@ export default {
             obj["16"] = this.province;
             nietos.push(this.dataGuest);
             nietos.push(obj);
-            this.$router.push({ path: "list", params: { foo: nietos } });
+            console.log(nietos,"welcome2");
+            console.log(this.$router.push({ name: "List", params: { foo: nietos } }),"welcome3");
+            this.$router.push({ name: "List", params: { foo: nietos } });
           } else if (
             parsed.response.arrivalGuest["arrival-guest"]["0"][
               "gcomment-desc"
@@ -673,7 +675,7 @@ export default {
               "}";
             // console.log(mori, "be the one");
             this.$router.push({
-              path: "success",
+              name: "Success",
               params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
             });
           } else {

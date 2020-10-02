@@ -9,6 +9,7 @@ const routes = [
   // but you can also remove it
   {
     path: "*",
+    name: "404",
     component: () => import("pages/Error404.vue")
   },
   {
@@ -16,19 +17,23 @@ const routes = [
     component: () => import("pages/Test.vue")
   },
   {
-    path: "/ota",
+    path: "/mobilecheckin",
+    name: "OTA",
     component: () => import("pages/Ota.vue")
   },
   {
     path: "/precheckin",
+    name: "Home",
     component: () => import("pages/About.vue")
   },
   {
     path: "/list",
+    name: "List",
     component: () => import("pages/List.vue")
   },
   {
     path: "/success",
+    name: "Success",
     component: () => import("pages/Success.vue")
   }
 ];

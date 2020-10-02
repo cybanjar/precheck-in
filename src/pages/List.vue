@@ -94,7 +94,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$routerthis.$route.params.foo,"welcome");
+    console.log(this.$route.params.foo,"welcome");
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
