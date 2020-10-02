@@ -1,22 +1,32 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
     </a-spin>
   </div>
   <div v-else>
     <div class="home">
       <!-- <div v-show="term"> -->
       <a-modal
-        title="Term and Condition"
+        :title="getLabels('t_c')"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
       >
         <template slot="footer">
-          <a-button key="back" @click="disagree">Disagree</a-button>
-          <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Agree</a-button>
+          <a-button key="back" @click="disagree">{{
+            getLabels("disagree")
+          }}</a-button>
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="handleOk"
+            >{{ getLabels("agree") }}</a-button
+          >
         </template>
-        <p>{{term}}</p>
+        <p>{{ terms }}</p>
+        <!--<p v-if="langID == 'ENG'">{{term1}}</p>
+        <p v-else>{{term}}</p>-->
       </a-modal>
       <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
         <template slot="footer">
@@ -101,7 +111,7 @@
                     {
                       initialValue: currDataPrepare['guest-email'],
                       rules: [
-                        {required: true, message: 'Please input your email' },
+                        {required: true, message: getLabels('required_email') },
                       ],
                     },
                   ]"
@@ -115,7 +125,7 @@
                     'phone',
                     {
                       initialValue:currDataPrepare['guest-phnumber'],
-                      rules: [{ required: true }],
+                      rules: [{ required: true, message: getLabels('required_phone') }],
                     },
                   ]"
                     style="width: 100%"
@@ -171,8 +181,8 @@
                     <a-select-option
                       v-for="item in FilterCountry"
                       :key="item"
-                      :value="item['alpha-3']"
-                    >{{ item.name }}</a-select-option>
+                      :value="item['descr']"
+                    >{{ item.setupvalue}}</a-select-option>
                   </a-select>
                   <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -223,19 +233,17 @@
                     <a-select-option
                       v-for="item in FilterCountry"
                       :key="item"
-                      :value="item['alpha-3']"
-                    >{{ item.name }}</a-select-option>
+                      :value="item['descr']"
+                    >{{ item.setupvalue}}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
 
-              <a-col :span="5" :xl="5" :xs="24">
+              <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
                 <div
-                  v-show="
+                  v-if="
                   country === 'INA' ||
-                  country === 'ina' ||
-                  currDataPrepare['guest-country'] === 'ina' ||
-                  currDataPrepare['guest-country'] === 'INA'
+                  country === 'ina' 
                 "
                 >
                   <a-form-item :label="getLabels('region')">
@@ -244,15 +252,32 @@
                       @change="handleChangeRegion"
                       v-decorator="[
                       'region',
-                      { initialValue: currDataPrepare['guest-region'], rules: [{ required: true }] },
+                      {
+                        initialValue: currDataPrepare['guest-prov'],
+                        rules: [{ required: true, message: getLabels('required_province') }],
+                      },
                     ]"
                     >
                       <a-select-option
-                        v-for="(item, keys) in filteredRegion"
-                        :key="keys"
-                        :value="filteredRegion[keys]['province']"
-                      >{{ filteredRegion[keys].province }}</a-select-option>
+                        v-for="item in filteredRegion"
+                        :key="item"
+                        :value="item['descr']"
+                      >{{ item.setupvalue}}</a-select-option>
                     </a-select>
+                  </a-form-item>
+                </div>
+                <div v-else>
+                  <a-form-item :label="getLabels('state')">
+                    <a-input
+                      v-decorator="[
+                    'State',
+                    {                      
+                      initialValue: State,
+                      rules: [{ message: 'Please input your State' }],
+                    },
+
+                  ]"
+                    />
                   </a-form-item>
                 </div>
               </a-col>
@@ -301,7 +326,7 @@
                     @change="onFileChange"
                     v-decorator="[
           'url',
-          { initialValue: '',rules: [{ required: true }] },
+          { initialValue: '',rules: [{ required: true, message: getLabels('required_id') }] },
         ]"
                   />
                 </a-form-item>
@@ -315,9 +340,15 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
-                    <strong>Rp. 500,000</strong>
+                    <strong>{{this.currDataPrepare['currency-usage']}} {{`${minimumDeposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</strong>
                   </h2>
                 </a-form-item>
+                <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
+                  <template slot="footer">
+                    <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
+                  </template>
+                  <p>{{getLabels('payment_error')}}</p>
+                </a-modal>-->
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
                 <a-button
@@ -334,7 +365,7 @@
             </a-row>
             <a-row :gutter="[16,8]" v-else>
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item label="Deposit">
+                <a-form-item :label="getLabels('deposit')">
                   <h2>
                     <strong>{{getLabels('cash_basis')}}</strong>
                   </h2>
@@ -371,20 +402,23 @@
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>-->
-        </a-form>
         <a-row class :gutter="[16,8]">
           <a-col :span="4" :xl="4" :xs="24">
-            <a-button
-              :xl="12"
-              class="font-weight-bold mt-3"
-              type="primary"
-              block
-              :size="size"
-              @click="save();scrollToTop();"
-              v-if="current == steps.length - 1"
-            >Check-In Now</a-button>
+            <a-form-item>
+              <a-button
+                :xl="12"
+                class="font-weight-bold mt-3"
+                type="primary"
+                block
+                :size="size"
+                @click="save();scrollToTop();"
+                v-if="current == steps.length - 1"
+                html-type="submit"
+              >{{getLabels('ci_now')}}</a-button>
+            </a-form-item>
           </a-col>
         </a-row>
+        </a-form>
       </div>
     </div>
   </div>
@@ -392,8 +426,8 @@
 
 <script>
 import router from "../router";
-import data from "../components/json/indonesia";
-import countries from "../components/json/country";
+// import data from "../components/json/indonesia";
+// import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -412,6 +446,8 @@ import Antd, {
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
+import CryptoJS from "crypto-js";
+import CookieS from "vue-cookies";
 Vue.use(Antd);
 
 export default {
@@ -455,8 +491,6 @@ export default {
       },
       nilai: 2,
       setRegion: "Bali",
-      Region: data.Indonesia.Region,
-      City: data.Indonesia.City,
       cek: "",
       cities: "",
       // filteredCity: [],
@@ -486,10 +520,7 @@ export default {
       purpose: "leisure",
       loading: true,
       term: "",
-      term1:
-        "I agree with the Terms and Conditions of Visual Grand Hotel Web Check-in.",
-      term2:
-        "Saya setuju dengan Syarat dan Ketentuan dari Visual Grand Hotel Web Check-in.",
+      term1: "",
       value: "terma",
       gambar: "https://source.unsplash.com/1366x786/?hotel",
       termcondition: false,
@@ -508,19 +539,24 @@ export default {
       FilterPurposeofStay: [],
       bed: "",
       floor: "",
-      region: "",
+      region: [],
       room: "",
       tempsetup: [],
       message: "",
       FilterCountry: [],
-      countries: countries,
+      countries: [],
       precheckin: false,
       hotelname: "",
       currData: [],
       labels: [],
       wifiAddress: "",
-      wiifiPassword: "",
+      wifiPassword: "",
       skipDeposit: false,
+      minimumDeposit: "",
+      paymentStatus: false,
+      paymentModal: false,
+      langID: "",
+      terms: "",
     };
   },
   watch: {
@@ -564,6 +600,7 @@ export default {
   // },
   created() {
     this.currData = this.$route.params.foo;
+    this.langID = this.$route.params.fighter;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
@@ -577,11 +614,6 @@ export default {
             },
           })
           .json();
-
-        if (this.precheckin == true) {
-          this.current = 2;
-          this.y = false;
-        }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
@@ -600,7 +632,6 @@ export default {
             jatah.push(this.tempsetup[i]);
 
             for (const hell in jatah) {
-              // console.log(jatah, "msk");
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
               }
@@ -619,6 +650,11 @@ export default {
             this.tempsetup[i]["number2"] == 1
           ) {
             this.term = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.term1 = this.tempsetup[i]["setupvalue"];
           } else if (this.tempsetup[i]["number1"] == 2) {
             if (this.tempsetup[i].setupflag == true) {
               this.money = this.tempsetup[i]["price"];
@@ -637,6 +673,7 @@ export default {
             this.scanid = !this.tempsetup[i]["setupflag"];
             // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
+            this.tempsetup[i].setupvalue = this.getLabels(this.tempsetup[i].setupvalue.toLowerCase());
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -669,6 +706,27 @@ export default {
             this.tempsetup[i]["number2"] == 4
           ) {
             this.skipDeposit = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 5
+          ) {
+            this.minimumDeposit = this.tempsetup[i]["price"];
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            const bulbasur = {};
+            bulbasur["descr"] = this.tempsetup[i]["descr"];
+            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.countries.push(bulbasur);
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 3
+          ) {
+            const air = {};
+            air["descr"] = this.tempsetup[i]["descr"];
+            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.region.push(air);
           }
         }
 
@@ -695,17 +753,27 @@ export default {
           obj["15"] = this.wifiAddress;
           obj["16"] = this.wifiPassword;
           obj["17"] = this.skipDeposit;
+          obj["18"] = this.minimumDeposit;
+          obj["19"] = this.countries;
+          obj["20"] = this.region;
+          obj["21"] = this.term1;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
-          router.push({ name: "ListCheckIn", params: { foo: nietos } });
+          router.push({ name: "ListCheckIn", params: { foo: nietos, fighter: this.langID } });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
           // console.log(this.currDataPrepare, "kesini");
+          this.precheckin = this.currDataPrepare["pre-checkin"];
+		  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
 
-          this.country = this.currDataPrepare["guest- "];
+          this.country = this.currDataPrepare["guest-country"];
         }
         this.termcondition = true;
+        if (this.precheckin == true) {
+          this.current = 2;
+          this.y = false;
+        }
         this.loading = false;
       })();
     } else if (this.$route.params.id != undefined) {
@@ -723,21 +791,28 @@ export default {
       this.term = this.$route.params.id["setup"]["12"];
       this.hotelname = this.$route.params.id["setup"]["13"];
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
-      this.wiifiAddress = this.$route.params.id["setup"]["15"];
+      this.wifiAddress = this.$route.params.id["setup"]["15"];
       this.wifiPassword = this.$route.params.id["setup"]["16"];
       this.skipDeposit = this.$route.params.id["setup"]["17"];
+      this.minimumDeposit = this.$route.params.id["setup"]["18"];
+      this.countries = this.$route.params.id["setup"]["19"];
+      this.region = this.$route.params.id["setup"]["20"];
+      this.term1 = this.$route.params.id["setup"]["21"];
       this.currDataPrepare = this.$route.params.id["data"];
+      this.precheckin = this.currDataPrepare["pre-checkin"];
 
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
+	  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
       this.termcondition = true;
+	  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
       this.loading = false;
     } else {
       router.push("notfound");
     }
   },
   mounted() {
-    this.filteredRegion = this.Region;
+    this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
   },
   methods: {
@@ -755,9 +830,19 @@ export default {
       }
     },
     next() {
-      this.current++;
-      if (this.precheckin == true) {
-        this.y = true;
+      if ((this.form.getFieldValue(['email'][0]) && this.form.getFieldValue(['phone'][0])) || this.form.getFieldValue(['region'][0])) {
+        this.current++;
+        if (this.precheckin == true) {
+          this.y = true;
+        }
+      } else {
+        if (this.form.getFieldValue(['email'][0]) == '') {
+          this.form.validateFields(['email']);
+        } else if (this.form.getFieldValue(['phone'][0]) == '') {
+          this.form.validateFields(['phone']);
+        } else if (this.form.getFieldValue(['region'][0]) == '') {
+          this.form.validateFields(['region']);
+        }
       }
     },
     prev() {
@@ -769,65 +854,55 @@ export default {
       this.current--;
     },
     search() {
-      (async () => {
-        const parsed = await ky
-          .post("https://dev.nicepay.co.id/nicepay/direct/v2/registration", {
-            json: {
-              request: {
-                timeStamp: "{{timestampTrx}}",
-                iMid: "{{iMid}}",
-                payMethod: "02",
-                currency: "IDR",
-                amt: "{{amount}}",
-                referenceNo: "{{refNo}}",
-                goodsNm: "Test Transaction Nicepay",
-                billingNm: "John Doe",
-                billingPhone: "02110680000",
-                billingEmail: "email@merchant.com",
-                billingAddr: "Jalan Bukit Berbunga 22",
-                billingCity: "Jakarta",
-                billingState: "DKI Jakarta",
-                billingPostCd: "12345",
-                billingCountry: "Indonesia",
-                deliveryNm: "dobleh@merchant.com",
-                deliveryPhone: "12345678",
-                deliveryAddr: "Jalan Bukit Berbunga 22",
-                deliveryCity: "Jakarta",
-                deliveryState: "DKI Jakarta",
-                deliveryPostCd: "12345",
-                deliveryCountry: "Indonesia",
-                dbProcessUrl: "https://ptsv2.com/t/test-nicepay-v2",
-                vat: "",
-                fee: "",
-                notaxAmt: "",
-                description: "",
-                merchantToken: "{{merTok}}",
-                reqDt: "",
-                reqTm: "",
-                reqDomain: "merchant.com",
-                reqServerIP: "127.0.0.1",
-                reqClientVer: "",
-                userIP: "127.0.0.1",
-                userSessionID: "697D6922C961070967D3BA1BA5699C2C",
-                userAgent:
-                  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/60.0.3112.101 Safari/537.36",
-                userLanguage: "ko-KR,en-US;q=0.8,ko;q=0.6,en;q=0.4",
-                cartData:
-                  '{"count":1,"item":[{"img_url":"https://images.ctfassets.net/od02wyo8cgm5/14Njym0dRLAHaVJywF8WFL/1910357dd0da0ae38b61bc8ad3db86e4/cloudflyer_2-fw19-grey_lime-m-g1.png","goods_name":"Shoe","goods_detail":"Shoe","goods_amt":{{amt}}}]}',
-                instmntType: "2",
-                instmntMon: "1",
-                recurrOpt: "0",
-                bankCd: "CENA",
-                vacctValidDt: "",
-                vacctValidTm: "",
-                merFixAcctId: "",
-                mitraCd: "",
-              },
-            },
-          })
-          .json();
-        // console.log(parsed, "test");
-      })();
+      const token = CryptoJS.SHA256('IONPAYTESTTRX2020090700000002' + this.minimumDeposit + '33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
+      const params = "timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" + this.minimumDeposit + "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" + this.form.getFieldValue(['gast'])+ "&billingPhone=" + this.form.getFieldValue(['phone'][0]) + "&billingEmail=" + this.form.getFieldValue(['email'][0]) + "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?lang=" + this.langID + "&instmntType=1&instmntMon=1&reccurOpt=0";
+      const datas = {
+        'book': this.currDataPrepare.resnr,
+        'codate': this.formatDate(this.currDataPrepare.co),
+        'payment': 'success',
+      };
+
+      CookieS.set('data', datas);
+
+      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://dev.nicepay.co.id/nicepay/api/orderRegist.do?' + params)}`)
+      .then(response => {
+      if (response.ok) return response.json()
+      throw new Error('Network response was not ok.')
+      })
+      .then(data => {
+        const resp = data.contents.substr(data.contents.indexOf('{'), data.contents.length);
+        this.resReg = JSON.parse(resp);
+        if (this.resReg.data['resultCd'] == '0000') {
+          console.log('masuk payment');
+          const urlInq = "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" + this.resReg.data['tXid'] + "&optDisplayCB=1&optDisplayBL=0";
+          window.open(urlInq, '_self');
+        } else {
+          console.log('error payment');
+        }
+      });
+    },
+    check() {
+      const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
+      const params = "iMid=IONPAYTEST&&merchantToken=" + token.toString() + "&tXid=IONPAYTEST01202009221236456216&amt=500000&referenceNo=TRX2020090700000002";
+
+      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://dev.nicepay.co.id/nicepay/api/onePassStatus.do?' + params)}`)
+      .then(response => {
+      if (response.ok) return response.json()
+      throw new Error('Network response was not ok.')
+      })
+      .then(data => {
+        this.resPaid = JSON.parse(data.contents);
+        if (this.resPaid.resultCd == '0000') {
+          this.paymentStatus = true;
+          console.log('payment valid');
+        } else {
+          this.paymentStatus = false;
+          console.log('payment invalid');
+        }
+      });
+    },
+    closeModal() {
+      this.paymentModal = false;
     },
     onFileChange(e) {
       const file = e.target.files[0];
@@ -853,10 +928,17 @@ export default {
           "," +
           this.wifiAddress +
           "!" +
-          this.wiifiPassword;
-        ("}");
-        // console.log(mori, "be the one");
-        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+          this.wifiPassword +
+          "?" +
+          this.currDataPrepare["argt-str"] +
+          "}";
+        //this.check();
+        //if (this.paymentStatus) {
+          //console.log(this.paymentStatus);
+          router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        //} else {
+          //this.paymentModal = true;
+        //}
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
@@ -932,7 +1014,8 @@ export default {
       });
     },
     disagree() {
-      router.push("mobilecheckin");
+      router.push({ path: "mobilecheckin", query: { lang: this.langID } });
+      // router.push("mobilecheckin");
     },
     handleBlur() {
       // console.log("blur");

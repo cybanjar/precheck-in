@@ -1,21 +1,21 @@
 <template>
   <div>
     <div class="ota text-center">
-      <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
+      <a-modal :title="getLabels('information')" :visible="informationmodal" >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
         </template>
-        <p>{{getLabels('early_checkin')}}</p>
+        <p>{{getLabels('early_checkin')}}{{checkin}}</p>
       </a-modal>
-      <a-modal title="Information" :visible="informationmodal1" :confirm-loading="confirmLoading">
+      <a-modal :title="getLabels('information')" :visible="informationmodal1" >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
         </template>
         <p>{{getLabels('mci_error_not_found')}}</p>
       </a-modal>
-      <a-modal title="Information" :visible="informationmodal2" :confirm-loading="confirmLoading">
+      <a-modal :title="getLabels('information')" :visible="informationmodal2" >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">Close</a-button>
+          <a-button key="submit" type="primary" @click="goOTA">{{getLabels('close')}}</a-button>
         </template>
         <p>{{getLabels('mci_error_not_ready')}}</p>
       </a-modal>
@@ -28,45 +28,95 @@
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalBookingCode" class="img-ota" src="../assets/booking-code.svg" />
-          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')" @ok="handleOk">
+          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOk"
+              >
+                {{ getLabels("search") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('book_code')">
-              <a-input v-model="bookingcode" placeholder="Input your booking code" />
+              <a-input v-model="bookingcode" :placeholder="getLabels('input_bookcode')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker @change="onChange" :format="dateFormat" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" :format="dateFormat" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img @click="showModalGuestName" class="img-ota" src="../assets/Name.svg" />
-          <a-modal v-model="modalGuestName" :title="getLabels('last_name')" @ok="handleOk">
+          <a-modal v-model="modalGuestName" :title="getLabels('last_name')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOk"
+              >
+                {{ getLabels("search") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('last_name')">
-              <a-input placeholder="Input your last name" />
+              <a-input :placeholder="getLabels('input_lastname')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img class="img-ota" @click="showModalEmailAddress" src="../assets/EmailAddress.svg" />
-          <a-modal v-model="modalEmailAddress" :title="getLabels('email')" @ok="handleOk">
+          <a-modal v-model="modalEmailAddress" :title="getLabels('email')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOk"
+              >
+                {{ getLabels("search") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('email')">
-              <a-input placeholder="Input your email address" />
+              <a-input :placeholder="getLabels('input_email')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img class="img-ota" @click="showModalMembershipID" src="../assets/membership.svg" />
-          <a-modal v-model="modalMembershipID" :title="getLabels('membership_id')" @ok="handleOk">
+          <a-modal
+            v-model="modalMembershipID"
+            :title="getLabels('membership_id')"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel") }}
+              </a-button>
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOk"
+              >
+                {{ getLabels("search") }}
+              </a-button>
+            </template>
             <a-form-item :label="getLabels('membership_id')">
-              <a-input placeholder="Input your Membership ID" />
+              <a-input :placeholder="getLabels('input_membership')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -79,6 +129,7 @@
 import router from "../router";
 import moment from "moment";
 import ky from "ky";
+import CookieS from "vue-cookies";
 
 export default {
   data() {
@@ -95,24 +146,47 @@ export default {
       informationmodal1: false,
       informationmodal2: false,
       informationterm: "",
-      confirmLoading: false,
       message: "",
       labels: [],
       tempsetup: [],
       checkin: "",
       arrive: "",
+      langID: "",
+      payment: "",
     };
   },
   mounted() {
     (async () => {
-      const tempParam = location.search.substring(1);
+      //const tempParam = location.search.substring(1);
+      const tempParam = {};
+      location.search.split('&').toString().substr(1).split(",").forEach(item => {
+          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]) ?  item.split("=")[1]: "No query strings available" ;
+      });
+      this.arrive = moment(new Date()).format("HH:mm");
+      if (tempParam.book != undefined) {
+        this.checkin = tempParam.citime.replace(/%3A/g, ":");
+        if ("14:00" < this.checkin) {
+          this.informationmodal = true;
+        } else {
+          this.bookingcode = tempParam.book;
+          this.date = tempParam.codate.replace(/%2F/g, "/");
+          this.handleOk();
+        }
+      } else if (tempParam.resultCd == '0000') {
+          const tmpParam = CookieS.get('data');
+          this.bookingcode = tmpParam.book;
+          this.date = tmpParam.codate;
+          this.payment = tmpParam.payment;
+          this.handleOk();
+      }
+      this.langID = tempParam.lang;
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
-                countryId1: tempParam,
+                countryId1: tempParam.lang,
                 countryId2: "",
                 inpVariable: " ",
               },
@@ -145,12 +219,9 @@ export default {
           this.tempsetup[i]["number2"] == 2
         ) {
           this.checkin = this.tempsetup[i]["setupvalue"];
-          // console.log(this.checkin);
         }
       }
-      this.arrive = moment(new Date()).format("HH:mm");
-      // console.log(this.arrive);
-      if (this.arrive != this.checkin) {
+      if ("14:00" < this.checkin) {
         this.informationmodal = true;
       }
     })();
@@ -173,13 +244,13 @@ export default {
       this.modalMembershipID = true;
     },
     errorbo() {
-      this.$message.error("Please input your Booking Code");
+      this.$message.error(this.getLabels('input_bookcode'));
     },
     errorco() {
-      this.$message.error("Please input your Check Out Date");
+      this.$message.error(this.getLabels('input_codate'));
     },
     error() {
-      this.$message.error("Please input your Booking Code and Check Out Date");
+      this.$message.error(this.getLabels('input_bookcode') + ', ' + this.getLabels('input_codate'));
     },
     goOTA() {
       this.informationmodal = false;
@@ -189,7 +260,7 @@ export default {
       const reservation = [];
       // console.log(this.bookingcode, "bo");
       // console.log(this.date, "co");
-      this.hour = moment(new Date()).format("HH:mm");
+      // this.hour = moment(new Date()).format("HH:mm");
       // console.log(this.hour, "jam");
 
       if (!this.bookingcode && !this.date) {
@@ -254,9 +325,7 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            // console.log(reservation, "reserve");
-            // console.log(reservation, "reservation");
-            router.push({ name: "Step", params: { foo: reservation } });
+            router.push({ name: "Step", params: { foo: reservation, fighter: this.langID } });
           }
         })();
 
@@ -266,10 +335,36 @@ export default {
         this.modalMembershipID = false;
       }
     },
+    handleCancel() {
+      this.modalBookingCode = false;
+      this.modalGuestName = false;
+      this.modalEmailAddress = false;
+      this.modalMembershipID = false;
+    },
     getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
+      //const found = this.labels.find(({program-variable}) => element == 'close');
+      //console.log(found);
+     /*(async () => {
+        const label = await ky
+          .post(
+            "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
+            {
+              json: {
+                request: {
+                  countryId1: this.langID,
+                  countryId2: '',
+                  inpVariable: nameKey,
+                },
+              },
+            }
+          )
+          return label;
+      });*/
+      
+      /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
+          return this.labels[x]["program-label1"];
+          break;const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
             .split(" ");
           for (let y = 0; y < splitStr.length; y++) {
@@ -278,7 +373,7 @@ export default {
           }
           return splitStr.join(" ");
         }
-      }
+      }*/
     },
   },
 };
