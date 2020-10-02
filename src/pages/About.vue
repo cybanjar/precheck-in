@@ -4,10 +4,8 @@
   </div>
   <div v-else>
     <div class="home">
-      <h6 class="q-ma-none text-center font-weight-bold visible">
-        {{ hotelname }}
-      </h6>
-      <div :style="information" class="row rounded-4 justify-between">
+      <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
+      <div :style="information" class="text-white row rounded-4 justify-between">
         <div class="col-4">
           <h4 class="q-ma-sm font-weight-bold">Online Check-in</h4>
           <br />
@@ -19,11 +17,7 @@
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h6>
-          <h6
-            v-else
-            class="q-ma-sm main-guest-title font-weight-bold"
-            :style="information"
-          >
+          <h6 v-else class="q-ma-sm main-guest-title font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h6>
@@ -40,93 +34,16 @@
         <div class="col-4">
           <q-card flat class="my-card">
             <q-img :src="gambar" basic>
-              <div class="absolute-bottom text-subtitle2 text-center">
-                {{ hotelname }}
-              </div>
+              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
             </q-img>
           </q-card>
         </div>
       </div>
 
-      <!-- <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
-      <div class="row rounded-4 justify-between" :style="information">
-        <div class="col pl-3 pt-3" :md="15" :xl="15" :xs="24">
-          <h4
-            class="q-ma-none mb-3 font-white font-weight-bold"
-            :style="information"
-          >ONLINE CHECK-IN</h4>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="q-ma-none main-guest-title font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6 v-else class="q-ma-none main-guest-title font-weight-bold" :style="information">
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h6>
-
-          <p class :style="information">
-            {{ getLabels("arrival") }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure") }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code") }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </div>
-        <div class="col container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <q-card flat class="my-card">
-            <q-img :src="gambar" basic>
-              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
-            </q-img>
-          </q-card>
-        </div>
-        <div class="col pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h4 class="q-ma-none mb-3 font-weight-bold" :style="information">ONLINE CHECK-IN</h4>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="q-ma-none main-guest-title font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h4 v-else class="main-guest-title font-weight-bold" :style="information">
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h4>
-          <p class="ant-card-meta-description" :style="information">
-            {{ getLabels("arrival") }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure") }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code") }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </div>
-      </div>-->
-
       <!-- Arrival -->
       <div>
-        <h5 class="ml-3 font-weight-bold full-border-bottom">
-          {{ getLabels("arrival") }}
-        </h5>
-        <!-- <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
-          <q-card flat class="header-card">
-            <div>
-              <div class="col" :span="23" :xl="23" :xs="23">
-                <p class="header-group">{{ getLabels("arrival") }}</p>
-              </div>
-            </div>
-          </q-card>
-        </div>-->
+        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("arrival") }}</h5>
+
         <div class="row ml-3" gutter="16">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("eta") }}</p>
@@ -141,21 +58,18 @@
             <p>{{ getLabels("price") }}</p>
             {{ nilai === 3 ? "" : currency }}
             {{
-              nilai === 3
-                ? " "
-                : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+            nilai === 3
+            ? " "
+            : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
             }}
             <span>/ {{ per }}</span>
           </div>
-          <div
-            class="col-md-3 col-xs-12"
-            v-show="showPrice && showPickupRequest"
-          >
+          <div class="col-md-3 col-xs-12" v-show="showPrice && showPickupRequest">
             <p>{{ getLabels("pick_detail") }}</p>
-            <q-input outlined filled v-model="flight" />
+            <q-input outlined v-model="flight" />
           </div>
         </div>
-        <div class="row ml-3" gutter="16">
+        <div class="row ml-3">
           <div class="col">
             <p>{{ getLabels("room_pref") }}</p>
             <q-option-group
@@ -166,78 +80,20 @@
               @change="Room"
               inline
             />
-            <!-- <a-radio-group
-                name="radioGroup"
-                v-show="showSmoking"
-                @change="Room"
-              >
-                <a-radio value="NonSmoking">
-                  <span class="font-weight-normal">{{
-                    getLabels("non_smoking")
-                  }}</span>
-                </a-radio>
-                <a-radio value="Smoking">
-                  <span class="font-weight-normal">{{
-                    getLabels("smoking")
-                  }}</span>
-                </a-radio>
-            </a-radio-group>-->
-            <!-- <a-form-item label>
-              <a-radio-group
-                name="radioGroup"
-                v-show="showFloor"
-                @change="Floor"
-              >
-                <a-radio value="LowerFloor">
-                  <span class="font-weight-normal">{{
-                    getLabels("lower_floor")
-                  }}</span>
-                </a-radio>
-                <a-radio value="HigherFloor">
-                  <span class="font-weight-normal">{{
-                    getLabels("higher_floor")
-                  }}</span>
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label>
-              <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
-                <a-radio value="OneBigBed">
-                  <span class="font-weight-normal">{{
-                    getLabels("one_big_bed")
-                  }}</span>
-                </a-radio>
-                <a-radio value="TwoSingleBeds">
-                  <span class="font-weight-normal">{{
-                    getLabels("two_single_beds")
-                  }}</span>
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>-->
           </div>
         </div>
         <div class="row ml-3">
           <div class="col">
             <p>{{ getLabels("special_request") }}</p>
-            <q-input v-model="text" filled autogrow :maxlength="max" />
+            <q-input v-model="text" autogrow outlined :maxlength="max" />
           </div>
           <div class="col max-breaker">
             <span v-text="text.length + '/' + max"></span>
           </div>
         </div>
 
-        <h5 class="ml-3 font-weight-bold full-border-bottom">
-          {{ getLabels("guest_detail") }}
-        </h5>
-        <!-- <div class="row ml-4 mr-3 mb-3">
-          <q-card class="header-card">
-            <div class="row">
-              <div class="col" :span="23" :xl="23" :xs="23">
-                <p class="header-group">{{ getLabels("guest_detail") }}</p>
-              </div>
-            </div>
-          </q-card>
-        </div>-->
+        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("guest_detail") }}</h5>
+
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12" v-if="email != ''">
             <p>{{ getLabels("email") }}</p>
@@ -258,50 +114,29 @@
               v-model="phone"
               :label="getLabels('phone_number')"
               mask="#### - #### - #####"
-              unmasked-value
               hint="Mask: #### - #### - #####"
             />
           </div>
         </div>
+
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("purpose_stay") }}</p>
-            <q-select
-              outlined
-              v-model="purpose"
-              :options="FilterPurposeofStay"
-            />
+            <q-select outlined v-model="purpose" :options="FilterPurposeofStay" />
           </div>
         </div>
+        <br />
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("nationality") }}</p>
-            <!-- <a-select
-              show-search
-              v-decorator="[
-                'nationality',
-                {
-                  initialValue: currDataPrepare['guest-doc-nation'],
-                  rules: [{ required: true }],
-                },
-              ]"
-              @change="Nationality"
-            >
-              <a-select-option
-                v-for="item in FilterCountry"
-                :key="item"
-                :value="item['descr']"
-                >{{ item.setupvalue }}</a-select-option
-              >
-            </a-select>-->
             <q-select
-              filled
+              outlined
               use-input
               hide-selected
               fill-input
               input-debounce="0"
+              :label="getLabels('nationality')"
               :options="FilterCountry"
-              style="width: 250px; padding-bottom: 32px"
             >
               <template v-slot:no-option>
                 <q-item>
@@ -312,45 +147,24 @@
           </div>
         </div>
 
-        <div class="row ml-3 mb-3">
-          <!-- <div class="col-md-1 col-xs-1">
+        <div class="row ml-3 mb-3 q-mt-md">
+          <div>
             <q-checkbox v-model="agree" />
-          </div>-->
-
-          <div class="q-gutter-sm">
-            <q-checkbox v-model="agree" />
-            <a @click="showModalTerm"
-              >{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a
-            >
+            <a @click="showModalTerm">{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a>
             {{ hotelname }}.
           </div>
-
-          <!-- <div class="col-md-5 col-xs-12">
-            {{ getLabels("pci_tc") }}
-            <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
-            {{ hotelname }}.
-          </div>-->
           <q-dialog v-model="visibleTerm">
             <q-card>
               <q-card-section>
                 <div class="text-h6">{{ getLabels("t_c") }}</div>
               </q-card-section>
-
               <q-separator />
-
               <q-card-section style="max-height: 50vh" class="scroll">
                 <p>{{ term }}</p>
               </q-card-section>
-
               <q-separator />
-
               <q-card-actions align="right">
-                <q-btn
-                  flat
-                  :label="getLabels('close')"
-                  color="primary"
-                  @click="handleOkTerm"
-                />
+                <q-btn flat :label="getLabels('close')" color="primary" @click="handleOkTerm" />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -359,24 +173,11 @@
           <div class="col-md-3 col-xs-12">
             <q-btn
               color="primary"
-              :xl="12"
               class="font-weight-bold mt-3"
               block
               :size="size"
               :disabled="!agree"
-              >{{ getLabels("ci_now") }}</q-btn
-            >
-
-            <!-- <a-button
-              :xl="12"
-              class="font-weight-bold mt-3"
-              type="primary"
-              block
-              :size="size"
-              :disabled="!agree"
-              html-type="submit"
-              >{{ getLabels("ci_now") }}</a-button
-            >-->
+            >{{ getLabels("ci_now") }}</q-btn>
           </div>
         </div>
       </div>
@@ -387,25 +188,9 @@
 <script>
 import router from "../router";
 import Vue from "vue";
-// import Quasar, {
-
-//   Card,
-//   Icon,
-//   FormModel,
-//   Button,
-//   Checkbox,
-//   Input,
-//   Collapse,
-//   Radio,
-//   DatePicker,
-//   Modal,
-// } from "ant-design-vue";
-// import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
 import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
-
-// Vue.use(Antd);
 
 export default {
   components: {
@@ -413,24 +198,13 @@ export default {
   },
   data() {
     return {
-      addessHotel:
-        "Perkantoran Gading Bukit Indah blok O No. 3-5, Kelapa Gading, Jakarta 14240",
       id: [],
-      plainOptions: ["Apple", "Pear", "Orange"],
       currDataPrepare: {},
       counter: 0,
-      size: "large",
       checkNick: false,
-      formItemLayout: {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 8 },
-      },
-      formTailLayout: {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 8, offset: 4 },
-      },
       nilai: 2,
       bed: "",
+      size: "large",
       floor: "",
       region: "",
       room: "",
@@ -494,6 +268,7 @@ export default {
       labels: [],
       flagKiosk: false,
       langID: "",
+      phone: "",
     };
   },
   created() {
