@@ -6,10 +6,10 @@
   </div>
   <div v-else>
     <div class="home">
-      {{currDataPrepare}}
+      <!-- {{ currDataPrepare }} -->
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div class="row header-branding" :style="information" type="flex" justify="space-between">
-        <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
+        <div class="col pl-3 pt-3" :span="15" :md="15" :xl="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
@@ -37,10 +37,10 @@
         </div>
         <div class="col container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
           <img class="img-hotel" :src="gambar" alt="Image Loading" />
-          <div class="overlay invisible">
+          <div class="overlay">
             <div class="text">{{ hotelname }}</div>
           </div>
-          <div class="invisible">
+          <div class>
             <div class="gear-setting"></div>
           </div>
         </div>
