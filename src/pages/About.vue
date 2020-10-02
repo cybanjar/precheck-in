@@ -587,7 +587,6 @@ export default {
             //   }
             //   return this.countries;
             this.Country = this.countries;
-            console.log(this.Country, "kota2");
             this.FilterCountry = this.mapWithNationality(this.Country, "descr");
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
@@ -758,8 +757,6 @@ export default {
       return itemReturn;
     },
     mapWithNationality(items, key) {
-      console.log(items, "datang");
-      console.log(key, "datang3");
       let itemReturn = items
         ? items.map((item) => ({
             label: `${item["setupvalue"]}`,
@@ -767,7 +764,6 @@ export default {
             value: item[key],
           }))
         : [];
-      console.log(itemReturn, "datang2");
       return itemReturn;
     },
     getLabels(nameKey) {

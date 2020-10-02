@@ -1,14 +1,25 @@
 <template>
   <div>
     <div class="home">
-      <div class="row header-brandings" :style="information" type="flex" justify="space-between">
+      <div
+        class="row header-brandings"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
         <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
         </div>
         <div class="col container" :span="9" :md="9" :xs="24">
-          <q-img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
+          <q-img
+            class="img-hotel float-right image"
+            :src="gambar"
+            alt="Image Loading"
+          />
           <div class="overlay">
-            <div class="text">{{hotelname}}</div>
+            <div class="text">{{ hotelname }}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -18,7 +29,7 @@
         </div>
       </div>
       <div>
-        <h1 class="mt-3 text-center">{{getLabels('guest_list')}}</h1>
+        <h1 class="mt-3 text-center">{{ getLabels("guest_list") }}</h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <!-- <q-list
@@ -65,13 +76,69 @@
             </q-card>
           </q-item>
         </q-list> -->
+        <q-list bordered>
+          <div v-for="item in data" :key="item">
+            <q-item
+              :class="item.isSelected == true ? 'selected' : 'notselected'"
+              clickable
+              v-ripple
+              @click="
+                item['gcomment-desc'] != 'GUEST ALREADY PCI'
+                  ? select(item)
+                  : disabled
+              "
+            >
+              <q-item-section>
+                <h2
+                  :class="
+                    item.isSelected == true
+                      ? 'selected pl-3 font-weight-bold'
+                      : 'notselected pl-3 font-weight-bold'
+                  "
+                >
+                  {{ item["guest-lname"] }},
+                  {{ item["guest-pname"] }}
+                </h2>
+                <p v-if="item['guest-member-name'] != ''" class="pl-3">
+                  {{ item["guest-member-name"] }}
+                </p>
+                <p v-else class="pl-3">
+                  <br />
+                </p>
+                <p class="pl-3">
+                  {{ getLabels("arrival") }}:
+                  <span class="font-weight-bold">{{
+                    formatDate(item.arrive)
+                  }}</span>
+                  {{ getLabels("departure") }}:
+                  <span class="font-weight-bold">{{
+                    formatDate(item.depart)
+                  }}</span>
+                </p>
+                <p class="pl-3">
+                  {{ item.rmqty }} {{ getLabels("adult") }}
+                  <q-chip
+                    class="glossy"
+                    square
+                    color="green"
+                    text-color="white"
+                    icon="bookmark"
+                  >
+                    {{ item["rate-desc"] }}
+                  </q-chip>
+                </p>
+              </q-item-section>
+            </q-item>
+          </div>
+        </q-list>
       </div>
       <q-btn
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-      >{{getLabels('next')}}</q-btn>
+        >{{ getLabels("next") }}</q-btn
+      >
       <!-- </router-link> -->
     </div>
   </div>
@@ -94,6 +161,7 @@ export default {
   created() {
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
+    console.log(this.setup, "setup");
     this.lemparsetup = this.$route.params.foo[1];
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
@@ -105,16 +173,23 @@ export default {
       this.data[i].key = Number(i) + 1;
     }
     return this.data;
-    // console.log(this.data, "berubah");
-  },
-  mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
+
+    // console.log(this.data, "berubah");
   },
   methods: {
     send() {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
-      this.$router.push({ name: "Home", params: { id: this.fairy } }).catch(()=>{});
+      this.$router
+        .push({ name: "Home", params: { id: this.fairy } })
+        .catch(() => {});
+      console.log(
+        this.$router
+          .push({ name: "Home", params: { id: this.fairy } })
+          .catch(() => {}),
+        "lempar"
+      );
     },
     select(client) {
       if (client.isSelected == false) {
