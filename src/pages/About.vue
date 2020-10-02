@@ -380,7 +380,7 @@
 </template>
 
 <script>
-// import router from "../router";
+import router from "../router";
 import Vue from "vue";
 // import Quasar, {
 
@@ -492,176 +492,230 @@ export default {
     };
   },
   created() {
-    (async () => {
-      const tempParam = location.search.substring(1);
-      const parsed = await ky
-        .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
-          {
-            json: {
-              request: {
-                encryptedText: tempParam
-                  .replace(/%2F/g, "/")
-                  .replace(/%20/g, "+"),
+    if (this.$route.params.id == undefined) {
+      (async () => {
+        const tempParam = location.search.substring(1);
+        const parsed = await ky
+          .post(
+            "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+            {
+              json: {
+                request: {
+                  encryptedText: tempParam
+                    .replace(/%2F/g, "/")
+                    .replace(/%20/g, "+"),
+                },
               },
-            },
-          }
-        )
-        .json();
-
-      console.log(parsed, "masuk");
-      localStorage.removeItem("labels");
-      localStorage.setItem(
-        "labels",
-        JSON.stringify(parsed.response.languagesList["languages-list"])
-      );
-      this.labels = JSON.parse(localStorage.getItem("labels"));
-      this.langID =
-        parsed.response.languagesList["languages-list"][0]["lang-id"];
-
-      this.tempsetup = parsed.response.pciSetup["pci-setup"];
-      const jatah = [];
-      for (const i in this.tempsetup) {
-        if (this.tempsetup[i]["number1"] == 4) {
-          jatah.push(this.tempsetup[i]);
-
-          for (const heaven in jatah) {
-            // console.log(jatah, "msk");
-            if (jatah[heaven].setupflag == true) {
-              this.information.backgroundColor = jatah[heaven]["setupvalue"];
             }
-          }
-        } else if (this.tempsetup[i]["number1"] == 5) {
-          jatah.push(this.tempsetup[i]);
+          )
+          .json();
 
-          for (const hell in jatah) {
-            // console.log(jatah, "msk");
-            if (jatah[hell].setupflag == true) {
-              this.information.color = jatah[hell]["setupvalue"];
-            }
-          }
-        } else if (
-          this.tempsetup[i]["number1"] == 7 &&
-          this.tempsetup[i]["number2"] == 1
-        ) {
-          const lagi = this.tempsetup[i]["setupvalue"].substring(
-            this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
-            this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
-          );
-          this.gambar = lagi;
-        } else if (
-          this.tempsetup[i]["number1"] == 6 &&
-          this.tempsetup[i]["setupflag"] == true
-        ) {
-          this.term = this.tempsetup[i]["setupvalue"];
-        } else if (this.tempsetup[i]["number1"] == 2) {
-          if (this.tempsetup[i].setupflag == true) {
-            this.showPickupRequest = this.tempsetup[i].setupflag;
-            this.money = this.tempsetup[i]["price"];
-            this.currency = this.tempsetup[i]["remarks"];
-            this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
-            this.per = this.getLabels(this.per.toLowerCase().trim());
-          }
-        } else if (
-          this.tempsetup[i]["number1"] == 8 &&
-          this.tempsetup[i]["number2"] == 2
-        ) {
-          this.hour = this.tempsetup[i]["setupvalue"];
-        } else if (this.tempsetup[i]["number1"] == 1) {
-          this.tempsetup[i].setupvalue = this.getLabels(
-            this.tempsetup[i].setupvalue.toLowerCase()
-          );
-          this.PurposeofStay.push(this.tempsetup[i]);
-          this.FilterPurposeofStay = this.mapWithPurpose(
-            this.PurposeofStay,
-            "number2"
-          );
-          if (this.tempsetup[i].setupflag == true) {
-            // this.purpose = this.tempsetup[i].setupvalue;
-            this.purpose = {
-              label: this.tempsetup[i].setupvalue,
-              value: this.tempsetup[i].number2,
-            };
-          }
-        } else if (this.tempsetup[i]["number1"] == 3) {
-          if (this.tempsetup[i].number2 == 1) {
-            this.showBed = this.tempsetup[i].setupflag;
-          } else if (this.tempsetup[i].number2 == 2) {
-            this.showSmoking = this.tempsetup[i].setupflag;
-          } else if (this.tempsetup[i].number2 == 3) {
-            this.showFloor = this.tempsetup[i].setupflag;
-          }
-        } else if (
-          this.tempsetup[i]["number1"] == 99 &&
-          this.tempsetup[i]["number2"] == 1
-        ) {
-          this.hotelname = this.tempsetup[i]["setupvalue"];
-        } else if (
-          this.tempsetup[i]["number1"] == 9 &&
-          this.tempsetup[i]["number2"] == 2
-        ) {
-          this.countries.push(this.tempsetup[i]);
-          //   for (const i in this.countries) {
-          //     this.countries[i].key = Number(i) + 1;
-          //   }
-          //   return this.countries;
-          this.Country = this.countries;
-          console.log(this.Country, "kota2");
-          this.FilterCountry = this.mapWithNationality(this.Country, "descr");
-        } else if (
-          this.tempsetup[i]["number1"] == 9 &&
-          this.tempsetup[i]["number2"] == 3
-        ) {
-          const air = {};
-          air["descr"] = this.tempsetup[i]["descr"];
-          air["setupvalue"] = this.tempsetup[i]["setupvalue"];
-          this.province.push(air);
-          this.filteredProvince = this.province;
-        } else if (
-          this.tempsetup[i]["number1"] == 8 &&
-          this.tempsetup[i]["number2"] == 10
-        ) {
-          this.flagKiosk = this.tempsetup[i]["setupflag"];
-        }
-      }
-
-      const tempMessResult = parsed.response.messResult.split(" ");
-      this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-      // console.log(this.guests, "guests");
-
-      if (
-        parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
-        "GUEST ALREADY PCI"
-      ) {
-        this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
-        const mori =
-          "{" +
-          this.currDataPrepare["rsv-number"] +
-          ";" +
-          moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
-          "," +
-          this.hour +
-          "}";
-        // console.log(mori, "be the one");
-        router.push({
-          name: "Success",
-          params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
-        });
-      } else {
-        this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
-        this.country = this.currDataPrepare["guest-country"];
-        this.email = this.currDataPrepare["guest-email"];
-        const string =
-          '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
-        const lagi = string.substring(
-          string.lastIndexOf("<img src=") + 10,
-          string.lastIndexOf('g"') + 1
+        localStorage.removeItem("labels");
+        localStorage.setItem(
+          "labels",
+          JSON.stringify(parsed.response.languagesList["languages-list"])
         );
-        this.gambar = lagi;
-      }
-    })();
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+        this.labels = JSON.parse(localStorage.getItem("labels"));
+        this.langID =
+          parsed.response.languagesList["languages-list"][0]["lang-id"];
 
+        this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const heaven in jatah) {
+              // console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+              }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+
+            for (const hell in jatah) {
+              // console.log(jatah, "msk");
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+              }
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 7 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            const lagi = this.tempsetup[i]["setupvalue"].substring(
+              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
+              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["setupflag"] == true
+          ) {
+            this.term = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 2) {
+            if (this.tempsetup[i].setupflag == true) {
+              this.showPickupRequest = this.tempsetup[i].setupflag;
+              this.money = this.tempsetup[i]["price"];
+              this.currency = this.tempsetup[i]["remarks"];
+              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+              this.per = this.getLabels(this.per.toLowerCase().trim());
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.hour = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 1) {
+            this.tempsetup[i].setupvalue = this.getLabels(
+              this.tempsetup[i].setupvalue.toLowerCase()
+            );
+            this.PurposeofStay.push(this.tempsetup[i]);
+            this.FilterPurposeofStay = this.mapWithPurpose(
+              this.PurposeofStay,
+              "number2"
+            );
+            if (this.tempsetup[i].setupflag == true) {
+              // this.purpose = this.tempsetup[i].setupvalue;
+              this.purpose = {
+                label: this.tempsetup[i].setupvalue,
+                value: this.tempsetup[i].number2,
+              };
+            }
+          } else if (this.tempsetup[i]["number1"] == 3) {
+            if (this.tempsetup[i].number2 == 1) {
+              this.showBed = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 2) {
+              this.showSmoking = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 3) {
+              this.showFloor = this.tempsetup[i].setupflag;
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.countries.push(this.tempsetup[i]);
+            //   for (const i in this.countries) {
+            //     this.countries[i].key = Number(i) + 1;
+            //   }
+            //   return this.countries;
+            this.Country = this.countries;
+            console.log(this.Country, "kota2");
+            this.FilterCountry = this.mapWithNationality(this.Country, "descr");
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 3
+          ) {
+            const air = {};
+            air["descr"] = this.tempsetup[i]["descr"];
+            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.province.push(air);
+            this.filteredProvince = this.province;
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 10
+          ) {
+            this.flagKiosk = this.tempsetup[i]["setupflag"];
+          }
+        }
+
+        const tempMessResult = parsed.response.messResult.split(" ");
+        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+        // console.log(this.guests, "guests");
+
+        if (tempMessResult[0] == "99") {
+          router.push("notfound");
+        } else {
+          if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+            const nietos = [];
+            const obj = {};
+            this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+            // console.log(this.gambar, "gambar");
+            obj["01"] = this.gambar;
+            obj["02"] = this.information;
+            obj["03"] = this.money;
+            obj["04"] = this.currency;
+            obj["05"] = this.per;
+            obj["06"] = this.purpose;
+            obj["07"] = this.FilterPurposeofStay;
+            obj["08"] = this.showBed;
+            obj["09"] = this.showSmoking;
+            obj["10"] = this.showFloor;
+            obj["11"] = this.hour;
+            obj["12"] = this.term;
+            obj["13"] = this.hotelname;
+            obj["14"] = this.showPickupRequest;
+            obj["15"] = this.countries;
+            obj["16"] = this.province;
+            nietos.push(this.dataGuest);
+            nietos.push(obj);
+            this.$router.push({ path: "list", params: { foo: nietos } });
+          } else if (
+            parsed.response.arrivalGuest["arrival-guest"]["0"][
+              "gcomment-desc"
+            ] == "GUEST ALREADY PCI"
+          ) {
+            this.currDataPrepare =
+              parsed.response.arrivalGuest["arrival-guest"][0];
+            const mori =
+              "{" +
+              this.currDataPrepare["rsv-number"] +
+              ";" +
+              moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+              "," +
+              this.hour +
+              "}";
+            // console.log(mori, "be the one");
+            this.$router.push({
+              path: "success",
+              params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+            });
+          } else {
+            this.currDataPrepare =
+              parsed.response.arrivalGuest["arrival-guest"][0];
+            this.country = this.currDataPrepare["guest-country"];
+            this.email = this.currDataPrepare["guest-email"];
+            const string =
+              '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
+            const lagi = string.substring(
+              string.lastIndexOf("<img src=") + 10,
+              string.lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
+          }
+        }
+      })();
+    } else {
+      this.gambar = this.$route.params.id["setup"]["01"];
+      this.information = this.$route.params.id["setup"]["02"];
+      this.money = this.$route.params.id["setup"]["03"];
+      this.currency = this.$route.params.id["setup"]["04"];
+      this.per = this.$route.params.id["setup"]["05"];
+      this.purpose = this.$route.params.id["setup"]["06"];
+      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
+      this.showBed = this.$route.params.id["setup"]["08"];
+      this.showSmoking = this.$route.params.id["setup"]["09"];
+      this.showFloor = this.$route.params.id["setup"]["10"];
+      this.hour = this.$route.params.id["setup"]["11"];
+      this.term = this.$route.params.id["setup"]["12"];
+      this.hotelname = this.$route.params.id["setup"]["13"];
+      this.showPickupRequest = this.$route.params.id["setup"]["14"];
+      this.countries = this.$route.params.id["setup"]["15"];
+      this.province = this.$route.params.id["setup"]["16"];
+      this.id = this.$route.params.id["data"];
+
+      this.currDataPrepare = this.id[this.counter];
+      this.country = this.currDataPrepare["guest-country"];
+      this.email = this.currDataPrepare["guest-email"];
+
+      this.counter += 1;
+    }
     this.loading = false;
   },
   methods: {
@@ -708,7 +762,7 @@ export default {
         const needle = val.toLowerCase();
         this.FilterCountry = this.Country.filter(function (itm) {
           //   return val.indexOf(itm.setupvalue) > -1;
-          return itm ;
+          return itm;
         });
         console.log(this.FilterCountry, "searching");
       });

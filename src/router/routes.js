@@ -24,6 +24,10 @@ const routes = [
     component: () => import("pages/About.vue")
   },
   {
+    path: "/list",
+    component: () => import("pages/List.vue")
+  },
+  {
     path: "/success",
     component: () => import("pages/Success.vue")
   }
