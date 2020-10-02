@@ -301,7 +301,6 @@
               fill-input
               input-debounce="0"
               :options="FilterCountry"
-              @filter="filterFn"
               style="width: 250px; padding-bottom: 32px"
             >
               <template v-slot:no-option>
