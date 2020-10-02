@@ -4,25 +4,64 @@
   </div>
   <div v-else>
     <div class="home">
-      <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
-      <div class="row header-branding" :style="information" type="flex" justify="space-between">
-        <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
-          <h2
+      <div :style="information" class="row rounded-4 justify-between">
+        <div class="col-4">
+          <h4 class="q-ma-sm font-weight-bold">Online Check-in</h4>
+          <br />
+          <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
+            class="q-ma-sm main-guest-title font-weight-bold"
+          >
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare["guest-member-name"] }}
+          </h6>
+          <h6 v-else class="q-ma-sm main-guest-title font-weight-bold" :style="information">
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }}
+          </h6>
+          <p class="q-ma-sm">
+            {{ getLabels("arrival") }}:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            {{ getLabels("departure") }}:
+            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
+            <br />
+            {{ getLabels("book_code") }}:
+            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
+          </p>
+        </div>
+        <div class="col-4">
+          <q-card flat class="my-card">
+            <q-img :src="gambar" basic>
+              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
+            </q-img>
+          </q-card>
+        </div>
+      </div>
+      <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
+
+      <!-- <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
+      <div class="row rounded-4 justify-between" :style="information">
+        <div class="col pl-3 pt-3" :md="15" :xl="15" :xs="24">
+          <h4
+            class="q-ma-none mb-3 font-white font-weight-bold"
+            :style="information"
+          >ONLINE CHECK-IN</h4>
+          <h6
+            v-if="currDataPrepare['guest-member-name'] !== ''"
+            class="q-ma-none main-guest-title font-weight-bold"
             :style="information"
           >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          </h6>
+          <h6 v-else class="q-ma-none main-guest-title font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
-          </h2>
+          </h6>
 
-          <p class="ant-card-meta-description font-white" :style="information">
+          <p class :style="information">
             {{ getLabels("arrival") }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
             {{ getLabels("departure") }}:
@@ -33,30 +72,28 @@
           </p>
         </div>
         <div class="col container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" :src="gambar" alt="Image Loading" />
-          <div class="overlay">
-            <div class="text">{{ hotelname }}</div>
-          </div>
-          <div class>
-            <div class="gear-setting"></div>
-          </div>
+          <q-card flat class="my-card">
+            <q-img :src="gambar" basic>
+              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
+            </q-img>
+          </q-card>
         </div>
         <div class="col pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
-          <h2
+          <h4 class="q-ma-none mb-3 font-weight-bold" :style="information">ONLINE CHECK-IN</h4>
+          <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
+            class="q-ma-none main-guest-title font-weight-bold"
             :style="information"
           >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2 v-else class="main-guest-title font-white font-weight-bold" :style="information">
+          </h6>
+          <h4 v-else class="main-guest-title font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
-          </h2>
-          <p class="ant-card-meta-description font-white" :style="information">
+          </h4>
+          <p class="ant-card-meta-description" :style="information">
             {{ getLabels("arrival") }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
             {{ getLabels("departure") }}:
@@ -66,50 +103,37 @@
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </div>
-      </div>
+      </div>-->
+
+      <!-- Arrival -->
       <div>
-        <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
-          <q-card class="header-card">
+        <h4 class="ml-3 full-border-bottom">{{ getLabels("arrival") }}</h4>
+        <!-- <div class="row ml-4 mr-3 mt-3 mb-3" gutter="16">
+          <q-card flat class="header-card">
             <div>
               <div class="col" :span="23" :xl="23" :xs="23">
                 <p class="header-group">{{ getLabels("arrival") }}</p>
               </div>
             </div>
           </q-card>
-        </div>
+        </div>-->
         <div class="row ml-3" gutter="16">
           <div class="col" :span="4" :xl="4" :lg="5" :md="6" :xs="24">
             <p>{{ getLabels("eta") }}</p>
             <vue-timepicker :minute-interval="30"></vue-timepicker>
           </div>
-          <div
-            class="col"
-            :span="4"
-            :xl="6"
-            :lg="5"
-            :md="6"
-            :xs="24"
-            v-show="showPickupRequest"
-          >
+          <div class="col" :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
             {{ showPrice }}
             <p>{{ getLabels("request") }}</p>
             <q-checkbox v-model="showPrice" :label="getLabels('pick_req')" />
           </div>
-          <div
-            class="col"
-            :span="4"
-            :xl="4"
-            :lg="5"
-            :md="5"
-            :xs="24"
-            v-show="showPickupRequest"
-          >
+          <div class="col" :span="4" :xl="4" :lg="5" :md="5" :xs="24" v-show="showPickupRequest">
             <p>{{ getLabels("price") }}</p>
             {{ nilai === 3 ? "" : currency }}
             {{
-              nilai === 3
-                ? " "
-                : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+            nilai === 3
+            ? " "
+            : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
             }}
             <span>/ {{ per }}</span>
           </div>
@@ -152,7 +176,7 @@
                     getLabels("smoking")
                   }}</span>
                 </a-radio>
-              </a-radio-group> -->
+            </a-radio-group>-->
             <!-- <a-form-item label>
               <a-radio-group
                 name="radioGroup"
@@ -184,7 +208,7 @@
                   }}</span>
                 </a-radio>
               </a-radio-group>
-            </a-form-item> -->
+            </a-form-item>-->
           </div>
         </div>
         <div class="row ml-3" :gutter="[16, 8]">
@@ -207,15 +231,7 @@
           </q-card>
         </div>
         <div class="row ml-3" :gutter="[16, 8]">
-          <div
-            class="col"
-            v-if="email != ''"
-            :span="5"
-            :xl="5"
-            :lg="7"
-            :md="10"
-            :xs="24"
-          >
+          <div class="col" v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
             <p>{{ getLabels("email") }}</p>
             <q-input outlined v-model="email" label="Outlined" disabled />
           </div>
@@ -244,11 +260,7 @@
         <div class="row ml-3" :gutter="[16, 8]">
           <div class="col" :span="3" :xl="3" :lg="7" :md="10" :xs="24">
             <p>{{ getLabels("purpose_stay") }}</p>
-            <q-select
-              outlined
-              v-model="purpose"
-              :options="FilterPurposeofStay"
-            />
+            <q-select outlined v-model="purpose" :options="FilterPurposeofStay" />
           </div>
         </div>
         <div class="row ml-3" :gutter="[16, 8]">
@@ -271,7 +283,7 @@
                 :value="item['descr']"
                 >{{ item.setupvalue }}</a-select-option
               >
-            </a-select> -->
+            </a-select>-->
             <q-select
               filled
               use-input
@@ -284,9 +296,7 @@
             >
               <template v-slot:no-option>
                 <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
+                  <q-item-section class="text-grey">No results</q-item-section>
                 </q-item>
               </template>
             </q-select>
@@ -317,12 +327,7 @@
               <q-separator />
 
               <q-card-actions align="right">
-                <q-btn
-                  flat
-                  :label="getLabels('close')"
-                  color="primary"
-                  @click="handleOkTerm"
-                />
+                <q-btn flat :label="getLabels('close')" color="primary" @click="handleOkTerm" />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -336,8 +341,7 @@
               block
               :size="size"
               :disabled="!agree"
-              >{{ getLabels("ci_now") }}</q-btn
-            >
+            >{{ getLabels("ci_now") }}</q-btn>
 
             <!-- <a-button
               :xl="12"
@@ -348,7 +352,7 @@
               :disabled="!agree"
               html-type="submit"
               >{{ getLabels("ci_now") }}</a-button
-            > -->
+            >-->
           </div>
         </div>
       </div>

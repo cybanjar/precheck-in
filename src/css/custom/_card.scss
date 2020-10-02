@@ -129,7 +129,6 @@
     background-color: $gold;
     color: $white;
   }
-
 }
 
 .card-color:hover {
@@ -139,9 +138,13 @@
 }
 
 .card-color:active {
-  transform: scale(.90);
+  transform: scale(0.9);
 }
 
 .ant-card-hoverable:hover {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+}
+
+.rounded-4 {
+  border-radius: 4px;
 }
