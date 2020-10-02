@@ -1,15 +1,14 @@
 <template>
   <div class="spin-load-table" v-if="loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
-    </a-spin>
+    <q-spinner color="primary" size="3em" :thickness="10" />
   </div>
   <div v-else>
     <div class="home">
-      <!-- {{ currDataPrepare }} -->
+      {{ currDataPrepare }}
+      {{ hotelname }}
       <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <div class="row header-branding" :style="information" type="flex" justify="space-between">
-        <div class="col pl-3 pt-3" :span="15" :md="15" :xl="15" :xs="24">
+        <div class="col pl-3 pt-3 invisible" :span="15" :md="15" :xl="15" :xs="24">
           <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
           <h2
             v-if="currDataPrepare['guest-member-name'] !== ''"
@@ -70,7 +69,7 @@
           </p>
         </div>
       </div>
-      <div class="text-uppercase">test</div>
+      <div>test</div>
     </div>
   </div>
 </template>
@@ -400,3 +399,4 @@ export default {
   },
 };
 </script>
+
