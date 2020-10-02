@@ -159,6 +159,7 @@ export default {
     };
   },
   created() {
+    this.labels = JSON.parse(localStorage.getItem("labels"));
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     console.log(this.setup, "setup");
@@ -173,7 +174,6 @@ export default {
       this.data[i].key = Number(i) + 1;
     }
     return this.data;
-    this.labels = JSON.parse(localStorage.getItem("labels"));
 
     // console.log(this.data, "berubah");
   },
