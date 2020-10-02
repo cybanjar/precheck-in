@@ -607,7 +607,7 @@ export default {
         // console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
-          router.push("notfound");
+           this.$router.push("notfound").catch(()=>{});
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
             const nietos = [];
@@ -632,9 +632,7 @@ export default {
             obj["16"] = this.province;
             nietos.push(this.dataGuest);
             nietos.push(obj);
-            console.log(nietos,"welcome2");
-            console.log(this.$router.push({ name: "List", params: { foo: nietos } }),"welcome3");
-            this.$router.push({ name: "List", params: { foo: nietos } });
+            this.$router.push({ name: "List", params: { foo: nietos } }).catch(()=>{});
           } else if (
             parsed.response.arrivalGuest["arrival-guest"]["0"][
               "gcomment-desc"
@@ -654,7 +652,7 @@ export default {
             this.$router.push({
               name: "Success",
               params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
-            });
+            }).catch(()=>{});
           } else {
             this.currDataPrepare =
               parsed.response.arrivalGuest["arrival-guest"][0];

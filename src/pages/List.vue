@@ -21,7 +21,7 @@
         <h1 class="mt-3 text-center">{{getLabels('guest_list')}}</h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
-        <q-list
+        <!-- <q-list
           :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
           :data-source="data"
         >
@@ -64,13 +64,11 @@
               </p>
             </q-card>
           </q-item>
-        </q-list>
+        </q-list> -->
       </div>
-      <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
       <q-btn
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
-        :size="size"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
       >{{getLabels('next')}}</q-btn>
@@ -94,7 +92,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.foo,"welcome");
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
@@ -117,7 +114,7 @@ export default {
     send() {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
-      router.push({ name: "Home", params: { id: this.fairy } });
+      this.$router.push({ name: "Home", params: { id: this.fairy } }).catch(()=>{});
     },
     select(client) {
       if (client.isSelected == false) {
