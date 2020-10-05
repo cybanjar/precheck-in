@@ -401,7 +401,7 @@ export default {
         this.Country.push(tempCountry);
         this.FilterCountry = this.mapWithNationality(this.Country[0], "descr");
         let tempProvince = this.tempsetup.filter((item, index) => {
-          return item.number1 === 9 && item.number2 === 3;
+          return item.number1 === 9 && item.number2 === 3 && item.descr != "SERVER TIME";
         });
         this.province = tempProvince;
         this.filteredProvince = this.mapWithProvince(this.province, "descr");
