@@ -388,13 +388,11 @@ export default {
           return item.number1 === 9 && item.number2 === 3;
         });
         this.province = tempProvince;
-        console.log(this.province, "coba");
         this.filteredProvince = this.mapWithProvince(this.province, "descr");
         let tempKios = this.tempsetup.filter((item, index) => {
           return item.number1 === 8 && item.number2 === 10;
         });
         this.flagKiosk = tempKios[0]["setupflag"];
-        console.log(this.flagKiosk, "coba");
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
