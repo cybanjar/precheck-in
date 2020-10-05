@@ -345,6 +345,7 @@
                 <!-- </a-select> -->
               </a-form-item>
             </a-col>
+          </a-row>
             <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Choose of Document ID">
                 <a-select default-value="E-KTP">
@@ -417,7 +418,7 @@
                 </a-form-item>
               </div>
             </a-col>
-          </a-row>
+          </a-row>-->
 
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
@@ -1089,7 +1090,9 @@ export default {
       return (this.indexStr = this.indexStr + 1);
     },
     getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
+      const label = this.labels.find(element => element['lang-variable'] == nameKey);
+      return label['lang-value'];
+      /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["lang-variable"] === nameKey) {
           const splitStr = this.labels[x]["lang-value"]
             .toLowerCase()
@@ -1100,7 +1103,7 @@ export default {
           }
           return splitStr.join(" ");
         }
-      }
+      }*/
     },
   },
   computed: {
