@@ -344,25 +344,23 @@ export default {
       this.modalMembershipID = false;
     },
     getLabels(nameKey) {
-      //const found = this.labels.find(({program-variable}) => element == 'close');
-      //console.log(found);
-     /*(async () => {
-        const label = await ky
-          .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
-            {
-              json: {
-                request: {
-                  countryId1: this.langID,
-                  countryId2: '',
-                  inpVariable: nameKey,
-                },
-              },
-            }
-          )
-          return label;
-      });*/
-      
+      console.log(nameKey);
+      const label = this.labels.find(element => element['lang-variable'] == nameKey);
+      if (label != undefined) {
+        return label['lang-value'];
+      } else {
+        return '';
+      }
+      /*if (nameKey == 'information') {
+        if (this.langID == 'ENG') {
+          return 'Information';
+        } else {
+          return 'Informasi';
+        }
+      } else {
+        const aco = this.labels.find(element => element['lang-variable'] == nameKey);
+        return aco['lang-value'];
+      }*/
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
           return this.labels[x]["program-label1"];
