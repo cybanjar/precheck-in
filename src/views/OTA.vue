@@ -256,6 +256,8 @@ export default {
     },
     goOTA() {
       this.informationmodal = false;
+      this.informationmodal1 = false;
+      this.informationmodal2 = false;
     },
     handleOk() {
       // console.log(e);
