@@ -88,14 +88,12 @@
         <div class="row ml-3">
           <div class="col">
             <p>{{ getLabels("room_pref") }}</p>
-            <q-option-group
-              v-model="group"
+            <!-- <q-option-group
               :options="options"
               color="primary"
               v-show="showSmoking"
-              @change="Room"
               inline
-            />
+            /> -->
           </div>
         </div>
         <div class="row ml-3">
@@ -549,17 +547,7 @@ export default {
         year: "numeric",
       }).format(new Date(datum));
     },
-    filterFn(val, update, abort) {
-      update(() => {
-        console.log("msk", val);
-        const needle = val.toLowerCase();
-        this.FilterCountry = this.Country.filter(function (itm) {
-          //   return val.indexOf(itm.setupvalue) > -1;
-          return itm;
-        });
-        console.log(this.FilterCountry, "searching");
-      });
-    },
+
     mapWithPurpose(items, key) {
       let itemReturn = items
         ? items.map((item) => ({
