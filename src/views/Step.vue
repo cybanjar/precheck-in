@@ -122,7 +122,8 @@
                     {
                       initialValue: currDataPrepare['guest-email'],
                       rules: [
-                        {required: true, message: getLabels('required_email') },
+                        {required: true, message: getLabels('required_email')},
+                        {type: 'email', message: getLabels('not_valid_email')},
                       ],
                     },
                   ]"
@@ -183,7 +184,6 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item :label="getLabels('nationality')">
                   <a-select
-                    show-search
                     v-decorator="[
                       'nationality',
                       {
@@ -235,7 +235,6 @@
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item :label="getLabels('country')">
                   <a-select
-                    show-search
                     v-model="country"
                     v-decorator="[
                       'country',
@@ -263,7 +262,6 @@
                 >
                   <a-form-item :label="getLabels('region')">
                     <a-select
-                      show-search
                       @change="handleChangeRegion"
                       v-decorator="[
                       'region',
@@ -1060,7 +1058,13 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
+      const label = this.labels.find(element => element['program-variable'] == nameKey);
+      if (label != undefined) {
+        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
+      } else {
+        return '';
+      }
+      /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
           const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
@@ -1071,7 +1075,7 @@ export default {
           }
           return splitStr.join(" ");
         }
-      }
+      }*/
     },
   },
   computed: {

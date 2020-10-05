@@ -150,7 +150,9 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
+      const label = this.labels.find(element => element['lang-variable'] == nameKey);
+      return label['lang-value'].charAt(0).toUpperCase() + label['lang-value'].slice(1);
+      /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["lang-variable"] === nameKey) {
           const splitStr = this.labels[x]["lang-value"]
             .toLowerCase()
@@ -161,7 +163,7 @@ export default {
           }
           return splitStr.join(" ");
         }
-      }
+      }*/
     },
   },
 };

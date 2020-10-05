@@ -111,6 +111,8 @@
                   v-model="hour"
                   :minute-step="30"
                   format="HH:mm"
+                  size="large"
+                  inputReadOnly
                 />
               </a-form-item>
             </a-col>
@@ -275,7 +277,7 @@
                     'email',
                     {
                       initialValue: email,
-                      rules: [{ required: true, message: getLabels('required_email') }],
+                      rules: [{ required: true, message: getLabels('required_email') }, {type: 'email', message: getLabels('not_valid_email')}],
                     },
                   ]"
                 />
@@ -294,7 +296,6 @@
                   style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input>
-                <input type="text" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -322,7 +323,6 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('nationality')">
                 <a-select
-                  show-search
                   v-decorator="[
                     'nationality',
                     {
@@ -1091,7 +1091,7 @@ export default {
     },
     getLabels(nameKey) {
       const label = this.labels.find(element => element['lang-variable'] == nameKey);
-      return label['lang-value'];
+      return label['lang-value'].charAt(0).toUpperCase() + label['lang-value'].slice(1);
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["lang-variable"] === nameKey) {
           const splitStr = this.labels[x]["lang-value"]

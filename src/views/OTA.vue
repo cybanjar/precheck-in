@@ -47,7 +47,7 @@
               <a-input v-model="bookingcode" :placeholder="getLabels('input_bookcode')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" :format="dateFormat" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" :format="dateFormat" size="large" inputReadOnly />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -70,7 +70,7 @@
               <a-input :placeholder="getLabels('input_lastname')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" size="large" inputReadOnly />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -93,7 +93,7 @@
               <a-input :placeholder="getLabels('input_email')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" size="large" inputReadOnly />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -118,7 +118,7 @@
               <a-input :placeholder="getLabels('input_membership')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" />
+              <a-date-picker :placeholder="getLabels('select_date')" @change="onChange" size="large" inputReadOnly />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -344,10 +344,9 @@ export default {
       this.modalMembershipID = false;
     },
     getLabels(nameKey) {
-      console.log(nameKey);
-      const label = this.labels.find(element => element['lang-variable'] == nameKey);
+      const label = this.labels.find(element => element['program-variable'] == nameKey);
       if (label != undefined) {
-        return label['lang-value'];
+        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
       } else {
         return '';
       }

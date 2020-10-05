@@ -196,7 +196,13 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      for (let x = 0; x < this.labels.length; x++) {
+      const label = this.labels.find(element => element['program-variable'] == nameKey);
+      if (label != undefined) {
+        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
+      } else {
+        return '';
+      }
+      /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
           const splitStr = this.labels[x]["program-label1"]
             .toLowerCase()
@@ -207,7 +213,7 @@ export default {
           }
           return splitStr.join(" ");
         }
-      }
+      }*/
     },
   },
 };
