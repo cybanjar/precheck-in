@@ -34,7 +34,9 @@
         <div class="col-3">
           <q-card flat class="my-card">
             <q-img :src="gambar" basic>
-              <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
+              <div class="absolute-bottom text-subtitle2 text-center">
+                {{ hotelname }}
+              </div>
             </q-img>
           </q-card>
         </div>
@@ -42,7 +44,9 @@
 
       <!-- Arrival -->
       <div>
-        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("arrival") }}</h5>
+        <h5 class="ml-3 font-weight-bold full-border-bottom">
+          {{ getLabels("arrival") }}
+        </h5>
 
         <div class="row ml-3" gutter="16">
           <div class="col-md-3 col-xs-12">
@@ -58,13 +62,16 @@
             <p>{{ getLabels("price") }}</p>
             {{ nilai === 3 ? "" : currency }}
             {{
-            nilai === 3
-            ? " "
-            : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+              nilai === 3
+                ? " "
+                : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
             }}
             <span>/ {{ per }}</span>
           </div>
-          <div class="col-md-3 col-xs-12" v-show="showPrice && showPickupRequest">
+          <div
+            class="col-md-3 col-xs-12"
+            v-show="showPrice && showPickupRequest"
+          >
             <p>{{ getLabels("pick_detail") }}</p>
             <q-input outlined />
           </div>
@@ -73,12 +80,25 @@
           <div class="col">
             <p>{{ getLabels("room_pref") }}</p>
             <q-option-group
-              v-model="group"
-              :options="options"
-              color="primary"
               v-show="showSmoking"
-              @change="Room"
+              :options="smoking"
+              color="primary"
               inline
+              dense
+            />
+            <q-option-group
+              v-show="showFloor"
+              :options="floor"
+              color="primary"
+              inline
+              dense
+            />
+            <q-option-group
+              v-show="showBed"
+              :options="bed"
+              color="primary"
+              inline
+              dense
             />
           </div>
         </div>
@@ -92,7 +112,9 @@
           </div>
         </div>
 
-        <h5 class="ml-3 font-weight-bold full-border-bottom">{{ getLabels("guest_detail") }}</h5>
+        <h5 class="ml-3 font-weight-bold full-border-bottom">
+          {{ getLabels("guest_detail") }}
+        </h5>
 
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12" v-if="email != ''">
@@ -122,35 +144,37 @@
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("purpose_stay") }}</p>
-            <q-select outlined v-model="purpose" :options="FilterPurposeofStay" />
+            <q-select
+              outlined
+              v-model="purpose"
+              :options="FilterPurposeofStay"
+            />
           </div>
         </div>
         <br />
         <div class="row ml-3">
           <div class="col-md-3 col-xs-12">
             <p>{{ getLabels("nationality") }}</p>
-            <q-select
-              outlined
-              use-input
-              hide-selected
-              fill-input
-              input-debounce="0"
-              :label="getLabels('nationality')"
-              :options="FilterCountry"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">No results</q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+            <q-select outlined :options="FilterCountry" />
+          </div>
+        </div>
+        <div class="row ml-3">
+          <div class="col-md-3 col-xs-12">
+            <p>{{ getLabels("country_of_residence") }}</p>
+            <q-select outlined :options="FilterCountry" />
+          </div>
+          <div class="col-md-3 col-xs-12">
+            <p>{{ getLabels("region") }}</p>
+            <q-select outlined :options="filteredProvince" />
           </div>
         </div>
 
         <div class="row ml-3 mb-3 q-mt-md">
           <div>
             <q-checkbox v-model="agree" />
-            <a @click="showModalTerm">{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a>
+            <a @click="showModalTerm"
+              >{{ getLabels("pci_tc") }} {{ getLabels("t_c") }}</a
+            >
             {{ hotelname }}.
           </div>
           <q-dialog v-model="visibleTerm">
@@ -164,7 +188,12 @@
               </q-card-section>
               <q-separator />
               <q-card-actions align="right">
-                <q-btn flat :label="getLabels('close')" color="primary" @click="handleOkTerm" />
+                <q-btn
+                  flat
+                  :label="getLabels('close')"
+                  color="primary"
+                  @click="handleOkTerm"
+                />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -177,7 +206,8 @@
               block
               :size="size"
               :disabled="!agree"
-            >{{ getLabels("ci_now") }}</q-btn>
+              >{{ getLabels("ci_now") }}</q-btn
+            >
           </div>
         </div>
       </div>
@@ -269,6 +299,9 @@ export default {
       flagKiosk: false,
       langID: "",
       phone: "",
+      smoking: [],
+      floor: [],
+      bed: [],
     };
   },
   created() {
@@ -300,54 +333,106 @@ export default {
           parsed.response.languagesList["languages-list"][0]["lang-id"];
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        let tempbC = this.tempsetup.filter((item, index) => {
+          return item.number1 === 4;
+        });
+        let bC = tempbC.filter((item, index) => {
+          return item.setupflag === true;
+        });
+        this.information.backgroundColor = bC[0].setupvalue;
+        let tempfC = this.tempsetup.filter((item, index) => {
+          return item.number1 === 5;
+        });
+        let fC = tempfC.filter((item, index) => {
+          return item.setupflag === true;
+        });
+        this.information.color = fC[0].setupvalue;
+        let tempGambar = this.tempsetup.filter((item, index) => {
+          return item.number1 === 7 && item.number2 === 1;
+        });
+        this.gambar = tempGambar[0].setupvalue.substring(
+          tempGambar[0].setupvalue.lastIndexOf("<img src=") + 10,
+          tempGambar[0].setupvalue.lastIndexOf('g"') + 1
+        );
+        let tempTerm = this.tempsetup.filter((item, index) => {
+          return item.number1 === 6 && item.setupflag === true;
+        });
+        this.term = tempTerm[0]["setupvalue"];
+        let temRequest = this.tempsetup.filter((item, index) => {
+          return item.number1 === 2 && item.setupflag === true;
+        });
+        this.showPickupRequest = temRequest[0].setupflag;
+        this.money = temRequest[0]["price"];
+        this.currency = temRequest[0]["remarks"];
+        let tempPer = temRequest[0]["setupvalue"].split("PER")[1];
+        this.per = this.getLabels(tempPer.toLowerCase().trim());
+        let tempHour = this.tempsetup.filter((item, index) => {
+          return item.number1 === 8 && item.number2 === 2;
+        });
+        this.hour = tempHour[0]["setupvalue"];
+        let tempBed = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 1;
+        });
+        this.showBed = tempBed[0].setupflag;
+        let tempSmoking = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 2;
+        });
+        this.showSmoking = tempSmoking[0].setupflag;
+        let tempFloor = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 3;
+        });
+        this.showFloor = tempFloor[0].setupflag;
+        let tempHotel = this.tempsetup.filter((item, index) => {
+          return item.number1 === 99 && item.number2 === 1;
+        });
+        this.hotelname = tempHotel[0]["setupvalue"];
+        let tempCountry = this.tempsetup.filter((item, index) => {
+          return item.number1 === 9 && item.number2 === 2;
+        });
+        this.Country.push(tempCountry);
+        this.FilterCountry = this.mapWithNationality(this.Country[0], "descr");
+        let tempProvince = this.tempsetup.filter((item, index) => {
+          return item.number1 === 9 && item.number2 === 3 && item.descr != "SERVER TIME";
+        });
+        this.province = tempProvince;
+        this.filteredProvince = this.mapWithProvince(this.province, "descr");
+        let tempKios = this.tempsetup.filter((item, index) => {
+          return item.number1 === 8 && item.number2 === 10;
+        });
+        this.flagKiosk = tempKios[0]["setupflag"];
+        this.smoking = [
+          {
+            label: this.getLabels("non_smoking"),
+            value: "NonSmoking",
+          },
+          {
+            label: this.getLabels("smoking"),
+            value: "Smoking",
+          },
+        ];
+        this.floor = [
+          {
+            label: this.getLabels("lower_floor"),
+            value: "LowerFloor",
+          },
+          {
+            label: this.getLabels("higher_floor"),
+            value: "HigherFloor",
+          },
+        ];
+        this.bed = [
+          {
+            label: this.getLabels("one_big_bed"),
+            value: "OneBigBed",
+          },
+          {
+            label: this.getLabels("two_single_beds"),
+            value: "TwoSingleBeds",
+          },
+        ];
         const jatah = [];
         for (const i in this.tempsetup) {
-          if (this.tempsetup[i]["number1"] == 4) {
-            jatah.push(this.tempsetup[i]);
-
-            for (const heaven in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[heaven].setupflag == true) {
-                this.information.backgroundColor = jatah[heaven]["setupvalue"];
-              }
-            }
-          } else if (this.tempsetup[i]["number1"] == 5) {
-            jatah.push(this.tempsetup[i]);
-
-            for (const hell in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[hell].setupflag == true) {
-                this.information.color = jatah[hell]["setupvalue"];
-              }
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 7 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            const lagi = this.tempsetup[i]["setupvalue"].substring(
-              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
-              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
-            );
-            this.gambar = lagi;
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["setupflag"] == true
-          ) {
-            this.term = this.tempsetup[i]["setupvalue"];
-          } else if (this.tempsetup[i]["number1"] == 2) {
-            if (this.tempsetup[i].setupflag == true) {
-              this.showPickupRequest = this.tempsetup[i].setupflag;
-              this.money = this.tempsetup[i]["price"];
-              this.currency = this.tempsetup[i]["remarks"];
-              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
-              this.per = this.getLabels(this.per.toLowerCase().trim());
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.hour = this.tempsetup[i]["setupvalue"];
-          } else if (this.tempsetup[i]["number1"] == 1) {
+          if (this.tempsetup[i]["number1"] == 1) {
             this.tempsetup[i].setupvalue = this.getLabels(
               this.tempsetup[i].setupvalue.toLowerCase()
             );
@@ -363,50 +448,11 @@ export default {
                 value: this.tempsetup[i].number2,
               };
             }
-          } else if (this.tempsetup[i]["number1"] == 3) {
-            if (this.tempsetup[i].number2 == 1) {
-              this.showBed = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 2) {
-              this.showSmoking = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 3) {
-              this.showFloor = this.tempsetup[i].setupflag;
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 99 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.hotelname = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.countries.push(this.tempsetup[i]);
-            //   for (const i in this.countries) {
-            //     this.countries[i].key = Number(i) + 1;
-            //   }
-            //   return this.countries;
-            this.Country = this.countries;
-            this.FilterCountry = this.mapWithNationality(this.Country, "descr");
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3
-          ) {
-            const air = {};
-            air["descr"] = this.tempsetup[i]["descr"];
-            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
-            this.province.push(air);
-            this.filteredProvince = this.province;
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 10
-          ) {
-            this.flagKiosk = this.tempsetup[i]["setupflag"];
           }
         }
 
         const tempMessResult = parsed.response.messResult.split(" ");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        // console.log(this.guests, "guests");
 
         if (tempMessResult[0] == "99") {
           this.$router.push("notfound").catch(() => {});
@@ -432,6 +478,9 @@ export default {
             obj["14"] = this.showPickupRequest;
             obj["15"] = this.countries;
             obj["16"] = this.province;
+            obj["17"] = this.smoking;
+            obj["18"] = this.floor;
+            obj["19"] = this.bed;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             this.$router
@@ -491,6 +540,9 @@ export default {
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
+      this.smoking = this.$route.params.id["setup"]["17"];
+      this.floor = this.$route.params.id["setup"]["18"];
+      this.bed = this.$route.params.id["setup"]["19"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
@@ -540,17 +592,7 @@ export default {
         year: "numeric",
       }).format(new Date(datum));
     },
-    filterFn(val, update, abort) {
-      update(() => {
-        console.log("msk", val);
-        const needle = val.toLowerCase();
-        this.FilterCountry = this.Country.filter(function (itm) {
-          //   return val.indexOf(itm.setupvalue) > -1;
-          return itm;
-        });
-        console.log(this.FilterCountry, "searching");
-      });
-    },
+
     mapWithPurpose(items, key) {
       let itemReturn = items
         ? items.map((item) => ({
@@ -568,6 +610,17 @@ export default {
             value: item[key],
           }))
         : [];
+      return itemReturn;
+    },
+    mapWithProvince(items, key) {
+      let itemReturn = items
+        ? items.map((item) => ({
+            label: `${item["setupvalue"]}`,
+
+            value: item[key],
+          }))
+        : [];
+
       return itemReturn;
     },
     getLabels(nameKey) {
