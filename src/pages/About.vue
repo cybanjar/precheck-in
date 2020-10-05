@@ -88,12 +88,27 @@
         <div class="row ml-3">
           <div class="col">
             <p>{{ getLabels("room_pref") }}</p>
-            <!-- <q-option-group
-              :options="options"
-              color="primary"
+            <q-option-group
               v-show="showSmoking"
+              :options="smoking"
+              color="primary"
               inline
-            /> -->
+              dense
+            />
+            <q-option-group
+              v-show="showFloor"
+              :options="floor"
+              color="primary"
+              inline
+              dense
+            />
+            <q-option-group
+              v-show="showBed"
+              :options="bed"
+              color="primary"
+              inline
+              dense
+            />
           </div>
         </div>
         <div class="row ml-3">
@@ -293,6 +308,9 @@ export default {
       flagKiosk: false,
       langID: "",
       phone: "",
+      smoking: [],
+      floor: [],
+      bed: [],
     };
   },
   created() {
@@ -391,6 +409,36 @@ export default {
           return item.number1 === 8 && item.number2 === 10;
         });
         this.flagKiosk = tempKios[0]["setupflag"];
+        this.smoking = [
+          {
+            label: this.getLabels("non_smoking"),
+            value: "NonSmoking",
+          },
+          {
+            label: this.getLabels("smoking"),
+            value: "Smoking",
+          },
+        ];
+        this.floor = [
+          {
+            label: this.getLabels("lower_floor"),
+            value: "LowerFloor",
+          },
+          {
+            label: this.getLabels("higher_floor"),
+            value: "HigherFloor",
+          },
+        ];
+        this.bed = [
+          {
+            label: this.getLabels("one_big_bed"),
+            value: "OneBigBed",
+          },
+          {
+            label: this.getLabels("two_single_beds"),
+            value: "TwoSingleBeds",
+          },
+        ];
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
@@ -439,6 +487,9 @@ export default {
             obj["14"] = this.showPickupRequest;
             obj["15"] = this.countries;
             obj["16"] = this.province;
+            obj["17"] = this.smoking;
+            obj["18"] = this.floor;
+            obj["19"] = this.bed;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             this.$router
@@ -498,6 +549,9 @@ export default {
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
+      this.smoking = this.$route.params.id["setup"]["17"];
+      this.floor = this.$route.params.id["setup"]["18"];
+      this.bed = this.$route.params.id["setup"]["19"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
