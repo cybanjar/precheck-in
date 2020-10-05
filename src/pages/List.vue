@@ -18,11 +18,11 @@
         </div>
       </div>-->
       <div :style="information" class="text-white row rounded-4 justify-between">
-        <div class="col-4">
+        <div class="col-3">
           <h4 class="q-ma-sm text-uppercase font-weight-bold">Online Check-in</h4>
           <br />
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <q-card flat class="my-card">
             <q-img :src="gambar" basic>
               <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>

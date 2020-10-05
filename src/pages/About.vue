@@ -6,22 +6,22 @@
     <div class="home">
       <h6 class="q-ma-none text-center font-weight-bold visible">{{ hotelname }}</h6>
       <div :style="information" class="text-white row rounded-4 justify-between">
-        <div class="col-4">
+        <div class="col-3">
           <h4 class="q-ma-sm font-weight-bold">Online Check-in</h4>
           <br />
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="q-ma-sm main-guest-title font-weight-bold"
+            class="q-ma-none q-ml-sm text-white font-weight-bold"
           >
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
             {{ currDataPrepare["guest-member-name"] }}
           </h6>
-          <h6 v-else class="q-ma-sm main-guest-title font-weight-bold" :style="information">
+          <h6 v-else class="q-ma-sm text-white font-weight-bold" :style="information">
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h6>
-          <p class="q-ma-sm">
+          <p class="q-ma-none q-ml-sm">
             {{ getLabels("arrival") }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
             {{ getLabels("departure") }}:
@@ -31,7 +31,7 @@
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <q-card flat class="my-card">
             <q-img :src="gambar" basic>
               <div class="absolute-bottom text-subtitle2 text-center">{{ hotelname }}</div>
