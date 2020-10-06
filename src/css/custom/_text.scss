@@ -2,6 +2,24 @@ h3 {
   margin: 10px;
 }
 
+h1 {
+  font-size: 2em !important;
+  margin-block-start: 0.67em !important;
+  margin-block-end: 0.67em !important;
+  margin-inline-start: 0px !important;
+  margin-inline-end: 0px !important;
+  line-height: 1.5 !important;
+}
+
+h2 {
+  font-size: 1.5em !important;
+  margin-block-start: 0.83em !important;
+  margin-block-end: 0.83em !important;
+  margin-inline-start: 0px !important;
+  margin-inline-end: 0px !important;
+  line-height: 1.5 !important;
+}
+
 .text-center {
   text-align: center;
 }
