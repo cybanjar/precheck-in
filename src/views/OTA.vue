@@ -45,7 +45,7 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel") }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkBO">
                 {{ getLabels("search") }}
               </a-button>
             </template>
@@ -77,12 +77,15 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel") }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkName">
                 {{ getLabels("search") }}
               </a-button>
             </template>
             <a-form-item :label="getLabels('last_name')">
-              <a-input :placeholder="getLabels('input_lastname')" />
+              <a-input
+                v-model="name"
+                :placeholder="getLabels('input_lastname')"
+              />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
               <a-date-picker
@@ -105,11 +108,11 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel") }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkEmail">
                 {{ getLabels("search") }}
               </a-button>
             </template>
-            <a-form-item :label="getLabels('email')">
+            <a-form-item v-model="email" :label="getLabels('email')">
               <a-input :placeholder="getLabels('input_email')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
@@ -172,6 +175,8 @@ export default {
       modalEmailAddress: false,
       modalMembershipID: false,
       bookingcode: "",
+      name: "",
+      email: "",
       dateFormat: "MM/DD/YY",
       date: "",
       hour: "",
@@ -187,6 +192,7 @@ export default {
       langID: "",
       payment: "",
       server: "",
+      hotelEndpoint: "",
     };
   },
   mounted() {
@@ -260,6 +266,10 @@ export default {
         );
       });
       this.server = moment(tempServer[0]["setupvalue"].format("HH:mm"));
+      const tempEndpoint = this.tempsetup.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 2;
+      });
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       console.log(this.server, "server");
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
@@ -295,6 +305,12 @@ export default {
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode"));
     },
+    errorname() {
+      this.$message.error(this.getLabels("last_name"));
+    },
+    erroremail() {
+      this.$message.error(this.getLabels("email"));
+    },
     errorco() {
       this.$message.error(this.getLabels("input_codate"));
     },
@@ -308,14 +324,8 @@ export default {
       this.informationmodal1 = false;
       this.informationmodal2 = false;
     },
-    handleOk() {
-      // console.log(e);
+    handleOkBO() {
       const reservation = [];
-      // console.log(this.bookingcode, "bo");
-      // console.log(this.date, "co");
-      // this.hour = moment(new Date()).format("HH:mm");
-      // console.log(this.hour, "jam");
-
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -323,39 +333,23 @@ export default {
       } else if (!this.date) {
         this.errorco();
       } else {
-        // reservation.push.apply(reservation, [
-        //   this.bookingcode,
-        //   this.date,
-        //   this.hour,
-        // ]);
-
         (async () => {
           const data = await ky
-            .post(
-              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
-              {
-                json: {
-                  request: {
-                    coDate: this.date,
-                    bookCode: this.bookingcode,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: "14:00",
-                    groupFlag: "false",
-                  },
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.bookingcode,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
                 },
-              }
-            )
+              },
+            })
             .json();
           this.message = data["response"]["messResult"];
-          // console.log(data["response"]["messResult"], "masuk2");
-          // this.informationterm = this.message.substring(
-          //   this.message.lastIndexOf("- ") + 1,
-          //   this.message.lastIndexOf("!")
-          // );
-          // console.log(this.message.substring(0, 2), "test");
-
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
           } else if (
@@ -370,11 +364,6 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            // console.log(
-            //   data["response"]["arrivalGuestlist"]["arrival-guestlist"],
-            //   "else1"
-            // );
-            // console.log(data["response"]["arrivalGuestlist"], "else2");
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
@@ -386,9 +375,112 @@ export default {
         })();
 
         this.modalBookingCode = false;
+      }
+    },
+    handleOkName() {
+      const reservation = [];
+      if (!this.name && !this.date) {
+        this.error();
+      } else if (!this.name) {
+        this.errorname();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.name,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: { foo: reservation, fighter: this.langID },
+            });
+          }
+        })();
+
         this.modalGuestName = false;
-        this.modalEmailAddress = false;
-        this.modalMembershipID = false;
+      }
+    },
+    handleOkEmail() {
+      const reservation = [];
+      if (!this.email && !this.date) {
+        this.error();
+      } else if (!this.email) {
+        this.erroremail();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.email,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: { foo: reservation, fighter: this.langID },
+            });
+          }
+        })();
+
+        this.modalGuestName = false;
       }
     },
     handleCancel() {

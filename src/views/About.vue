@@ -107,14 +107,35 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" :label="getLabels('eta')">
-                <a-time-picker
+                <!-- <a-time-picker
                   v-model="hour"
                   :minute-step="30"
                   format="HH:mm"
                   size="large"
                   inputReadOnly
-                />
+                /> -->
               </a-form-item>
+              <q-input filled v-model="date">
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-time v-model="hour" mask="YYYY-MM-DD HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </a-col>
             <a-col
               :span="4"
@@ -396,10 +417,10 @@
                   <a-select
                     show-search
                     @change="handleChangeRegion"
-                    v-model="currDataPrepare['guest-prov']"
                     v-decorator="[
                       'region',
                       {
+                        initialValue: currDataPrepare['guest-prov'],
                         rules: [{ required: true }],
                       },
                     ]"
@@ -483,6 +504,8 @@ import router from "../router";
 import data from "../components/json/indonesia";
 // import countries from "../components/json/country";
 import Vue from "vue";
+import Quasar from "quasar";
+
 import Antd, {
   Row,
   Col,
@@ -497,10 +520,11 @@ import Antd, {
   DatePicker,
   Modal,
 } from "ant-design-vue";
+
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
-Vue.use(Antd);
+Vue.use(Antd, Quasar);
 
 export default {
   data() {
@@ -618,7 +642,7 @@ export default {
         const tempMessResult = parsed.response.messResult;
         console.log(tempMessResult, "bokis");
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        if ((tempMessResult == "99 - Pre Checkin Not Allowed!")) {
+        if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
           this.langID = "";
         } else {
           this.langID =
