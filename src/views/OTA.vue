@@ -51,6 +51,7 @@
             </template>
             <a-form-item :label="getLabels('book_code')">
               <a-input
+                class="ant-input-h"
                 v-model="bookingcode"
                 :placeholder="getLabels('input_bookcode')"
               />
@@ -169,6 +170,31 @@ import router from "../router";
 import moment from "moment";
 import ky from "ky";
 import CookieS from "vue-cookies";
+import Vue from "vue";
+import {
+  Quasar,
+  QInput,
+  QTime,
+  QBtn,
+  QPopupProxy,
+  ClosePopup,
+  QIcon,
+  QDate,
+} from "quasar";
+
+Vue.use(Quasar, {
+  components: {
+    QTime,
+    QInput,
+    QBtn,
+    QPopupProxy,
+    QIcon,
+    QDate,
+  },
+  directives: {
+    ClosePopup,
+  },
+});
 
 export default {
   data() {
