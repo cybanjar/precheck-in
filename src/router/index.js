@@ -4,7 +4,8 @@ import Home from "../views/About.vue";
 
 Vue.use(VueRouter);
 
-const routes = [{
+const routes = [
+  {
     path: "/precheckin",
     name: "Home",
     component: Home,
@@ -96,7 +97,7 @@ const router = new VueRouter({
   scrollBehavior() {
     return {
       x: 0,
-      y: 0
+      y: 0,
     };
   },
 });

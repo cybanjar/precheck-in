@@ -1,9 +1,11 @@
 <template>
   <div class="mt-3">
-    <h1 class="text-center mb-3 text-uppercase font-weight-bold">VHP Online Configuration</h1>
-    <a-row class="ml-3 mr-3" :gutter="[16,8]">
+    <h1 class="text-center mb-3 text-uppercase font-weight-bold">
+      VHP Online Configuration
+    </h1>
+    <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Features" style="width: 100%">
+        <a-card hoverable title="Features" style="width: 100%;">
           <a slot="extra">
             <a-icon type="snippets" />
           </a>
@@ -12,25 +14,38 @@
               <a-time-picker
                 :default-value="moment('13:00', 'HH:mm')"
                 v-decorator="[
-              'time',{
-                rules: [{ required: true }],
-              },
-            ]"
+                  'time',
+                  {
+                    rules: [{ required: true }],
+                  },
+                ]"
                 :minute-step="30"
                 format="HH:mm"
               />
             </a-form-item>
             <a-form-item label="Enable Upload ID">
-              <a-switch v-model="uploadID" checked-children="Yes" un-checked-children="No" />
+              <a-switch
+                v-model="uploadID"
+                checked-children="Yes"
+                un-checked-children="No"
+              />
             </a-form-item>
             <a-form-item label="Default Purpose of Stay">
-              <a-select default-value="leisure" style="width: 100%" @change="handlePurpose">
+              <a-select
+                default-value="leisure"
+                style="width: 100%;"
+                @change="handlePurpose"
+              >
                 <a-select-option value="leisure">Leisure</a-select-option>
                 <a-select-option value="bussiness">Bussiness</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="Using KIOSK Check-In">
-              <a-switch v-model="kiosk" checked-children="Yes" un-checked-children="No" />
+              <a-switch
+                v-model="kiosk"
+                checked-children="Yes"
+                un-checked-children="No"
+              />
             </a-form-item>
           </div>
         </a-card>
@@ -44,45 +59,69 @@
       >
         <a-row>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1890FF')" class="card-color blue">Blue</div>
+            <div @click="mouseClicks('#1890FF')" class="card-color blue">
+              Blue
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#E85058')" class="card-color red">Red</div>
+            <div @click="mouseClicks('#E85058')" class="card-color red">
+              Red
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#FBDB81')" class="card-color yellow">Yellow</div>
+            <div @click="mouseClicks('#FBDB81')" class="card-color yellow">
+              Yellow
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#008800')" class="card-color green">Green</div>
+            <div @click="mouseClicks('#008800')" class="card-color green">
+              Green
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#FFFFFF')" class="card-color white">White</div>
+            <div @click="mouseClicks('#FFFFFF')" class="card-color white">
+              White
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#D42A83')" class="card-color magenta">Magenta</div>
+            <div @click="mouseClicks('#D42A83')" class="card-color magenta">
+              Magenta
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1B262C')" class="card-color black">Black</div>
+            <div @click="mouseClicks('#1B262C')" class="card-color black">
+              Black
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#FA7D09')" class="card-color orange">Orange</div>
+            <div @click="mouseClicks('#FA7D09')" class="card-color orange">
+              Orange
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#901F90')" class="card-color purple">Purple</div>
+            <div @click="mouseClicks('#901F90')" class="card-color purple">
+              Purple
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#1488CC')" class="card-color bluesky">Blue Sky</div>
+            <div @click="mouseClicks('#1488CC')" class="card-color bluesky">
+              Blue Sky
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#E4E3E3')" class="card-color grey">Grey</div>
+            <div @click="mouseClicks('#E4E3E3')" class="card-color grey">
+              Grey
+            </div>
           </a-col>
           <a-col :span="8" :lg="8">
-            <div @click="mouseClicks('#FFBF00')" class="card-color gold">Gold</div>
+            <div @click="mouseClicks('#FFBF00')" class="card-color gold">
+              Gold
+            </div>
           </a-col>
         </a-row>
       </a-modal>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Request" style="width: 100%">
+        <a-card hoverable title="Request" style="width: 100%;">
           <a slot="extra">
             <a-icon type="lock" />
           </a>
@@ -100,8 +139,14 @@
                 </a-checkbox>
                 </template>-->
 
-                <a-checkbox checked="datarow.setupflag" value="['datarow.number2']" name="type">
-                  <span class="font-weight-normal">{{ datarow.setupvalue }}</span>
+                <a-checkbox
+                  checked="datarow.setupflag"
+                  value="['datarow.number2']"
+                  name="type"
+                >
+                  <span class="font-weight-normal">{{
+                    datarow.setupvalue
+                  }}</span>
                 </a-checkbox>
                 <br />
                 <!-- 
@@ -115,7 +160,11 @@
               </a-checkbox-group>
             </a-form-model-item>
             <a-form-item label="Pickup">
-              <a-switch v-model="pickupRequest" checked-children="Yes" un-checked-children="No" />
+              <a-switch
+                v-model="pickupRequest"
+                checked-children="Yes"
+                un-checked-children="No"
+              />
             </a-form-item>
             <div v-if="pickupRequest">
               <a-form-item label="Pickup Type">
@@ -133,7 +182,7 @@
               </a-form-item>
               <a-form-item label="Pickup Rate">
                 <a-input-number
-                  style="width: 100%"
+                  style="width: 100%;"
                   v-model="perPax"
                   :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -144,19 +193,24 @@
               </a-form-item>
             </div>
             <a-form-item label="Keycard Qty">
-              <a-input-number v-model="keyCard" id="inputNumber" :min="1" :max="10" />
+              <a-input-number
+                v-model="keyCard"
+                id="inputNumber"
+                :min="1"
+                :max="10"
+              />
             </a-form-item>
           </div>
         </a-card>
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
         <a-card
-          style="width:100%"
+          style="width: 100%;"
           title="Theme"
           :tab-list="tabList"
           hoverable
           :active-tab-key="key"
-          @tabChange="key => onTabChange(key, 'key')"
+          @tabChange="(key) => onTabChange(key, 'key')"
         >
           <span slot="customRender" slot-scope="item">{{ item.key }}</span>
           <a slot="extra" href="#">
@@ -175,11 +229,19 @@
             </a-form-item>
             <a-form-item v-if="colorPicker == '1'">
               <a-input v-model="bgColor" @click="showModalBC">
-                <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
+                <a-icon
+                  slot="prefix"
+                  type="bg-colors"
+                  style="color: rgba(0, 0, 0, 0.25);"
+                />
               </a-input>
             </a-form-item>
             <a-form-item v-else>
-              <slider-picker style="width: 300px" class="vc-slider" v-model="info.backgroundColor" />
+              <slider-picker
+                style="width: 300px;"
+                class="vc-slider"
+                v-model="info.backgroundColor"
+              />
             </a-form-item>
           </div>
           <div class="ml-3 mr-3" v-if="key === 'tab2'">
@@ -195,11 +257,19 @@
             </a-form-item>
             <a-form-item v-if="fontColor == '3'">
               <a-input v-model="fgColor" @click="showModalFC">
-                <a-icon slot="prefix" type="bg-colors" style="color: rgba(0,0,0,.25)" />
+                <a-icon
+                  slot="prefix"
+                  type="bg-colors"
+                  style="color: rgba(0, 0, 0, 0.25);"
+                />
               </a-input>
             </a-form-item>
             <a-form-item v-else>
-              <slider-picker style="width: 300px" class="vc-slider" v-model="info.foregroundColor" />
+              <slider-picker
+                style="width: 300px;"
+                class="vc-slider"
+                v-model="info.foregroundColor"
+              />
             </a-form-item>
           </div>
         </a-card>
@@ -207,9 +277,9 @@
       </a-col>
     </a-row>
 
-    <a-row class="ml-3 mr-3" :gutter="[16,8]">
+    <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Deposit" style="width: 100%">
+        <a-card hoverable title="Deposit" style="width: 100%;">
           <a slot="extra">
             <a-icon type="wallet" />
           </a>
@@ -217,7 +287,10 @@
             <a-form-item label="Deposit Parameters">
               <a-row>
                 <a-col :span="2">
-                  <a-checkbox v-model="allowDepositChecklist" @change="changeDeposit" />
+                  <a-checkbox
+                    v-model="allowDepositChecklist"
+                    @change="changeDeposit"
+                  />
                 </a-col>
                 <a-col :span="22">
                   <p>{{ this.allowDepositDescr }}</p>
@@ -226,33 +299,33 @@
             </a-form-item>
             <a-form-item label="Min Deposit Per Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="minDeposit"
                 :formatter="
-                    (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  "
+                  (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                "
                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
                 :max="1000000"
               />
             </a-form-item>
             <a-form-item label="Over One Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="overDeposit"
                 :formatter="
-                    (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  "
+                  (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                "
                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
                 :max="1000000"
               />
             </a-form-item>
             <a-form-item label="Over One Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="maxDeposit"
                 :formatter="
-                    (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  "
+                  (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                "
                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
                 :max="1000000"
               />
@@ -261,7 +334,7 @@
         </a-card>
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Wifi Access" style="width: 100%">
+        <a-card hoverable title="Wifi Access" style="width: 100%;">
           <a slot="extra">
             <a-icon type="wifi" />
           </a>
@@ -270,10 +343,10 @@
               <a-input
                 v-model="ssid"
                 v-decorator="[
-                'ssid',
-                { 
-                  rules: [{ required: false }] 
-                },
+                  'ssid',
+                  {
+                    rules: [{ required: false }],
+                  },
                 ]"
               >
                 <a-icon slot="prefix" type="wifi" />
@@ -282,10 +355,7 @@
             <a-form-item label="Wifi Password">
               <a-input
                 v-model="wifipass"
-                v-decorator="[
-                'wifipass',
-                { rules: [{ required: false }] },
-                ]"
+                v-decorator="['wifipass', { rules: [{ required: false }] }]"
               >
                 <a-icon slot="prefix" type="lock" />
               </a-input>
@@ -294,7 +364,7 @@
         </a-card>
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Setup URL" style="width: 100%">
+        <a-card hoverable title="Setup URL" style="width: 100%;">
           <a slot="extra">
             <a-icon type="deployment-unit" />
           </a>
@@ -319,14 +389,14 @@
       </a-col>
     </a-row>
 
-    <a-row class="ml-3 mr-3" :gutter="[16,8]">
+    <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="24" :lg="24" :xs="24">
-        <a-card hoverable title="Term and Condition" style="width: 100%">
+        <a-card hoverable title="Term and Condition" style="width: 100%;">
           <a slot="extra">
             <a-icon type="safety-certificate" />
           </a>
           <div class="ml-3 mr-3">
-            <a-row :gutter="[16,8]">
+            <a-row :gutter="[16, 8]">
               <a-col :span="8" :xl="8" :xs="24">
                 <a-form-item label="Default Language [English]">
                   <a-textarea v-model="tempEng" :rows="6" />
@@ -357,44 +427,66 @@
     >
       <a-row>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1890FF')" class="card-color blue">Blue</div>
+          <div @click="mouseClicksx('#1890FF')" class="card-color blue">
+            Blue
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
           <div @click="mouseClicksx('#E85058')" class="card-color red">Red</div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#FBDB81')" class="card-color yellow">Yellow</div>
+          <div @click="mouseClicksx('#FBDB81')" class="card-color yellow">
+            Yellow
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#008800')" class="card-color green">Green</div>
+          <div @click="mouseClicksx('#008800')" class="card-color green">
+            Green
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#FFFFFF')" class="card-color white">White</div>
+          <div @click="mouseClicksx('#FFFFFF')" class="card-color white">
+            White
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#D42A83')" class="card-color magenta">Magenta</div>
+          <div @click="mouseClicksx('#D42A83')" class="card-color magenta">
+            Magenta
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1B262C')" class="card-color black">Black</div>
+          <div @click="mouseClicksx('#1B262C')" class="card-color black">
+            Black
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#FA7D09')" class="card-color orange">Orange</div>
+          <div @click="mouseClicksx('#FA7D09')" class="card-color orange">
+            Orange
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#901F90')" class="card-color purple">Purple</div>
+          <div @click="mouseClicksx('#901F90')" class="card-color purple">
+            Purple
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#1488CC')" class="card-color bluesky">Blue Sky</div>
+          <div @click="mouseClicksx('#1488CC')" class="card-color bluesky">
+            Blue Sky
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#E4E3E3')" class="card-color grey">Grey</div>
+          <div @click="mouseClicksx('#E4E3E3')" class="card-color grey">
+            Grey
+          </div>
         </a-col>
         <a-col :span="8" :lg="8">
-          <div @click="mouseClicksx('#FFBF00')" class="card-color gold">Gold</div>
+          <div @click="mouseClicksx('#FFBF00')" class="card-color gold">
+            Gold
+          </div>
         </a-col>
       </a-row>
     </a-modal>
-    <a-row class="ml-3 mr-3" :gutter="[16,8]">
+    <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="6" :lg="6" :xs="24">
         <a-button>Cancel</a-button>
         <a-button class="ml-2" type="primary">Save</a-button>

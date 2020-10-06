@@ -141,7 +141,7 @@ export default {
             this.data[i]["l-selected"] = false;
           }
         }
-      } 
+      }
       // else {
       //   for (const i in this.data) {
       //     if (this.data[i]["i-counter"] == client["i-counter"]) {
@@ -186,7 +186,10 @@ export default {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       // console.log(this.fairy);
-      router.push({ name: "Step", params: { id: this.fairy, fighter: this.langID } });
+      router.push({
+        name: "Step",
+        params: { id: this.fairy, fighter: this.langID },
+      });
     },
     formatDate(datum) {
       return new Intl.DateTimeFormat(navigator.language, {
@@ -196,11 +199,16 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      const label = this.labels.find(element => element['program-variable'] == nameKey);
+      const label = this.labels.find(
+        (element) => element["program-variable"] == nameKey
+      );
       if (label != undefined) {
-        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
+        return (
+          label["program-label1"].charAt(0).toUpperCase() +
+          label["program-label1"].slice(1)
+        );
       } else {
-        return '';
+        return "";
       }
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {

@@ -6,22 +6,24 @@
       v-model="setRegion"
       default-value="DKI Jakarta"
       show-search
-      style="width: 200px"
+      style="width: 200px;"
       @change="handleChangeProvince"
     >
       <a-select-option
         v-for="(item, keys) in filteredRegion"
         :key="keys"
         :value="filteredRegion[keys]['province']"
-      >{{ filteredRegion[keys].province }}</a-select-option>
+        >{{ filteredRegion[keys].province }}</a-select-option
+      >
     </a-select>
 
-    <a-select show-search style="width: 200px">
+    <a-select show-search style="width: 200px;">
       <a-select-option
         v-for="(item, key) in filteredCities"
         :key="key"
         :value="filteredCities[key].city_name"
-      >{{ filteredCities[key].city_name }}</a-select-option>
+        >{{ filteredCities[key].city_name }}</a-select-option
+      >
     </a-select>
     <!-- <a-select :options="filteredCity"></a-select> -->
   </div>
@@ -62,7 +64,7 @@ export default {
         }
       }
       return filteredCity;
-    }
+    },
   },
   methods: {
     // handleChangeProvince(isi) {
@@ -101,4 +103,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="../css/style.scss"/>
+<style scoped lang="scss" src="../css/style.scss" />

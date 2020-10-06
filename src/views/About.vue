@@ -114,28 +114,36 @@
                   size="large"
                   inputReadOnly
                 /> -->
+                <q-input
+                  v-model="hour"
+                  class="inputTime"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="schedule" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time v-model="hour" mask="HH:mm" format24h>
+                          <div class="row items-center justify-end">
+                            <q-btn
+                              v-close-popup
+                              label="Close"
+                              color="primary"
+                              flat
+                            />
+                          </div>
+                        </q-time>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
               </a-form-item>
-              <q-input filled v-model="date">
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-time v-model="hour" mask="YYYY-MM-DD HH:mm" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Close"
-                            color="primary"
-                            flat
-                          />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
             </a-col>
             <a-col
               :span="4"
@@ -392,7 +400,6 @@
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('country_of_residence')">
                 <a-select
-                  show-search
                   v-model="country"
                   v-decorator="[
                     'country',
@@ -415,7 +422,6 @@
               <div v-if="country === 'INA' || country === 'ina'">
                 <a-form-item :label="getLabels('region')">
                   <a-select
-                    show-search
                     @change="handleChangeRegion"
                     v-decorator="[
                       'region',
@@ -504,8 +510,15 @@ import router from "../router";
 import data from "../components/json/indonesia";
 // import countries from "../components/json/country";
 import Vue from "vue";
-import Quasar from "quasar";
-
+import {
+  Quasar,
+  QInput,
+  QTime,
+  QBtn,
+  QPopupProxy,
+  ClosePopup,
+  QIcon,
+} from "quasar";
 import Antd, {
   Row,
   Col,
@@ -524,8 +537,19 @@ import Antd, {
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
-Vue.use(Antd, Quasar);
-
+Vue.use(Antd);
+Vue.use(Quasar, {
+  components: {
+    QTime,
+    QInput,
+    QBtn,
+    QPopupProxy,
+    QIcon,
+  },
+  directives: {
+    ClosePopup,
+  },
+});
 export default {
   data() {
     return {
@@ -686,7 +710,7 @@ export default {
         const tempHour = this.tempsetup.filter((item, index) => {
           return item.number1 === 8 && item.number2 === 2;
         });
-        this.hour = moment(tempHour[0]["setupvalue"], "HH:mm");
+        this.hour = moment(tempHour[0]["setupvalue"], "HH:mm")._i;
         const tempBed = this.tempsetup.filter((item, index) => {
           return item.number1 === 3 && item.number2 === 1;
         });

@@ -61,7 +61,7 @@
                 @change="onChange"
                 :format="dateFormat"
                 size="large"
-                inputReadOnly
+                input-read-only
               />
             </a-form-item>
           </a-modal>
@@ -92,7 +92,7 @@
                 :placeholder="getLabels('select_date')"
                 @change="onChange"
                 size="large"
-                inputReadOnly
+                input-read-only
               />
             </a-form-item>
           </a-modal>
@@ -120,7 +120,7 @@
                 :placeholder="getLabels('select_date')"
                 @change="onChange"
                 size="large"
-                inputReadOnly
+                input-read-only
               />
             </a-form-item>
           </a-modal>
@@ -150,13 +150,14 @@
                 :placeholder="getLabels('select_date')"
                 @change="onChange"
                 size="large"
-                inputReadOnly
+                input-read-only
               />
             </a-form-item>
           </a-modal>
         </a-col>
       </a-row>
       {{ server }}
+      {{ hotelEndpoint + "mobileCI/findReservation" }}
     </div>
   </div>
 </template>
@@ -270,6 +271,7 @@ export default {
         return item.number1 === 99 && item.number2 === 2;
       });
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      console.log();
       console.log(this.server, "server");
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {

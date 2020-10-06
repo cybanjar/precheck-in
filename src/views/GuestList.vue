@@ -36,7 +36,7 @@
           :data-source="data"
           :pagination="false"
           size="middle"
-          defaultExpandAllRows="true"
+          default-expand-all-rows="true"
           :scroll="{ x: 'calc(600px + 50%)', y: 350 }"
         >
           <span slot="tags" slot-scope="tags">

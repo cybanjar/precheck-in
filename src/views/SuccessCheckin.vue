@@ -1,9 +1,9 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{getLabels('room_number')}} : {{taejin}}</p>
-    <p>{{getLabels('wifi_address')}} : {{wifiAddress}}</p>
-    <p>{{getLabels('wifi_password')}} : {{wifiPassword}}</p>
+    <p>{{ getLabels("room_number") }} : {{ taejin }}</p>
+    <p>{{ getLabels("wifi_address") }} : {{ wifiAddress }}</p>
+    <p>{{ getLabels("wifi_password") }} : {{ wifiPassword }}</p>
     <p>
       <br />
     </p>
@@ -77,11 +77,16 @@ export default {
   },
   methods: {
     getLabels(nameKey) {
-      const label = this.labels.find(element => element['program-variable'] == nameKey);
+      const label = this.labels.find(
+        (element) => element["program-variable"] == nameKey
+      );
       if (label != undefined) {
-        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
+        return (
+          label["program-label1"].charAt(0).toUpperCase() +
+          label["program-label1"].slice(1)
+        );
       } else {
-        return '';
+        return "";
       }
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
@@ -100,4 +105,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="../css/style.scss"/>
+<style scoped lang="scss" src="../css/style.scss" />

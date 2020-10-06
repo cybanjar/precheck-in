@@ -88,7 +88,7 @@ export default {
 
     (async () => {
       const parsed = await ky
-        .post( this.hotelEndpoint+"preCI/storeQRCode", {
+        .post(this.hotelEndpoint + "preCI/storeQRCode", {
           json: {
             request: {
               base64image: this.url,

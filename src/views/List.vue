@@ -1,14 +1,25 @@
 <template>
   <div>
     <div class="home">
-      <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
+      <a-row
+        class="header-brandings"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
+          <img
+            class="img-hotel float-right image"
+            :src="gambar"
+            alt="Image Loading"
+          />
           <div class="overlay">
-            <div class="text">{{hotelname}}</div>
+            <div class="text">{{ hotelname }}</div>
           </div>
           <div class="visible">
             <div class="online-checkin-mobile">
@@ -18,7 +29,7 @@
         </a-col>
       </a-row>
       <div>
-        <h1 class="mt-3 text-center">{{getLabels('guest_list')}}</h1>
+        <h1 class="mt-3 text-center">{{ getLabels("guest_list") }}</h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -44,23 +55,25 @@
                 {{ item["guest-lname"] }},
                 {{ item["guest-pname"] }}
               </h2>
-              <p v-if="item['guest-member-name'] != ''" class="pl-3">{{ item['guest-member-name'] }}</p>
+              <p v-if="item['guest-member-name'] != ''" class="pl-3">
+                {{ item["guest-member-name"] }}
+              </p>
               <p v-else class="pl-3">
                 <br />
               </p>
               <p class="pl-3">
-                {{getLabels('arrival')}}:
-                <span
-                  class="font-weight-bold"
-                >{{ formatDate(item.arrive) }}</span>
-                {{getLabels('departure')}}:
-                <span
-                  class="font-weight-bold"
-                >{{ formatDate(item.depart) }}</span>
+                {{ getLabels("arrival") }}:
+                <span class="font-weight-bold">{{
+                  formatDate(item.arrive)
+                }}</span>
+                {{ getLabels("departure") }}:
+                <span class="font-weight-bold">{{
+                  formatDate(item.depart)
+                }}</span>
               </p>
               <p class="pl-3">
-                {{ item.rmqty }} {{getLabels('adult')}}
-                <a-tag color="green">{{ item['rate-desc'] }}</a-tag>
+                {{ item.rmqty }} {{ getLabels("adult") }}
+                <a-tag color="green">{{ item["rate-desc"] }}</a-tag>
               </p>
             </a-card>
           </a-list-item>
@@ -73,7 +86,8 @@
         :size="size"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-      >{{getLabels('next')}}</a-button>
+        >{{ getLabels("next") }}</a-button
+      >
       <!-- </router-link> -->
     </div>
   </div>
@@ -150,8 +164,13 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      const label = this.labels.find(element => element['lang-variable'] == nameKey);
-      return label['lang-value'].charAt(0).toUpperCase() + label['lang-value'].slice(1);
+      const label = this.labels.find(
+        (element) => element["lang-variable"] == nameKey
+      );
+      return (
+        label["lang-value"].charAt(0).toUpperCase() +
+        label["lang-value"].slice(1)
+      );
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["lang-variable"] === nameKey) {
           const splitStr = this.labels[x]["lang-value"]
