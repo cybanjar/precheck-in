@@ -7,22 +7,19 @@
   <div v-else>
     <div class="home">
       <!-- <div v-show="term"> -->
-      <a-modal
-        :title="getLabels('t_c')"
-        :visible="termcondition"
-        :confirm-loading="confirmLoading"
-      >
+      <a-modal :title="getLabels('t_c')" :visible="termcondition" :confirm-loading="confirmLoading">
         <template slot="footer">
-          <a-button key="back" @click="disagree">{{
+          <a-button key="back" @click="disagree">
+            {{
             getLabels("disagree")
-          }}</a-button>
+            }}
+          </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree") }}</a-button
-          >
+          >{{ getLabels("agree") }}</a-button>
         </template>
         <p>{{ terms }}</p>
         <!--<p v-if="langID == 'ENG'">{{term1}}</p>
@@ -37,23 +34,12 @@
       <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
-      <a-row
-        class="header-branding mb-3"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
+      <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            :src="gambar"
-            alt="Image Loading"
-          />
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
           <div class="overlay visible">
             <div class="text">{{ hotelname }}</div>
           </div>
@@ -170,8 +156,7 @@
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
+                    >{{ item.setupvalue }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -208,8 +193,7 @@
                       v-for="item in FilterCountry"
                       :key="item"
                       :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
+                    >{{ item.setupvalue }}</a-select-option>
                   </a-select>
                   <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -260,8 +244,7 @@
                       v-for="item in FilterCountry"
                       :key="item"
                       :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
+                    >{{ item.setupvalue }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -288,8 +271,7 @@
                         v-for="item in filteredRegion"
                         :key="item"
                         :value="item['descr']"
-                        >{{ item.setupvalue }}</a-select-option
-                      >
+                      >{{ item.setupvalue }}</a-select-option>
                     </a-select>
                   </a-form-item>
                 </div>
@@ -371,15 +353,15 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
-                    <strong
-                      >{{ this.currDataPrepare["currency-usage"] }}
+                    <strong>
+                      {{ this.currDataPrepare["currency-usage"] }}
                       {{
-                        `${minimumDeposit}`.replace(
-                          /\B(?=(\d{3})+(?!\d))/g,
-                          ","
-                        )
-                      }}</strong
-                    >
+                      `${minimumDeposit}`.replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      ","
+                      )
+                      }}
+                    </strong>
                   </h2>
                 </a-form-item>
                 <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
@@ -394,8 +376,7 @@
                   class="font-weight-bold mt-3 mr-3"
                   type="primary"
                   @click="search()"
-                  >{{ getLabels("pay") }}</a-button
-                >
+                >{{ getLabels("pay") }}</a-button>
                 <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -415,27 +396,29 @@
             <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
-                  <a-checkbox v-model="pay">{{
+                  <a-checkbox v-model="pay">
+                    {{
                     getLabels("term_cash_basis")
-                  }}</a-checkbox>
+                    }}
+                  </a-checkbox>
                 </p>
               </a-col>
             </a-row>
           </div>
           <div class="steps-action">
             <div v-if="y">
-              <a-button v-if="current > 0" @click="prev">{{
+              <a-button class="mr-3" v-if="current > 0" @click="prev">
+                {{
                 getLabels("prev")
-              }}</a-button>
+                }}
+              </a-button>
+              <a-button
+                v-if="current < steps.length - 1"
+                type="primary"
+                @click="next"
+              >{{ getLabels("next") }}</a-button>
             </div>
 
-            <a-button
-              v-if="current < steps.length - 1"
-              style="margin-left: 8px;"
-              type="primary"
-              @click="next"
-              >{{ getLabels("next") }}</a-button
-            >
             <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
@@ -462,8 +445,7 @@
                   "
                   v-if="current == steps.length - 1"
                   html-type="submit"
-                  >{{ getLabels("ci_now") }}</a-button
-                >
+                >{{ getLabels("ci_now") }}</a-button>
               </a-form-item>
             </a-col>
           </a-row>
