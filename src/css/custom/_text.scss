@@ -51,5 +51,9 @@ h3 {
 }
 
 .text-capitalize {
-  text-transform: capitalize;
+  text-transform: capitalize !important;
+}
+
+.text-lowercase {
+  text-transform: lowercase !important;
 }

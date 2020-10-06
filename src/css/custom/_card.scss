@@ -148,3 +148,15 @@
 .rounded-4 {
   border-radius: 4px;
 }
+
+.q-card .q-card--bordered:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+}
+
+.q-card--bordered:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+}
+
+.q-card--flat:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+}
