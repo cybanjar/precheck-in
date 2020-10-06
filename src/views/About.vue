@@ -107,14 +107,35 @@
           <a-row class="ml-3" gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item layout="vertical" :label="getLabels('eta')">
-                <a-time-picker
+                <!-- <a-time-picker
                   v-model="hour"
                   :minute-step="30"
                   format="HH:mm"
                   size="large"
                   inputReadOnly
-                />
+                /> -->
               </a-form-item>
+              <q-input filled v-model="date">
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-time v-model="hour" mask="YYYY-MM-DD HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </a-col>
             <a-col
               :span="4"
@@ -277,7 +298,16 @@
                     'email',
                     {
                       initialValue: email,
-                      rules: [{ required: true, message: getLabels('required_email') }, {type: 'email', message: getLabels('not_valid_email')}],
+                      rules: [
+                        {
+                          required: true,
+                          message: getLabels('required_email'),
+                        },
+                        {
+                          type: 'email',
+                          message: getLabels('not_valid_email'),
+                        },
+                      ],
                     },
                   ]"
                 />
@@ -346,7 +376,7 @@
               </a-form-item>
             </a-col>
           </a-row>
-            <!-- <a-col :span="5" :xl="5" :xs="24">
+          <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Choose of Document ID">
                 <a-select default-value="E-KTP">
                   <a-select-option value="id_card">E-KTP</a-select-option>
@@ -387,10 +417,10 @@
                   <a-select
                     show-search
                     @change="handleChangeRegion"
-                    v-model="currDataPrepare['guest-prov']"
                     v-decorator="[
                       'region',
                       {
+                        initialValue: currDataPrepare['guest-prov'],
                         rules: [{ required: true }],
                       },
                     ]"
@@ -474,6 +504,8 @@ import router from "../router";
 import data from "../components/json/indonesia";
 // import countries from "../components/json/country";
 import Vue from "vue";
+import Quasar from "quasar";
+
 import Antd, {
   Row,
   Col,
@@ -488,14 +520,11 @@ import Antd, {
   DatePicker,
   Modal,
 } from "ant-design-vue";
+
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
-Vue.use(Antd);
-
-const groupby = (paramnumber1, paramnumber2) => {
-  return [];
-};
+Vue.use(Antd, Quasar);
 
 export default {
   data() {
@@ -581,6 +610,8 @@ export default {
       labels: [],
       flagKiosk: false,
       langID: "",
+      hotelEndpoint: "",
+      hotelCode: "",
     };
   },
   created() {
@@ -608,58 +639,89 @@ export default {
           JSON.stringify(parsed.response.languagesList["languages-list"])
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
-        this.langID =
-          parsed.response.languagesList["languages-list"][0]["lang-id"];
+        const tempMessResult = parsed.response.messResult;
+        console.log(tempMessResult, "bokis");
+        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+        if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
+          this.langID = "";
+        } else {
+          this.langID =
+            parsed.response.languagesList["languages-list"][0]["lang-id"];
+        }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        const tempbC = this.tempsetup.filter((item, index) => {
+          return item.number1 === 4;
+        });
+        const bC = tempbC.filter((item, index) => {
+          return item.setupflag === true;
+        });
+        this.information.backgroundColor = bC[0].setupvalue;
+        const tempfC = this.tempsetup.filter((item, index) => {
+          return item.number1 === 5;
+        });
+        const fC = tempfC.filter((item, index) => {
+          return item.setupflag === true;
+        });
+        this.information.color = fC[0].setupvalue;
+        const tempGambar = this.tempsetup.filter((item, index) => {
+          return item.number1 === 7 && item.number2 === 1;
+        });
+        this.gambar = tempGambar[0].setupvalue.substring(
+          tempGambar[0].setupvalue.lastIndexOf("<img src=") + 10,
+          tempGambar[0].setupvalue.lastIndexOf('g"') + 1
+        );
+        const tempTerm = this.tempsetup.filter((item, index) => {
+          return item.number1 === 6 && item.setupflag === true;
+        });
+        this.term = tempTerm[0]["setupvalue"];
+        const temRequest = this.tempsetup.filter((item, index) => {
+          return item.number1 === 2 && item.setupflag === true;
+        });
+        this.showPickupRequest = temRequest[0].setupflag;
+        this.money = temRequest[0]["price"];
+        this.currency = temRequest[0]["remarks"];
+        const tempPer = temRequest[0]["setupvalue"].split("PER")[1];
+        this.per = this.getLabels(tempPer.toLowerCase().trim());
+        const tempHour = this.tempsetup.filter((item, index) => {
+          return item.number1 === 8 && item.number2 === 2;
+        });
+        this.hour = moment(tempHour[0]["setupvalue"], "HH:mm");
+        const tempBed = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 1;
+        });
+        this.showBed = tempBed[0].setupflag;
+        const tempSmoking = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 2;
+        });
+        this.showSmoking = tempSmoking[0].setupflag;
+        const tempFloor = this.tempsetup.filter((item, index) => {
+          return item.number1 === 3 && item.number2 === 3;
+        });
+        this.showFloor = tempFloor[0].setupflag;
+        const tempHotel = this.tempsetup.filter((item, index) => {
+          return item.number1 === 99 && item.number2 === 1;
+        });
+        this.hotelname = tempHotel[0]["setupvalue"];
+        const tempKios = this.tempsetup.filter((item, index) => {
+          return item.number1 === 8 && item.number2 === 10;
+        });
+        this.flagKiosk = tempKios[0]["setupflag"];
+
+        const tempEndpoint = this.tempsetup.filter((item, index) => {
+          return item.number1 === 99 && item.number2 === 2;
+        });
+        this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+
+        const tempHotelCode = this.tempsetup.filter((item, index) => {
+          return item.number1 === 99 && item.number2 === 3;
+        });
+        this.hotelCode = tempHotelCode[0]["setupvalue"];
+        console.log(this.hotelCode, "coba2");
+        console.log(this.hotelEndpoint, "coba");
         const jatah = [];
         for (const i in this.tempsetup) {
-          if (this.tempsetup[i]["number1"] == 4) {
-            jatah.push(this.tempsetup[i]);
-
-            for (const heaven in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[heaven].setupflag == true) {
-                this.information.backgroundColor = jatah[heaven]["setupvalue"];
-              }
-            }
-          } else if (this.tempsetup[i]["number1"] == 5) {
-            jatah.push(this.tempsetup[i]);
-
-            for (const hell in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[hell].setupflag == true) {
-                this.information.color = jatah[hell]["setupvalue"];
-              }
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 7 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            const lagi = this.tempsetup[i]["setupvalue"].substring(
-              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
-              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
-            );
-            this.gambar = lagi;
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["setupflag"] == true
-          ) {
-            this.term = this.tempsetup[i]["setupvalue"];
-          } else if (this.tempsetup[i]["number1"] == 2) {
-            if (this.tempsetup[i].setupflag == true) {
-              this.showPickupRequest = this.tempsetup[i].setupflag;
-              this.money = this.tempsetup[i]["price"];
-              this.currency = this.tempsetup[i]["remarks"];
-              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
-              this.per = this.getLabels(this.per.toLowerCase().trim());
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.hour = moment(this.tempsetup[i]["setupvalue"], "HH:mm");
-          } else if (this.tempsetup[i]["number1"] == 1) {
+          if (this.tempsetup[i]["number1"] == 1) {
             this.tempsetup[i].setupvalue = this.getLabels(
               this.tempsetup[i].setupvalue.toLowerCase()
             );
@@ -667,19 +729,6 @@ export default {
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
             }
-          } else if (this.tempsetup[i]["number1"] == 3) {
-            if (this.tempsetup[i].number2 == 1) {
-              this.showBed = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 2) {
-              this.showSmoking = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 3) {
-              this.showFloor = this.tempsetup[i].setupflag;
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 99 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.hotelname = this.tempsetup[i]["setupvalue"];
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
             this.tempsetup[i]["number2"] == 2
@@ -690,25 +739,17 @@ export default {
             this.countries.push(bulbasur);
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3
+            this.tempsetup[i]["number2"] == 3 &&
+            this.tempsetup[i].descr != "SERVER TIME"
           ) {
             const air = {};
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.province.push(air);
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 10
-          ) {
-            this.flagKiosk = this.tempsetup[i]["setupflag"];
           }
         }
 
-        const tempMessResult = parsed.response.messResult.split(" ");
-        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        // console.log(this.guests, "guests");
-
-        if (tempMessResult[0] == "99") {
+        if (tempMessResult[0] == "99 - Pre Checkin Not Allowed!") {
           router.push("notfound");
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
@@ -732,6 +773,8 @@ export default {
             obj["14"] = this.showPickupRequest;
             obj["15"] = this.countries;
             obj["16"] = this.province;
+            obj["17"] = this.hotelEndpoint;
+            obj["18"] = this.hotelCode;
             nietos.push(this.dataGuest);
             nietos.push(obj);
             router.push({ name: "List", params: { foo: nietos } });
@@ -753,7 +796,13 @@ export default {
             // console.log(mori, "be the one");
             router.push({
               name: "Success",
-              params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+              params: {
+                jin: mori,
+                jun: this.langID,
+                jen: this.flagKiosk,
+                mihawk: this.hotelCode,
+                luffy: this.hotelEndpoint,
+              },
             });
           } else {
             this.currDataPrepare =
@@ -787,6 +836,8 @@ export default {
       this.showPickupRequest = this.$route.params.id["setup"]["14"];
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
+      this.hotelEndpoint = this.$route.params.id["setup"]["17"];
+      this.hotelCode = this.$route.params.id["setup"]["18"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
@@ -795,13 +846,11 @@ export default {
 
       this.counter += 1;
     }
-    this.loading = false;
-  },
-  mounted() {
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.loading = false;
   },
   methods: {
     showModalTerm() {
@@ -885,46 +934,45 @@ export default {
           //   },
           //   "inputan"
           // );
-          // (async () => {
-          console.log(this.hour);
-          // const tempParam = location.search.substring(1);
-          // const parsed = await ky
-          //   .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/updateData", {
-          //     json: {
-          //       request: {
-          //         resNumber: this.currDataPrepare["rsv-number"],
-          //         reslineNumber: this.currDataPrepare["rsvline-number"],
-          //         estAT: values.time._i,
-          //         pickrequest: this.showPrice,
-          //         pickdetail:
-          //           this.showPrice == false ||
-          //           values.flight == " " ||
-          //           values.flight == undefined
-          //             ? ""
-          //             : values.flight,
-          //         roomPreferences:
-          //           this.room + "$" + this.floor + "$" + this.bed,
-          //         specialReq:
-          //           values.Request == " " || values.Request == undefined
-          //             ? ""
-          //             : values.Request,
-          //         guestPhnumber: values.phone,
-          //         guestNationality: values.nationality,
-          //         guestCountry: values.country,
-          //         guestRegion: values.country != "INA" ? " " : values.region,
-          //         agreedTerm: true,
-          //         purposeOfStay: values.purpose,
-          // },
-          // },
-          // })
-          // .json();
-          // console.log(parsed, "inputan3");
-          // const tempMessResult = parsed.response.messResult.split(" ");
-          // this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          // })();
-          // this.scrollToTop();
-          // this.save();
-          // this.form.resetFields();
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post(this.hotelEndpoint + "preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: values.time._i,
+                    pickrequest: this.showPrice,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
+                    guestPhnumber: values.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
+          this.scrollToTop();
+          this.save();
+          this.form.resetFields();
         }
       });
     },
@@ -939,7 +987,16 @@ export default {
           this.hour +
           "}";
         // console.log(mori, "be the one");
-        router.push({ name: "Success", params: { jin: mori, jun: this.langID, jen: this.flagKiosk } });
+        router.push({
+          name: "Success",
+          params: {
+            jin: mori,
+            jun: this.langID,
+            jen: this.flagKiosk,
+            mihawk: this.hotelCode,
+            luffy: this.hotelEndpoint,
+          },
+        });
 
         // router.push("success");
       }
@@ -1035,63 +1092,17 @@ export default {
         year: "numeric",
       }).format(new Date(datum));
     },
-    groupby(paramnumber1, paramnumber2) {
-      let lastnumber1 = 0;
-      let totalnumber1 = 0;
-      for (let i = 0; i < this.tempsetup.length; i++) {
-        const number1 = this.tempsetup[i]["number1"];
-        if (lastnumber1 != number1) {
-          totalnumber1 = totalnumber1 + 1;
-          lastnumber1 = number1;
-        }
-      }
-      // return totalnumber1;
-      const tempdata = [];
-      for (let i = 0; i < this.tempsetup.length; i++) {
-        if (this.tempsetup[i]["number1"] == paramnumber1) {
-          if (paramnumber2 != 0) {
-            const datarow = this.tempsetup[i];
-            if (datarow["number2"] == paramnumber2) {
-              tempdata.push(this.tempsetup[i]);
-            }
-          } else if (paramnumber2 == 0) {
-            tempdata.push(this.tempsetup[i]);
-          }
-        }
-      }
-      if (tempdata[0]["number1"] == 3) {
-        this.tempRoomPreferencelenght = [];
-        this.tempRoomPreference = [];
-        for (const b in tempdata) {
-          if (tempdata[b].setupflag == true) {
-            // isi 3
-            this.tempRoomPreferencelenght.push(tempdata[b]);
-            const coba = tempdata[b]["setupvalue"];
-            // coba[b].key = Number(b);
-
-            const splitcoba = coba.split(" & ");
-
-            // isi 6
-            for (const c in splitcoba) {
-              this.tempRoomPreference.push({
-                key: Number(b) + 1,
-                descr: splitcoba[c],
-              });
-            }
-          }
-        }
-        return this.tempRoomPreferencelenght;
-      } else if (tempdata[0]["number1"] == 6) {
-        return tempdata[0]["setupvalue"];
-      }
-      return tempdata;
-    },
     test() {
       return (this.indexStr = this.indexStr + 1);
     },
     getLabels(nameKey) {
-      const label = this.labels.find(element => element['lang-variable'] == nameKey);
-      return label['lang-value'].charAt(0).toUpperCase() + label['lang-value'].slice(1);
+      const label = this.labels.find(
+        (element) => element["lang-variable"] == nameKey
+      );
+      return (
+        label["lang-value"].charAt(0).toUpperCase() +
+        label["lang-value"].slice(1)
+      );
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["lang-variable"] === nameKey) {
           const splitStr = this.labels[x]["lang-value"]
@@ -1104,37 +1115,6 @@ export default {
           return splitStr.join(" ");
         }
       }*/
-    },
-  },
-  computed: {
-    filteredCities() {
-      const filteredCity = [];
-      const set = this.setRegion;
-
-      for (let i = 0; i < this.City.length; i++) {
-        const regionID = set;
-        const dataRow = this.City[i];
-        const regionIDinCity = dataRow["province"];
-
-        if (regionID === regionIDinCity) {
-          filteredCity.push(dataRow);
-        }
-      }
-      return filteredCity;
-    },
-    FilterRoomPreference() {
-      return this.groupby(3, 0);
-    },
-    indexStrs() {
-      // get: function () {
-      //   return this.indexStr;
-      //   console.log(this.indexStr, "be the one");
-      // },
-      // set: function (newIndex) {
-      //   this.indexStr = this.indexStr + 1;
-      //   console.log(this.indexStr, "be the one");
-      // },
-      return this.test();
     },
   },
 };
