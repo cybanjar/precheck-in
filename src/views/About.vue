@@ -183,7 +183,12 @@
                         transition-show="scale"
                         transition-hide="scale"
                       >
-                        <q-time v-model="hour" mask="HH:mm" format24h>
+                        <q-time
+                          v-model="hour"
+                          mask="HH:mm"
+                          :minute-options="[0, 30]"
+                          format24h
+                        >
                           <div class="row items-center justify-end">
                             <q-btn
                               v-close-popup

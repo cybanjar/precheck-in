@@ -160,7 +160,6 @@
           </a-modal>
         </a-col>
       </a-row>
-      {{ server }}
     </div>
   </div>
 </template>
@@ -314,8 +313,16 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-
+      console.log(
+        "Jamserverdong",
+        tempServer[0]["setupvalue"],
+        moment(tempServer[0]["setupvalue"], "HH:mm").valueOf()
+      );
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
+      const vServerClock = moment(
+        tempServer[0]["setupvalue"],
+        "HH:mm"
+      ).valueOf();
 
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
@@ -326,7 +333,11 @@ export default {
           this.checkin = this.tempsetup[i]["setupvalue"];
         }
       }
-      if ("14:00" < this.server) {
+
+      const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
+      console.log(vServerClock, vCheckinClock, vCheckinClock < vServerClock);
+
+      if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
     })();
