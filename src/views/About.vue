@@ -356,7 +356,7 @@
                 </a-select>
               </a-form-item>
             </a-col>
-          </a-row>
+          </a-row>-->
 
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
@@ -418,7 +418,7 @@
                 </a-form-item>
               </div>
             </a-col>
-          </a-row>-->
+          </a-row>
 
           <!-- Address -->
           <a-row class="ml-3 mb-3" :gutter="[16, 8]">
