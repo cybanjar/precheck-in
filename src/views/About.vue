@@ -6,8 +6,47 @@
   </div>
   <div v-else>
     <div class="home">
+      <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
+        <a-col class="pl-3 pt-3" :span="15" :md="15" :xs="24">
+          <h4 class="mb-3 text-white font-weight-bold" :style="information">ONLINE CHECK-IN</h4>
+          <h6
+            v-if="currDataPrepare['guest-member-name'] !== ''"
+            class="main-guest-title text-white font-weight-bold"
+            :style="information"
+          >
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare["guest-member-name"] }}
+          </h6>
+          <h6 v-else class="main-guest-title text-white font-weight-bold" :style="information">
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }}
+          </h6>
+
+          <p class="ant-card-meta-description text-white" :style="information">
+            {{ getLabels("arrival") }}:
+            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
+            {{ getLabels("departure") }}:
+            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
+            <br />
+            {{ getLabels("book_code") }}:
+            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
+          </p>
+        </a-col>
+        <a-col class="container" :span="9" :md="9" :xs="24">
+          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
+          <div class="overlay">
+            <div class="text">{{ hotelname }}</div>
+          </div>
+          <!-- <div class="visible">
+            <div class="online-checkin-mobile">
+              <p class="text-center">Online Check-In</p>
+            </div>
+          </div>-->
+        </a-col>
+      </a-row>
       <!-- {{currDataPrepare}} -->
-      <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
+      <!-- <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
       <a-row
         class="header-branding"
         :style="information"
@@ -92,7 +131,7 @@
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
-      </a-row>
+      </a-row>-->
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
@@ -113,7 +152,7 @@
                   format="HH:mm"
                   size="large"
                   inputReadOnly
-                /> -->
+                />-->
                 <q-input
                   v-model="hour"
                   class="inputTime"
@@ -131,12 +170,7 @@
                       >
                         <q-time v-model="hour" mask="HH:mm" format24h>
                           <div class="row items-center justify-end">
-                            <q-btn
-                              v-close-popup
-                              label="Close"
-                              color="primary"
-                              flat
-                            />
+                            <q-btn v-close-popup label="Close" color="primary" flat />
                           </div>
                         </q-time>
                       </q-popup-proxy>
@@ -145,38 +179,23 @@
                 </q-input>
               </a-form-item>
             </a-col>
-            <a-col
-              :span="4"
-              :xl="6"
-              :lg="5"
-              :md="6"
-              :xs="24"
-              v-show="showPickupRequest"
-            >
+            <a-col :span="4" :xl="6" :lg="5" :md="6" :xs="24" v-show="showPickupRequest">
               <a-form-item :label="getLabels('request')">
                 <a-checkbox
                   :checked="showPrice"
                   v-model="showPrice"
                   @change="onChange"
-                  >{{ getLabels("pick_req") }}</a-checkbox
-                >
+                >{{ getLabels("pick_req") }}</a-checkbox>
               </a-form-item>
             </a-col>
-            <a-col
-              :span="4"
-              :xl="4"
-              :lg="5"
-              :md="5"
-              :xs="24"
-              v-show="showPickupRequest"
-            >
+            <a-col :span="4" :xl="4" :lg="5" :md="5" :xs="24" v-show="showPickupRequest">
               <a-form-item :label="getLabels('price')">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
-                    nilai === 3
-                      ? " "
-                      : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+                  nilai === 3
+                  ? " "
+                  : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
                   }}
                 </label>
                 <span>/ {{ per }}</span>
@@ -205,52 +224,56 @@
           <a-row class="ml-3" gutter="16">
             <a-col>
               <a-form-item :label="getLabels('room_pref')">
-                <a-radio-group
-                  name="radioGroup"
-                  v-show="showSmoking"
-                  @change="Room"
-                >
+                <a-radio-group name="radioGroup" v-show="showSmoking" @change="Room">
                   <a-radio value="NonSmoking">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("non_smoking")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                   <a-radio value="Smoking">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("smoking")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
-                <a-radio-group
-                  name="radioGroup"
-                  v-show="showFloor"
-                  @change="Floor"
-                >
+                <a-radio-group name="radioGroup" v-show="showFloor" @change="Floor">
                   <a-radio value="LowerFloor">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("lower_floor")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                   <a-radio value="HigherFloor">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("higher_floor")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
                 <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
                   <a-radio value="OneBigBed">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("one_big_bed")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                   <a-radio value="TwoSingleBeds">
-                    <span class="font-weight-normal">{{
+                    <span class="font-weight-normal">
+                      {{
                       getLabels("two_single_beds")
-                    }}</span>
+                      }}
+                    </span>
                   </a-radio>
                 </a-radio-group>
               </a-form-item>
@@ -277,14 +300,7 @@
             </a-card>
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col
-              v-if="email != ''"
-              :span="5"
-              :xl="5"
-              :lg="7"
-              :md="10"
-              :xs="24"
-            >
+            <a-col v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('email')">
                 <a-input
                   v-decorator="[
@@ -351,8 +367,7 @@
                     v-for="item in FilterPurposeofStay"
                     :key="item"
                     :value="item.setupvalue"
-                    >{{ item.setupvalue }}</a-select-option
-                  >
+                  >{{ item.setupvalue }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -374,8 +389,7 @@
                     v-for="item in FilterCountry"
                     :key="item"
                     :value="item['descr']"
-                    >{{ item.setupvalue }}</a-select-option
-                  >
+                  >{{ item.setupvalue }}</a-select-option>
                 </a-select>
                 <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -413,8 +427,7 @@
                     v-for="item in FilterCountry"
                     :key="item"
                     :value="item['descr']"
-                    >{{ item.setupvalue }}</a-select-option
-                  >
+                  >{{ item.setupvalue }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -435,8 +448,7 @@
                       v-for="item in filteredProvince"
                       :key="item"
                       :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
+                    >{{ item.setupvalue }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </div>
@@ -477,8 +489,7 @@
                   type="primary"
                   :loading="loading"
                   @click="handleOkTerm"
-                  >{{ getLabels("close") }}</a-button
-                >
+                >{{ getLabels("close") }}</a-button>
               </template>
               <p>{{ term }}</p>
             </a-modal>
@@ -494,8 +505,7 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                  >{{ getLabels("ci_now") }}</a-button
-                >
+                >{{ getLabels("ci_now") }}</a-button>
               </a-form-item>
             </a-col>
           </a-row>
