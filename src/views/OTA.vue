@@ -480,7 +480,7 @@ export default {
           }
         })();
 
-        this.modalGuestName = false;
+        this.modalEmailAddress = false;
       }
     },
     handleCancel() {
