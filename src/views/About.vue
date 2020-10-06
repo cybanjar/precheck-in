@@ -615,8 +615,15 @@ export default {
           JSON.stringify(parsed.response.languagesList["languages-list"])
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
-        this.langID =
-          parsed.response.languagesList["languages-list"][0]["lang-id"];
+        const tempMessResult = parsed.response.messResult;
+        console.log(tempMessResult, "bokis");
+        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+        if ((tempMessResult == "99 - Pre Checkin Not Allowed!")) {
+          this.langID = "";
+        } else {
+          this.langID =
+            parsed.response.languagesList["languages-list"][0]["lang-id"];
+        }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const tempbC = this.tempsetup.filter((item, index) => {
@@ -708,7 +715,8 @@ export default {
             this.countries.push(bulbasur);
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3
+            this.tempsetup[i]["number2"] == 3 &&
+            this.tempsetup[i].descr != "SERVER TIME"
           ) {
             const air = {};
             air["descr"] = this.tempsetup[i]["descr"];
@@ -717,11 +725,7 @@ export default {
           }
         }
 
-        const tempMessResult = parsed.response.messResult.split(" ");
-        this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-        // console.log(this.guests, "guests");
-
-        if (tempMessResult[0] == "99") {
+        if (tempMessResult[0] == "99 - Pre Checkin Not Allowed!") {
           router.push("notfound");
         } else {
           if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
@@ -768,7 +772,13 @@ export default {
             // console.log(mori, "be the one");
             router.push({
               name: "Success",
-              params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+              params: {
+                jin: mori,
+                jun: this.langID,
+                jen: this.flagKiosk,
+                mihawk: this.hotelCode,
+                luffy: this.hotelEndpoint,
+              },
             });
           } else {
             this.currDataPrepare =
@@ -955,7 +965,13 @@ export default {
         // console.log(mori, "be the one");
         router.push({
           name: "Success",
-          params: { jin: mori, jun: this.langID, jen: this.flagKiosk },
+          params: {
+            jin: mori,
+            jun: this.langID,
+            jen: this.flagKiosk,
+            mihawk: this.hotelCode,
+            luffy: this.hotelEndpoint,
+          },
         });
 
         // router.push("success");

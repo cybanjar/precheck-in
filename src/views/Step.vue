@@ -118,15 +118,21 @@
                 <a-form-item :label="getLabels('email')">
                   <a-input
                     v-decorator="[
-                    'email',
-                    {
-                      initialValue: currDataPrepare['guest-email'],
-                      rules: [
-                        {required: true, message: getLabels('required_email')},
-                        {type: 'email', message: getLabels('not_valid_email')},
-                      ],
-                    },
-                  ]"
+                      'email',
+                      {
+                        initialValue: currDataPrepare['guest-email'],
+                        rules: [
+                          {
+                            required: true,
+                            message: getLabels('required_email'),
+                          },
+                          {
+                            type: 'email',
+                            message: getLabels('not_valid_email'),
+                          },
+                        ],
+                      },
+                    ]"
                   />
                 </a-form-item>
               </a-col>
@@ -134,13 +140,18 @@
                 <a-form-item :label="getLabels('phone_number')">
                   <a-input
                     v-decorator="[
-                    'phone',
-                    {
-                      initialValue:currDataPrepare['guest-phnumber'],
-                      rules: [{ required: true, message: getLabels('required_phone') }],
-                    },
-                  ]"
-                    style="width: 100%"
+                      'phone',
+                      {
+                        initialValue: currDataPrepare['guest-phnumber'],
+                        rules: [
+                          {
+                            required: true,
+                            message: getLabels('required_phone'),
+                          },
+                        ],
+                      },
+                    ]"
+                    style="width: 100%;"
                     @keypress="isNumber($event)"
                   ></a-input>
                 </a-form-item>
@@ -197,7 +208,8 @@
                       v-for="item in FilterCountry"
                       :key="item"
                       :value="item['descr']"
-                    >{{ item.setupvalue}}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                   <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -248,34 +260,36 @@
                       v-for="item in FilterCountry"
                       :key="item"
                       :value="item['descr']"
-                    >{{ item.setupvalue}}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </a-col>
 
               <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-                <div
-                  v-if="
-                  country === 'INA' ||
-                  country === 'ina' 
-                "
-                >
+                <div v-if="country === 'INA' || country === 'ina'">
                   <a-form-item :label="getLabels('region')">
                     <a-select
                       @change="handleChangeRegion"
                       v-decorator="[
-                      'region',
-                      {
-                        initialValue: currDataPrepare['guest-prov'],
-                        rules: [{ required: true, message: getLabels('required_province') }],
-                      },
-                    ]"
+                        'region',
+                        {
+                          initialValue: currDataPrepare['guest-prov'],
+                          rules: [
+                            {
+                              required: true,
+                              message: getLabels('required_province'),
+                            },
+                          ],
+                        },
+                      ]"
                     >
                       <a-select-option
                         v-for="item in filteredRegion"
                         :key="item"
                         :value="item['descr']"
-                      >{{ item.setupvalue}}</a-select-option>
+                        >{{ item.setupvalue }}</a-select-option
+                      >
                     </a-select>
                   </a-form-item>
                 </div>
@@ -283,13 +297,12 @@
                   <a-form-item :label="getLabels('state')">
                     <a-input
                       v-decorator="[
-                    'State',
-                    {                      
-                      initialValue: State,
-                      rules: [{ message: 'Please input your State' }],
-                    },
-
-                  ]"
+                        'State',
+                        {
+                          initialValue: State,
+                          rules: [{ message: 'Please input your State' }],
+                        },
+                      ]"
                     />
                   </a-form-item>
                 </div>
@@ -338,9 +351,14 @@
                     type="file"
                     @change="onFileChange"
                     v-decorator="[
-          'url',
-          { initialValue: '',rules: [{ required: true, message: getLabels('required_id') }] },
-        ]"
+                      'url',
+                      {
+                        initialValue: '',
+                        rules: [
+                          { required: true, message: getLabels('required_id') },
+                        ],
+                      },
+                    ]"
                   />
                 </a-form-item>
 
@@ -353,7 +371,15 @@
               <a-col :span="12" :xl="12" :xs="12">
                 <a-form-item :label="getLabels('deposit_payment')">
                   <h2>
-                    <strong>{{this.currDataPrepare['currency-usage']}} {{`${minimumDeposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</strong>
+                    <strong
+                      >{{ this.currDataPrepare["currency-usage"] }}
+                      {{
+                        `${minimumDeposit}`.replace(
+                          /\B(?=(\d{3})+(?!\d))/g,
+                          ","
+                        )
+                      }}</strong
+                    >
                   </h2>
                 </a-form-item>
                 <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
@@ -421,22 +447,26 @@
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>-->
-        <a-row class :gutter="[16,8]">
-          <a-col :span="4" :xl="4" :xs="24">
-            <a-form-item>
-              <a-button
-                :xl="12"
-                class="font-weight-bold mt-3"
-                type="primary"
-                block
-                :size="size"
-                @click="save();scrollToTop();"
-                v-if="current == steps.length - 1"
-                html-type="submit"
-              >{{getLabels('ci_now')}}</a-button>
-            </a-form-item>
-          </a-col>
-        </a-row>
+          <a-row class :gutter="[16, 8]">
+            <a-col :span="4" :xl="4" :xs="24">
+              <a-form-item>
+                <a-button
+                  :xl="12"
+                  class="font-weight-bold mt-3"
+                  type="primary"
+                  block
+                  :size="size"
+                  @click="
+                    save();
+                    scrollToTop();
+                  "
+                  v-if="current == steps.length - 1"
+                  html-type="submit"
+                  >{{ getLabels("ci_now") }}</a-button
+                >
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
       </div>
     </div>
@@ -692,7 +722,9 @@ export default {
             this.scanid = !this.tempsetup[i]["setupflag"];
             // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(this.tempsetup[i].setupvalue.toLowerCase());
+            this.tempsetup[i].setupvalue = this.getLabels(
+              this.tempsetup[i].setupvalue.toLowerCase()
+            );
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -740,7 +772,8 @@ export default {
             this.countries.push(bulbasur);
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3
+            this.tempsetup[i]["number2"] == 3 &&
+            item.descr != "SERVER TIME"
           ) {
             const air = {};
             air["descr"] = this.tempsetup[i]["descr"];
@@ -779,12 +812,19 @@ export default {
           nietos.push(this.dataGuest);
           nietos.push(obj);
           // console.log(nietos, "tuwiiinnggg");
-          router.push({ name: "ListCheckIn", params: { foo: nietos, fighter: this.langID } });
+          router.push({
+            name: "ListCheckIn",
+            params: { foo: nietos, fighter: this.langID },
+          });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
           // console.log(this.currDataPrepare, "kesini");
           this.precheckin = this.currDataPrepare["pre-checkin"];
-		  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
+          if (this.langID == "ENG") {
+            this.terms = this.term;
+          } else {
+            this.terms = this.term1;
+          }
 
           this.country = this.currDataPrepare["guest-country"];
         }
@@ -822,9 +862,17 @@ export default {
 
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
-	  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
+      if (this.langID == "ENG") {
+        this.terms = this.term;
+      } else {
+        this.terms = this.term1;
+      }
       this.termcondition = true;
-	  if (this.langID == 'ENG') { this.terms = this.term } else { this.terms = this.term1};
+      if (this.langID == "ENG") {
+        this.terms = this.term;
+      } else {
+        this.terms = this.term1;
+      }
       this.loading = false;
     } else {
       router.push("notfound");
@@ -849,18 +897,22 @@ export default {
       }
     },
     next() {
-      if ((this.form.getFieldValue(['email'][0]) && this.form.getFieldValue(['phone'][0])) || this.form.getFieldValue(['region'][0])) {
+      if (
+        (this.form.getFieldValue(["email"][0]) &&
+          this.form.getFieldValue(["phone"][0])) ||
+        this.form.getFieldValue(["region"][0])
+      ) {
         this.current++;
         if (this.precheckin == true) {
           this.y = true;
         }
       } else {
-        if (this.form.getFieldValue(['email'][0]) == '') {
-          this.form.validateFields(['email']);
-        } else if (this.form.getFieldValue(['phone'][0]) == '') {
-          this.form.validateFields(['phone']);
-        } else if (this.form.getFieldValue(['region'][0]) == '') {
-          this.form.validateFields(['region']);
+        if (this.form.getFieldValue(["email"][0]) == "") {
+          this.form.validateFields(["email"]);
+        } else if (this.form.getFieldValue(["phone"][0]) == "") {
+          this.form.validateFields(["phone"]);
+        } else if (this.form.getFieldValue(["region"][0]) == "") {
+          this.form.validateFields(["region"]);
         }
       }
       // console.log(this.form.validateFields(["email"], { force: true }));
@@ -874,52 +926,90 @@ export default {
       this.current--;
     },
     search() {
-      const token = CryptoJS.SHA256('IONPAYTESTTRX2020090700000002' + this.minimumDeposit + '33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
-      const params = "timeStamp=" + moment().format('YYYYMMDDHHmmss') + "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" + this.minimumDeposit + "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" + this.form.getFieldValue(['gast'])+ "&billingPhone=" + this.form.getFieldValue(['phone'][0]) + "&billingEmail=" + this.form.getFieldValue(['email'][0]) + "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" + token.toString() + "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?lang=" + this.langID + "&instmntType=1&instmntMon=1&reccurOpt=0";
+      const token = CryptoJS.SHA256(
+        "IONPAYTESTTRX2020090700000002" +
+          this.minimumDeposit +
+          "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
+      );
+      const params =
+        "timeStamp=" +
+        moment().format("YYYYMMDDHHmmss") +
+        "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
+        this.minimumDeposit +
+        "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
+        this.form.getFieldValue(["gast"]) +
+        "&billingPhone=" +
+        this.form.getFieldValue(["phone"][0]) +
+        "&billingEmail=" +
+        this.form.getFieldValue(["email"][0]) +
+        "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
+        token.toString() +
+        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?lang=" +
+        this.langID +
+        "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
-        'book': this.currDataPrepare.resnr,
-        'codate': this.formatDate(this.currDataPrepare.co),
-        'payment': 'success',
+        book: this.currDataPrepare.resnr,
+        codate: this.formatDate(this.currDataPrepare.co),
+        payment: "success",
       };
 
-      CookieS.set('data', datas);
+      CookieS.set("data", datas);
 
-      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://dev.nicepay.co.id/nicepay/api/orderRegist.do?' + params)}`)
-      .then(response => {
-      if (response.ok) return response.json()
-      throw new Error('Network response was not ok.')
-      })
-      .then(data => {
-        const resp = data.contents.substr(data.contents.indexOf('{'), data.contents.length);
-        this.resReg = JSON.parse(resp);
-        if (this.resReg.data['resultCd'] == '0000') {
-          console.log('masuk payment');
-          const urlInq = "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" + this.resReg.data['tXid'] + "&optDisplayCB=1&optDisplayBL=0";
-          window.open(urlInq, '_self');
-        } else {
-          console.log('error payment');
-        }
-      });
+      fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(
+          "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
+        )}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          throw new Error("Network response was not ok.");
+        })
+        .then((data) => {
+          const resp = data.contents.substr(
+            data.contents.indexOf("{"),
+            data.contents.length
+          );
+          this.resReg = JSON.parse(resp);
+          if (this.resReg.data["resultCd"] == "0000") {
+            console.log("masuk payment");
+            const urlInq =
+              "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
+              this.resReg.data["tXid"] +
+              "&optDisplayCB=1&optDisplayBL=0";
+            window.open(urlInq, "_self");
+          } else {
+            console.log("error payment");
+          }
+        });
     },
     check() {
-      const token = CryptoJS.SHA256('IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==');
-      const params = "iMid=IONPAYTEST&&merchantToken=" + token.toString() + "&tXid=IONPAYTEST01202009221236456216&amt=500000&referenceNo=TRX2020090700000002";
+      const token = CryptoJS.SHA256(
+        "IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
+      );
+      const params =
+        "iMid=IONPAYTEST&&merchantToken=" +
+        token.toString() +
+        "&tXid=IONPAYTEST01202009221236456216&amt=500000&referenceNo=TRX2020090700000002";
 
-      fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://dev.nicepay.co.id/nicepay/api/onePassStatus.do?' + params)}`)
-      .then(response => {
-      if (response.ok) return response.json()
-      throw new Error('Network response was not ok.')
-      })
-      .then(data => {
-        this.resPaid = JSON.parse(data.contents);
-        if (this.resPaid.resultCd == '0000') {
-          this.paymentStatus = true;
-          console.log('payment valid');
-        } else {
-          this.paymentStatus = false;
-          console.log('payment invalid');
-        }
-      });
+      fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(
+          "https://dev.nicepay.co.id/nicepay/api/onePassStatus.do?" + params
+        )}`
+      )
+        .then((response) => {
+          if (response.ok) return response.json();
+          throw new Error("Network response was not ok.");
+        })
+        .then((data) => {
+          this.resPaid = JSON.parse(data.contents);
+          if (this.resPaid.resultCd == "0000") {
+            this.paymentStatus = true;
+            console.log("payment valid");
+          } else {
+            this.paymentStatus = false;
+            console.log("payment invalid");
+          }
+        });
     },
     closeModal() {
       this.paymentModal = false;
@@ -954,10 +1044,10 @@ export default {
           "}";
         //this.check();
         //if (this.paymentStatus) {
-          //console.log(this.paymentStatus);
-          router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        //console.log(this.paymentStatus);
+        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
         //} else {
-          //this.paymentModal = true;
+        //this.paymentModal = true;
         //}
       }
       this.currDataPrepare = this.id[this.counter];
@@ -1058,11 +1148,16 @@ export default {
       }).format(new Date(datum));
     },
     getLabels(nameKey) {
-      const label = this.labels.find(element => element['program-variable'] == nameKey);
+      const label = this.labels.find(
+        (element) => element["program-variable"] == nameKey
+      );
       if (label != undefined) {
-        return label['program-label1'].charAt(0).toUpperCase() + label['program-label1'].slice(1);
+        return (
+          label["program-label1"].charAt(0).toUpperCase() +
+          label["program-label1"].slice(1)
+        );
       } else {
-        return '';
+        return "";
       }
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
