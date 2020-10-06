@@ -755,7 +755,7 @@ export default {
           } else if (
             this.tempsetup[i]["number1"] == 9 &&
             this.tempsetup[i]["number2"] == 3 &&
-            item.descr != "SERVER TIME"
+            this.tempsetup[i].descr != "SERVER TIME"
           ) {
             const air = {};
             air["descr"] = this.tempsetup[i]["descr"];

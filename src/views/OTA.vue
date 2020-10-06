@@ -159,6 +159,7 @@
           </a-modal>
         </a-col>
       </a-row>
+      {{ server }}
     </div>
   </div>
 </template>
@@ -192,6 +193,8 @@ export default {
       checkin: "",
       arrive: "",
       langID: "",
+      hotelCode: "",
+      tempHotel: "",
       payment: "",
       server: "",
       hotelEndpoint: "",
@@ -229,6 +232,7 @@ export default {
         this.handleOk();
       }
       this.langID = tempParam.lang;
+      // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
         .post(
           "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -250,8 +254,25 @@ export default {
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
+      const code = await ky
+        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
+          json: {
+            request: {
+              hotelCode: "vhpweb",
+            },
+          },
+        })
+        .json();
+      console.log(code, "code");
+      this.tempHotel = code.response.pciSetup["pci-setup"];
+      const tempEndpoint = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 2;
+      });
+      console.log(tempEndpoint[0]["setupvalue"]);
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+
       const setup = await ky
-        .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+        .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
             request: {
               icase: 1,
@@ -260,7 +281,6 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
-      console.log(this.tempsetup, "setup");
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -268,13 +288,9 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
-      const tempEndpoint = this.tempsetup.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 2;
-      });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-      console.log(this.hotelEndpoint, "server2");
-      console.log(this.server, "server");
+
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
         if (
@@ -338,6 +354,59 @@ export default {
       this.informationmodal1 = false;
       this.informationmodal2 = false;
     },
+    handleOk() {
+      const reservation = [];
+      if (!this.bookingcode && !this.date) {
+        this.error();
+      } else if (!this.bookingcode) {
+        this.errorbo();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.bookingcode,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: { foo: reservation, fighter: this.langID },
+            });
+          }
+        })();
+
+        this.modalBookingCode = false;
+      }
+    },
     handleOkBO() {
       const reservation = [];
       if (!this.bookingcode && !this.date) {
@@ -349,22 +418,19 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(
-              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
-              {
-                json: {
-                  request: {
-                    coDate: this.date,
-                    bookCode: this.bookingcode,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: "14:00",
-                    groupFlag: "false",
-                  },
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.bookingcode,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
                 },
-              }
-            )
+              },
+            })
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
@@ -405,22 +471,19 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(
-              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
-              {
-                json: {
-                  request: {
-                    coDate: this.date,
-                    bookCode: this.name,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: "14:00",
-                    groupFlag: "false",
-                  },
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.name,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
                 },
-              }
-            )
+              },
+            })
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
@@ -462,22 +525,19 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(
-              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
-              {
-                json: {
-                  request: {
-                    coDate: this.date,
-                    bookCode: this.email,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: "14:00",
-                    groupFlag: "false",
-                  },
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.date,
+                  bookCode: this.email,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
                 },
-              }
-            )
+              },
+            })
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
