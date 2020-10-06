@@ -319,6 +319,16 @@ export default {
         this.getLabels("input_bookcode") + ", " + this.getLabels("input_codate")
       );
     },
+    errorName() {
+      this.$message.error(
+        this.getLabels("last_name") + ", " + this.getLabels("input_codate")
+      );
+    },
+    errorMail() {
+      this.$message.error(
+        this.getLabels("email") + ", " + this.getLabels("input_codate")
+      );
+    },
     goOTA() {
       this.informationmodal = false;
       this.informationmodal1 = false;
@@ -380,7 +390,7 @@ export default {
     handleOkName() {
       const reservation = [];
       if (!this.name && !this.date) {
-        this.error();
+        this.errorName();
       } else if (!this.name) {
         this.errorname();
       } else if (!this.date) {
@@ -433,7 +443,7 @@ export default {
     handleOkEmail() {
       const reservation = [];
       if (!this.email && !this.date) {
-        this.error();
+        this.errorMail();
       } else if (!this.email) {
         this.erroremail();
       } else if (!this.date) {
