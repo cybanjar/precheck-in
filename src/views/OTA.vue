@@ -112,8 +112,11 @@
                 {{ getLabels("search") }}
               </a-button>
             </template>
-            <a-form-item v-model="email" :label="getLabels('email')">
-              <a-input :placeholder="getLabels('input_email')" />
+            <a-form-item :label="getLabels('email')">
+              <a-input
+                v-model="email"
+                :placeholder="getLabels('input_email')"
+              />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
               <a-date-picker
@@ -156,8 +159,6 @@
           </a-modal>
         </a-col>
       </a-row>
-      {{ server }}
-      {{ hotelEndpoint + "mobileCI/findReservation" }}
     </div>
   </div>
 </template>
@@ -259,6 +260,7 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      console.log(this.tempsetup, "setup");
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -266,12 +268,12 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-      this.server = moment(tempServer[0]["setupvalue"].format("HH:mm"));
+      this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const tempEndpoint = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-      console.log();
+      console.log(this.hotelEndpoint, "server2");
       console.log(this.server, "server");
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
@@ -308,10 +310,10 @@ export default {
       this.$message.error(this.getLabels("input_bookcode"));
     },
     errorname() {
-      this.$message.error(this.getLabels("last_name"));
+      this.$message.error(this.getLabels("input_lastname"));
     },
     erroremail() {
-      this.$message.error(this.getLabels("email"));
+      this.$message.error(this.getLabels("input_email"));
     },
     errorco() {
       this.$message.error(this.getLabels("input_codate"));
@@ -323,12 +325,12 @@ export default {
     },
     errorName() {
       this.$message.error(
-        this.getLabels("last_name") + ", " + this.getLabels("input_codate")
+        this.getLabels("input_lastname") + ", " + this.getLabels("input_codate")
       );
     },
     errorMail() {
       this.$message.error(
-        this.getLabels("email") + ", " + this.getLabels("input_codate")
+        this.getLabels("input_email") + ", " + this.getLabels("input_codate")
       );
     },
     goOTA() {
@@ -347,19 +349,22 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: this.date,
-                  bookCode: this.bookingcode,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
+            .post(
+              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+              {
+                json: {
+                  request: {
+                    coDate: this.date,
+                    bookCode: this.bookingcode,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: "14:00",
+                    groupFlag: "false",
+                  },
                 },
-              },
-            })
+              }
+            )
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
@@ -400,19 +405,22 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: this.date,
-                  bookCode: this.name,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
+            .post(
+              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+              {
+                json: {
+                  request: {
+                    coDate: this.date,
+                    bookCode: this.name,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: "14:00",
+                    groupFlag: "false",
+                  },
                 },
-              },
-            })
+              }
+            )
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
@@ -444,6 +452,7 @@ export default {
     },
     handleOkEmail() {
       const reservation = [];
+      console.log(this.email, "email");
       if (!this.email && !this.date) {
         this.errorMail();
       } else if (!this.email) {
@@ -453,19 +462,22 @@ export default {
       } else {
         (async () => {
           const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: this.date,
-                  bookCode: this.email,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
+            .post(
+              "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/findReservation",
+              {
+                json: {
+                  request: {
+                    coDate: this.date,
+                    bookCode: this.email,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: "14:00",
+                    groupFlag: "false",
+                  },
                 },
-              },
-            })
+              }
+            )
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
