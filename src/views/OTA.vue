@@ -572,6 +572,11 @@ export default {
     },
     handleOkBO() {
       const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -584,7 +589,7 @@ export default {
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
               json: {
                 request: {
-                  coDate: this.date,
+                  coDate: coDate,
                   bookCode: this.bookingcode,
                   chName: " ",
                   earlyCI: "false",
@@ -743,14 +748,18 @@ export default {
 
       let fixLabel = "";
 
-      if (used === "titleCase") {
-        fixLabel = this.setTitleCase(label["program-label1"]);
-      } else if (used === "sentenceCase") {
-        fixLabel =
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1);
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        fixLabel = label["program-label1"];
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
+        }
       }
 
       return fixLabel;
