@@ -463,13 +463,8 @@
                   "
                   v-if="current == steps.length - 1"
                   html-type="submit"
-<<<<<<< HEAD
                   :disabled="!pay"
                 >{{ getLabels("ci_now") }}</a-button>
-=======
-                  >{{ getLabels("ci_now") }}</a-button
-                >
->>>>>>> df4812c3e0d14e394c4cecc4b64f5c03102555eb
               </a-form-item>
             </a-col>
           </a-row>
