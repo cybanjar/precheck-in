@@ -1,6 +1,5 @@
 <template>
   <div class="text-center">
-    test
     <canvas id="canvas" v-show="(flagKiosk)"></canvas>
     <p>
       {{ getLabels("book_code") }} :
@@ -45,13 +44,13 @@ export default {
       hotelEndpoint: "",
     };
   },
-  created() {
+  mounted() {
     this.data = this.$route.params.jin;
     this.flagKiosk = this.$route.params.jen;
     this.hotelCode = this.$route.params.mihawk;
     this.hotelEndpoint = this.$route.params.luffy;
     console.log(this.$route.params, "kelempar");
-    this.hotelCode = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.jun + ' ' + this.labels);
 
     const success = btoa(this.data);
@@ -65,7 +64,7 @@ export default {
       this.data.lastIndexOf("}")
     );
     this.urlMCI =
-      "http://vhp-online.com/mobilecheckin?lang=" +
+      "http://localhost:8080/mobilecheckin?lang=" +
       this.$route.params.jun +
       "&book=" +
       this.taejin +
@@ -74,7 +73,7 @@ export default {
       "&citime=" +
       this.jegal +
       "&hotelcode=" +
-      this.mihawk;
+      this.hotelCode;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
