@@ -7,19 +7,22 @@
   <div v-else>
     <div class="home">
       <!-- <div v-show="term"> -->
-      <a-modal :title="getLabels('t_c')" :visible="termcondition" :confirm-loading="confirmLoading">
+      <a-modal
+        :title="getLabels('t_c')"
+        :visible="termcondition"
+        :confirm-loading="confirmLoading"
+      >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{
-            getLabels("disagree")
-            }}
+            {{ getLabels("disagree") }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-          >{{ getLabels("agree") }}</a-button>
+            >{{ getLabels("agree") }}</a-button
+          >
         </template>
         <p>{{ terms }}</p>
         <!--<p v-if="langID == 'ENG'">{{term1}}</p>
@@ -34,12 +37,23 @@
       <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
-      <a-row class="header-branding mb-3" :style="information" type="flex" justify="space-between">
+      <a-row
+        class="header-branding mb-3"
+        :style="information"
+        type="flex"
+        justify="space-between"
+      >
         <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">ONLINE CHECK-IN</h1>
+          <h1 class="mb-3 font-white font-weight-bold" :style="information">
+            ONLINE CHECK-IN
+          </h1>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
-          <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
+          <img
+            class="img-hotel float-right image"
+            :src="gambar"
+            alt="Image Loading"
+          />
           <div class="overlay visible">
             <div class="text">{{ hotelname }}</div>
           </div>
@@ -156,7 +170,8 @@
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
-                    >{{ item.setupvalue }}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -191,9 +206,10 @@
                   >
                     <a-select-option
                       v-for="item in FilterCountry"
-                      :key="item"
+                      :key="item['descr']"
                       :value="item['descr']"
-                    >{{ item.setupvalue }}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                   <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
@@ -242,9 +258,10 @@
                   >
                     <a-select-option
                       v-for="item in FilterCountry"
-                      :key="item"
+                      :key="item['descr']"
                       :value="item['descr']"
-                    >{{ item.setupvalue }}</a-select-option>
+                      >{{ item.setupvalue }}</a-select-option
+                    >
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -269,9 +286,10 @@
                     >
                       <a-select-option
                         v-for="item in filteredRegion"
-                        :key="item"
+                        :key="item['descr']"
                         :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option>
+                        >{{ item.setupvalue }}</a-select-option
+                      >
                     </a-select>
                   </a-form-item>
                 </div>
@@ -356,10 +374,10 @@
                     <strong>
                       {{ this.currDataPrepare["currency-usage"] }}
                       {{
-                      `${minimumDeposit}`.replace(
-                      /\B(?=(\d{3})+(?!\d))/g,
-                      ","
-                      )
+                        `${minimumDeposit}`.replace(
+                          /\B(?=(\d{3})+(?!\d))/g,
+                          ","
+                        )
                       }}
                     </strong>
                   </h2>
@@ -376,7 +394,8 @@
                   class="font-weight-bold mt-3 mr-3"
                   type="primary"
                   @click="search()"
-                >{{ getLabels("pay") }}</a-button>
+                  >{{ getLabels("pay") }}</a-button
+                >
                 <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -397,9 +416,7 @@
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
                   <a-checkbox v-model="pay">
-                    {{
-                    getLabels("term_cash_basis")
-                    }}
+                    {{ getLabels("term_cash_basis") }}
                   </a-checkbox>
                 </p>
               </a-col>
@@ -407,24 +424,25 @@
           </div>
           <div class="steps-action">
             <div v-if="y">
-              <a-button class="mr-3" v-if="current > 0" @click="prev">
-                {{
+              <a-button v-if="current > 0" @click="prev">{{
                 getLabels("prev")
-                }}
-              </a-button>
-              <a-button
-                v-if="current < steps.length - 1"
-                type="primary"
-                @click="next"
-              >{{ getLabels("next") }}</a-button>
+              }}</a-button>
             </div>
 
-            <!-- <a-button
+            <a-button
+              v-if="current < steps.length - 1"
+              style="margin-left: 8px;"
+              type="primary"
+              @click="next"
+              >{{ getLabels("next") }}</a-button
+            >
+          </div>
+
+          <!-- <a-button
               v-if="current == steps.length - 1"
               type="primary"
               @click="$message.success('Processing complete!')"
             >Done</a-button>-->
-          </div>
           <!-- <a-row :gutter="[16,8]">
             <a-col :span="12" :xl="12" :xs="24">
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
@@ -445,8 +463,13 @@
                   "
                   v-if="current == steps.length - 1"
                   html-type="submit"
+<<<<<<< HEAD
                   :disabled="!pay"
                 >{{ getLabels("ci_now") }}</a-button>
+=======
+                  >{{ getLabels("ci_now") }}</a-button
+                >
+>>>>>>> df4812c3e0d14e394c4cecc4b64f5c03102555eb
               </a-form-item>
             </a-col>
           </a-row>
@@ -933,7 +956,7 @@ export default {
         this.form.getFieldValue(["email"][0]) +
         "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
         token.toString() +
-        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?lang=" +
+        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {

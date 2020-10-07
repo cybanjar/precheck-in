@@ -51,6 +51,7 @@
             </template>
             <a-form-item :label="getLabels('book_code')">
               <a-input
+                class="ant-input-h"
                 v-model="bookingcode"
                 :placeholder="getLabels('input_bookcode')"
               />
@@ -149,12 +150,35 @@
               <a-input :placeholder="getLabels('input_membership')" />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker
+              <!-- <a-date-picker
                 :placeholder="getLabels('select_date')"
                 @change="onChange"
                 size="large"
                 input-read-only
-              />
+              /> -->
+              <!-- <q-input filled v-model="date" mask="date" :rules="['date']">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="date">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input> -->
+              <q-date v-model="date" />
             </a-form-item>
           </a-modal>
         </a-col>
@@ -168,6 +192,31 @@ import router from "../router";
 import moment from "moment";
 import ky from "ky";
 import CookieS from "vue-cookies";
+import Vue from "vue";
+import {
+  Quasar,
+  QInput,
+  QTime,
+  QBtn,
+  QPopupProxy,
+  ClosePopup,
+  QIcon,
+  QDate,
+} from "quasar";
+
+Vue.use(Quasar, {
+  components: {
+    QTime,
+    QInput,
+    QBtn,
+    QPopupProxy,
+    QIcon,
+    QDate,
+  },
+  directives: {
+    ClosePopup,
+  },
+});
 
 export default {
   data() {
@@ -287,8 +336,16 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-
+      console.log(
+        "Jamserverdong",
+        tempServer[0]["setupvalue"],
+        moment(tempServer[0]["setupvalue"], "HH:mm").valueOf()
+      );
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
+      const vServerClock = moment(
+        tempServer[0]["setupvalue"],
+        "HH:mm"
+      ).valueOf();
 
       // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
@@ -299,7 +356,11 @@ export default {
           this.checkin = this.tempsetup[i]["setupvalue"];
         }
       }
-      if ("14:00" < this.server) {
+
+      const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
+      console.log(vServerClock, vCheckinClock, vCheckinClock < vServerClock);
+
+      if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
     })();
