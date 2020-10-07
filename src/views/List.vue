@@ -3,7 +3,10 @@
     <div class="home">
       <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
         <a-col class="pl-3 pt-3" :span="15" :md="15" :xs="24">
-          <h4 class="mb-3 text-white font-weight-bold" :style="information">ONLINE CHECK-IN</h4>
+          <h4
+            class="mb-3 text-white text-center font-weight-bold"
+            :style="information"
+          >ONLINE CHECK-IN</h4>
         </a-col>
         <a-col class="container" :span="9" :md="9" :xs="24">
           <img class="img-hotel float-right image" :src="gambar" alt="Image Loading" />
