@@ -16,6 +16,64 @@ import iconSet from "quasar/icon-set/material-icons";
 
 import Vue from "vue";
 
-import { Quasar } from "quasar";
+import {
+  Quasar,
+  QLayout,
+  QHeader,
+  QDrawer,
+  QPageContainer,
+  QPage,
+  QToolbar,
+  QToolbarTitle,
+  QBtn,
+  QIcon,
+  QList,
+  QItem,
+  QItemSection,
+  QItemLabel,
+  QForm,
+  QInput,
+  QDate,
+  QPopupProxy,
+  QSelect,
+  QCard,
+  QCardSection,
+  QCardActions,
+  QMenu,
+  ClosePopup,
+  QSpace,
+} from "quasar";
 
-Vue.use(Quasar, { config: {}, lang: lang, iconSet: iconSet });
+Vue.use(Quasar, {
+  config: {},
+  components: {
+    QLayout,
+    QHeader,
+    QDrawer,
+    QPageContainer,
+    QPage,
+    QToolbar,
+    QToolbarTitle,
+    QBtn,
+    QIcon,
+    QList,
+    QItem,
+    QItemSection,
+    QItemLabel,
+    QForm,
+    QInput,
+    QDate,
+    QPopupProxy,
+    QSelect,
+    QCard,
+    QCardSection,
+    QCardActions,
+    QMenu,
+    QSpace,
+  },
+  directives: {
+    ClosePopup,
+  },
+  lang: lang,
+  iconSet: iconSet,
+});
