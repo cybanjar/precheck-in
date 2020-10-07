@@ -334,6 +334,7 @@ export default {
       payment: "",
       server: "",
       hotelEndpoint: "",
+      DateFormat: "MM/DD/YYYY",
     };
   },
   mounted() {
@@ -519,6 +520,10 @@ export default {
     },
     handleOk() {
       const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -531,7 +536,7 @@ export default {
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
               json: {
                 request: {
-                  coDate: this.date,
+                  coDate: coDate,
                   bookCode: this.bookingcode,
                   chName: " ",
                   earlyCI: "false",
@@ -572,6 +577,10 @@ export default {
     },
     handleOkBO() {
       const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -584,7 +593,7 @@ export default {
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
               json: {
                 request: {
-                  coDate: this.date,
+                  coDate: coDate,
                   bookCode: this.bookingcode,
                   chName: " ",
                   earlyCI: "false",
@@ -625,6 +634,10 @@ export default {
     },
     handleOkName() {
       const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.name && !this.date) {
         this.errorName();
       } else if (!this.name) {
@@ -637,7 +650,7 @@ export default {
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
               json: {
                 request: {
-                  coDate: this.date,
+                  coDate: coDate,
                   bookCode: this.name,
                   chName: " ",
                   earlyCI: "false",
@@ -678,6 +691,10 @@ export default {
     },
     handleOkEmail() {
       const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       console.log(this.email, "email");
       if (!this.email && !this.date) {
         this.errorMail();
@@ -691,7 +708,7 @@ export default {
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
               json: {
                 request: {
-                  coDate: this.date,
+                  coDate: coDate,
                   bookCode: this.email,
                   chName: " ",
                   earlyCI: "false",
