@@ -2,7 +2,7 @@
   <div>
     <div class="home">
       <a-row class="header-brandings" :style="information" type="flex" justify="space-between">
-        <a-col class="pl-3 pt-3" :span="15" :md="15" :xs="24">
+        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
           <h4
             class="mb-3 text-white text-center font-weight-bold"
             :style="information"
@@ -13,11 +13,11 @@
           <div class="overlay">
             <div class="text">{{ hotelname }}</div>
           </div>
-          <!-- <div class="visible">
+          <div class="visible">
             <div class="online-checkin-mobile">
               <p class="text-center">Online Check-In</p>
             </div>
-          </div>-->
+          </div>
         </a-col>
       </a-row>
       <div>
