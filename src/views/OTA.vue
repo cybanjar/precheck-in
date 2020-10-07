@@ -345,7 +345,6 @@ export default {
 
     this.date = dd + "/" + mm + "/" + yyyy;
 
-    console.log(this.date);
 
     (async () => {
       //const tempParam = location.search.substring(1);
@@ -409,12 +408,10 @@ export default {
           },
         })
         .json();
-      console.log(code, "code");
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      console.log(tempEndpoint[0]["setupvalue"]);
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
 
       const setup = await ky
@@ -434,18 +431,13 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-      console.log(
-        "Jamserverdong",
-        tempServer[0]["setupvalue"],
-        moment(tempServer[0]["setupvalue"], "HH:mm").valueOf()
-      );
+     
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
 
-      // console.log(this.bahasa, "test");
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -456,7 +448,6 @@ export default {
       }
 
       const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-      console.log(vServerClock, vCheckinClock, vCheckinClock < vServerClock);
 
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
@@ -695,7 +686,6 @@ export default {
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
-      console.log(this.email, "email");
       if (!this.email && !this.date) {
         this.errorMail();
       } else if (!this.email) {

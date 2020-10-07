@@ -663,7 +663,7 @@ export default {
         }
       }
 
-      console.log("dataPreferences : ", this.dataPreferences);
+      // console.log("dataPreferences : ", this.dataPreferences);
 
       // console.log("this.ssid : ", this.ssid);
       // console.log("this.wifipass : ", this.wifipass);

@@ -821,7 +821,6 @@ export default {
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
-          console.log(this.currDataPrepare, "kesini");
           this.precheckin = this.currDataPrepare["pre-checkin"];
           if (this.langID == "ENG" || this.langID == "eng") {
             this.terms = this.term;
@@ -978,14 +977,12 @@ export default {
           );
           this.resReg = JSON.parse(resp);
           if (this.resReg.data["resultCd"] == "0000") {
-            console.log("masuk payment");
             const urlInq =
               "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
               this.resReg.data["tXid"] +
               "&optDisplayCB=1&optDisplayBL=0";
             window.open(urlInq, "_self");
           } else {
-            console.log("error payment");
           }
         });
     },
@@ -1011,10 +1008,8 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            console.log("payment invalid");
           }
         });
     },
@@ -1057,7 +1052,6 @@ export default {
           .json();
           if (uploadResult.response.resultMessage == '') {
             this.hasUpload = true;
-            console.log(this.hasUpload);
           } else {
             this.hasUpload = false;
           };

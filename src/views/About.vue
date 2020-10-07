@@ -1183,7 +1183,6 @@ export default {
       }
     },
     formatDate(datum) {
-      console.log(datum);
       const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
           ? `0${String(moment(datum, "YYYY-M-DD").date())}`
@@ -1196,7 +1195,6 @@ export default {
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}-${dMonth}-${dYear}`, "DD-MM-YYYY")._i;
 
-      console.log(dDate, typeof dDate, dMonth, dYear, fixDate);
 
       return fixDate;
     },
