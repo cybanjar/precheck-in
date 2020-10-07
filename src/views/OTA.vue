@@ -84,7 +84,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -140,7 +140,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -196,7 +196,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -251,7 +251,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -345,7 +345,6 @@ export default {
 
     this.date = dd + "/" + mm + "/" + yyyy;
 
-
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
@@ -431,7 +430,7 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-     
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
