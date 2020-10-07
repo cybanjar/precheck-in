@@ -149,7 +149,7 @@
       </a-row>-->
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
-          <a-row class="ml-4 mr-3 mt-3 mb-3" gutter="16">
+          <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
@@ -160,7 +160,7 @@
               </a-row>
             </a-card>
           </a-row>
-          <a-row class="ml-3" gutter="16">
+          <a-row class="ml-3" :gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
               <a-form-item
                 layout="vertical"
@@ -267,7 +267,7 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row class="ml-3" gutter="16">
+          <a-row class="ml-3" :gutter="16">
             <a-col>
               <a-form-item :label="getLabels('room_pref', 'titleCase')">
                 <a-radio-group
@@ -426,7 +426,7 @@
                 >
                   <a-select-option
                     v-for="item in FilterPurposeofStay"
-                    :key="item"
+                    :key="item.setupvalue"
                     :value="item.setupvalue"
                     >{{ item.setupvalue }}</a-select-option
                   >
@@ -449,7 +449,7 @@
                 >
                   <a-select-option
                     v-for="item in FilterCountry"
-                    :key="item"
+                    :key="item['descr']"
                     :value="item['descr']"
                     >{{ item.setupvalue }}</a-select-option
                   >
@@ -490,7 +490,7 @@
                 >
                   <a-select-option
                     v-for="item in FilterCountry"
-                    :key="item"
+                    :key="item['descr']"
                     :value="item['descr']"
                     >{{ item.setupvalue }}</a-select-option
                   >
@@ -512,7 +512,7 @@
                   >
                     <a-select-option
                       v-for="item in filteredProvince"
-                      :key="item"
+                      :key="item['descr']"
                       :value="item['descr']"
                       >{{ item.setupvalue }}</a-select-option
                     >
