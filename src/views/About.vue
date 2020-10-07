@@ -397,7 +397,7 @@
                   style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input> -->
-                <q-input v-model="phone" mask="####-####-####" fill-mask />
+                <q-input v-model="phone" mask="####-####-####" fill-mask outlined dense />
               </a-form-item>
             </a-col>
           </a-row>
