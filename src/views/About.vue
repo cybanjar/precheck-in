@@ -1000,71 +1000,70 @@ export default {
         if (!err) {
           // console.log("inputan2 ", values);
 
-          console.log(
-            {
-              resNumber: this.currDataPrepare["rsv-number"],
-              reslineNumber: this.currDataPrepare["rsvline-number"],
-              estAT: this.hour,
-              pickrequest: this.showPrice,
-              pickdetail:
-                this.showPrice == false ||
-                values.flight == " " ||
-                values.flight == undefined
-                  ? ""
-                  : values.flight,
-              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
-              guestPhnumber: this.phone,
-              guestNationality: values.nationality,
-              guestCountry: values.country,
-              guestRegion: values.country != "INA" ? " " : values.region,
-              agreedTerm: true,
-              purposeOfStay: values.purpose,
-            },
-            "inputan"
-          );
-          // (async () => {
-          //   const tempParam = location.search.substring(1);
-          //   const parsed = await ky
-          //     .post(this.hotelEndpoint + "preCI/updateData", {
-          //       json: {
-          //         request: {
-          //           resNumber: this.currDataPrepare["rsv-number"],
-          //           reslineNumber: this.currDataPrepare["rsvline-number"],
-          //           estAT: values.time._i,
-          //           pickrequest: this.showPrice,
-          //           pickdetail:
-          //             this.showPrice == false ||
-          //             values.flight == " " ||
-          //             values.flight == undefined
-          //               ? ""
-          //               : values.flight,
-          //           roomPreferences:
-          //             this.room + "$" + this.floor + "$" + this.bed,
-          //           specialReq:
-          //             values.Request == " " || values.Request == undefined
-          //               ? ""
-          //               : values.Request,
-          //           guestPhnumber: values.phone,
-          //           guestNationality: values.nationality,
-          //           guestCountry: values.country,
-          //           guestRegion: values.country != "INA" ? " " : values.region,
-          //           agreedTerm: true,
-          //           purposeOfStay: values.purpose,
-          //         },
-          //       },
-          //     })
-          //     .json();
-          //   console.log(parsed, "inputan3");
-          //   const tempMessResult = parsed.response.messResult.split(" ");
-          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          // })();
-          // this.scrollToTop();
-          // this.save();
-          // this.form.resetFields();
+          // console.log(
+          //   {
+          //     resNumber: this.currDataPrepare["rsv-number"],
+          //     reslineNumber: this.currDataPrepare["rsvline-number"],
+          //     estAT: this.hour,
+          //     pickrequest: this.showPrice,
+          //     pickdetail:
+          //       this.showPrice == false ||
+          //       values.flight == " " ||
+          //       values.flight == undefined
+          //         ? ""
+          //         : values.flight,
+          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+          //     specialReq:
+          //       values.Request == " " || values.Request == undefined
+          //         ? ""
+          //         : values.Request,
+          //     guestPhnumber: this.phone,
+          //     guestNationality: values.nationality,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     agreedTerm: true,
+          //     purposeOfStay: values.purpose,
+          //   },
+          //   "inputan"
+          // );
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post(this.hotelEndpoint + "preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: this.hour,
+                    pickrequest: this.showPrice,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
+                    guestPhnumber: this.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
+          this.scrollToTop();
+          this.save();
+          this.form.resetFields();
         }
       });
     },
@@ -1210,4 +1209,5 @@ export default {
     },
   },
 };
+</script>
 </script>
