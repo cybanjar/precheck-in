@@ -9,6 +9,11 @@
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
     <p>{{ getLabels("mci_success") }}</p>
+    <p>
+      <a-button type="primary" href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb">{{
+        getLabels("done")
+      }}</a-button>
+    </p>
   </div>
 </template>
 
@@ -100,6 +105,9 @@ export default {
           return splitStr.join(" ");
         }
       }*/
+    },
+    goBack() {
+      route
     },
   },
 };
