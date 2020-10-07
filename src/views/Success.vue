@@ -49,9 +49,7 @@ export default {
     this.flagKiosk = this.$route.params.jen;
     this.hotelCode = this.$route.params.mihawk;
     this.hotelEndpoint = this.$route.params.luffy;
-    console.log(this.$route.params, "kelempar");
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    // console.log(this.$route.params.jun + ' ' + this.labels);
 
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
