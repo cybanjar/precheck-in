@@ -1,5 +1,6 @@
 <template>
   <div class="text-center">
+    test
     <canvas id="canvas" v-show="(flagKiosk)"></canvas>
     <p>
       {{ getLabels("book_code") }} :
@@ -44,11 +45,12 @@ export default {
       hotelEndpoint: "",
     };
   },
-  mounted() {
+  created() {
     this.data = this.$route.params.jin;
     this.flagKiosk = this.$route.params.jen;
     this.hotelCode = this.$route.params.mihawk;
     this.hotelEndpoint = this.$route.params.luffy;
+    console.log(this.$route.params, "kelempar");
     this.hotelCode = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.jun + ' ' + this.labels);
 
@@ -70,7 +72,9 @@ export default {
       "&codate=" +
       this.iplyo +
       "&citime=" +
-      this.jegal;
+      this.jegal +
+      "&hotelcode=" +
+      this.mihawk;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
