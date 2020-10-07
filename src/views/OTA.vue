@@ -159,7 +159,6 @@
           </a-modal>
         </a-col>
       </a-row>
-      {{ server }}
     </div>
   </div>
 </template>

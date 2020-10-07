@@ -445,6 +445,7 @@
                   "
                   v-if="current == steps.length - 1"
                   html-type="submit"
+                  :disabled="!pay"
                 >{{ getLabels("ci_now") }}</a-button>
               </a-form-item>
             </a-col>
@@ -588,6 +589,8 @@ export default {
       paymentModal: false,
       langID: "",
       terms: "",
+      imgb64: "",
+      hasUpload: false,
     };
   },
   watch: {
@@ -800,9 +803,9 @@ export default {
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
-          // console.log(this.currDataPrepare, "kesini");
+          console.log(this.currDataPrepare, "kesini");
           this.precheckin = this.currDataPrepare["pre-checkin"];
-          if (this.langID == "ENG") {
+          if (this.langID == "ENG" || this.langID == "eng") {
             this.terms = this.term;
           } else {
             this.terms = this.term1;
@@ -844,13 +847,13 @@ export default {
 
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
-      if (this.langID == "ENG") {
+      if (this.langID == "ENG" || this.langID == "eng") {
         this.terms = this.term;
       } else {
         this.terms = this.term1;
       }
       this.termcondition = true;
-      if (this.langID == "ENG") {
+      if (this.langID == "ENG" || this.langID == "eng") {
         this.terms = this.term;
       } else {
         this.terms = this.term1;
@@ -882,7 +885,8 @@ export default {
       if (
         (this.form.getFieldValue(["email"][0]) &&
           this.form.getFieldValue(["phone"][0])) ||
-        this.form.getFieldValue(["region"][0])
+        this.form.getFieldValue(["region"][0]) &&
+        this.url
       ) {
         this.current++;
         if (this.precheckin == true) {
@@ -895,7 +899,10 @@ export default {
           this.form.validateFields(["phone"]);
         } else if (this.form.getFieldValue(["region"][0]) == "") {
           this.form.validateFields(["region"]);
+        } else if (this.url == "") {
+          this.form.validateFields(["url"]);
         }
+
       }
       // console.log(this.form.validateFields(["email"], { force: true }));
     },
@@ -999,6 +1006,44 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
+
+      let tmpImgb64 = "";
+      const toBase64 = file => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+      });
+
+      async function Main() {
+        tmpImgb64 = await toBase64(file);
+        return tmpImgb64.substring(tmpImgb64.indexOf(',') + 1, tmpImgb64.length)
+      };
+      (async () => {
+        this.imgb64 = await Main();
+        const uploadResult = await ky
+          .post(
+            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/saveIDCard",
+            {
+              json: {
+                request: {
+                  inpResnr: this.currDataPrepare.resnr,
+                  inpReslinnr: this.currDataPrepare.reslinnr,
+                  guestno: this.currDataPrepare.gastno,
+                  imagedata: this.imgb64,
+                  userinit: "01",
+                },
+              },
+            }
+          )
+          .json();
+          if (uploadResult.response.resultMessage == '') {
+            this.hasUpload = true;
+            console.log(this.hasUpload);
+          } else {
+            this.hasUpload = false;
+          };
+      })();
     },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
@@ -1012,6 +1057,30 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
+      (async () => {
+        const parsed = await ky
+          .post(
+            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/resCI",
+            {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue('purpose'),
+                  email: this.form.getFieldValue('email'),
+                  guestPhnumber: this.form.getFieldValue('phone'),
+                  guestNation: this.form.getFieldValue('nationality'),
+                  guestCountry: this.form.getFieldValue('country'),
+                  guestRegion: this.form.getFieldValue('region'),
+                  base64image: this.imgb64, 
+                },
+              },
+            }
+          )
+          .json();
+      })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +
@@ -1030,7 +1099,7 @@ export default {
         router.push({ name: "SuccessCheckIn", params: { jin: mori } });
         //} else {
         //this.paymentModal = true;
-        //}
+        // }
       }
       this.currDataPrepare = this.id[this.counter];
       this.counter += 1;
