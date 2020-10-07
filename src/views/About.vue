@@ -35,12 +35,12 @@
           </h6>
 
           <p class="ant-card-meta-description text-white" :style="information">
-            {{ getLabels("arrival") }}:
+            {{ getLabels("arrival", `titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure") }}:
+            {{ getLabels("departure", `titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />
-            {{ getLabels("book_code") }}:
+            {{ getLabels("book_code", `titleCase`) }}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -97,12 +97,12 @@
           </h2>
 
           <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival") }}:
+            {{ getLabels("arrival",`titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure") }}:
+            {{ getLabels("departure",`titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />
-            {{ getLabels("book_code") }}:
+            {{ getLabels("book_code",`titleCase`) }}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -137,12 +137,12 @@
             {{ currDataPrepare["guest-pname"] }}
           </h2>
           <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival") }}:
+            {{ getLabels("arrival",`titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure") }}:
+            {{ getLabels("departure",`titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
             <br />
-            {{ getLabels("book_code") }}:
+            {{ getLabels("book_code",`titleCase`) }}:
             <strong>{{ currDataPrepare["rsv-number"] }}</strong>
           </p>
         </a-col>
@@ -153,14 +153,19 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">{{ getLabels("arrival") }}</p>
+                  <p class="header-group">
+                    {{ getLabels("arrival", `titleCase`) }}
+                  </p>
                 </a-col>
               </a-row>
             </a-card>
           </a-row>
           <a-row class="ml-3" :gutter="16">
             <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
-              <a-form-item layout="vertical" :label="getLabels('eta')">
+              <a-form-item
+                layout="vertical"
+                :label="getLabels('eta', `titleCase`)"
+              >
                 <!-- <a-time-picker
                   v-model="hour"
                   :minute-step="30"
@@ -212,12 +217,12 @@
               :xs="24"
               v-show="showPickupRequest"
             >
-              <a-form-item :label="getLabels('request')">
+              <a-form-item :label="getLabels('request', `titleCase`)">
                 <a-checkbox
                   :checked="showPrice"
                   v-model="showPrice"
                   @change="onChange"
-                  >{{ getLabels("pick_req") }}</a-checkbox
+                  >{{ getLabels("pick_req", `titleCase`) }}</a-checkbox
                 >
               </a-form-item>
             </a-col>
@@ -229,7 +234,7 @@
               :xs="24"
               v-show="showPickupRequest"
             >
-              <a-form-item :label="getLabels('price')">
+              <a-form-item :label="getLabels('price', 'titleCase')">
                 <label v-decorator="['currency', { initialValue: money }]">
                   {{ nilai === 3 ? "" : currency }}
                   {{
@@ -249,7 +254,7 @@
               :md="7"
               :xs="24"
             >
-              <a-form-item :label="getLabels('pick_detail')">
+              <a-form-item :label="getLabels('pick_detail', 'titleCase')">
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -264,7 +269,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="16">
             <a-col>
-              <a-form-item :label="getLabels('room_pref')">
+              <a-form-item :label="getLabels('room_pref', 'titleCase')">
                 <a-radio-group
                   name="radioGroup"
                   v-show="showSmoking"
@@ -272,12 +277,12 @@
                 >
                   <a-radio value="NonSmoking">
                     <span class="font-weight-normal">
-                      {{ getLabels("non_smoking") }}
+                      {{ getLabels("non_smoking", `sentenceCase`) }}
                     </span>
                   </a-radio>
                   <a-radio value="Smoking">
                     <span class="font-weight-normal">
-                      {{ getLabels("smoking") }}
+                      {{ getLabels("smoking", `sentenceCase`) }}
                     </span>
                   </a-radio>
                 </a-radio-group>
@@ -290,12 +295,12 @@
                 >
                   <a-radio value="LowerFloor">
                     <span class="font-weight-normal">
-                      {{ getLabels("lower_floor") }}
+                      {{ getLabels("lower_floor", `sentenceCase`) }}
                     </span>
                   </a-radio>
                   <a-radio value="HigherFloor">
                     <span class="font-weight-normal">
-                      {{ getLabels("higher_floor") }}
+                      {{ getLabels("higher_floor", `sentenceCase`) }}
                     </span>
                   </a-radio>
                 </a-radio-group>
@@ -304,12 +309,12 @@
                 <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
                   <a-radio value="OneBigBed">
                     <span class="font-weight-normal">
-                      {{ getLabels("one_big_bed") }}
+                      {{ getLabels("one_big_bed", `sentenceCase`) }}
                     </span>
                   </a-radio>
                   <a-radio value="TwoSingleBeds">
                     <span class="font-weight-normal">
-                      {{ getLabels("two_single_beds") }}
+                      {{ getLabels("two_single_beds", `sentenceCase`) }}
                     </span>
                   </a-radio>
                 </a-radio-group>
@@ -318,7 +323,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
-              <a-form-item :label="getLabels('special_request')">
+              <a-form-item :label="getLabels('special_request', `titleCase`)">
                 <a-textarea v-model="text" :rows="4" :maxlength="max" />
               </a-form-item>
             </a-col>
@@ -331,7 +336,9 @@
             <a-card class="header-card">
               <a-row>
                 <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">{{ getLabels("guest_detail") }}</p>
+                  <p class="header-group">
+                    {{ getLabels("guest_detail", `titleCase`) }}
+                  </p>
                 </a-col>
               </a-row>
             </a-card>
@@ -345,7 +352,7 @@
               :md="10"
               :xs="24"
             >
-              <a-form-item :label="getLabels('email')">
+              <a-form-item :label="getLabels('email', `titleCase`)">
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -361,7 +368,7 @@
             </a-col>
             <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <span>{{ currDataPrepare["guest-email"] }}</span>
-              <a-form-item :label="getLabels('email')">
+              <a-form-item :label="getLabels('email', `titleCase`)">
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -371,11 +378,11 @@
                       rules: [
                         {
                           required: true,
-                          message: getLabels('required_email'),
+                          message: getLabels('required_email', `titleCase`),
                         },
                         {
                           type: 'email',
-                          message: getLabels('not_valid_email'),
+                          message: getLabels('not_valid_email', `sentenceCase`),
                         },
                       ],
                     },
@@ -384,7 +391,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('phone_number')">
+              <a-form-item :label="getLabels('phone_number', `titleCase`)">
                 <!-- <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -409,7 +416,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('purpose_stay')">
+              <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
                 <a-select
                   @change="Kuy"
                   v-decorator="[
@@ -429,7 +436,7 @@
           </a-row>
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('nationality')">
+              <a-form-item :label="getLabels('nationality', `titleCase`)">
                 <a-select
                   v-decorator="[
                     'nationality',
@@ -468,7 +475,9 @@
 
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('country_of_residence')">
+              <a-form-item
+                :label="getLabels('country_of_residence', `titleCase`)"
+              >
                 <a-select
                   v-model="country"
                   v-decorator="[
@@ -490,7 +499,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div v-if="country === 'INA' || country === 'ina'">
-                <a-form-item :label="getLabels('region')">
+                <a-form-item :label="getLabels('region', `titleCase`)">
                   <a-select
                     @change="handleChangeRegion"
                     v-decorator="[
@@ -511,7 +520,7 @@
                 </a-form-item>
               </div>
               <div v-else>
-                <a-form-item :label="getLabels('state')">
+                <a-form-item :label="getLabels('state', `titleCase`)">
                   <a-input
                     class="ant-input-h"
                     v-decorator="[
@@ -533,12 +542,14 @@
               <a-checkbox v-model="agree" />
             </a-col>
             <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
-              {{ getLabels("pci_tc") }}
-              <a @click="showModalTerm">{{ getLabels("t_c") }}</a>
+              {{ getLabels("pci_tc", `sentenceCase`) }}
+              <a @click="showModalTerm">{{
+                getLabels("t_c", `sentenceCase`)
+              }}</a>
               {{ hotelname }}.
             </a-col>
             <a-modal
-              :title="getLabels('t_c')"
+              :title="getLabels('t_c', `titleCase`)"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
             >
@@ -548,7 +559,7 @@
                   type="primary"
                   :loading="loading"
                   @click="handleOkTerm"
-                  >{{ getLabels("close") }}</a-button
+                  >{{ getLabels("close", `sentenceCase`) }}</a-button
                 >
               </template>
               <p>{{ term }}</p>
@@ -565,7 +576,7 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                  >{{ getLabels("ci_now") }}</a-button
+                  >{{ getLabels("ci_now", `sentenceCase`) }}</a-button
                 >
               </a-form-item>
             </a-col>
@@ -775,7 +786,7 @@ export default {
         this.money = temRequest[0]["price"];
         this.currency = temRequest[0]["remarks"];
         const tempPer = temRequest[0]["setupvalue"].split("PER")[1];
-        this.per = this.getLabels(tempPer.toLowerCase().trim());
+        this.per = this.getLabels(tempPer.toLowerCase().trim(), `sentenceCase`);
         const tempHour = this.tempsetup.filter((item, index) => {
           return item.number1 === 8 && item.number2 === 2;
         });
@@ -812,10 +823,12 @@ export default {
         this.hotelCode = tempHotelCode[0]["setupvalue"];
        
         const jatah = [];
+
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
             this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase()
+              this.tempsetup[i].setupvalue.toLowerCase(),
+              `sentenceCase`
             );
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
@@ -1179,26 +1192,29 @@ export default {
     test() {
       return (this.indexStr = this.indexStr + 1);
     },
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
-      return (
-        label["lang-value"].charAt(0).toUpperCase() +
-        label["lang-value"].slice(1)
-      );
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
-        }
-      }*/
+
+      let fixLabel = "";
+
+      if (used === "titleCase") {
+        fixLabel = this.setTitleCase(label["lang-value"]);
+      } else if (used === "sentenceCase") {
+        fixLabel =
+          label["lang-value"].charAt(0).toUpperCase() +
+          label["lang-value"].slice(1);
+      } else {
+        fixLabel = label["lang-value"];
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };

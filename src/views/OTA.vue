@@ -1,35 +1,46 @@
 <template>
   <div>
     <div class="ota text-center">
-      <a-modal :title="getLabels('information')" :visible="informationmodal">
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationmodal"
+      >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
-            getLabels("close")
+            getLabels("close", `titleCase`)
           }}</a-button>
         </template>
-        <p>{{ getLabels("early_checkin") }}{{ checkin }}</p>
+        <p>{{ getLabels("early_checkin", `sentenceCase`) }}{{ checkin }}</p>
       </a-modal>
-      <a-modal :title="getLabels('information')" :visible="informationmodal1">
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationmodal1"
+      >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
-            getLabels("close")
+            getLabels("close", `titleCase`)
           }}</a-button>
         </template>
-        <p>{{ getLabels("mci_error_not_found") }}</p>
+        <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
       </a-modal>
-      <a-modal :title="getLabels('information')" :visible="informationmodal2">
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationmodal2"
+      >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
-            getLabels("close")
+            getLabels("close", `titleCase`)
           }}</a-button>
         </template>
-        <p>{{ getLabels("mci_error_not_ready") }}</p>
+        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">{{ getLabels("find_rsv") }}</h1>
+          <h1 class="text-white">
+            <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
+          </h1>
           <p class="text-white text-secondary">
-            {{ getLabels("choose_option") }}
+            {{ getLabels("choose_option", `sentenceCase`) }}
           </p>
         </a-col>
       </a-row>
@@ -40,131 +51,40 @@
             class="img-ota"
             src="../assets/booking-code.svg"
           />
-          <a-modal v-model="modalBookingCode" :title="getLabels('book_code')"
+          <a-modal
+            v-model="modalBookingCode"
+            :title="getLabels('book_code', `titleCase`)"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
-                {{ getLabels("cancel") }}
+                {{ getLabels("cancel", `titleCase`) }}
               </a-button>
               <a-button key="submit" type="primary" @click="handleOkBO">
-                {{ getLabels("search") }}
+                {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
-            <a-form-item :label="getLabels('book_code')">
+            <a-form-item :label="getLabels('book_code', `titleCase`)">
               <a-input
                 class="ant-input-h"
                 v-model="bookingcode"
-                :placeholder="getLabels('input_bookcode')"
+                :placeholder="getLabels('input_bookcode', `sentenceCase`)"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date')">
-              <a-date-picker
-                :placeholder="getLabels('select_date')"
-                @change="onChange"
-                :format="dateFormat"
-                size="large"
-                input-read-only
-              />
-            </a-form-item>
-          </a-modal>
-        </a-col>
-        <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalGuestName"
-            class="img-ota"
-            src="../assets/Name.svg"
-          />
-          <a-modal v-model="modalGuestName" :title="getLabels('last_name')"
-            ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
-                {{ getLabels("cancel") }}
-              </a-button>
-              <a-button key="submit" type="primary" @click="handleOkName">
-                {{ getLabels("search") }}
-              </a-button>
-            </template>
-            <a-form-item :label="getLabels('last_name')">
-              <a-input
-                v-model="name"
-                :placeholder="getLabels('input_lastname')"
-              />
-            </a-form-item>
-            <a-form-item :label="getLabels('co_date')">
-              <a-date-picker
-                :placeholder="getLabels('select_date')"
-                @change="onChange"
-                size="large"
-                input-read-only
-              />
-            </a-form-item>
-          </a-modal>
-        </a-col>
-        <a-col :span="4" :xl="4" :xs="12">
-          <img
-            class="img-ota"
-            @click="showModalEmailAddress"
-            src="../assets/EmailAddress.svg"
-          />
-          <a-modal v-model="modalEmailAddress" :title="getLabels('email')"
-            ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
-                {{ getLabels("cancel") }}
-              </a-button>
-              <a-button key="submit" type="primary" @click="handleOkEmail">
-                {{ getLabels("search") }}
-              </a-button>
-            </template>
-            <a-form-item :label="getLabels('email')">
-              <a-input
-                v-model="email"
-                :placeholder="getLabels('input_email')"
-              />
-            </a-form-item>
-            <a-form-item :label="getLabels('co_date')">
-              <a-date-picker
-                :placeholder="getLabels('select_date')"
-                @change="onChange"
-                size="large"
-                input-read-only
-              />
-            </a-form-item>
-          </a-modal>
-        </a-col>
-        <a-col :span="4" :xl="4" :xs="12">
-          <img
-            class="img-ota"
-            @click="showModalMembershipID"
-            src="../assets/membership.svg"
-          />
-          <a-modal
-            v-model="modalMembershipID"
-            :title="getLabels('membership_id')"
-            ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
-                {{ getLabels("cancel") }}
-              </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
-                {{ getLabels("search") }}
-              </a-button>
-            </template>
-            <a-form-item :label="getLabels('membership_id')">
-              <a-input :placeholder="getLabels('input_membership')" />
-            </a-form-item>
-            <a-form-item :label="getLabels('co_date')">
-              <!-- <a-date-picker
-                :placeholder="getLabels('select_date')"
-                @change="onChange"
-                size="large"
-                input-read-only
-              /> -->
-              <!-- <q-input filled v-model="date" mask="date" :rules="['date']">
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
                 <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
+                  <q-icon name="calendar_today" class="cursor_pointer">
                     <q-popup-proxy
                       ref="qDateProxy"
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date">
+                      <q-date v-model="date" mask="DD/MM/YYYY">
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -177,8 +97,174 @@
                     </q-popup-proxy>
                   </q-icon>
                 </template>
-              </q-input> -->
-              <q-date v-model="date" />
+              </q-input>
+            </a-form-item>
+          </a-modal>
+        </a-col>
+        <a-col :span="4" :xl="4" :xs="12">
+          <img
+            @click="showModalGuestName"
+            class="img-ota"
+            src="../assets/Name.svg"
+          />
+          <a-modal
+            v-model="modalGuestName"
+            :title="getLabels('last_name', `titleCase`)"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel", `titleCase`) }}
+              </a-button>
+              <a-button key="submit" type="primary" @click="handleOkName">
+                {{ getLabels("search", `titleCase`) }}
+              </a-button>
+            </template>
+            <a-form-item :label="getLabels('last_name', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                v-model="name"
+                :placeholder="getLabels('input_lastname', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="date" mask="DD/MM/YYYY">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </a-form-item>
+          </a-modal>
+        </a-col>
+        <a-col :span="4" :xl="4" :xs="12">
+          <img
+            class="img-ota"
+            @click="showModalEmailAddress"
+            src="../assets/EmailAddress.svg"
+          />
+          <a-modal
+            v-model="modalEmailAddress"
+            :title="getLabels('email', `titleCase`)"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel", `titleCase`) }}
+              </a-button>
+              <a-button key="submit" type="primary" @click="handleOkEmail">
+                {{ getLabels("search", `titleCase`) }}
+              </a-button>
+            </template>
+            <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                v-model="email"
+                :placeholder="getLabels('input_email', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="date" mask="DD/MM/YYYY">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </a-form-item>
+          </a-modal>
+        </a-col>
+        <a-col :span="4" :xl="4" :xs="12">
+          <img
+            class="img-ota"
+            @click="showModalMembershipID"
+            src="../assets/membership.svg"
+          />
+          <a-modal
+            v-model="modalMembershipID"
+            :title="getLabels('membership_id', `titleCase`)"
+            ><template slot="footer">
+              <a-button key="back" @click="handleCancel">
+                {{ getLabels("cancel", `titleCase`) }}
+              </a-button>
+              <a-button key="submit" type="primary" @click="handleOk">
+                {{ getLabels("search", `titleCase`) }}
+              </a-button>
+            </template>
+            <a-form-item :label="getLabels('membership_id', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                :placeholder="getLabels('input_membership', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="date" mask="DD/MM/YYYY">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </a-form-item>
           </a-modal>
         </a-col>
@@ -189,34 +275,36 @@
 
 <script>
 import router from "../router";
-import moment from "moment";
-import ky from "ky";
-import CookieS from "vue-cookies";
 import Vue from "vue";
 import {
   Quasar,
   QInput,
   QTime,
+  QDate,
   QBtn,
   QPopupProxy,
   ClosePopup,
   QIcon,
-  QDate,
 } from "quasar";
-
 Vue.use(Quasar, {
+  config: {},
   components: {
     QTime,
+    QDate,
     QInput,
     QBtn,
     QPopupProxy,
     QIcon,
-    QDate,
   },
   directives: {
     ClosePopup,
   },
+  plugins: {},
 });
+
+import moment from "moment";
+import ky from "ky";
+import CookieS from "vue-cookies";
 
 export default {
   data() {
@@ -249,6 +337,15 @@ export default {
     };
   },
   mounted() {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+
+    this.date = dd + "/" + mm + "/" + yyyy;
+
+    console.log(this.date);
+
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
@@ -383,30 +480,36 @@ export default {
       this.modalMembershipID = true;
     },
     errorbo() {
-      this.$message.error(this.getLabels("input_bookcode"));
+      this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
     },
     errorname() {
-      this.$message.error(this.getLabels("input_lastname"));
+      this.$message.error(this.getLabels("input_lastname", `sentenceCase`));
     },
     erroremail() {
-      this.$message.error(this.getLabels("input_email"));
+      this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     errorco() {
-      this.$message.error(this.getLabels("input_codate"));
+      this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
     error() {
       this.$message.error(
-        this.getLabels("input_bookcode") + ", " + this.getLabels("input_codate")
+        this.getLabels("input_bookcode") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
       );
     },
     errorName() {
       this.$message.error(
-        this.getLabels("input_lastname") + ", " + this.getLabels("input_codate")
+        this.getLabels("input_lastname") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
       );
     },
     errorMail() {
       this.$message.error(
-        this.getLabels("input_email") + ", " + this.getLabels("input_codate")
+        this.getLabels("input_email") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
       );
     },
     goOTA() {
@@ -633,41 +736,29 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
+
+      let fixLabel = "";
+
+      if (used === "titleCase") {
+        fixLabel = this.setTitleCase(label["program-label1"]);
+      } else if (used === "sentenceCase") {
+        fixLabel =
           label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+          label["program-label1"].slice(1);
       } else {
-        return "";
+        fixLabel = label["program-label1"];
       }
-      /*if (nameKey == 'information') {
-        if (this.langID == 'ENG') {
-          return 'Information';
-        } else {
-          return 'Informasi';
-        }
-      } else {
-        const aco = this.labels.find(element => element['lang-variable'] == nameKey);
-        return aco['lang-value'];
-      }*/
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          return this.labels[x]["program-label1"];
-          break;const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
-        }
-      }*/
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };
