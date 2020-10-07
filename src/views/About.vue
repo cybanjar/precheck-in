@@ -719,6 +719,7 @@ export default {
       hotelEndpoint: "",
       hotelCode: "",
       phone: "",
+      State: "",
     };
   },
   created() {
@@ -747,14 +748,9 @@ export default {
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
         const tempMessResult = parsed.response.messResult;
-        //console.log(tempMessResult, "bokis");
-
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
         if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
-          this.langID = "";
-        } else {
-          this.langID =
-            parsed.response.languagesList["languages-list"][0]["lang-id"];
+          router.push("notfound");
         }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
@@ -825,8 +821,7 @@ export default {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
-        console.log(this.hotelCode, "coba2");
-        console.log(this.hotelEndpoint, "coba");
+       
         const jatah = [];
 
         for (const i in this.tempsetup) {
@@ -859,75 +854,69 @@ export default {
           }
         }
 
-        if (tempMessResult[0] == "99 - Pre Checkin Not Allowed!") {
-          router.push("notfound");
+        if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
+          const nietos = [];
+          const obj = {};
+          this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+          obj["01"] = this.gambar;
+          obj["02"] = this.information;
+          obj["03"] = this.money;
+          obj["04"] = this.currency;
+          obj["05"] = this.per;
+          obj["06"] = this.purpose;
+          obj["07"] = this.FilterPurposeofStay;
+          obj["08"] = this.showBed;
+          obj["09"] = this.showSmoking;
+          obj["10"] = this.showFloor;
+          obj["11"] = this.hour;
+          obj["12"] = this.term;
+          obj["13"] = this.hotelname;
+          obj["14"] = this.showPickupRequest;
+          obj["15"] = this.countries;
+          obj["16"] = this.province;
+          obj["17"] = this.hotelEndpoint;
+          obj["18"] = this.hotelCode;
+          nietos.push(this.dataGuest);
+          nietos.push(obj);
+          router.push({ name: "List", params: { foo: nietos } });
+        } else if (
+          parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
+          "GUEST ALREADY PCI"
+        ) {
+          this.currDataPrepare =
+            parsed.response.arrivalGuest["arrival-guest"][0];
+          const mori =
+            "{" +
+            this.currDataPrepare["rsv-number"] +
+            ";" +
+            moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+            "," +
+            this.hour +
+            "}";
+
+          router.push({
+            name: "Success",
+            params: {
+              jin: mori,
+              jun: this.langID,
+              jen: this.flagKiosk,
+              mihawk: this.hotelCode,
+              luffy: this.hotelEndpoint,
+            },
+          });
         } else {
-          if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
-            const nietos = [];
-            const obj = {};
-            this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-            // console.log(this.gambar, "gambar");
-            obj["01"] = this.gambar;
-            obj["02"] = this.information;
-            obj["03"] = this.money;
-            obj["04"] = this.currency;
-            obj["05"] = this.per;
-            obj["06"] = this.purpose;
-            obj["07"] = this.FilterPurposeofStay;
-            obj["08"] = this.showBed;
-            obj["09"] = this.showSmoking;
-            obj["10"] = this.showFloor;
-            obj["11"] = this.hour;
-            obj["12"] = this.term;
-            obj["13"] = this.hotelname;
-            obj["14"] = this.showPickupRequest;
-            obj["15"] = this.countries;
-            obj["16"] = this.province;
-            obj["17"] = this.hotelEndpoint;
-            obj["18"] = this.hotelCode;
-            nietos.push(this.dataGuest);
-            nietos.push(obj);
-            router.push({ name: "List", params: { foo: nietos } });
-          } else if (
-            parsed.response.arrivalGuest["arrival-guest"]["0"][
-              "gcomment-desc"
-            ] == "GUEST ALREADY PCI"
-          ) {
-            this.currDataPrepare =
-              parsed.response.arrivalGuest["arrival-guest"][0];
-            const mori =
-              "{" +
-              this.currDataPrepare["rsv-number"] +
-              ";" +
-              moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
-              "," +
-              this.hour +
-              "}";
-            // console.log(mori, "be the one");
-            router.push({
-              name: "Success",
-              params: {
-                jin: mori,
-                jun: this.langID,
-                jen: this.flagKiosk,
-                mihawk: this.hotelCode,
-                luffy: this.hotelEndpoint,
-              },
-            });
-          } else {
-            this.currDataPrepare =
-              parsed.response.arrivalGuest["arrival-guest"][0];
-            this.country = this.currDataPrepare["guest-country"];
-            this.email = this.currDataPrepare["guest-email"];
-            this.phone = this.currDataPrepare["guest-phone"];
-            const string =
-              '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
-            const lagi = string.substring(
-              string.lastIndexOf("<img src=") + 10,
-              string.lastIndexOf('g"') + 1
-            );
-            this.gambar = lagi;
-          }
+          this.currDataPrepare =
+            parsed.response.arrivalGuest["arrival-guest"][0];
+          this.country = this.currDataPrepare["guest-country"];
+          this.email = this.currDataPrepare["guest-email"];
+          this.phone = this.currDataPrepare["guest-phone"];
+          const string =
+            '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
+          const lagi = string.substring(
+            string.lastIndexOf("<img src=") + 10,
+            string.lastIndexOf('g"') + 1
+          );
+          this.gambar = lagi;
         }
       })();
     } else {
@@ -1018,73 +1007,71 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log("inputan2 ", values);
-
-          console.log(
-            {
-              resNumber: this.currDataPrepare["rsv-number"],
-              reslineNumber: this.currDataPrepare["rsvline-number"],
-              estAT: this.hour,
-              pickrequest: this.showPrice,
-              pickdetail:
-                this.showPrice == false ||
-                values.flight == " " ||
-                values.flight == undefined
-                  ? ""
-                  : values.flight,
-              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
-              guestPhnumber: this.phone,
-              guestNationality: values.nationality,
-              guestCountry: values.country,
-              guestRegion: values.country != "INA" ? " " : values.region,
-              agreedTerm: true,
-              purposeOfStay: values.purpose,
-            },
-            "inputan"
-          );
-          // (async () => {
-          //   const tempParam = location.search.substring(1);
-          //   const parsed = await ky
-          //     .post(this.hotelEndpoint + "preCI/updateData", {
-          //       json: {
-          //         request: {
-          //           resNumber: this.currDataPrepare["rsv-number"],
-          //           reslineNumber: this.currDataPrepare["rsvline-number"],
-          //           estAT: values.time._i,
-          //           pickrequest: this.showPrice,
-          //           pickdetail:
-          //             this.showPrice == false ||
-          //             values.flight == " " ||
-          //             values.flight == undefined
-          //               ? ""
-          //               : values.flight,
-          //           roomPreferences:
-          //             this.room + "$" + this.floor + "$" + this.bed,
-          //           specialReq:
-          //             values.Request == " " || values.Request == undefined
-          //               ? ""
-          //               : values.Request,
-          //           guestPhnumber: values.phone,
-          //           guestNationality: values.nationality,
-          //           guestCountry: values.country,
-          //           guestRegion: values.country != "INA" ? " " : values.region,
-          //           agreedTerm: true,
-          //           purposeOfStay: values.purpose,
-          //         },
-          //       },
-          //     })
-          //     .json();
-          //   console.log(parsed, "inputan3");
-          //   const tempMessResult = parsed.response.messResult.split(" ");
-          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          // })();
-          // this.scrollToTop();
-          // this.save();
-          // this.form.resetFields();
+          // console.log(
+          //   {
+          //     resNumber: this.currDataPrepare["rsv-number"],
+          //     reslineNumber: this.currDataPrepare["rsvline-number"],
+          //     estAT: this.hour,
+          //     pickrequest: this.showPrice,
+          //     pickdetail:
+          //       this.showPrice == false ||
+          //       values.flight == " " ||
+          //       values.flight == undefined
+          //         ? ""
+          //         : values.flight,
+          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+          //     specialReq:
+          //       values.Request == " " || values.Request == undefined
+          //         ? ""
+          //         : values.Request,
+          //     guestPhnumber: this.phone,
+          //     guestNationality: values.nationality,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     agreedTerm: true,
+          //     purposeOfStay: values.purpose,
+          //   },
+          //   "inputan"
+          // );
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post(this.hotelEndpoint + "preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: this.hour,
+                    pickrequest: this.showPrice,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
+                    guestPhnumber: this.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            // console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
+          this.scrollToTop();
+          this.save();
+          this.form.resetFields();
         }
       });
     },
@@ -1098,7 +1085,6 @@ export default {
           "," +
           this.hour +
           "}";
-        // console.log(mori, "be the one");
         router.push({
           name: "Success",
           params: {
@@ -1160,7 +1146,6 @@ export default {
       this.information.color = colour.hex;
     },
     onChange(e) {
-      // console.log(`checked = ${e.target.checked}`);
       this.showPrice = e.target.checked;
     },
 
