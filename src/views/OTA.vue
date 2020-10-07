@@ -57,13 +57,34 @@
               />
             </a-form-item>
             <a-form-item :label="getLabels('co_date')">
-              <a-date-picker
-                :placeholder="getLabels('select_date')"
-                @change="onChange"
-                :format="dateFormat"
-                size="large"
-                input-read-only
-              />
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="date">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </a-form-item>
           </a-modal>
         </a-col>
@@ -166,29 +187,28 @@
 
 <script>
 import router from "../router";
-import moment from "moment";
-import ky from "ky";
-import CookieS from "vue-cookies";
 import Vue from "vue";
 import {
   Quasar,
+  QDate,
   QInput,
-  QTime,
   QBtn,
   QPopupProxy,
   ClosePopup,
   QIcon,
-  QDate,
 } from "quasar";
+
+import moment from "moment";
+import ky from "ky";
+import CookieS from "vue-cookies";
 
 Vue.use(Quasar, {
   components: {
-    QTime,
+    QDate,
     QInput,
     QBtn,
     QPopupProxy,
     QIcon,
-    QDate,
   },
   directives: {
     ClosePopup,
