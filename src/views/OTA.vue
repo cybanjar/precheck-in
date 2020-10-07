@@ -760,14 +760,18 @@ export default {
 
       let fixLabel = "";
 
-      if (used === "titleCase") {
-        fixLabel = this.setTitleCase(label["program-label1"]);
-      } else if (used === "sentenceCase") {
-        fixLabel =
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1);
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        fixLabel = label["program-label1"];
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
+        }
       }
 
       return fixLabel;

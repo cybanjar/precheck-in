@@ -576,7 +576,7 @@
                   :size="size"
                   :disabled="!agree"
                   html-type="submit"
-                  >{{ getLabels("ci_now", `sentenceCase`) }}</a-button
+                  >{{ getLabels("ci_now", `titleCase`) }}</a-button
                 >
               </a-form-item>
             </a-col>
@@ -821,7 +821,7 @@ export default {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
-       
+
         const jatah = [];
 
         for (const i in this.tempsetup) {
@@ -1183,11 +1183,22 @@ export default {
       }
     },
     formatDate(datum) {
-      return new Intl.DateTimeFormat(navigator.language, {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }).format(new Date(datum));
+      console.log(datum);
+      const dDate =
+        String(moment(datum, "YYYY-MM-DD").date()).length == 1
+          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
+          : String(moment(datum, "YYYY-MM-DD").date());
+      const dMonth =
+        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
+          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
+          : String(moment(datum, "YYYY-MM-DD").month() + 1);
+
+      const dYear = moment(datum, "YYYY-MM-DD").year();
+      const fixDate = moment(`${dDate}-${dMonth}-${dYear}`, "DD-MM-YYYY")._i;
+
+      console.log(dDate, typeof dDate, dMonth, dYear, fixDate);
+
+      return fixDate;
     },
     test() {
       return (this.indexStr = this.indexStr + 1);
@@ -1199,14 +1210,18 @@ export default {
 
       let fixLabel = "";
 
-      if (used === "titleCase") {
-        fixLabel = this.setTitleCase(label["lang-value"]);
-      } else if (used === "sentenceCase") {
-        fixLabel =
-          label["lang-value"].charAt(0).toUpperCase() +
-          label["lang-value"].slice(1);
+      if (label["lang-value"] == "undefined") {
+        fixLabel = "";
       } else {
-        fixLabel = label["lang-value"];
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["lang-value"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["lang-value"].charAt(0).toUpperCase() +
+            label["lang-value"].slice(1);
+        } else {
+          fixLabel = label["lang-value"];
+        }
       }
 
       return fixLabel;
