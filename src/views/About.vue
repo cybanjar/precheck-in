@@ -404,12 +404,24 @@
                   style="width: 100%;"
                   @keypress="isNumber($event)"
                 ></a-input> -->
-                <q-input
+                <!-- <q-input
                   v-model="phone"
-                  mask="####-####-####"
+                  mask="############"
                   fill-mask
                   outlined
                   dense
+                /> -->
+                <q-input
+                  v-decorator="[
+                    'phone',
+                    {
+                      rules: [{ required: true }],
+                    },
+                  ]"
+                  outlined
+                  dense
+                  v-model="phone"
+                  mask="############"
                 />
               </a-form-item>
             </a-col>
@@ -692,7 +704,7 @@ export default {
       term1: "I agree with the Terms and Conditions of Web Pre Check-in.",
       term: "",
       value: "terma",
-      gambar: "https://source.unsplash.com/1366x786/?hotel",
+      gambar: "",
       information: {
         backgroundColor: "$green",
         color: "$white",
@@ -771,10 +783,8 @@ export default {
         const tempGambar = this.tempsetup.filter((item, index) => {
           return item.number1 === 7 && item.number2 === 1;
         });
-        this.gambar = tempGambar[0].setupvalue.substring(
-          tempGambar[0].setupvalue.lastIndexOf("<img src=") + 10,
-          tempGambar[0].setupvalue.lastIndexOf('g"') + 1
-        );
+        this.gambar = tempGambar[0].setupvalue;
+
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
@@ -910,13 +920,6 @@ export default {
           this.country = this.currDataPrepare["guest-country"];
           this.email = this.currDataPrepare["guest-email"];
           this.phone = this.currDataPrepare["guest-phone"];
-          const string =
-            '<a data-flickr-embed="true" href="https://www.flickr.com/photos/190073392@N05/50315498352/in/dateposted-public/" title="vhp"><img src="https://live.staticflickr.com/65535/50315498352_b946e526dd_c.jpg" width="800" height="425" alt="vhp"></a>';
-          const lagi = string.substring(
-            string.lastIndexOf("<img src=") + 10,
-            string.lastIndexOf('g"') + 1
-          );
-          this.gambar = lagi;
         }
       })();
     } else {
@@ -967,15 +970,6 @@ export default {
     handleCancelTerm(e) {
       this.visibleTerm = false;
     },
-    apalah(param) {
-      this.acoPancenOye = [];
-      for (let x = 0; x < this.tempRoomPreference.length; x++) {
-        if (this.tempRoomPreference[x].key === param) {
-          this.acoPancenOye.push(this.tempRoomPreference[x].descr);
-        }
-      }
-      return this.acoPancenOye;
-    },
     Room(e) {
       this.room = e.target.value;
     },
@@ -994,12 +988,6 @@ export default {
     handleChangeRegion(value) {
       this.region = value;
     },
-    onKeydown(event) {
-      const char = String.fromCharCode(event.keyCode);
-      if (!/[0-9]/.test(char)) {
-        event.preventDefault();
-      }
-    },
     scrollToTop() {
       window.scrollTo(0, 0);
     },
@@ -1007,71 +995,71 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log(
-          //   {
-          //     resNumber: this.currDataPrepare["rsv-number"],
-          //     reslineNumber: this.currDataPrepare["rsvline-number"],
-          //     estAT: this.hour,
-          //     pickrequest: this.showPrice,
-          //     pickdetail:
-          //       this.showPrice == false ||
-          //       values.flight == " " ||
-          //       values.flight == undefined
-          //         ? ""
-          //         : values.flight,
-          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-          //     specialReq:
-          //       values.Request == " " || values.Request == undefined
-          //         ? ""
-          //         : values.Request,
-          //     guestPhnumber: this.phone,
-          //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
-          //     agreedTerm: true,
-          //     purposeOfStay: values.purpose,
-          //   },
-          //   "inputan"
-          // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post(this.hotelEndpoint + "preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: this.hour,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq:
-                      values.Request == " " || values.Request == undefined
-                        ? ""
-                        : values.Request,
-                    guestPhnumber: this.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-            // console.log(parsed, "inputan3");
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
-          this.scrollToTop();
-          this.save();
-          this.form.resetFields();
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: this.hour,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
+              guestPhnumber: this.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          // (async () => {
+          //   const tempParam = location.search.substring(1);
+          //   const parsed = await ky
+          //     .post(this.hotelEndpoint + "preCI/updateData", {
+          //       json: {
+          //         request: {
+          //           resNumber: this.currDataPrepare["rsv-number"],
+          //           reslineNumber: this.currDataPrepare["rsvline-number"],
+          //           estAT: this.hour,
+          //           pickrequest: this.showPrice,
+          //           pickdetail:
+          //             this.showPrice == false ||
+          //             values.flight == " " ||
+          //             values.flight == undefined
+          //               ? ""
+          //               : values.flight,
+          //           roomPreferences:
+          //             this.room + "$" + this.floor + "$" + this.bed,
+          //           specialReq:
+          //             values.Request == " " || values.Request == undefined
+          //               ? ""
+          //               : values.Request,
+          //           guestPhnumber: this.phone,
+          //           guestNationality: values.nationality,
+          //           guestCountry: values.country,
+          //           guestRegion: values.country != "INA" ? " " : values.region,
+          //           agreedTerm: true,
+          //           purposeOfStay: values.purpose,
+          //         },
+          //       },
+          //     })
+          //     .json();
+          //   // console.log(parsed, "inputan3");
+          //   const tempMessResult = parsed.response.messResult.split(" ");
+          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
+          // this.scrollToTop();
+          // this.save();
+          // this.form.resetFields();
         }
       });
     },
@@ -1109,66 +1097,11 @@ export default {
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
     },
-    berubah(e) {
-      this.nilai = e.target.value;
-    },
-    masukinFoto(foto) {
-      this.gambar = foto.target.value;
-    },
-    masukinTerm(tulisan) {
-      this.term = tulisan.target.value;
-    },
-    masukinUang(uang) {
-      this.money = uang.target.value;
-    },
-    showModal() {
-      this.visible = true;
-    },
-    imageModal() {
-      this.keluar = true;
-    },
-    munculModal() {
-      this.muncul = true;
-    },
-    guestModal() {
-      this.guest = true;
-    },
-    gantiHeaderClass(warna) {
-      this.information.backgroundColor = warna;
-    },
-    gantiFontClass(colours) {
-      this.information.color = colours;
-    },
-    customHeaderClass(color) {
-      this.information.backgroundColor = color.hex;
-    },
-    customFontClass(colour) {
-      this.information.color = colour.hex;
-    },
+
     onChange(e) {
       this.showPrice = e.target.checked;
     },
-
     moment,
-    handleChange(e) {
-      this.checkNick = e.target.checked;
-      this.$nextTick(() => {
-        this.form.validateFields(["nickname"], { force: true });
-      });
-    },
-    handleBlur() {
-      // console.log("blur");
-    },
-    handleFocus() {
-      // console.log("focus");
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
-    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
@@ -1195,11 +1128,7 @@ export default {
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}-${dMonth}-${dYear}`, "DD-MM-YYYY")._i;
 
-
       return fixDate;
-    },
-    test() {
-      return (this.indexStr = this.indexStr + 1);
     },
     getLabels(nameKey, used) {
       const label = this.labels.find(
