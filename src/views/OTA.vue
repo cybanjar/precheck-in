@@ -44,16 +44,12 @@
           </p>
         </a-col>
       </a-row>
-      {{boPhoto}}
-      {{namePhoto}}
-      {{emailPhoto}}
-      {{memberPhoto}}
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
           <img
             @click="showModalBookingCode"
             class="img-ota"
-            src="../assets/kodeBooking.svg"
+            :src="require(`../assets/${boPhoto}`)"
           />
           <a-modal
             v-model="modalBookingCode"
@@ -106,7 +102,11 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img @click="showModalGuestName" class="img-ota" :src="namePhoto" />
+          <img
+            @click="showModalGuestName"
+            class="img-ota"
+            :src="require(`../assets/${namePhoto}`)"
+          />
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
@@ -161,7 +161,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            :src="emailPhoto"
+            :src="require(`../assets/${emailPhoto}`)"
           />
           <a-modal
             v-model="modalEmailAddress"
@@ -217,7 +217,7 @@
           <img
             class="img-ota"
             @click="showModalMembershipID"
-            :src="memberPhoto"
+            :src="require(`../assets/${memberPhoto}`)"
           />
           <a-modal
             v-model="modalMembershipID"
@@ -380,15 +380,15 @@ export default {
       }
       this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
-        this.boPhoto = "../assets/booking-code.svg";
-        this.namePhoto = "../assets/Name.svg";
-        this.emailPhoto = "../assets/EmailAddress.svg";
-        this.memberPhoto = "../assets/membership.svg";
+        this.boPhoto = "booking-code.svg";
+        this.namePhoto = "Name.svg";
+        this.emailPhoto = "EmailAddress.svg";
+        this.memberPhoto = "membership.svg";
       } else {
-        this.boPhoto = "../assets/kodeBooking.svg";
-        this.namePhoto = "../assets/Nama.svg";
-        this.emailPhoto = "../assets/AlamatEmail.svg";
-        this.memberPhoto = "../assets/keanggotaan.svg";
+        this.boPhoto = "kodeBooking.svg";
+        this.namePhoto = "Nama.svg";
+        this.emailPhoto = "AlamatEmail.svg";
+        this.memberPhoto = "keanggotaan.svg";
       }
       // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
@@ -571,7 +571,11 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
             });
           }
         })();
@@ -628,7 +632,11 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
             });
           }
         })();
@@ -685,7 +693,11 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
             });
           }
         })();
@@ -742,7 +754,11 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
             });
           }
         })();
