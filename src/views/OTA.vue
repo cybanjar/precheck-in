@@ -84,7 +84,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -109,7 +109,7 @@
           />
           <a-modal
             v-model="modalGuestName"
-            :title="getLabels('last_name', `titleCase`)"
+            :title="getLabels('guest_name', `titleCase`)"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -118,11 +118,11 @@
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
-            <a-form-item :label="getLabels('last_name', `titleCase`)">
+            <a-form-item :label="getLabels('guest_name', `titleCase`)">
               <a-input
                 class="ant-input-h"
                 v-model="name"
-                :placeholder="getLabels('input_lastname', `sentenceCase`)"
+                :placeholder="getLabels('input_guest_name', `sentenceCase`)"
               />
             </a-form-item>
             <a-form-item :label="getLabels('co_date', `titleCase`)">
@@ -140,7 +140,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -196,7 +196,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -251,7 +251,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY">
+                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -345,7 +345,6 @@ export default {
 
     this.date = dd + "/" + mm + "/" + yyyy;
 
-
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
@@ -431,7 +430,7 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-     
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
@@ -475,7 +474,7 @@ export default {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
     },
     errorname() {
-      this.$message.error(this.getLabels("input_lastname", `sentenceCase`));
+      this.$message.error(this.getLabels("input_guest_name", `sentenceCase`));
     },
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
@@ -492,7 +491,7 @@ export default {
     },
     errorName() {
       this.$message.error(
-        this.getLabels("input_lastname") +
+        this.getLabels("guest_name") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
       );
