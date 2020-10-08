@@ -464,7 +464,8 @@
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
-                >{{ getLabels("ci_now") }}</a-button>
+                  >{{ getLabels("ci_now") }}</a-button
+                >
               </a-form-item>
             </a-col>
           </a-row>
@@ -608,6 +609,7 @@ export default {
       langID: "",
       terms: "",
       imgb64: "",
+      hotelEndpoint: "",
       hasUpload: false,
     };
   },
@@ -616,49 +618,16 @@ export default {
       key;
     },
   },
-  // created() {
-  //   const urlParams = new URLSearchParams(window.location.search);
-
-  //   this.bookingcode = urlParams.get("bookingcode");
-  //   this.loading = false;
-  //   this.termcondition = true;
-  //   // console.log(this.$route.params.id, "lempar");
-  //   if (this.bookingcode === "982010") {
-  //     router.push("listcheckin");
-  //   } else {
-  //     this.currDataPrepare = {
-  //       key: 1,
-  //       name: "R. Andito Rizky Pratama, Mr",
-  //       arrival: "12/12/2020",
-  //       departure: "15/12/2020",
-  //       adult: "2",
-  //       booking: "11020133",
-  //       email: "randitorizky@gmail.com",
-  //       tags: "Suites",
-  //       rs: 0,
-  //       description: "Ariella Calista Ichwan",
-  //       isSelected: false,
-  //     };
-  //     term;
-  //   }
-  //   if (this.$route.params.id != undefined) {
-  //     this.id = this.$route.params.id;
-  //     // this.counter = this.id.length;
-
-  //     this.currDataPrepare = this.id[this.counter];
-  //     this.counter += 1;
-  //   }
-  //    }
-  // },
   created() {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
+    this.hotelEndpoint = this.$route.params.endpoint;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
-          .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+          .post(this.hotelEndpoint + "preCI/loadSetup", {
             json: {
               request: {
                 icase: 1,
@@ -785,8 +754,6 @@ export default {
           }
         }
 
-        // console.log(this.currData, "anjay");
-        // console.log(this.currData["0"], "anjay");
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -814,7 +781,6 @@ export default {
           obj["21"] = this.term1;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          // console.log(nietos, "tuwiiinnggg");
           router.push({
             name: "ListCheckIn",
             params: { foo: nietos, fighter: this.langID },
@@ -902,8 +868,7 @@ export default {
       if (
         (this.form.getFieldValue(["email"][0]) &&
           this.form.getFieldValue(["phone"][0])) ||
-        this.form.getFieldValue(["region"][0]) &&
-        this.url
+        (this.form.getFieldValue(["region"][0]) && this.url)
       ) {
         this.current++;
         if (this.precheckin == true) {
@@ -919,9 +884,7 @@ export default {
         } else if (this.url == "") {
           this.form.validateFields(["url"]);
         }
-
       }
-      // console.log(this.form.validateFields(["email"], { force: true }));
     },
     prev() {
       if (this.precheckin == true) {
@@ -1021,40 +984,41 @@ export default {
       this.url = URL.createObjectURL(file);
 
       let tmpImgb64 = "";
-      const toBase64 = file => new Promise((resolve, reject) => {
+      const toBase64 = (file) =>
+        new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-      });
+          reader.onerror = (error) => reject(error);
+        });
 
       async function Main() {
         tmpImgb64 = await toBase64(file);
-        return tmpImgb64.substring(tmpImgb64.indexOf(',') + 1, tmpImgb64.length)
-      };
+        return tmpImgb64.substring(
+          tmpImgb64.indexOf(",") + 1,
+          tmpImgb64.length
+        );
+      }
       (async () => {
         this.imgb64 = await Main();
         const uploadResult = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/saveIDCard",
-            {
-              json: {
-                request: {
-                  inpResnr: this.currDataPrepare.resnr,
-                  inpReslinnr: this.currDataPrepare.reslinnr,
-                  guestno: this.currDataPrepare.gastno,
-                  imagedata: this.imgb64,
-                  userinit: "01",
-                },
+          .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
+            json: {
+              request: {
+                inpResnr: this.currDataPrepare.resnr,
+                inpReslinnr: this.currDataPrepare.reslinnr,
+                guestno: this.currDataPrepare.gastno,
+                imagedata: this.imgb64,
+                userinit: "01",
               },
-            }
-          )
+            },
+          })
           .json();
-          if (uploadResult.response.resultMessage == '') {
-            this.hasUpload = true;
-          } else {
-            this.hasUpload = false;
-          };
+        if (uploadResult.response.resultMessage == "") {
+          this.hasUpload = true;
+        } else {
+          this.hasUpload = false;
+        }
       })();
     },
     onKeydown(event) {
@@ -1069,30 +1033,27 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-      (async () => {
-        const parsed = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/resCI",
-            {
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint+"mobileCI/resCI", {
               json: {
                 request: {
                   rsvNumber: this.currDataPrepare.resnr,
                   rsvlineNumber: this.currDataPrepare.reslinnr,
                   userInit: "01",
                   newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue('purpose'),
-                  email: this.form.getFieldValue('email'),
-                  guestPhnumber: this.form.getFieldValue('phone'),
-                  guestNation: this.form.getFieldValue('nationality'),
-                  guestCountry: this.form.getFieldValue('country'),
-                  guestRegion: this.form.getFieldValue('region'),
-                  base64image: this.imgb64, 
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
                 },
               },
-            }
-          )
-          .json();
-      })();
+            })
+            .json();
+        })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +

@@ -571,7 +571,7 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID },
+              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
             });
           }
         })();
@@ -628,7 +628,7 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID },
+              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
             });
           }
         })();
@@ -685,7 +685,7 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID },
+              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
             });
           }
         })();
@@ -742,7 +742,7 @@ export default {
             );
             router.push({
               name: "Step",
-              params: { foo: reservation, fighter: this.langID },
+              params: { foo: reservation, fighter: this.langID , endpoint: this.hotelEndpoint},
             });
           }
         })();
