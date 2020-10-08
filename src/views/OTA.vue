@@ -44,12 +44,16 @@
           </p>
         </a-col>
       </a-row>
+      {{boPhoto}}
+      {{namePhoto}}
+      {{emailPhoto}}
+      {{memberPhoto}}
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
           <img
             @click="showModalBookingCode"
             class="img-ota"
-            src="../assets/booking-code.svg"
+            src="../assets/kodeBooking.svg"
           />
           <a-modal
             v-model="modalBookingCode"
@@ -102,11 +106,7 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalGuestName"
-            class="img-ota"
-            src="../assets/Name.svg"
-          />
+          <img @click="showModalGuestName" class="img-ota" :src="namePhoto" />
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
@@ -161,7 +161,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            src="../assets/EmailAddress.svg"
+            :src="emailPhoto"
           />
           <a-modal
             v-model="modalEmailAddress"
@@ -217,7 +217,7 @@
           <img
             class="img-ota"
             @click="showModalMembershipID"
-            src="../assets/membership.svg"
+            :src="memberPhoto"
           />
           <a-modal
             v-model="modalMembershipID"
@@ -334,10 +334,13 @@ export default {
       payment: "",
       server: "",
       hotelEndpoint: "",
-      DateFormat: "MM/DD/YYYY",
+      boPhoto: "",
+      namePhoto: "",
+      emailPhoto: "",
+      memberPhoto: "",
     };
   },
-  mounted() {
+  created() {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -376,6 +379,17 @@ export default {
         this.handleOk();
       }
       this.langID = tempParam.lang;
+      if (this.langID == "eng" || this.langID == "ENG") {
+        this.boPhoto = "../assets/booking-code.svg";
+        this.namePhoto = "../assets/Name.svg";
+        this.emailPhoto = "../assets/EmailAddress.svg";
+        this.memberPhoto = "../assets/membership.svg";
+      } else {
+        this.boPhoto = "../assets/kodeBooking.svg";
+        this.namePhoto = "../assets/Nama.svg";
+        this.emailPhoto = "../assets/AlamatEmail.svg";
+        this.memberPhoto = "../assets/keanggotaan.svg";
+      }
       // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
         .post(
