@@ -13,27 +13,30 @@
 <script>
 export default {
   data() {
-    return {};
+    return { labels: [] };
+  },
+  created() {
+    this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     getLabels(nameKey, used) {
       const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
+        (element) => element["lang-variable"] == nameKey
       );
 
       let fixLabel = "";
 
-      if (label["program-label1"] == "undefined") {
+      if (label["lang-value"] == "undefined") {
         fixLabel = "";
       } else {
         if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
+          fixLabel = this.setTitleCase(label["lang-value"]);
         } else if (used === "sentenceCase") {
           fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
+            label["lang-value"].charAt(0).toUpperCase() +
+            label["lang-value"].slice(1);
         } else {
-          fixLabel = label["program-label1"];
+          fixLabel = label["lang-value"];
         }
       }
 

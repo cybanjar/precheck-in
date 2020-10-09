@@ -728,7 +728,6 @@ export default {
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
         const tempMessResult = parsed.response.messResult;
-        console.log(tempMessResult);
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
         if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
           router.push("notfound");
