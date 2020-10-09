@@ -392,30 +392,16 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('phone_number', `titleCase`)">
-                <!-- <a-input
-                  class="ant-input-h"
-                  v-decorator="[
-                    'phone',
-                    {
-                      initialValue: currDataPrepare['guest-phone'],
-                      rules: [{ required: true }],
-                    },
-                  ]"
-                  style="width: 100%;"
-                  @keypress="isNumber($event)"
-                ></a-input> -->
-                <!-- <q-input
-                  v-model="phone"
-                  mask="############"
-                  fill-mask
-                  outlined
-                  dense
-                /> -->
                 <q-input
                   v-decorator="[
                     'phone',
                     {
-                      rules: [{ required: true }],
+                      rules: [
+                        {
+                          required: true,
+                          message: getLabels('required_phone'),
+                        },
+                      ],
                     },
                   ]"
                   outlined
@@ -466,24 +452,9 @@
                     >{{ item.setupvalue }}</a-select-option
                   >
                 </a-select>
-                <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
-                <!-- </a-select> -->
               </a-form-item>
             </a-col>
           </a-row>
-          <!-- <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Choose of Document ID">
-                <a-select default-value="E-KTP">
-                  <a-select-option value="id_card">E-KTP</a-select-option>
-                  <a-select-option value="passport">Passport</a-select-option>
-                  <a-select-option value="driving_license">Driving License</a-select-option>
-                  <a-select-option value="kitas">KITAS</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </a-row>-->
 
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
@@ -585,7 +556,7 @@
                   class="font-weight-bold mt-3"
                   type="primary"
                   block
-                  :size="size"
+                  size="large"
                   :disabled="!agree"
                   html-type="submit"
                   >{{ getLabels("ci_now", `titleCase`) }}</a-button
@@ -601,8 +572,6 @@
 
 <script>
 import router from "../router";
-import data from "../components/json/indonesia";
-// import countries from "../components/json/country";
 import Vue from "vue";
 import {
   Quasar,
@@ -653,7 +622,6 @@ export default {
       plainOptions: ["Apple", "Pear", "Orange"],
       currDataPrepare: {},
       counter: 0,
-      size: "large",
       checkNick: false,
       formItemLayout: {
         labelCol: { span: 4 },
@@ -760,9 +728,12 @@ export default {
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
         const tempMessResult = parsed.response.messResult;
+        console.log(tempMessResult);
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
         if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
           router.push("notfound");
+        } else if (tempMessResult == "2 - Guest Already Checkin.") {
+          router.push("done");
         }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
@@ -995,71 +966,71 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(
-            {
-              resNumber: this.currDataPrepare["rsv-number"],
-              reslineNumber: this.currDataPrepare["rsvline-number"],
-              estAT: this.hour,
-              pickrequest: this.showPrice,
-              pickdetail:
-                this.showPrice == false ||
-                values.flight == " " ||
-                values.flight == undefined
-                  ? ""
-                  : values.flight,
-              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
-              guestPhnumber: this.phone,
-              guestNationality: values.nationality,
-              guestCountry: values.country,
-              guestRegion: values.country != "INA" ? " " : values.region,
-              agreedTerm: true,
-              purposeOfStay: values.purpose,
-            },
-            "inputan"
-          );
-          // (async () => {
-          //   const tempParam = location.search.substring(1);
-          //   const parsed = await ky
-          //     .post(this.hotelEndpoint + "preCI/updateData", {
-          //       json: {
-          //         request: {
-          //           resNumber: this.currDataPrepare["rsv-number"],
-          //           reslineNumber: this.currDataPrepare["rsvline-number"],
-          //           estAT: this.hour,
-          //           pickrequest: this.showPrice,
-          //           pickdetail:
-          //             this.showPrice == false ||
-          //             values.flight == " " ||
-          //             values.flight == undefined
-          //               ? ""
-          //               : values.flight,
-          //           roomPreferences:
-          //             this.room + "$" + this.floor + "$" + this.bed,
-          //           specialReq:
-          //             values.Request == " " || values.Request == undefined
-          //               ? ""
-          //               : values.Request,
-          //           guestPhnumber: this.phone,
-          //           guestNationality: values.nationality,
-          //           guestCountry: values.country,
-          //           guestRegion: values.country != "INA" ? " " : values.region,
-          //           agreedTerm: true,
-          //           purposeOfStay: values.purpose,
-          //         },
-          //       },
-          //     })
-          //     .json();
-          //   // console.log(parsed, "inputan3");
-          //   const tempMessResult = parsed.response.messResult.split(" ");
-          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          // })();
-          // this.scrollToTop();
-          // this.save();
-          // this.form.resetFields();
+          // console.log(
+          //   {
+          //     resNumber: this.currDataPrepare["rsv-number"],
+          //     reslineNumber: this.currDataPrepare["rsvline-number"],
+          //     estAT: this.hour,
+          //     pickrequest: this.showPrice,
+          //     pickdetail:
+          //       this.showPrice == false ||
+          //       values.flight == " " ||
+          //       values.flight == undefined
+          //         ? ""
+          //         : values.flight,
+          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+          //     specialReq:
+          //       values.Request == " " || values.Request == undefined
+          //         ? ""
+          //         : values.Request,
+          //     guestPhnumber: this.phone,
+          //     guestNationality: values.nationality,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     agreedTerm: true,
+          //     purposeOfStay: values.purpose,
+          //   },
+          //   "inputan"
+          // );
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post(this.hotelEndpoint + "preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: this.hour,
+                    pickrequest: this.showPrice,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq:
+                      values.Request == " " || values.Request == undefined
+                        ? ""
+                        : values.Request,
+                    guestPhnumber: this.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            // console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
+          this.scrollToTop();
+          this.save();
+          this.form.resetFields();
         }
       });
     },
@@ -1126,7 +1097,7 @@ export default {
           : String(moment(datum, "YYYY-MM-DD").month() + 1);
 
       const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}-${dMonth}-${dYear}`, "DD-MM-YYYY")._i;
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
 
       return fixDate;
     },

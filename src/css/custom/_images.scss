@@ -34,6 +34,7 @@ img.preview {
 
 .img-ota {
   width: 100px;
+  height: auto;
 }
 
 .img-hotel {
@@ -44,6 +45,7 @@ img.preview {
   .img-hotel {
     width: 90vw;
     // height: 195px;
+    height: auto;
   }
   .invisible {
     display: none !important;
@@ -56,12 +58,14 @@ img.preview {
 @media screen and (max-width: 768px) {
   .img-hotel {
     height: 171px;
+    width: auto;
   }
 }
 
 @media screen and (max-width: 1199px) {
   .img-hotel {
     height: 171px;
+    width: auto;
   }
 }
 

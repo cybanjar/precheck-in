@@ -327,7 +327,6 @@ export default {
       labels: [],
       tempsetup: [],
       checkin: "",
-      arrive: "",
       langID: "",
       hotelCode: "",
       tempHotel: "",
@@ -361,7 +360,6 @@ export default {
             ? item.split("=")[1]
             : "No query strings available";
         });
-      this.arrive = moment(new Date()).format("HH:mm");
       if (tempParam.book != undefined) {
         this.checkin = tempParam.citime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
@@ -416,7 +414,7 @@ export default {
         .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
           json: {
             request: {
-              hotelCode: "vhpweb",
+              hotelCode: tempParam.hotelcode,
             },
           },
         })

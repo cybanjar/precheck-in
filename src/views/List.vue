@@ -77,7 +77,7 @@
       <a-button
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
-        :size="size"
+        size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
       >{{ getLabels("next") }}</a-button>
