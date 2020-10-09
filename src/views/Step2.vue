@@ -138,7 +138,7 @@
               </a-col>
               <a-col :span="5" :xl="5" :xs="24">
                 <a-form-item :label="getLabels('phone_number')">
-                  <q-input
+                  <a-input
                     v-decorator="[
                       'phone',
                       {
@@ -151,11 +151,9 @@
                         ],
                       },
                     ]"
-                    outlined
-                    dense
-                    v-model="phone"
-                    mask="############"
-                  ></q-input>
+                    style="width: 100%;"
+                    @keypress="isNumber($event)"
+                  ></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -466,8 +464,7 @@
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
-                  >{{ getLabels("ci_now") }}</a-button
-                >
+                >{{ getLabels("ci_now") }}</a-button>
               </a-form-item>
             </a-col>
           </a-row>
@@ -575,7 +572,7 @@ export default {
       term: "",
       term1: "",
       value: "terma",
-      gambar: "",
+      gambar: "https://source.unsplash.com/1366x786/?hotel",
       termcondition: false,
       information: {
         backgroundColor: "$green",
@@ -695,7 +692,11 @@ export default {
             this.tempsetup[i]["number1"] == 7 &&
             this.tempsetup[i]["number2"] == 1
           ) {
-            this.gambar = this.tempsetup[i]["setupvalue"];
+            const lagi = this.tempsetup[i]["setupvalue"].substring(
+              this.tempsetup[i]["setupvalue"].lastIndexOf("<img src=") + 10,
+              this.tempsetup[i]["setupvalue"].lastIndexOf('g"') + 1
+            );
+            this.gambar = lagi;
           } else if (
             this.tempsetup[i]["number1"] == 6 &&
             this.tempsetup[i]["number2"] == 1
@@ -835,7 +836,7 @@ export default {
           this.current = 2;
           this.y = true;
         }
-        if (this.hasUpload == "0 image id already exist") {
+        if (this.hasUpload == '0 image id already exist') {
           this.current = 3;
           this.y = true;
         }
@@ -865,6 +866,7 @@ export default {
       this.term1 = this.$route.params.id["setup"]["21"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
+      this.hasUpload = this.currDataPrepare["image-flag"];
 
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
@@ -883,7 +885,7 @@ export default {
         this.current = 2;
         this.y = true;
       }
-      if (this.hasUpload == "0 image id already exist") {
+      if (this.hasUpload == '0 image id already exist') {
         this.current = 3;
         this.y = true;
       }
@@ -911,11 +913,8 @@ export default {
       }
     },
     next() {
-      if (this.current == 0) {
-        if (
-          this.form.getFieldValue(["email"][0]) &&
-          this.form.getFieldValue(["phone"][0])
-        ) {
+      if(this.current == 0) {
+        if(this.form.getFieldValue(["email"][0]) && this.form.getFieldValue(["phone"][0])) {
           this.current++;
           if (this.precheckin == true) {
             this.y = true;
@@ -927,8 +926,8 @@ export default {
             this.form.validateFields(["phone"]);
           }
         }
-      } else if (this.current == 1) {
-        if (this.form.getFieldValue(["region"][0])) {
+      } else if(this.current == 1) {
+        if(this.form.getFieldValue(["region"][0])) {
           this.current++;
           if (this.precheckin == true) {
             this.y = true;
@@ -1002,14 +1001,13 @@ export default {
           );
           this.resReg = JSON.parse(resp);
           if (this.resReg.data["resultCd"] == "0000") {
-            // console.log(this.resReg);
+            console.log(this.resReg);
             const urlInq =
               "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
               this.resReg.data["tXid"] +
               "&optDisplayCB=1&optDisplayBL=0";
             window.open(urlInq, "_self");
           } else {
-            // console.log("error payment");
           }
         });
     },
@@ -1035,10 +1033,8 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            console.log("payment invalid");
           }
         });
     },
@@ -1048,6 +1044,7 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
+
       let tmpImgb64 = "";
       const toBase64 = file => new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -1095,7 +1092,7 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-         (async () => {
+      (async () => {
         const parsed = await ky
           .post(
             "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/resCI",
@@ -1230,19 +1227,11 @@ export default {
       );
     },
     formatDate(datum) {
-      const dDate =
-        String(moment(datum, "YYYY-MM-DD").date()).length == 1
-          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-          : String(moment(datum, "YYYY-MM-DD").date());
-      const dMonth =
-        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-          : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
-      const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
-      return fixDate;
+      return new Intl.DateTimeFormat(navigator.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date(datum));
     },
     getLabels(nameKey) {
       const label = this.labels.find(
@@ -1268,6 +1257,23 @@ export default {
           return splitStr.join(" ");
         }
       }*/
+    },
+  },
+  computed: {
+    filteredCities() {
+      const filteredCity = [];
+      const set = this.setRegion;
+
+      for (let i = 0; i < this.City.length; i++) {
+        const regionID = set;
+        const dataRow = this.City[i];
+        const regionIDinCity = dataRow["province"];
+
+        if (regionID === regionIDinCity) {
+          filteredCity.push(dataRow);
+        }
+      }
+      return filteredCity;
     },
   },
 };
