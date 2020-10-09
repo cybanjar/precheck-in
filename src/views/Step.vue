@@ -1035,10 +1035,10 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            console.log("payment valid");
+            // console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            console.log("payment invalid");
+            // console.log("payment invalid");
           }
         });
     },
@@ -1079,7 +1079,7 @@ export default {
           )
           .json();
           if (uploadResult.response.resultMessage != '') {
-            console.log(uploadResult.response.resultMessage);
+            // console.log(uploadResult.response.resultMessage);
           }
       })();
     },
