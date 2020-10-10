@@ -612,6 +612,7 @@ export default {
       terms: "",
       imgb64: "",
       hasUpload: false,
+      hotelEndpoint: "",
     };
   },
   watch: {
@@ -656,12 +657,13 @@ export default {
   created() {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
+    this.hotelEndpoint = this.$route.params.endpoint;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
-          .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/loadSetup", {
+          .post(this.hotelEndpoint + "preCI/loadSetup", {
             json: {
               request: {
                 icase: 1,
@@ -936,7 +938,7 @@ export default {
         } else {
           this.form.validateFields(["region"]);
         }
-      } else if(this.current == 2) {
+      } else if (this.current == 2) {
         if (this.form.getFieldValue(["url"][0])) {
           this.current++;
           if (this.precheckin == true) {
@@ -968,7 +970,7 @@ export default {
         "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
         this.minimumDeposit +
         "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-        this.currDataPrepare['gast'].replace(/ /g,'') +
+        this.currDataPrepare["gast"].replace(/ /g, "") +
         "&billingPhone=" +
         this.form.getFieldValue(["phone"][0]) +
         "&billingEmail=" +
@@ -1035,10 +1037,10 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            console.log("payment valid");
+            // console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            console.log("payment invalid");
+            // console.log("payment invalid");
           }
         });
     },
@@ -1049,38 +1051,39 @@ export default {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
       let tmpImgb64 = "";
-      const toBase64 = file => new Promise((resolve, reject) => {
+      const toBase64 = (file) =>
+        new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-      });
+          reader.onerror = (error) => reject(error);
+        });
 
       async function Main() {
         tmpImgb64 = await toBase64(file);
-        return tmpImgb64.substring(tmpImgb64.indexOf(',') + 1, tmpImgb64.length)
-      };
+        return tmpImgb64.substring(
+          tmpImgb64.indexOf(",") + 1,
+          tmpImgb64.length
+        );
+      }
       (async () => {
         this.imgb64 = await Main();
         const uploadResult = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/saveIDCard",
-            {
-              json: {
-                request: {
-                  inpResnr: this.currDataPrepare.resnr,
-                  inpReslinnr: this.currDataPrepare.reslinnr,
-                  guestno: this.currDataPrepare.gastno,
-                  imagedata: this.imgb64,
-                  userinit: "01",
-                },
+          .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
+            json: {
+              request: {
+                inpResnr: this.currDataPrepare.resnr,
+                inpReslinnr: this.currDataPrepare.reslinnr,
+                guestno: this.currDataPrepare.gastno,
+                imagedata: this.imgb64,
+                userinit: "01",
               },
-            }
-          )
+            },
+          })
           .json();
-          if (uploadResult.response.resultMessage != '') {
-            console.log(uploadResult.response.resultMessage);
-          }
+        if (uploadResult.response.resultMessage != "") {
+          // console.log(uploadResult.response.resultMessage);
+        }
       })();
     },
     onKeydown(event) {
@@ -1095,30 +1098,27 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-         (async () => {
-        const parsed = await ky
-          .post(
-            "http://ws1.e1-vhp.com/VHPWebBased/rest/mobileCI/resCI",
-            {
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
               json: {
                 request: {
                   rsvNumber: this.currDataPrepare.resnr,
                   rsvlineNumber: this.currDataPrepare.reslinnr,
                   userInit: "01",
                   newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue('purpose'),
-                  email: this.form.getFieldValue('email'),
-                  guestPhnumber: this.form.getFieldValue('phone'),
-                  guestNation: this.form.getFieldValue('nationality'),
-                  guestCountry: this.form.getFieldValue('country'),
-                  guestRegion: this.form.getFieldValue('region'),
-                  base64image: this.imgb64, 
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
                 },
               },
-            }
-          )
-          .json();
-      })();
+            })
+            .json();
+        })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +
