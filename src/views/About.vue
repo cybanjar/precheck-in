@@ -319,7 +319,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea :rows="4" :maxLength="max" :keyup="text" v-model="text"/>
+                <a-textarea :rows="4" :maxLength="max" v-model="text"/>
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
