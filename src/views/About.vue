@@ -708,7 +708,7 @@ export default {
         const tempParam = location.search.substring(1);
         const parsed = await ky
           .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+            "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
             {
               json: {
                 request: {
