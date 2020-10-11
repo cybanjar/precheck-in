@@ -257,12 +257,7 @@
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
                 <a-input
                   class="ant-input-h"
-                  v-decorator="[
-                    'flight',
-                    {
-                      rules: [{}],
-                    },
-                  ]"
+                  v-decorator="['flight',{}]"
                 />
               </a-form-item>
             </a-col>
@@ -324,7 +319,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea v-model="text" :rows="4" :maxlength="max" />
+                <a-textarea :rows="4" :maxLength="max" :keyup="text" v-model="text"/>
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -370,7 +365,7 @@
               <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email', `titleCase`)">
                 <a-input
-                  class="ant-input-h"
+                  class="ant-input-h"   
                   v-decorator="[
                     'email',
                     {
@@ -386,27 +381,27 @@
                         },
                       ],
                     },
-                  ]"
+                  ]"               
                 />
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('phone_number', `titleCase`)">
-                <q-input
+                <q-input   
                   v-decorator="[
                     'phone',
                     {
+                      initialValue: phone,
                       rules: [
-                        {
+                        {                          
                           required: true,
                           message: getLabels('required_phone'),
                         },
                       ],
                     },
-                  ]"
+                  ]"               
                   outlined
-                  dense
-                  v-model="phone"
+                  dense                  
                   mask="############"
                 />
               </a-form-item>
@@ -462,7 +457,6 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
-                  v-model="country"
                   v-decorator="[
                     'country',
                     {
@@ -484,7 +478,6 @@
               <div v-if="country === 'INA' || country === 'ina'">
                 <a-form-item :label="getLabels('region', `titleCase`)">
                   <a-select
-                    @change="handleChangeRegion"
                     v-decorator="[
                       'region',
                       {
@@ -492,6 +485,7 @@
                         rules: [{ required: true }],
                       },
                     ]"
+                    @change="handleChangeRegion"
                   >
                     <a-select-option
                       v-for="item in filteredProvince"
@@ -700,6 +694,7 @@ export default {
       hotelCode: "",
       phone: "",
       State: "",
+      flight: "",
     };
   },
   created() {
@@ -708,7 +703,7 @@ export default {
         const tempParam = location.search.substring(1);
         const parsed = await ky
           .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+            "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
             {
               json: {
                 request: {
@@ -928,9 +923,11 @@ export default {
   },
   methods: {
     showModalTerm() {
+      // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
     },
     handleOkTerm(e) {
+      // console.log('handleOkTerm is Fired');
       this.confirmLoading = true;
       setTimeout(() => {
         this.visibleTerm = false;
@@ -938,33 +935,42 @@ export default {
       }, 700);
     },
     handleCancelTerm(e) {
+      // console.log('handleCancelTerm is Fired');
       this.visibleTerm = false;
     },
     Room(e) {
+      // console.log('Room is Fired');
       this.room = e.target.value;
     },
     Bed(e) {
+      // console.log('Bed is Fired');
       this.bed = e.target.value;
     },
     Floor(e) {
+      // console.log('Floor is Fired');
       this.floor = e.target.value;
     },
     Kuy(value) {
+      // console.log('Kuy is Fired');
       this.kuy = value;
     },
     Nationality(value) {
+      // console.log('Nationality is Fired');
       this.nationality = value;
     },
     handleChangeRegion(value) {
+      // console.log('handleChangeRegion is Fired');
       this.region = value;
     },
     scrollToTop() {
+      // console.log('scrollToTop is Fired');
       window.scrollTo(0, 0);
     },
     handleSubmit(e) {
+      // console.log('handleSubmit is Fired');
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        if (!err) {
+        if (!err) {          
           // console.log(
           //   {
           //     resNumber: this.currDataPrepare["rsv-number"],
@@ -1013,7 +1019,7 @@ export default {
                       values.Request == " " || values.Request == undefined
                         ? ""
                         : values.Request,
-                    guestPhnumber: this.phone,
+                    guestPhnumber: values.phone,
                     guestNationality: values.nationality,
                     guestCountry: values.country,
                     guestRegion: values.country != "INA" ? " " : values.region,
@@ -1034,6 +1040,7 @@ export default {
       });
     },
     save() {
+      // console.log('save is Fired');
       if (this.counter == this.id.length) {
         const mori =
           "{" +
@@ -1061,6 +1068,7 @@ export default {
       this.agree = false;
     },
     back() {
+      // console.log('back is Fired');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -1069,10 +1077,11 @@ export default {
     },
 
     onChange(e) {
+      // console.log('onChange is Fired');
       this.showPrice = e.target.checked;
     },
-    moment,
-    isNumber: function (evt) {
+    isNumber(evt) {
+      // console.log('isNumber is Fired');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1084,50 +1093,54 @@ export default {
       } else {
         return true;
       }
-    },
-    formatDate(datum) {
-      const dDate =
+    }
+  },
+  computed: {
+    formatDate() {
+      return datum => {
+        const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
-          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-          : String(moment(datum, "YYYY-MM-DD").date());
-      const dMonth =
-        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-          : String(moment(datum, "YYYY-MM-DD").month() + 1);
+            ? `0${String(moment(datum, "YYYY-M-DD").date())}`
+            : String(moment(datum, "YYYY-MM-DD").date());
+        const dMonth =
+          String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
+            ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
+            : String(moment(datum, "YYYY-MM-DD").month() + 1);
 
-      const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+        const dYear = moment(datum, "YYYY-MM-DD").year();
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
 
-      return fixDate;
+        return fixDate;
+      };
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["lang-variable"] == nameKey
-      );
-
+    getLabels(){
       let fixLabel = "";
 
-      if (label["lang-value"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["lang-value"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["lang-value"].charAt(0).toUpperCase() +
-            label["lang-value"].slice(1);
-        } else {
-          fixLabel = label["lang-value"];
-        }
-      }
+      return (nameKey, used) =>{
+        const label = this.labels.find(el => {
+          return el["lang-variable"] == nameKey;
+        });
 
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
-    },
-  },
+        if(label === undefined){
+          fixLabel = nameKey;                 
+        }
+        else{
+          if (used === "titleCase") {
+            fixLabel = label["lang-value"].replace(/\w\S*/g, function(txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel = label["lang-value"].charAt(0).toUpperCase() + label["lang-value"].slice(1);
+          } else if (used === "upperCase"){
+            fixLabel = label["lang-value"].toUpperCase();
+          } else {
+            fixLabel = label["lang-value"];
+          }
+        }
+
+        return fixLabel;
+      };
+    }
+  }
 };
 </script>

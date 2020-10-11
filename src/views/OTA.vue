@@ -391,7 +391,7 @@ export default {
       // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
         .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
@@ -411,7 +411,7 @@ export default {
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
       const code = await ky
-        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
+        .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
           json: {
             request: {
               hotelCode: tempParam.hotelcode,
