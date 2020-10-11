@@ -150,11 +150,19 @@ export default {
       }
     },
     formatDate(datum) {
-      return new Intl.DateTimeFormat(navigator.language, {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }).format(new Date(datum));
+      const dDate =
+        String(moment(datum, "YYYY-MM-DD").date()).length == 1
+          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
+          : String(moment(datum, "YYYY-MM-DD").date());
+      const dMonth =
+        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
+          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
+          : String(moment(datum, "YYYY-MM-DD").month() + 1);
+
+      const dYear = moment(datum, "YYYY-MM-DD").year();
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+
+      return fixDate;
     },
     getLabels(nameKey) {
       const label = this.labels.find(
