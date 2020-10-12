@@ -731,6 +731,7 @@ export default {
         }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+
         const tempbC = this.tempsetup.filter((item, index) => {
           return item.number1 === 4;
         });
@@ -1098,16 +1099,9 @@ export default {
   computed: {
     formatDate() {
       return datum => {
-        const dDate =
-        String(moment(datum, "YYYY-MM-DD").date()).length == 1
-            ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-            : String(moment(datum, "YYYY-MM-DD").date());
-        const dMonth =
-          String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-            ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-            : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
-        const dYear = moment(datum, "YYYY-MM-DD").year();
+        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(2, "0");
+        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(2, "0");
+        const dYear = String(moment(datum, "YYYY-MM-DD").year());
         const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
 
         return fixDate;
@@ -1122,7 +1116,7 @@ export default {
         });
 
         if(label === undefined){
-          fixLabel = nameKey;                 
+          fixLabel = "nameKey";                 
         }
         else{
           if (used === "titleCase") {
