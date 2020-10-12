@@ -29,7 +29,9 @@
         </a-col>
       </a-row>
       <div>
-        <h1 class="mt-3 text-center">{{ getLabels("guest_list", `titleCase`) }}</h1>
+        <h1 class="mt-3 text-center">
+          {{ getLabels("guest_list", `titleCase`) }}
+        </h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -91,7 +93,7 @@
       <a-button
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
-        :size="size"
+        size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
         >{{ getLabels("next") }}</a-button
