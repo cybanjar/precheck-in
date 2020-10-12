@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="spin-load-table" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div class="ota text-center">
       <a-modal
         :title="getLabels('information', `titleCase`)"
@@ -339,6 +344,7 @@ export default {
       emailPhoto: "",
       memberPhoto: "",
       member: "",
+      loading: true,
     };
   },
   created() {
@@ -466,7 +472,9 @@ export default {
         this.informationmodal = true;
       }
     })();
+    this.loading = false;
   },
+
   methods: {
     onChange(date, dateString) {
       // console.log(date, dateString);
@@ -843,33 +851,37 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-
+  },
+  computed: {
+    getLabels() {
       let fixLabel = "";
 
-      if (label["program-label1"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
 
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+        if (label === undefined) {
+          fixLabel = nameKey;
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["program-label1"].charAt(0).toUpperCase() +
+              label["program-label1"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["program-label1"].toUpperCase();
+          } else {
+            fixLabel = label["program-label1"];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };

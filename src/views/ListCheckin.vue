@@ -206,30 +206,35 @@ export default {
 
       return fixDate;
     },
-    getLabels(nameKey) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
-      } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+    getLabels() {
+      let fixLabel = "";
+
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+
+        if (label === undefined) {
+          fixLabel = nameKey;
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["program-label1"].charAt(0).toUpperCase() +
+              label["program-label1"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["program-label1"].toUpperCase();
+          } else {
+            fixLabel = label["program-label1"];
           }
-          return splitStr.join(" ");
         }
-      }*/
+        return fixLabel;
+      };
     },
   },
 };
