@@ -57,6 +57,7 @@
             :src="require(`../assets/${boPhoto}`)"
           />
           <a-modal
+            :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
             ><template slot="footer">
@@ -602,6 +603,7 @@ export default {
       }
     },
     handleOkBO() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -659,7 +661,10 @@ export default {
           }
         })();
 
-        this.modalBookingCode = false;
+        setTimeout(() => {
+          this.modalBookingCode = false;
+          this.confirmLoading = false;
+        }, 2000);
       }
     },
     handleOkName() {
