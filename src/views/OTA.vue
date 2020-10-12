@@ -226,12 +226,13 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkMember">
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
             <a-form-item :label="getLabels('membership_id', `titleCase`)">
               <a-input
+                v-model="member"
                 class="ant-input-h"
                 :placeholder="getLabels('input_membership', `sentenceCase`)"
               />
@@ -337,6 +338,7 @@ export default {
       namePhoto: "",
       emailPhoto: "",
       memberPhoto: "",
+      member: "",
     };
   },
   created() {
@@ -491,6 +493,9 @@ export default {
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
+    errormember() {
+      this.$message.error(this.getLabels("input_member", `sentenceCase`));
+    },
     errorco() {
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
@@ -511,6 +516,13 @@ export default {
     errorMail() {
       this.$message.error(
         this.getLabels("input_email") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
+      );
+    },
+    errorMember() {
+      this.$message.error(
+        this.getLabels("input_member") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
       );
@@ -762,6 +774,67 @@ export default {
         })();
 
         this.modalEmailAddress = false;
+      }
+    },
+    handleOkMember() {
+      const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      if (!this.member && !this.date) {
+        this.errorMember();
+      } else if (!this.member) {
+        this.errormember();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: coDate,
+                  bookCode: this.member,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
+            });
+          }
+        })();
+
+        this.modalMembershipID = false;
       }
     },
     handleCancel() {
