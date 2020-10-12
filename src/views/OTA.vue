@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="spin-load-table" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div class="ota text-center">
       <a-modal
         :title="getLabels('information', `titleCase`)"
@@ -52,6 +57,7 @@
             :src="require(`../assets/${boPhoto}`)"
           />
           <a-modal
+            :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
             ><template slot="footer">
@@ -226,12 +232,13 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkMember">
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
             <a-form-item :label="getLabels('membership_id', `titleCase`)">
               <a-input
+                v-model="member"
                 class="ant-input-h"
                 :placeholder="getLabels('input_membership', `sentenceCase`)"
               />
@@ -337,6 +344,8 @@ export default {
       namePhoto: "",
       emailPhoto: "",
       memberPhoto: "",
+      member: "",
+      loading: true,
     };
   },
   created() {
@@ -464,7 +473,9 @@ export default {
         this.informationmodal = true;
       }
     })();
+    this.loading = false;
   },
+
   methods: {
     onChange(date, dateString) {
       // console.log(date, dateString);
@@ -491,6 +502,9 @@ export default {
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
+    errormember() {
+      this.$message.error(this.getLabels("input_member", `sentenceCase`));
+    },
     errorco() {
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
@@ -511,6 +525,13 @@ export default {
     errorMail() {
       this.$message.error(
         this.getLabels("input_email") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
+      );
+    },
+    errorMember() {
+      this.$message.error(
+        this.getLabels("input_member") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
       );
@@ -582,6 +603,7 @@ export default {
       }
     },
     handleOkBO() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -639,7 +661,10 @@ export default {
           }
         })();
 
-        this.modalBookingCode = false;
+        setTimeout(() => {
+          this.modalBookingCode = false;
+          this.confirmLoading = false;
+        }, 2000);
       }
     },
     handleOkName() {
@@ -764,11 +789,73 @@ export default {
         this.modalEmailAddress = false;
       }
     },
+    handleOkMember() {
+      const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      if (!this.member && !this.date) {
+        this.errorMember();
+      } else if (!this.member) {
+        this.errormember();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: coDate,
+                  bookCode: this.member,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+              },
+            });
+          }
+        })();
+
+        this.modalMembershipID = false;
+      }
+    },
     handleCancel() {
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
+<<<<<<< HEAD
     }
   },
   computed: {
@@ -791,15 +878,49 @@ export default {
           } else if (used === "sentenceCase") {
             fixLabel = label["program-label1"].charAt(0).toUpperCase() + label["program-label1"].slice(1);
           } else if (used === "upperCase"){
+=======
+    },
+  },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+
+        if (label === undefined) {
+          fixLabel = nameKey;
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["program-label1"].charAt(0).toUpperCase() +
+              label["program-label1"].slice(1);
+          } else if (used === "upperCase") {
+>>>>>>> origin/agumon
             fixLabel = label["program-label1"].toUpperCase();
           } else {
             fixLabel = label["program-label1"];
           }
         }
+<<<<<<< HEAD
 
         return fixLabel;
       };
     }
   }
+=======
+        return fixLabel;
+      };
+    },
+  },
+>>>>>>> origin/agumon
 };
 </script>
