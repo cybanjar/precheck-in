@@ -400,7 +400,7 @@ export default {
       // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
         .post(
-          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
+          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
@@ -420,7 +420,7 @@ export default {
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
       const code = await ky
-        .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
+        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
           json: {
             request: {
               hotelCode: tempParam.hotelcode,
@@ -855,30 +855,6 @@ export default {
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
-<<<<<<< HEAD
-    }
-  },
-  computed: {
-    getLabels(){
-      let fixLabel = "";
-
-      return (nameKey, used) =>{
-        const label = this.labels.find(el => {
-          return el["program-variable"] == nameKey;
-        });
-
-        if(label === undefined){
-          fixLabel = nameKey;                 
-        }
-        else{
-          if (used === "titleCase") {
-            fixLabel = label["program-label1"].replace(/\w\S*/g, function(txt) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel = label["program-label1"].charAt(0).toUpperCase() + label["program-label1"].slice(1);
-          } else if (used === "upperCase"){
-=======
     },
   },
   computed: {
@@ -904,23 +880,14 @@ export default {
               label["program-label1"].charAt(0).toUpperCase() +
               label["program-label1"].slice(1);
           } else if (used === "upperCase") {
->>>>>>> origin/agumon
             fixLabel = label["program-label1"].toUpperCase();
           } else {
             fixLabel = label["program-label1"];
           }
         }
-<<<<<<< HEAD
-
-        return fixLabel;
-      };
-    }
-  }
-=======
         return fixLabel;
       };
     },
   },
->>>>>>> origin/agumon
 };
 </script>
