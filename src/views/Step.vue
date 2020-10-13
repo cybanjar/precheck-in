@@ -1109,17 +1109,11 @@ export default {
           this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "," +
-          this.wifiAddress +
-          "!" +
-          this.wifiPassword +
-          "?" +
-          this.currDataPrepare["argt-str"] +
           "}";
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        router.push({ name: "SuccessCheckIn", params: { jin: mori, jun: this.wifiAddress, jen: this.wifiPassword, jon: this.currDataPrepare["argt-str"] } });
         //} else {
         //this.paymentModal = true;
         // }
