@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
+    console.log(this.$route.params, "nyampe");
     this.data = this.$route.params.jin;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
