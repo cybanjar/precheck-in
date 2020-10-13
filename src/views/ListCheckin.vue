@@ -29,7 +29,9 @@
         </a-col>
       </a-row>
       <div>
-        <h1 class="mt-3 text-center">{{ getLabels("guest_list") }}</h1>
+        <h1 class="mt-3 text-center">
+          {{ getLabels("guest_list", `titleCase`) }}
+        </h1>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -60,7 +62,7 @@
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
-                {{ item["gast"] }}
+                {{ item["gast"].toUpperCase() }}
               </h2>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}
@@ -91,7 +93,7 @@
       <a-button
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
-        :size="size"
+        size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
         >{{ getLabels("next") }}</a-button
@@ -192,36 +194,47 @@ export default {
       });
     },
     formatDate(datum) {
-      return new Intl.DateTimeFormat(navigator.language, {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }).format(new Date(datum));
+      const dDate =
+        String(moment(datum, "YYYY-MM-DD").date()).length == 1
+          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
+          : String(moment(datum, "YYYY-MM-DD").date());
+      const dMonth =
+        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
+          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
+          : String(moment(datum, "YYYY-MM-DD").month() + 1);
+
+      const dYear = moment(datum, "YYYY-MM-DD").year();
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+
+      return fixDate;
     },
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+
+      let fixLabel = "";
+
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };

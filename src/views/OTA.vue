@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="spin-load-table" v-if="loading">
+    <a-spin>
+      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+    </a-spin>
+  </div>
+  <div v-else>
     <div class="ota text-center">
       <a-modal
         :title="getLabels('information', `titleCase`)"
@@ -55,6 +60,7 @@
             :src="require(`../assets/${boPhoto}`)"
           />
           <a-modal
+            :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
             :closable="false"
@@ -88,7 +94,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -145,7 +158,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -202,7 +222,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -233,12 +260,13 @@
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOk">
+              <a-button key="submit" type="primary" @click="handleOkMember">
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
             <a-form-item :label="getLabels('membership_id', `titleCase`)">
               <a-input
+                v-model="member"
                 class="ant-input-h"
                 :placeholder="getLabels('input_membership', `sentenceCase`)"
               />
@@ -258,7 +286,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -325,6 +360,9 @@ export default {
       email: "",
       dateFormat: "MM/DD/YY",
       date: "",
+      minCalendar: "2020/10",
+      minDate: "2020/10/10",
+      maxDate: "2020/10/10",
       hour: "",
       informationmodal: false,
       informationmodal1: false,
@@ -344,6 +382,9 @@ export default {
       namePhoto: "",
       emailPhoto: "",
       memberPhoto: "",
+      member: "",
+      loading: true,
+      confirmLoading: false
     };
   },
   created() {
@@ -395,10 +436,10 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
-      // this.hotelCode = tempParam.hotelCode;
+      this.hotelCode = tempParam["hotelcode"];
       const parsed = await ky
         .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
@@ -418,20 +459,22 @@ export default {
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
       const code = await ky
-        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
-          json: {
-            request: {
-              hotelCode: tempParam.hotelcode,
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
+          {
+            json: {
+              request: {
+                hotelCode: this.hotelCode,
+              },
             },
-          },
-        })
+          }
+        )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -442,6 +485,7 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -455,6 +499,27 @@ export default {
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
+
+      const systemDateObj = this.tempsetup.filter((item, index) => {
+        return item.number1 === 9 && item.number2 === 4;
+      });
+
+      const systemDate = systemDateObj[0]["setupvalue"];
+
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
+        2,
+        "0"
+      );
+      const dMonth = String(
+        moment(systemDate, "DD/MM/YYYY").month() + 1
+      ).padStart(2, "0");
+      const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
+      const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
+
+      this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+      this.minDate = `${dYear}/${dMonth}/${dDate}`;
+      this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
+      this.minCalendar = `${dYear}/${dMonth}`;
 
       for (const i in this.tempsetup) {
         if (
@@ -471,7 +536,9 @@ export default {
         this.informationmodal = true;
       }
     })();
+    this.loading = false;
   },
+
   methods: {
     onChange(date, dateString) {
       // console.log(date, dateString);
@@ -498,6 +565,9 @@ export default {
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
+    errormember() {
+      this.$message.error(this.getLabels("input_member", `sentenceCase`));
+    },
     errorco() {
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
@@ -518,6 +588,13 @@ export default {
     errorMail() {
       this.$message.error(
         this.getLabels("input_email") +
+          ", " +
+          this.getLabels("input_codate", `sentenceCase`)
+      );
+    },
+    errorMember() {
+      this.$message.error(
+        this.getLabels("input_member") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
       );
@@ -580,6 +657,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -589,6 +667,7 @@ export default {
       }
     },
     handleOkBO() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -641,12 +720,16 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
 
-        this.modalBookingCode = false;
+        setTimeout(() => {
+          this.modalBookingCode = false;
+          this.confirmLoading = false;
+        }, 2000);
       }
     },
     handleOkName() {
@@ -702,6 +785,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -763,6 +847,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -771,39 +856,105 @@ export default {
         this.modalEmailAddress = false;
       }
     },
+    handleOkMember() {
+      const reservation = [];
+      const dDate = moment(this.date, "DD/MM/YYYY").date();
+      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
+      const dYear = moment(this.date, "DD/MM/YYYY").year();
+      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      if (!this.member && !this.date) {
+        this.errorMember();
+      } else if (!this.member) {
+        this.errormember();
+      } else if (!this.date) {
+        this.errorco();
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: coDate,
+                  bookCode: this.member,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: "14:00",
+                  groupFlag: "false",
+                },
+              },
+            })
+            .json();
+          this.message = data["response"]["messResult"];
+          if (this.message.substring(0, 2) == "9 ") {
+            this.informationmodal = true;
+          } else if (
+            this.message.substring(0, 2) == "01" ||
+            this.message.substring(0, 2) == "02"
+          ) {
+            this.informationmodal2 = true;
+          } else if (
+            this.message.substring(0, 2) == "88" ||
+            this.message.substring(0, 2) == "5 " ||
+            this.message.substring(0, 2) == "2 "
+          ) {
+            this.informationmodal1 = true;
+          } else {
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
+          }
+        })();
+
+        this.modalMembershipID = false;
+      }
+    },
     handleCancel() {
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-
+  },
+  computed: {
+    getLabels() {
       let fixLabel = "";
 
-      if (label["program-label1"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
 
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+        if (label === undefined) {
+          fixLabel = nameKey;
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["program-label1"].charAt(0).toUpperCase() +
+              label["program-label1"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["program-label1"].toUpperCase();
+          } else {
+            fixLabel = label["program-label1"];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };

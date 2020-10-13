@@ -53,100 +53,8 @@
           <div class="overlay">
             <div class="text">{{ hotelname }}</div>
           </div>
-          <!-- <div class="visible">
-            <div class="online-checkin-mobile">
-              <p class="text-center">Online Check-In</p>
-            </div>
-          </div>-->
         </a-col>
       </a-row>
-      <!-- {{currDataPrepare}} -->
-      <!-- <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
-      <a-row
-        class="header-branding"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col
-          class="pl-3 pt-3 invisible"
-          :span="15"
-          :md="15"
-          :xl="15"
-          :xs="24"
-        >
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-          <h2
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h2>
-
-          <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code",`titleCase`) }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </a-col>
-        <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" :src="gambar" alt="Image Loading" />
-          <div class="overlay invisible">
-            <div class="text">{{ hotelname }}</div>
-          </div>
-          <div class="invisible">
-            <div class="gear-setting"></div>
-          </div>
-        </a-col>
-        <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-          <h2
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h2>
-          <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code",`titleCase`) }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </a-col>
-      </a-row>-->
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
@@ -166,13 +74,6 @@
                 layout="vertical"
                 :label="getLabels('eta', `titleCase`)"
               >
-                <!-- <a-time-picker
-                  v-model="hour"
-                  :minute-step="30"
-                  format="HH:mm"
-                  size="large"
-                  inputReadOnly
-                />-->
                 <q-input
                   v-model="hour"
                   class="inputTime"
@@ -255,15 +156,7 @@
               :xs="24"
             >
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
-                <a-input
-                  class="ant-input-h"
-                  v-decorator="[
-                    'flight',
-                    {
-                      rules: [{}],
-                    },
-                  ]"
-                />
+                <a-input class="ant-input-h" v-decorator="['flight', {}]" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -324,7 +217,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea v-model="text" :rows="4" :maxlength="max" />
+                <a-textarea :rows="4" :maxLength="max" v-model="text" />
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -396,6 +289,7 @@
                   v-decorator="[
                     'phone',
                     {
+                      initialValue: phone,
                       rules: [
                         {
                           required: true,
@@ -406,8 +300,7 @@
                   ]"
                   outlined
                   dense
-                  v-model="phone"
-                  mask="############"
+                  mask="################"
                 />
               </a-form-item>
             </a-col>
@@ -462,7 +355,6 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
-                  v-model="country"
                   v-decorator="[
                     'country',
                     {
@@ -484,7 +376,6 @@
               <div v-if="country === 'INA' || country === 'ina'">
                 <a-form-item :label="getLabels('region', `titleCase`)">
                   <a-select
-                    @change="handleChangeRegion"
                     v-decorator="[
                       'region',
                       {
@@ -492,6 +383,7 @@
                         rules: [{ required: true }],
                       },
                     ]"
+                    @change="handleChangeRegion"
                   >
                     <a-select-option
                       v-for="item in filteredProvince"
@@ -701,6 +593,7 @@ export default {
       hotelCode: "",
       phone: "",
       State: "",
+      flight: "",
     };
   },
   created() {
@@ -709,7 +602,7 @@ export default {
         const tempParam = location.search.substring(1);
         const parsed = await ky
           .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/retrieveReservation",
+            "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
             {
               json: {
                 request: {
@@ -737,6 +630,7 @@ export default {
         }
 
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+
         const tempbC = this.tempsetup.filter((item, index) => {
           return item.number1 === 4;
         });
@@ -759,7 +653,7 @@ export default {
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
-        this.term = tempTerm[0]["setupvalue"];
+        this.term = this.getLabels(tempTerm[0]["setupvalue"], "sentenceCase");
         const temRequest = this.tempsetup.filter((item, index) => {
           return item.number1 === 2 && item.setupflag === true;
         });
@@ -802,15 +696,11 @@ export default {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
-
         const jatah = [];
 
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase(),
-              `sentenceCase`
-            );
+            this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -929,9 +819,11 @@ export default {
   },
   methods: {
     showModalTerm() {
+      // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
     },
     handleOkTerm(e) {
+      // console.log('handleOkTerm is Fired');
       this.confirmLoading = true;
       setTimeout(() => {
         this.visibleTerm = false;
@@ -939,102 +831,112 @@ export default {
       }, 700);
     },
     handleCancelTerm(e) {
+      // console.log('handleCancelTerm is Fired');
       this.visibleTerm = false;
     },
     Room(e) {
+      // console.log('Room is Fired');
       this.room = e.target.value;
     },
     Bed(e) {
+      // console.log('Bed is Fired');
       this.bed = e.target.value;
     },
     Floor(e) {
+      // console.log('Floor is Fired');
       this.floor = e.target.value;
     },
     Kuy(value) {
+      // console.log('Kuy is Fired');
       this.kuy = value;
     },
     Nationality(value) {
+      // console.log('Nationality is Fired');
       this.nationality = value;
     },
     handleChangeRegion(value) {
+      // console.log('handleChangeRegion is Fired');
       this.region = value;
     },
     scrollToTop() {
+      // console.log('scrollToTop is Fired');
       window.scrollTo(0, 0);
     },
     handleSubmit(e) {
+      // console.log('handleSubmit is Fired');
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log(
-          //   {
-          //     resNumber: this.currDataPrepare["rsv-number"],
-          //     reslineNumber: this.currDataPrepare["rsvline-number"],
-          //     estAT: this.hour,
-          //     pickrequest: this.showPrice,
-          //     pickdetail:
-          //       this.showPrice == false ||
-          //       values.flight == " " ||
-          //       values.flight == undefined
-          //         ? ""
-          //         : values.flight,
-          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-          //     specialReq:
-          //       values.Request == " " || values.Request == undefined
-          //         ? ""
-          //         : values.Request,
-          //     guestPhnumber: this.phone,
-          //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
-          //     agreedTerm: true,
-          //     purposeOfStay: values.purpose,
-          //   },
-          //   "inputan"
-          // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post(this.hotelEndpoint + "preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: this.hour,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq:
-                      values.Request == " " || values.Request == undefined
-                        ? ""
-                        : values.Request,
-                    guestPhnumber: this.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-            // console.log(parsed, "inputan3");
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
-          this.scrollToTop();
-          this.save();
-          this.form.resetFields();
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: this.hour,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
+              guestPhnumber: this.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          // (async () => {
+          //   const tempParam = location.search.substring(1);
+          //   const parsed = await ky
+          //     .post(this.hotelEndpoint + "preCI/updateData", {
+          //       json: {
+          //         request: {
+          //           resNumber: this.currDataPrepare["rsv-number"],
+          //           reslineNumber: this.currDataPrepare["rsvline-number"],
+          //           estAT: this.hour,
+          //           pickrequest: this.showPrice,
+          //           pickdetail:
+          //             this.showPrice == false ||
+          //             values.flight == " " ||
+          //             values.flight == undefined
+          //               ? ""
+          //               : values.flight,
+          //           roomPreferences:
+          //             this.room + "$" + this.floor + "$" + this.bed,
+          //           specialReq:
+          //             values.Request == " " || values.Request == undefined
+          //               ? ""
+          //               : values.Request,
+          //           guestPhnumber: this.phone,
+          //           guestNationality: values.nationality,
+          //           guestCountry: values.country,
+          //           guestRegion: values.country != "INA" ? " " : values.region,
+          //           agreedTerm: true,
+          //           purposeOfStay: values.purpose,
+          //         },
+          //       },
+          //     })
+          //     .json();
+          // console.log(parsed, "inputan3");
+          //   const tempMessResult = parsed.response.messResult.split(" ");
+          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
+          // this.scrollToTop();
+          // this.save();
+          // this.form.resetFields();
         }
       });
     },
     save() {
+      // console.log('save is Fired');
       if (this.counter == this.id.length) {
         const mori =
           "{" +
@@ -1062,6 +964,7 @@ export default {
       this.agree = false;
     },
     back() {
+      // console.log('back is Fired');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -1070,10 +973,11 @@ export default {
     },
 
     onChange(e) {
+      // console.log('onChange is Fired');
       this.showPrice = e.target.checked;
     },
-    moment,
-    isNumber: function (evt) {
+    isNumber(evt) {
+      // console.log('isNumber is Fired');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1086,48 +990,52 @@ export default {
         return true;
       }
     },
-    formatDate(datum) {
-      const dDate =
-        String(moment(datum, "YYYY-MM-DD").date()).length == 1
-          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-          : String(moment(datum, "YYYY-MM-DD").date());
-      const dMonth =
-        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-          : String(moment(datum, "YYYY-MM-DD").month() + 1);
+  },
+  computed: {
+    formatDate() {
+      return (datum) => {
+        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(
+          2,
+          "0"
+        );
+        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+          2,
+          "0"
+        );
+        const dYear = String(moment(datum, "YYYY-MM-DD").year());
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
 
-      const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
-      return fixDate;
+        return fixDate;
+      };
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["lang-variable"] == nameKey
-      );
-
+    getLabels() {
       let fixLabel = "";
 
-      if (label["lang-value"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["lang-value"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["lang-value"].charAt(0).toUpperCase() +
-            label["lang-value"].slice(1);
-        } else {
-          fixLabel = label["lang-value"];
-        }
-      }
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["lang-variable"] == nameKey;
+        });
 
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+        if (label === undefined) {
+          fixLabel = "nameKey";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["lang-value"].charAt(0).toUpperCase() +
+              label["lang-value"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["lang-value"].toUpperCase();
+          } else {
+            fixLabel = label["lang-value"];
+          }
+        }
+
+        return fixLabel;
+      };
     },
   },
 };
