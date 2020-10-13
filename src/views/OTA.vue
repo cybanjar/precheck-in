@@ -90,7 +90,13 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date 
+                        v-model="date" 
+                        mask="DD/MM/YYYY" 
+                        :navigation-min-year-month="minCalendar"
+                        :options="date => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -146,7 +152,13 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date 
+                        v-model="date" 
+                        mask="DD/MM/YYYY" 
+                        :navigation-min-year-month="minCalendar"
+                        :options="date => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -202,7 +214,13 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date 
+                        v-model="date" 
+                        mask="DD/MM/YYYY" 
+                        :navigation-min-year-month="minCalendar"
+                        :options="date => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -258,7 +276,13 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="DD/MM/YYYY" no-unset>
+                      <q-date 
+                        v-model="date" 
+                        mask="DD/MM/YYYY" 
+                        :navigation-min-year-month="minCalendar"
+                        :options="date => date >= minDate && date <= maxDate"
+                        today-btn
+                        no-unset>
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -325,6 +349,9 @@ export default {
       email: "",
       dateFormat: "MM/DD/YY",
       date: "",
+      minCalendar: "2020/10",
+      minDate: "2020/10/10",
+      maxDate: "2020/10/10",
       hour: "",
       informationmodal: false,
       informationmodal1: false,
@@ -352,9 +379,9 @@ export default {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();
+    const yyyy = today.getFullYear();    
 
-    this.date = dd + "/" + mm + "/" + yyyy;
+    this.date = dd + "/" + mm + "/" + yyyy;    
 
     (async () => {
       //const tempParam = location.search.substring(1);
@@ -400,7 +427,7 @@ export default {
       // this.hotelCode = tempParam.hotelCode;
       const parsed = await ky
         .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
@@ -420,7 +447,7 @@ export default {
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
       const code = await ky
-        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
+        .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
           json: {
             request: {
               hotelCode: tempParam.hotelcode,
@@ -432,7 +459,7 @@ export default {
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];    
 
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
@@ -444,6 +471,7 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -457,6 +485,25 @@ export default {
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
+
+      const systemDateObj = this.tempsetup.filter((item,index) => {
+        return (
+          item.number1 === 9 &&
+          item.number2 === 4
+        );
+      });
+
+      const systemDate = systemDateObj[0]['setupvalue'];
+
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(2, "0");
+      const dMonth = String(moment(systemDate, "DD/MM/YYYY").month() + 1).padStart(2, "0");
+      const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
+      const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
+      
+      this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+      this.minDate = `${dYear}/${dMonth}/${dDate}`;
+      this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
+      this.minCalendar = `${dYear}/${dMonth}`;
 
       for (const i in this.tempsetup) {
         if (

@@ -615,6 +615,7 @@ export default {
       imgb64: "",
       hasUpload: false,
       hotelEndpoint: "",
+      hotelcode: "",
     };
   },
   watch: {
@@ -626,6 +627,7 @@ export default {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
     this.hotelEndpoint = this.$route.params.endpoint;
+    this.hotelcode = this.$route.params.hotelCode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
@@ -1178,7 +1180,10 @@ export default {
       });
     },
     disagree() {
-      router.push({ path: "mobilecheckin", query: { lang: this.langID } });
+      router.push({
+        path: "mobilecheckin",
+        query: { lang: this.langID, hotelCode: this.hotelcode },
+      });
       // router.push("mobilecheckin");
     },
     handleBlur() {
