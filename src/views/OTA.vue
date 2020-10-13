@@ -594,6 +594,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelCode: tempParam.hotelcode,
               },
             });
           }
@@ -656,6 +657,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelCode: tempParam.hotelcode,
               },
             });
           }
@@ -720,6 +722,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelCode: tempParam.hotelcode,
               },
             });
           }
@@ -781,6 +784,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelCode: tempParam.hotelcode,
               },
             });
           }
@@ -842,6 +846,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelCode: tempParam.hotelcode,
               },
             });
           }
