@@ -91,7 +91,7 @@
         </a-list>
       </div>
       <a-button
-        class="fixed-bottom-right mr-3 float-right"
+        class="mr-3 float-right"
         type="primary"
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
