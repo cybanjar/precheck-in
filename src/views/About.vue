@@ -758,7 +758,7 @@ export default {
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
-        this.term = tempTerm[0]["setupvalue"];
+        this.term = this.getLabels(tempTerm[0]["setupvalue"], "sentenceCase");
         const temRequest = this.tempsetup.filter((item, index) => {
           return item.number1 === 2 && item.setupflag === true;
         });
