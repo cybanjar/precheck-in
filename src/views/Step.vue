@@ -622,40 +622,6 @@ export default {
       key;
     },
   },
-  // created() {
-  //   const urlParams = new URLSearchParams(window.location.search);
-
-  //   this.bookingcode = urlParams.get("bookingcode");
-  //   this.loading = false;
-  //   this.termcondition = true;
-  //   // console.log(this.$route.params.id, "lempar");
-  //   if (this.bookingcode === "982010") {
-  //     router.push("listcheckin");
-  //   } else {
-  //     this.currDataPrepare = {
-  //       key: 1,
-  //       name: "R. Andito Rizky Pratama, Mr",
-  //       arrival: "12/12/2020",
-  //       departure: "15/12/2020",
-  //       adult: "2",
-  //       booking: "11020133",
-  //       email: "randitorizky@gmail.com",
-  //       tags: "Suites",
-  //       rs: 0,
-  //       description: "Ariella Calista Ichwan",
-  //       isSelected: false,
-  //     };
-  //     term;
-  //   }
-  //   if (this.$route.params.id != undefined) {
-  //     this.id = this.$route.params.id;
-  //     // this.counter = this.id.length;
-
-  //     this.currDataPrepare = this.id[this.counter];
-  //     this.counter += 1;
-  //   }
-  //    }
-  // },
   created() {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
@@ -788,8 +754,6 @@ export default {
           }
         }
 
-        // console.log(this.currData, "anjay");
-        // console.log(this.currData["0"], "anjay");
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -817,7 +781,6 @@ export default {
           obj["21"] = this.term1;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          // console.log(nietos, "tuwiiinnggg");
           router.push({
             name: "ListCheckIn",
             params: { foo: nietos, fighter: this.langID },
