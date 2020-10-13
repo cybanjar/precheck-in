@@ -2,27 +2,31 @@
   <div class="text-center">
     <canvas id="canvas" v-show="(flagKiosk)"></canvas>
     <p>
-      {{ getLabels("book_code") }} :
+      {{ getLabels("book_code", `titleCase`) }} :
       <span class="font-weight-bold">{{ taejin }}</span>
     </p>
     <p>
-      {{ getLabels("co_date") }} :
+      {{ getLabels("co_date", `titleCase`) }} :
       <span class="font-weight-bold">{{ iplyo }}</span>
     </p>
     <p>
-      {{ getLabels("ci_time") }} :
+      {{ getLabels("ci_time", `titleCase`) }} :
       <span class="font-weight-bold">{{ jegal }}</span>
     </p>
     <p>
       <a-button type="primary" :href="urlMCI">{{
-        getLabels("ci_now")
+        getLabels("ci_now", `titleCase`)
       }}</a-button>
     </p>
     <p>
       <br />
     </p>
-    <p v-show="(!flagKiosk)">{{ getLabels("success_wo_kiosk") }}</p>
-    <p v-show="(flagKiosk)">{{ getLabels("success_w_kiosk") }}</p>
+    <p v-show="(!flagKiosk)">
+      {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
+    </p>
+    <p v-show="(flagKiosk)">
+      {{ getLabels("success_w_kiosk", `sentenceCase`) }}
+    </p>
   </div>
 </template>
 
@@ -102,26 +106,33 @@ export default {
     })();
   },
   methods: {
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
-      return (
-        label["lang-value"].charAt(0).toUpperCase() +
-        label["lang-value"].slice(1)
-      );
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["lang-variable"] === nameKey) {
-          const splitStr = this.labels[x]["lang-value"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+
+      let fixLabel = "";
+
+      if (label["lang-value"] == "undefined") {
+        fixLabel = "";
+      } else {
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["lang-value"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["lang-value"].charAt(0).toUpperCase() +
+            label["lang-value"].slice(1);
+        } else {
+          fixLabel = label["lang-value"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };

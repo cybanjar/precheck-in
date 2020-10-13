@@ -32,7 +32,9 @@
         </a-col>
       </a-row>
       <div>
-        <h4 class="mt-3 text-center">{{ getLabels("guest_list", `titleCase`) }}</h4>
+        <h4 class="mt-3 text-center">
+          {{ getLabels("guest_list", `titleCase`) }}
+        </h4>
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
@@ -196,6 +198,11 @@ export default {
       }
 
       return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };

@@ -801,15 +801,11 @@ export default {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
-
         const jatah = [];
 
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase(),
-              `sentenceCase`
-            );
+            this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -965,71 +961,71 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log(
-          //   {
-          //     resNumber: this.currDataPrepare["rsv-number"],
-          //     reslineNumber: this.currDataPrepare["rsvline-number"],
-          //     estAT: this.hour,
-          //     pickrequest: this.showPrice,
-          //     pickdetail:
-          //       this.showPrice == false ||
-          //       values.flight == " " ||
-          //       values.flight == undefined
-          //         ? ""
-          //         : values.flight,
-          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-          //     specialReq:
-          //       values.Request == " " || values.Request == undefined
-          //         ? ""
-          //         : values.Request,
-          //     guestPhnumber: this.phone,
-          //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
-          //     agreedTerm: true,
-          //     purposeOfStay: values.purpose,
-          //   },
-          //   "inputan"
-          // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post(this.hotelEndpoint + "preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: this.hour,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq:
-                      values.Request == " " || values.Request == undefined
-                        ? ""
-                        : values.Request,
-                    guestPhnumber: this.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-            // console.log(parsed, "inputan3");
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
-          this.scrollToTop();
-          this.save();
-          this.form.resetFields();
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: this.hour,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
+              guestPhnumber: this.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          // (async () => {
+          //   const tempParam = location.search.substring(1);
+          //   const parsed = await ky
+          //     .post(this.hotelEndpoint + "preCI/updateData", {
+          //       json: {
+          //         request: {
+          //           resNumber: this.currDataPrepare["rsv-number"],
+          //           reslineNumber: this.currDataPrepare["rsvline-number"],
+          //           estAT: this.hour,
+          //           pickrequest: this.showPrice,
+          //           pickdetail:
+          //             this.showPrice == false ||
+          //             values.flight == " " ||
+          //             values.flight == undefined
+          //               ? ""
+          //               : values.flight,
+          //           roomPreferences:
+          //             this.room + "$" + this.floor + "$" + this.bed,
+          //           specialReq:
+          //             values.Request == " " || values.Request == undefined
+          //               ? ""
+          //               : values.Request,
+          //           guestPhnumber: this.phone,
+          //           guestNationality: values.nationality,
+          //           guestCountry: values.country,
+          //           guestRegion: values.country != "INA" ? " " : values.region,
+          //           agreedTerm: true,
+          //           purposeOfStay: values.purpose,
+          //         },
+          //       },
+          //     })
+          //     .json();
+          // console.log(parsed, "inputan3");
+          //   const tempMessResult = parsed.response.messResult.split(" ");
+          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
+          // this.scrollToTop();
+          // this.save();
+          // this.form.resetFields();
         }
       });
     },

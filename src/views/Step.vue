@@ -247,7 +247,9 @@
             </a-row>
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('country')">
+                <a-form-item
+                  :label="getLabels('country_of_residence', `titleCase`)"
+                >
                   <a-select
                     v-model="country"
                     v-decorator="[
@@ -276,7 +278,7 @@
                       v-decorator="[
                         'region',
                         {
-                          initialValue: currDataPrepare['guest-prov'],
+                          initialValue: currDataPrepare['guest-region'],
                           rules: [
                             {
                               required: true,
@@ -1244,30 +1246,33 @@ export default {
 
       return fixDate;
     },
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+
+      let fixLabel = "";
+
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };
