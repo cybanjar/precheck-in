@@ -535,6 +535,7 @@
               :title="getLabels('t_c', `titleCase`)"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
+              :closable="false"
             >
               <template slot="footer">
                 <a-button
