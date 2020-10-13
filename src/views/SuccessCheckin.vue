@@ -4,15 +4,16 @@
     <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
     <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
     <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
+    <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
     <p>
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{ getLabels("mci_success", `se`) }}</p>
+    <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
     <p>
       <a-button
         type="primary"
-        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
+        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
         >{{ getLabels("done") }}</a-button
       >
     </p>
@@ -40,23 +41,14 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.data.substring(
-      this.data.lastIndexOf(",") + 1,
-      this.data.lastIndexOf("!")
-    );
-    this.wifiPassword = this.data.substring(
-      this.data.lastIndexOf("!") + 1,
-      this.data.lastIndexOf("?")
-    );
-    this.arrangement = this.data.substring(
-      this.data.lastIndexOf("?") + 1,
-      this.data.lastIndexOf("}")
-    );
+    this.wifiAddress = this.$route.params.jun;
+    this.wifiPassword = this.$route.params.jen;
+    this.arrangement = this.$route.params.jon;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { width: 76 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -88,6 +80,7 @@ export default {
         (element) => element["program-variable"] == nameKey
       );
 
+      console.log(label["program-label1"]);
       let fixLabel = "";
 
       if (label["program-label1"] == "undefined") {

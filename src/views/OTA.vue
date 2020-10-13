@@ -9,6 +9,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -20,6 +21,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal1"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -31,6 +33,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal2"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -60,6 +63,7 @@
             :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -123,6 +127,7 @@
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -186,6 +191,7 @@
           <a-modal
             v-model="modalEmailAddress"
             :title="getLabels('email', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -249,6 +255,7 @@
           <a-modal
             v-model="modalMembershipID"
             :title="getLabels('membership_id', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}

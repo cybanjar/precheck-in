@@ -11,6 +11,7 @@
         :title="getLabels('t_c')"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
@@ -176,11 +177,17 @@
                       { initialValue: purpose, rules: [{ required: true }] },
                     ]"
                   >
-                    <a-select-option
+                    <!--<a-select-option
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
                       >{{ item.setupvalue }}</a-select-option
+                    >-->
+                    <a-select-option
+                      v-for="item in FilterPurposeofStay"
+                      :key="item"
+                      :value="item.setupvalue"
+                      >{{ getLabels(item.setupvalue.toLowerCase()) }}</a-select-option
                     >
                   </a-select>
                 </a-form-item>
@@ -704,9 +711,9 @@ export default {
             this.scanid = !this.tempsetup[i]["setupflag"];
             // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(
+            /*this.tempsetup[i].setupvalue = this.getLabels(
               this.tempsetup[i].setupvalue.toLowerCase()
-            );
+            );*/
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -890,6 +897,7 @@ export default {
       }
     },
     next() {
+      console.log(this.hasUpload);
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
@@ -947,14 +955,14 @@ export default {
         "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
         this.minimumDeposit +
         "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-        this.currDataPrepare["gast"].replace(/ /g, "") +
+        this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
         "&billingPhone=" +
         this.form.getFieldValue(["phone"][0]) +
         "&billingEmail=" +
         this.form.getFieldValue(["email"][0]) +
         "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
         token.toString() +
-        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
+        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
@@ -1101,17 +1109,11 @@ export default {
           this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "," +
-          this.wifiAddress +
-          "!" +
-          this.wifiPassword +
-          "?" +
-          this.currDataPrepare["argt-str"] +
           "}";
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        router.push({ name: "SuccessCheckIn", params: { jin: mori, jun: this.wifiAddress, jen: this.wifiPassword, jon: this.currDataPrepare["argt-str"] } });
         //} else {
         //this.paymentModal = true;
         // }
