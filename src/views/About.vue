@@ -300,7 +300,7 @@
                   ]"
                   outlined
                   dense
-                  mask="#################"
+                  mask="################"
                 />
               </a-form-item>
             </a-col>

@@ -82,10 +82,18 @@
       scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="current === 0">{{ getLabels("guest_detail") }}</h2>
-          <h2 v-show="current === 1">{{ getLabels("guest_detail") }}</h2>
-          <h2 v-show="current === 2">{{ getLabels("scan_id") }}</h2>
-          <h2 v-show="current === 3">{{ getLabels("deposit_payment") }}</h2>
+          <h2 v-show="current === 0">
+            {{ getLabels("guest_detail", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 1">
+            {{ getLabels("guest_detail", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 2">
+            {{ getLabels("scan_id", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 3">
+            {{ getLabels("deposit_payment", `titleCase`) }}
+          </h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -627,7 +635,7 @@ export default {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
     this.hotelEndpoint = this.$route.params.endpoint;
-    this.hotelcode = this.$route.params.hotelCode;
+    this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
@@ -781,6 +789,7 @@ export default {
           obj["19"] = this.countries;
           obj["20"] = this.region;
           obj["21"] = this.term1;
+          obj["22"] = this.hotelcode;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({
@@ -832,6 +841,7 @@ export default {
       this.countries = this.$route.params.id["setup"]["19"];
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
+      this.hotelcode = this.$route.params.id["setup"]["22"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
 
@@ -1182,7 +1192,7 @@ export default {
     disagree() {
       router.push({
         path: "mobilecheckin",
-        query: { lang: this.langID, hotelCode: this.hotelcode },
+        query: { lang: this.langID, hotelcode: this.hotelcode },
       });
       // router.push("mobilecheckin");
     },

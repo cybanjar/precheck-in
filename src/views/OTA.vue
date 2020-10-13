@@ -90,13 +90,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -152,13 +153,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -214,13 +216,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -276,13 +279,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -373,15 +377,16 @@ export default {
       memberPhoto: "",
       member: "",
       loading: true,
+      confirmLoading: false
     };
   },
   created() {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();    
+    const yyyy = today.getFullYear();
 
-    this.date = dd + "/" + mm + "/" + yyyy;    
+    this.date = dd + "/" + mm + "/" + yyyy;
 
     (async () => {
       //const tempParam = location.search.substring(1);
@@ -424,7 +429,7 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
-      // this.hotelCode = tempParam.hotelCode;
+      this.hotelCode = tempParam["hotelcode"];
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -447,20 +452,22 @@ export default {
       this.labels = JSON.parse(localStorage.getItem("labels"));
 
       const code = await ky
-        .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
-          json: {
-            request: {
-              hotelCode: tempParam.hotelcode,
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
+          {
+            json: {
+              request: {
+                hotelCode: this.hotelCode,
+              },
             },
-          },
-        })
+          }
+        )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];    
-
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -471,7 +478,7 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
-      
+
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -486,20 +493,22 @@ export default {
         "HH:mm"
       ).valueOf();
 
-      const systemDateObj = this.tempsetup.filter((item,index) => {
-        return (
-          item.number1 === 9 &&
-          item.number2 === 4
-        );
+      const systemDateObj = this.tempsetup.filter((item, index) => {
+        return item.number1 === 9 && item.number2 === 4;
       });
 
-      const systemDate = systemDateObj[0]['setupvalue'];
+      const systemDate = systemDateObj[0]["setupvalue"];
 
-      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(2, "0");
-      const dMonth = String(moment(systemDate, "DD/MM/YYYY").month() + 1).padStart(2, "0");
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
+        2,
+        "0"
+      );
+      const dMonth = String(
+        moment(systemDate, "DD/MM/YYYY").month() + 1
+      ).padStart(2, "0");
       const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
       const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
-      
+
       this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
@@ -641,7 +650,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelCode: tempParam.hotelcode,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -704,7 +713,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelCode: tempParam.hotelcode,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -769,7 +778,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelCode: tempParam.hotelcode,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -831,7 +840,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelCode: tempParam.hotelcode,
+                hotelcode: this.hotelCode,
               },
             });
           }
@@ -893,7 +902,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelCode: tempParam.hotelcode,
+                hotelcode: this.hotelCode,
               },
             });
           }
