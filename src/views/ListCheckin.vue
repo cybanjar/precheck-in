@@ -104,9 +104,7 @@ export default {
       selectedData: [],
       gambar: "",
       hotelname: "",
-      information: {
-        borderRadius: "4px",
-      },
+      information: {},
       lemparsetup: [],
       fairy: {},
       labels: [],
