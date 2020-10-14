@@ -99,6 +99,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -163,6 +164,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -227,6 +229,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -291,6 +294,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
