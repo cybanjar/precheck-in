@@ -13,8 +13,8 @@
     <p>
       <a-button
         type="primary"
-        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
-        >{{ getLabels("done") }}</a-button
+        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
+        >{{ getLabels("done", `titleCase`) }}</a-button
       >
     </p>
   </div>
@@ -36,7 +36,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$route.params, "nyampe");
+    // console.log(this.$route.params.jin, "nyampe");
     this.data = this.$route.params.jin;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
@@ -48,7 +48,7 @@ export default {
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 76 }
+      { width: 300 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -75,34 +75,30 @@ export default {
     // })();
   },
   methods: {
-    getLabels(nameKey, used) {
+    getLabels(nameKey) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-
-      console.log(label["program-label1"]);
-      let fixLabel = "";
-
-      if (label["program-label1"] == "undefined") {
-        fixLabel = "";
+      if (label != undefined) {
+        return (
+          label["program-label1"].charAt(0).toUpperCase() +
+          label["program-label1"].slice(1)
+        );
       } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
+        return "";
       }
-
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+      /*for (let x = 0; x < this.labels.length; x++) {
+        if (this.labels[x]["program-variable"] === nameKey) {
+          const splitStr = this.labels[x]["program-label1"]
+            .toLowerCase()
+            .split(" ");
+          for (let y = 0; y < splitStr.length; y++) {
+            splitStr[y] =
+              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
+          }
+          return splitStr.join(" ");
+        }
+      }*/
     },
     goBack() {
       route;

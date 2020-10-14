@@ -109,22 +109,22 @@
           />
           <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
           <p>
-            {{ getLabels("arrival") }}:
+            {{ getLabels("arrival", `titleCase`) }}:
             <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure") }}:
+            {{ getLabels("departure", `titleCase`) }}:
             <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
             <br />
-            {{ getLabels("book_code") }}:
+            {{ getLabels("book_code", `titleCase`) }}:
             <strong>{{ this.currDataPrepare.resnr }}</strong>
             <br />
-            {{ getLabels("room_number") }} :
+            {{ getLabels("room_number", `titleCase`) }} :
             <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
 
           <div class="steps-content" v-show="current === 0">
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('email')">
+                <a-form-item :label="getLabels('email', `titleCase`)">
                   <a-input
                     v-decorator="[
                       'email',
@@ -146,7 +146,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('phone_number')">
+                <a-form-item :label="getLabels('phone_number', `titleCase`)">
                   <q-input
                     v-decorator="[
                       'phone',
@@ -170,7 +170,7 @@
             </a-row>
             <a-row class :gutter="[16, 8]">
               <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item :label="getLabels('purpose_stay')">
+                <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
                   <a-select
                     v-decorator="[
                       'purpose',
@@ -210,7 +210,7 @@
           <div class="steps-content" v-show="current === 1">
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('nationality')">
+                <a-form-item :label="getLabels('nationality', `titleCase`)">
                   <a-select
                     v-decorator="[
                       'nationality',
@@ -287,7 +287,7 @@
 
               <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
                 <div v-if="country === 'INA' || country === 'ina'">
-                  <a-form-item :label="getLabels('region')">
+                  <a-form-item :label="getLabels('region', `titleCase`)">
                     <a-select
                       @change="handleChangeRegion"
                       v-decorator="[
@@ -313,7 +313,7 @@
                   </a-form-item>
                 </div>
                 <div v-else>
-                  <a-form-item :label="getLabels('state')">
+                  <a-form-item :label="getLabels('state', `titleCase`)">
                     <a-input
                       v-decorator="[
                         'State',
@@ -364,7 +364,7 @@
           <div class="steps-content" v-show="current === 2">
             <a-row class :gutter="[16, 8]">
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('upload_id')">
+                <a-form-item :label="getLabels('upload_id', `titleCase`)">
                   <input
                     class
                     type="file"
@@ -388,7 +388,7 @@
           <div class="steps-content" v-show="current === 3">
             <a-row :gutter="[16, 8]" v-if="pay == false">
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('deposit_payment')">
+                <a-form-item :label="getLabels('deposit_payment', `titleCase`)">
                   <h2>
                     <strong>
                       {{ this.currDataPrepare["currency-usage"] }}
@@ -424,9 +424,9 @@
             </a-row>
             <a-row :gutter="[16, 8]" v-else>
               <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('deposit')">
+                <a-form-item :label="getLabels('deposit', `titleCase`)">
                   <h2>
-                    <strong>{{ getLabels("cash_basis") }}</strong>
+                    <strong>{{ getLabels("cash_basis", `titleCase`) }}</strong>
                   </h2>
                 </a-form-item>
               </a-col>
@@ -435,7 +435,7 @@
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
                   <a-checkbox v-model="pay">
-                    {{ getLabels("term_cash_basis") }}
+                    {{ getLabels("term_cash_basis", `titleCase`) }}
                   </a-checkbox>
                 </p>
               </a-col>
@@ -444,7 +444,7 @@
           <div class="steps-action">
             <div v-if="y">
               <a-button v-if="current > 0" @click="prev">{{
-                getLabels("prev")
+                getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
 
@@ -453,7 +453,7 @@
               style="margin-left: 8px;"
               type="primary"
               @click="next"
-              >{{ getLabels("next") }}</a-button
+              >{{ getLabels("next", `titleCase`) }}</a-button
             >
           </div>
 
@@ -483,7 +483,7 @@
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
-                  >{{ getLabels("ci_now") }}</a-button
+                  >{{ getLabels("ci_now", `titleCase`) }}</a-button
                 >
               </a-form-item>
             </a-col>
@@ -1083,27 +1083,27 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-        })();
+        // (async () => {
+        //   const parsed = await ky
+        //     .post(this.hotelEndpoint + "mobileCI/resCI", {
+        //       json: {
+        //         request: {
+        //           rsvNumber: this.currDataPrepare.resnr,
+        //           rsvlineNumber: this.currDataPrepare.reslinnr,
+        //           userInit: "01",
+        //           newRoomno: this.currDataPrepare.zinr,
+        //           purposeOfStay: this.form.getFieldValue("purpose"),
+        //           email: this.form.getFieldValue("email"),
+        //           guestPhnumber: this.form.getFieldValue("phone"),
+        //           guestNation: this.form.getFieldValue("nationality"),
+        //           guestCountry: this.form.getFieldValue("country"),
+        //           guestRegion: this.form.getFieldValue("region"),
+        //           base64image: this.imgb64,
+        //         },
+        //       },
+        //     })
+        //     .json();
+        // })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +
