@@ -99,7 +99,6 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
-                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -164,7 +163,6 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
-                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -229,7 +227,6 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
-                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -294,7 +291,6 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
-                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                       >
@@ -386,7 +382,7 @@ export default {
       memberPhoto: "",
       member: "",
       loading: true,
-      confirmLoading: false
+      confirmLoading: false,
     };
   },
   created() {
@@ -408,22 +404,8 @@ export default {
             ? item.split("=")[1]
             : "No query strings available";
         });
-      if (tempParam.book != undefined) {
-        this.checkin = tempParam.citime.replace(/%3A/g, ":");
-        if ("14:00" < this.checkin) {
-          this.informationmodal = true;
-        } else {
-          this.bookingcode = tempParam.book;
-          this.date = tempParam.codate.replace(/%2F/g, "/");
-          this.handleOk();
-        }
-      } else if (tempParam.resultCd == "0000") {
-        const tmpParam = CookieS.get("data");
-        this.bookingcode = tmpParam.book;
-        this.date = tmpParam.codate;
-        this.payment = tmpParam.payment;
-        this.handleOk();
-      }
+      this.hotelCode = tempParam["hotelcode"];
+      
       this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
@@ -436,7 +418,6 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
-      this.hotelCode = tempParam["hotelcode"];
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -525,12 +506,27 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
+      if (tempParam.book != undefined) {
+        this.checkin = tempParam.citime.replace(/%3A/g, ":");
+        if ("14:00" < this.checkin) {
+          this.informationmodal = true;
+        } else {
+          this.bookingcode = tempParam.book;
+          this.date = tempParam.codate.replace(/%2F/g, "/");
+          this.handleOk();
+        }
+      } else if (tempParam.resultCd == "0000") {
+        const tmpParam = CookieS.get("data");
+        this.bookingcode = tmpParam.book;
+        this.date = tmpParam.codate;
+        this.payment = tmpParam.payment;
+        this.handleOk();
+      }
     })();
     this.loading = false;
   },
   methods: {
     onChange(date, dateString) {
-      // console.log(date, dateString);
       this.date = dateString;
     },
     showModalBookingCode() {
@@ -595,10 +591,7 @@ export default {
     },
     handleOk() {
       const reservation = [];
-      const dDate = moment(this.date, "DD/MM/YYYY").date();
-      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
-      const dYear = moment(this.date, "DD/MM/YYYY").year();
-      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      const coDate = this.date;
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -651,7 +644,6 @@ export default {
             });
           }
         })();
-        this.modalBookingCode = false;
       }
     },
     handleOkBO() {
@@ -916,7 +908,8 @@ export default {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
         });
-        if (label === undefined) {          
+        if (label === undefined) {
+          fixLabel = "";
         } else {
           if (used === "titleCase") {
             fixLabel = label["program-label1"].replace(/\w\S*/g, function (

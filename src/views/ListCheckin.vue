@@ -1,33 +1,25 @@
 <template>
   <div>
     <div class="home">
-      <a-row
-        class="header-brandings"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-        </a-col>
-        <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            :src="gambar"
-            alt="Image Loading"
-          />
-          <div class="overlay">
-            <div class="text">{{ hotelname }}</div>
-          </div>
-          <div class="visible">
-            <div class="online-checkin-mobile">
-              <p class="text-center">Online Check-In</p>
-            </div>
-          </div>
-        </a-col>
-      </a-row>
+      <h5 class="text-black text-center font-weight-bold visible">
+        ONLINE CHECK-IN
+      </h5>
+      <div class="row justify-between" :style="information">
+        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
+          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
+        </div>
+        <div class="col-md col-md-3 col-xs-12">
+          <q-card flat>
+            <q-img :src="gambar">
+              <div
+                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
+              >
+                {{ hotelname }}
+              </div>
+            </q-img>
+          </q-card>
+        </div>
+      </div>
       <div>
         <h1 class="mt-3 text-center">
           {{ getLabels("guest_list", `titleCase`) }}
