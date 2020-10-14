@@ -55,7 +55,7 @@ export default {
       // }
     );
 
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
+    QRCode.toDataURL(success, { errorCorrectionLevel: "H", width: "300", height: "auto" }).then((url) => {
       // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
@@ -80,7 +80,7 @@ export default {
         (element) => element["program-variable"] == nameKey
       );
       let fixLabel = "";
-      if (label["program-label1"] == "undefined") {
+      if (label == undefined) {
         fixLabel = "";
       } else {
         if (used === "titleCase") {
@@ -95,19 +95,19 @@ export default {
       }
 
       return fixLabel;
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
-        }
-      }*/
-      /*  */
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    },
+    formatDate(datum){
+        const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2,"0");
+        const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(2,"0");
+        const dYear = String(moment(datum, "MM/DD/YYYY").year());
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+
+        return fixDate;
     },
     goBack() {
       route;

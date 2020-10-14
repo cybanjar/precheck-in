@@ -81,7 +81,7 @@ export default {
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { errorCorrectionLevel: "H", width: "300", height: "auto" }
+      { errorCorrectionLevel: "H" }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
