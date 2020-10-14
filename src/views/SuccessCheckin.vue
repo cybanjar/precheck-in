@@ -55,7 +55,7 @@ export default {
       // }
     );
 
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H", width: "300", height: "auto" }).then((url) => {
+    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
       // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
