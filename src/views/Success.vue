@@ -56,7 +56,7 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
-    this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
+    this.taejin = this.data.substring(1, this.data.indexOf(";") );
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,
       this.data.lastIndexOf(",")
@@ -66,7 +66,7 @@ export default {
       this.data.lastIndexOf("}")
     );
     this.urlMCI =
-      "http://vhp-online.com/mobilecheckin?lang=" +
+      "http://localhost:8080/mobilecheckin?lang=" +
       this.$route.params.jun +
       "&book=" +
       this.taejin +

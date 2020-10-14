@@ -687,6 +687,8 @@ export default {
           JSON.stringify(parsed.response.languagesList["languages-list"])
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
+        this.langID =
+          parsed.response.languagesList["languages-list"]["0"]["lang-id"];
         const tempMessResult = parsed.response.messResult;
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
         if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
@@ -813,6 +815,7 @@ export default {
           obj["16"] = this.province;
           obj["17"] = this.hotelEndpoint;
           obj["18"] = this.hotelCode;
+          obj["19"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({ name: "List", params: { foo: nietos } });
@@ -868,6 +871,7 @@ export default {
       this.province = this.$route.params.id["setup"]["16"];
       this.hotelEndpoint = this.$route.params.id["setup"]["17"];
       this.hotelCode = this.$route.params.id["setup"]["18"];
+      this.langID = this.$route.params.id["setup"]["19"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
