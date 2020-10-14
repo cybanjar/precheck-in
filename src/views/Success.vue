@@ -7,7 +7,7 @@
     </p>
     <p>
       {{ getLabels("co_date", `titleCase`) }} :
-      <span class="font-weight-bold">{{ iplyo }}</span>
+      <span class="font-weight-bold">{{ formatDate(iplyo) }}</span>
     </p>
     <p>
       {{ getLabels("ci_time", `titleCase`) }} :
@@ -21,10 +21,10 @@
     <p>
       <br />
     </p>
-    <p v-show="(!flagKiosk)">
+    <p v-show="(!flagKiosk)" class="p-mobile">
       {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
     </p>
-    <p v-show="(flagKiosk)">
+    <p v-show="(flagKiosk)" class="p-mobile">
       {{ getLabels("success_w_kiosk", `sentenceCase`) }}
     </p>
   </div>
@@ -33,14 +33,15 @@
 <script>
 import QRCode from "qrcode";
 import ky from "ky";
+import moment from "moment";
 
 export default {
   data() {
     return {
-      taejin: "",
-      iplyo: "",
-      jegal: "",
-      url: "",
+      taejin: "", //Booking Code
+      iplyo: "", // Checkout Date
+      jegal: "", // Check-in Time
+      url: "", 
       labels: [],
       flagKiosk: false,
       urlMCI: "",
@@ -56,6 +57,7 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
+    
     this.taejin = this.data.substring(1, this.data.indexOf(";") );
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,
@@ -107,13 +109,14 @@ export default {
   },
   methods: {
     getLabels(nameKey, used) {
+      
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
 
       let fixLabel = "";
 
-      if (label["lang-value"] == "undefined") {
+      if (label == undefined) {
         fixLabel = "";
       } else {
         if (used === "titleCase") {
@@ -133,6 +136,14 @@ export default {
       return label.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
+    },
+    formatDate(datum){
+        const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2,"0");
+        const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(2,"0");
+        const dYear = String(moment(datum, "MM/DD/YYYY").year());
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+
+        return fixDate;
     },
   },
 };
