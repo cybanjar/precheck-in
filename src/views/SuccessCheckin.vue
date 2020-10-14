@@ -75,18 +75,26 @@ export default {
     // })();
   },
   methods: {
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+      let fixLabel = "";
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        return "";
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
+        }
       }
+
+      return fixLabel;
       /*for (let x = 0; x < this.labels.length; x++) {
         if (this.labels[x]["program-variable"] === nameKey) {
           const splitStr = this.labels[x]["program-label1"]
@@ -99,6 +107,7 @@ export default {
           return splitStr.join(" ");
         }
       }*/
+      /*  */
     },
     goBack() {
       route;

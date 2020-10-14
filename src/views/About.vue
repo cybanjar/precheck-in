@@ -1087,7 +1087,7 @@ export default {
         });
 
         if (label === undefined) {
-          fixLabel = "nameKey";
+          fixLabel = "";
         } else {
           if (used === "titleCase") {
             fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {

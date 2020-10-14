@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <canvas id="canvas" v-show="(flagKiosk)"></canvas>
+    <canvas id="canvas" v-show="(!flagKiosk)"></canvas>
     <p>
       {{ getLabels("book_code", `titleCase`) }} :
       <span class="font-weight-bold">{{ taejin }}</span>

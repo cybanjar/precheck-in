@@ -932,7 +932,7 @@ export default {
         });
 
         if (label === undefined) {
-          fixLabel = nameKey;
+          fixLabel = "";
         } else {
           if (used === "titleCase") {
             fixLabel = label["program-label1"].replace(/\w\S*/g, function (
