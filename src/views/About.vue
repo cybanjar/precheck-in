@@ -634,6 +634,7 @@ export default {
       information: {
         backgroundColor: "$green",
         color: "$white",
+        borderRadius: "4px",
       },
       tempsetup: [],
       totalnumber1: 0,
