@@ -38,47 +38,70 @@
       <!-- </div> -->
       <!-- test -->
       <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
-      <a-row
-        class="header-branding mb-3"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col class="pl-3 pt-3 invisible" :span="15" :md="15" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-        </a-col>
-        <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            :src="gambar"
-            alt="Image Loading"
-          />
-          <div class="overlay visible">
-            <div class="text">{{ hotelname }}</div>
-          </div>
-          <div class="visible">
-            <div class="online-checkin-mobile">
-              <p class="text-center">Online Check-In</p>
-            </div>
-          </div>
-          <!-- <div class="invisible">
-            <div class="gear-setting">
-              <a-icon
-                type="setting"
-                :style="{ fontSize: '1.5rem' }"
-                class="float-right align-self-center"
-                theme="filled"
-                @click="imageModal"
-              />
-            </div>
-          </div>-->
-        </a-col>
-        <!-- <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold">ONLINE CHECK-IN</h1>
-        </a-col>-->
-      </a-row>
+      <h5 class="text-black text-center font-weight-bold visible">
+        ONLINE CHECK-IN
+      </h5>
+      <div class="row justify-between" :style="information">
+        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
+          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
+          <h6
+            v-if="currDataPrepare['guest-member-name'] !== ''"
+            class="text-white font-weight-bold"
+            :style="information"
+          >
+            {{ this.currDataPrepare["gast"] }}
+            {{ currDataPrepare["guest-member-name"] }}
+          </h6>
+          <h6 v-else class="text-white font-weight-bold" :style="information">
+            {{ this.currDataPrepare["gast"] }}
+          </h6>
+          <p class="ant-card-meta-description text-white" :style="information">
+            {{ getLabels("arrival", `titleCase`) }}:
+            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
+            {{ getLabels("departure", `titleCase`) }}:
+            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
+            <br />
+            {{ getLabels("book_code", `titleCase`) }}:
+            <strong>{{ this.currDataPrepare.resnr }}</strong>
+            {{ getLabels("room_number", `titleCase`) }}:
+            <strong>{{ this.currDataPrepare.zinr }}</strong>
+          </p>
+        </div>
+        <div class="col-md col-md-3 col-xs-12">
+          <q-card flat>
+            <q-img class="" :src="gambar">
+              <div
+                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
+              >
+                {{ hotelname }}
+              </div>
+            </q-img>
+          </q-card>
+        </div>
+        <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
+          <h6
+            v-if="currDataPrepare['guest-member-name'] !== ''"
+            class="text-white font-weight-bold"
+          >
+            {{ this.currDataPrepare["gast"] }}
+            {{ currDataPrepare["guest-member-name"] }}
+          </h6>
+          <h6 v-else class="text-white font-weight-bold">
+            {{ this.currDataPrepare["gast"] }},
+          </h6>
+          <p class="ant-card-meta-description text-white">
+            {{ getLabels("arrival", `titleCase`) }}:
+            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
+            {{ getLabels("departure", `titleCase`) }}:
+            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
+            <br />
+            {{ getLabels("book_code", `titleCase`) }}:
+            <strong>{{ this.currDataPrepare.resnr }}</strong>
+            {{ getLabels("room_number", `titleCase`) }}:
+            <strong>{{ this.currDataPrepare.zinr }}</strong>
+          </p>
+        </div>
+      </div>
       <!-- precheckin: {{precheckin}}
       scandID: {{scanid}}-->
       <div>
@@ -95,31 +118,6 @@
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
-          <!-- <h2 class="main-guest-title font-weight-bold">
-            R. Andito Rizky Pratama
-            <br />
-            <small>Ariella Calista Ichwan</small>
-          </h2>-->
-          <a-alert
-            :message="this.currDataPrepare['gast']"
-            :description="this.currDataPrepare.description"
-            type="info"
-            show-icon
-            class="mb-3"
-          />
-          <!-- <h4 class="main-guest-title font-white font-weight-bold">{{currDataPrepare.description}}</h4> -->
-          <p>
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
-            <br />
-            {{ getLabels("book_code", `titleCase`) }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            <br />
-            {{ getLabels("room_number", `titleCase`) }} :
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
-          </p>
 
           <div class="steps-content" v-show="current === 0">
             <a-row class :gutter="[16, 8]">
