@@ -187,7 +187,9 @@
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
-                      >{{ getLabels(item.setupvalue.toLowerCase()) }}</a-select-option
+                      >{{
+                        getLabels(item.setupvalue.toLowerCase())
+                      }}</a-select-option
                     >
                   </a-select>
                 </a-form-item>
@@ -596,14 +598,8 @@ export default {
       termcondition: false,
       information: {
         backgroundColor: "$green",
-        // border: "none",
-        // borderBottom: "3px solid black",
         color: "$white",
-        // padding: "24px 0 0px 0",
-        // lineHeight: "0.625rem",
-        // padding: 0,
-        // height: "5rem",
-        // marginBottom: "1rem !important",
+        borderRadius: "4px",
       },
       hour: "",
       FilterPurposeofStay: [],
@@ -1113,7 +1109,15 @@ export default {
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-        router.push({ name: "SuccessCheckIn", params: { jin: mori, jun: this.wifiAddress, jen: this.wifiPassword, jon: this.currDataPrepare["argt-str"] } });
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            jin: mori,
+            jun: this.wifiAddress,
+            jen: this.wifiPassword,
+            jon: this.currDataPrepare["argt-str"],
+          },
+        });
         //} else {
         //this.paymentModal = true;
         // }
