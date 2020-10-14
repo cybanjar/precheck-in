@@ -9,6 +9,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -20,6 +21,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal1"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -31,6 +33,7 @@
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal2"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="submit" type="primary" @click="goOTA">{{
@@ -60,6 +63,7 @@
             :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -90,13 +94,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -122,6 +127,7 @@
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -152,13 +158,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -184,6 +191,7 @@
           <a-modal
             v-model="modalEmailAddress"
             :title="getLabels('email', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -214,13 +222,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -246,6 +255,7 @@
           <a-modal
             v-model="modalMembershipID"
             :title="getLabels('membership_id', `titleCase`)"
+            :closable="false"
             ><template slot="footer">
               <a-button key="back" @click="handleCancel">
                 {{ getLabels("cancel", `titleCase`) }}
@@ -276,13 +286,14 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date 
-                        v-model="date" 
-                        mask="DD/MM/YYYY" 
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
-                        :options="date => date >= minDate && date <= maxDate"
+                        :options="(date) => date >= minDate && date <= maxDate"
                         today-btn
-                        no-unset>
+                        no-unset
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -332,11 +343,9 @@ Vue.use(Quasar, {
   },
   plugins: {},
 });
-
 import moment from "moment";
 import ky from "ky";
 import CookieS from "vue-cookies";
-
 export default {
   data() {
     return {
@@ -373,21 +382,15 @@ export default {
       memberPhoto: "",
       member: "",
       loading: true,
-      confirmLoading: true,
-      webLabel: {
-        information: ''
-      }
+      confirmLoading: false
     };
   },
   created() {
-    console.log('Log','Start Created');
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();    
-
-    this.date = dd + "/" + mm + "/" + yyyy;    
-
+    const yyyy = today.getFullYear();
+    this.date = dd + "/" + mm + "/" + yyyy;
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
@@ -429,7 +432,7 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
-      // this.hotelCode = tempParam.hotelCode;
+      this.hotelCode = tempParam["hotelcode"];
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -450,23 +453,23 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
-      console.log(this.labels);
-
       const code = await ky
-        .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
-          json: {
-            request: {
-              hotelCode: tempParam.hotelcode,
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
+          {
+            json: {
+              request: {
+                hotelCode: this.hotelCode,
+              },
             },
-          },
-        })
+          }
+        )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];    
-
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -477,7 +480,6 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
-      
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -485,32 +487,28 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
-
-      const systemDateObj = this.tempsetup.filter((item,index) => {
-        return (
-          item.number1 === 9 &&
-          item.number2 === 4
-        );
+      const systemDateObj = this.tempsetup.filter((item, index) => {
+        return item.number1 === 9 && item.number2 === 4;
       });
-
-      const systemDate = systemDateObj[0]['setupvalue'];
-
-      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(2, "0");
-      const dMonth = String(moment(systemDate, "DD/MM/YYYY").month() + 1).padStart(2, "0");
+      const systemDate = systemDateObj[0]["setupvalue"];
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
+        2,
+        "0"
+      );
+      const dMonth = String(
+        moment(systemDate, "DD/MM/YYYY").month() + 1
+      ).padStart(2, "0");
       const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
       const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
-      
       this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -519,62 +517,46 @@ export default {
           this.checkin = this.tempsetup[i]["setupvalue"];
         }
       }
-
       const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
     })();
-    // this.loading = false;
-
-    console.log('Log','Finish Created');
+    this.loading = false;
   },
-
-  methods: {    
+  methods: {
     onChange(date, dateString) {
-      console.log('Log','OnChange is Fired');
       // console.log(date, dateString);
       this.date = dateString;
     },
     showModalBookingCode() {
-      console.log('Log','showModalBookingCode is Fired');
       this.modalBookingCode = true;
     },
     showModalGuestName() {
-      console.log('Log','showModalGuestName is Fired');
       this.modalGuestName = true;
     },
     showModalEmailAddress() {
-      console.log('Log','showModalEmailAddress is Fired');
       this.modalEmailAddress = true;
     },
     showModalMembershipID() {
-      console.log('Log','showModalMembershipID is Fired');
       this.modalMembershipID = true;
     },
     errorbo() {
-      console.log('Log','errorbo is Fired');
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
     },
     errorname() {
-      console.log('Log','errorname is Fired');
       this.$message.error(this.getLabels("input_guest_name", `sentenceCase`));
     },
     erroremail() {
-      console.log('Log','erroremail is Fired');
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     errormember() {
-      console.log('Log','errormember is Fired');
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
     },
     errorco() {
-      console.log('Log','errorco is Fired');
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
     error() {
-      console.log('Log','error is Fired');
       this.$message.error(
         this.getLabels("input_bookcode") +
           ", " +
@@ -582,7 +564,6 @@ export default {
       );
     },
     errorName() {
-      console.log('Log','errorName is Fired');
       this.$message.error(
         this.getLabels("guest_name") +
           ", " +
@@ -590,7 +571,6 @@ export default {
       );
     },
     errorMail() {
-      console.log('Log','errorMail is Fired');
       this.$message.error(
         this.getLabels("input_email") +
           ", " +
@@ -598,7 +578,6 @@ export default {
       );
     },
     errorMember() {
-      console.log('Log','errorMember is Fired');
       this.$message.error(
         this.getLabels("input_member") +
           ", " +
@@ -606,13 +585,11 @@ export default {
       );
     },
     goOTA() {
-      console.log('Log','goOTA is Fired');
       this.informationmodal = false;
       this.informationmodal1 = false;
       this.informationmodal2 = false;
     },
     handleOk() {
-      console.log('Log','handleOk is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -665,16 +642,15 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
-
         this.modalBookingCode = false;
       }
     },
     handleOkBO() {
-      console.log('Log','handleOkBO is Fired');
       this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
@@ -728,11 +704,11 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
-
         setTimeout(() => {
           this.modalBookingCode = false;
           this.confirmLoading = false;
@@ -740,7 +716,6 @@ export default {
       }
     },
     handleOkName() {
-      console.log('Log','handleOkName is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -793,16 +768,15 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
-
         this.modalGuestName = false;
       }
     },
     handleOkEmail() {
-      console.log('Log','handleOkEmail is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -855,16 +829,15 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
-
         this.modalEmailAddress = false;
       }
     },
     handleOkMember() {
-      console.log('Log','handleOkMember is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -917,33 +890,31 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
               },
             });
           }
         })();
-
         this.modalMembershipID = false;
       }
     },
     handleCancel() {
-      console.log('Log','handleCancel is Fired');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
-    }    
+    },
   },
-  computed: {    
-    getLabels() {      
+  computed: {
+    getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
         });
-        
-        if(label === undefined){          
-        }else{
+        if (label === undefined) {
+          fixLabel = nameKey;
+        } else {
           if (used === "titleCase") {
             fixLabel = label["program-label1"].replace(/\w\S*/g, function (
               txt
@@ -959,14 +930,10 @@ export default {
           } else {
             fixLabel = label["program-label1"];
           }
-        }        
+        }
         return fixLabel;
       };
     },
   },
-  mounted(){    
-    this.loading = false;    
-    console.log('Mounted is Executed');    
-  }
 };
 </script>

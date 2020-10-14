@@ -11,6 +11,7 @@
         :title="getLabels('t_c')"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
+        :closable="false"
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
@@ -82,10 +83,18 @@
       scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="current === 0">{{ getLabels("guest_detail") }}</h2>
-          <h2 v-show="current === 1">{{ getLabels("guest_detail") }}</h2>
-          <h2 v-show="current === 2">{{ getLabels("scan_id") }}</h2>
-          <h2 v-show="current === 3">{{ getLabels("deposit_payment") }}</h2>
+          <h2 v-show="current === 0">
+            {{ getLabels("guest_detail", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 1">
+            {{ getLabels("guest_detail", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 2">
+            {{ getLabels("scan_id", `titleCase`) }}
+          </h2>
+          <h2 v-show="current === 3">
+            {{ getLabels("deposit_payment", `titleCase`) }}
+          </h2>
           <!-- <h2 class="main-guest-title font-weight-bold">
             R. Andito Rizky Pratama
             <br />
@@ -168,11 +177,17 @@
                       { initialValue: purpose, rules: [{ required: true }] },
                     ]"
                   >
-                    <a-select-option
+                    <!--<a-select-option
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
                       >{{ item.setupvalue }}</a-select-option
+                    >-->
+                    <a-select-option
+                      v-for="item in FilterPurposeofStay"
+                      :key="item"
+                      :value="item.setupvalue"
+                      >{{ getLabels(item.setupvalue.toLowerCase()) }}</a-select-option
                     >
                   </a-select>
                 </a-form-item>
@@ -247,7 +262,9 @@
             </a-row>
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('country')">
+                <a-form-item
+                  :label="getLabels('country_of_residence', `titleCase`)"
+                >
                   <a-select
                     v-model="country"
                     v-decorator="[
@@ -276,7 +293,7 @@
                       v-decorator="[
                         'region',
                         {
-                          initialValue: currDataPrepare['guest-prov'],
+                          initialValue: currDataPrepare['guest-region'],
                           rules: [
                             {
                               required: true,
@@ -613,6 +630,7 @@ export default {
       imgb64: "",
       hasUpload: false,
       hotelEndpoint: "",
+      hotelcode: "",
     };
   },
   watch: {
@@ -620,44 +638,11 @@ export default {
       key;
     },
   },
-  // created() {
-  //   const urlParams = new URLSearchParams(window.location.search);
-
-  //   this.bookingcode = urlParams.get("bookingcode");
-  //   this.loading = false;
-  //   this.termcondition = true;
-  //   // console.log(this.$route.params.id, "lempar");
-  //   if (this.bookingcode === "982010") {
-  //     router.push("listcheckin");
-  //   } else {
-  //     this.currDataPrepare = {
-  //       key: 1,
-  //       name: "R. Andito Rizky Pratama, Mr",
-  //       arrival: "12/12/2020",
-  //       departure: "15/12/2020",
-  //       adult: "2",
-  //       booking: "11020133",
-  //       email: "randitorizky@gmail.com",
-  //       tags: "Suites",
-  //       rs: 0,
-  //       description: "Ariella Calista Ichwan",
-  //       isSelected: false,
-  //     };
-  //     term;
-  //   }
-  //   if (this.$route.params.id != undefined) {
-  //     this.id = this.$route.params.id;
-  //     // this.counter = this.id.length;
-
-  //     this.currDataPrepare = this.id[this.counter];
-  //     this.counter += 1;
-  //   }
-  //    }
-  // },
   created() {
     this.currData = this.$route.params.foo;
     this.langID = this.$route.params.fighter;
     this.hotelEndpoint = this.$route.params.endpoint;
+    this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // console.log(this.$route.params.id, "nyamtuh");
     if (this.$route.params.foo != undefined) {
@@ -726,9 +711,9 @@ export default {
             this.scanid = !this.tempsetup[i]["setupflag"];
             // console.log(this.scanid, "scandid");
           } else if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(
+            /*this.tempsetup[i].setupvalue = this.getLabels(
               this.tempsetup[i].setupvalue.toLowerCase()
-            );
+            );*/
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -786,8 +771,6 @@ export default {
           }
         }
 
-        // console.log(this.currData, "anjay");
-        // console.log(this.currData["0"], "anjay");
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -813,9 +796,9 @@ export default {
           obj["19"] = this.countries;
           obj["20"] = this.region;
           obj["21"] = this.term1;
+          obj["22"] = this.hotelcode;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          // console.log(nietos, "tuwiiinnggg");
           router.push({
             name: "ListCheckIn",
             params: { foo: nietos, fighter: this.langID },
@@ -865,6 +848,7 @@ export default {
       this.countries = this.$route.params.id["setup"]["19"];
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
+      this.hotelcode = this.$route.params.id["setup"]["22"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
 
@@ -913,6 +897,7 @@ export default {
       }
     },
     next() {
+      console.log(this.hasUpload);
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
@@ -970,14 +955,14 @@ export default {
         "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
         this.minimumDeposit +
         "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-        this.currDataPrepare["gast"].replace(/ /g, "") +
+        this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
         "&billingPhone=" +
         this.form.getFieldValue(["phone"][0]) +
         "&billingEmail=" +
         this.form.getFieldValue(["email"][0]) +
         "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
         token.toString() +
-        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
+        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
@@ -1124,17 +1109,11 @@ export default {
           this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "," +
-          this.wifiAddress +
-          "!" +
-          this.wifiPassword +
-          "?" +
-          this.currDataPrepare["argt-str"] +
           "}";
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-        router.push({ name: "SuccessCheckIn", params: { jin: mori } });
+        router.push({ name: "SuccessCheckIn", params: { jin: mori, jun: this.wifiAddress, jen: this.wifiPassword, jon: this.currDataPrepare["argt-str"] } });
         //} else {
         //this.paymentModal = true;
         // }
@@ -1213,7 +1192,10 @@ export default {
       });
     },
     disagree() {
-      router.push({ path: "mobilecheckin", query: { lang: this.langID } });
+      router.push({
+        path: "mobilecheckin",
+        query: { lang: this.langID, hotelcode: this.hotelcode },
+      });
       // router.push("mobilecheckin");
     },
     handleBlur() {
@@ -1244,30 +1226,33 @@ export default {
 
       return fixDate;
     },
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+
+      let fixLabel = "";
+
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };

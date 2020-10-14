@@ -53,100 +53,8 @@
           <div class="overlay">
             <div class="text">{{ hotelname }}</div>
           </div>
-          <!-- <div class="visible">
-            <div class="online-checkin-mobile">
-              <p class="text-center">Online Check-In</p>
-            </div>
-          </div>-->
         </a-col>
       </a-row>
-      <!-- {{currDataPrepare}} -->
-      <!-- <h3 class="text-center font-weight-bold visible">{{ hotelname }}</h3>
-      <a-row
-        class="header-branding"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col
-          class="pl-3 pt-3 invisible"
-          :span="15"
-          :md="15"
-          :xl="15"
-          :xs="24"
-        >
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-          <h2
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h2>
-
-          <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code",`titleCase`) }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </a-col>
-        <a-col class="container" :span="9" :md="9" :xl="9" :lg="9" :xs="24">
-          <img class="img-hotel" :src="gambar" alt="Image Loading" />
-          <div class="overlay invisible">
-            <div class="text">{{ hotelname }}</div>
-          </div>
-          <div class="invisible">
-            <div class="gear-setting"></div>
-          </div>
-        </a-col>
-        <a-col class="pl-3 pt-3 visible" :span="12" :md="12" :xs="24">
-          <h1 class="mb-3 font-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h1>
-          <h2
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h2>
-          <h2
-            v-else
-            class="main-guest-title font-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h2>
-          <p class="ant-card-meta-description font-white" :style="information">
-            {{ getLabels("arrival",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure",`titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code",`titleCase`) }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </a-col>
-      </a-row>-->
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
@@ -166,13 +74,6 @@
                 layout="vertical"
                 :label="getLabels('eta', `titleCase`)"
               >
-                <!-- <a-time-picker
-                  v-model="hour"
-                  :minute-step="30"
-                  format="HH:mm"
-                  size="large"
-                  inputReadOnly
-                />-->
                 <q-input
                   v-model="hour"
                   class="inputTime"
@@ -255,10 +156,7 @@
               :xs="24"
             >
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
-                <a-input
-                  class="ant-input-h"
-                  v-decorator="['flight',{}]"
-                />
+                <a-input class="ant-input-h" v-decorator="['flight', {}]" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -319,7 +217,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea :rows="4" :maxLength="max" v-model="text"/>
+                <a-textarea :rows="4" :maxLength="max" v-model="text" />
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -365,7 +263,7 @@
               <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email', `titleCase`)">
                 <a-input
-                  class="ant-input-h"   
+                  class="ant-input-h"
                   v-decorator="[
                     'email',
                     {
@@ -381,28 +279,28 @@
                         },
                       ],
                     },
-                  ]"               
+                  ]"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('phone_number', `titleCase`)">
-                <q-input   
+                <q-input
                   v-decorator="[
                     'phone',
                     {
                       initialValue: phone,
                       rules: [
-                        {                          
+                        {
                           required: true,
                           message: getLabels('required_phone'),
                         },
                       ],
                     },
-                  ]"               
+                  ]"
                   outlined
-                  dense                  
-                  mask="############"
+                  dense
+                  mask="################"
                 />
               </a-form-item>
             </a-col>
@@ -529,6 +427,7 @@
               :title="getLabels('t_c', `titleCase`)"
               :visible="visibleTerm"
               :confirm-loading="confirmLoadingTerm"
+              :closable="false"
             >
               <template slot="footer">
                 <a-button
@@ -754,7 +653,7 @@ export default {
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
-        this.term = tempTerm[0]["setupvalue"];
+        this.term = this.getLabels(tempTerm[0]["setupvalue"], "sentenceCase");
         const temRequest = this.tempsetup.filter((item, index) => {
           return item.number1 === 2 && item.setupflag === true;
         });
@@ -797,15 +696,11 @@ export default {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
-
         const jatah = [];
 
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
-            this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase(),
-              `sentenceCase`
-            );
+            this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
             this.FilterPurposeofStay.push(this.tempsetup[i]);
             if (this.tempsetup[i].setupflag == true) {
               this.purpose = this.tempsetup[i].setupvalue;
@@ -971,72 +866,72 @@ export default {
       // console.log('handleSubmit is Fired');
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        if (!err) {          
-          // console.log(
-          //   {
-          //     resNumber: this.currDataPrepare["rsv-number"],
-          //     reslineNumber: this.currDataPrepare["rsvline-number"],
-          //     estAT: this.hour,
-          //     pickrequest: this.showPrice,
-          //     pickdetail:
-          //       this.showPrice == false ||
-          //       values.flight == " " ||
-          //       values.flight == undefined
-          //         ? ""
-          //         : values.flight,
-          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-          //     specialReq:
-          //       values.Request == " " || values.Request == undefined
-          //         ? ""
-          //         : values.Request,
-          //     guestPhnumber: this.phone,
-          //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
-          //     agreedTerm: true,
-          //     purposeOfStay: values.purpose,
-          //   },
-          //   "inputan"
-          // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post(this.hotelEndpoint + "preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: this.hour,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq:
-                      values.Request == " " || values.Request == undefined
-                        ? ""
-                        : values.Request,
-                    guestPhnumber: values.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-            // console.log(parsed, "inputan3");
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
-          this.scrollToTop();
-          this.save();
-          this.form.resetFields();
+        if (!err) {
+          console.log(
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: this.hour,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq:
+                values.Request == " " || values.Request == undefined
+                  ? ""
+                  : values.Request,
+              guestPhnumber: this.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            },
+            "inputan"
+          );
+          // (async () => {
+          //   const tempParam = location.search.substring(1);
+          //   const parsed = await ky
+          //     .post(this.hotelEndpoint + "preCI/updateData", {
+          //       json: {
+          //         request: {
+          //           resNumber: this.currDataPrepare["rsv-number"],
+          //           reslineNumber: this.currDataPrepare["rsvline-number"],
+          //           estAT: this.hour,
+          //           pickrequest: this.showPrice,
+          //           pickdetail:
+          //             this.showPrice == false ||
+          //             values.flight == " " ||
+          //             values.flight == undefined
+          //               ? ""
+          //               : values.flight,
+          //           roomPreferences:
+          //             this.room + "$" + this.floor + "$" + this.bed,
+          //           specialReq:
+          //             values.Request == " " || values.Request == undefined
+          //               ? ""
+          //               : values.Request,
+          //           guestPhnumber: this.phone,
+          //           guestNationality: values.nationality,
+          //           guestCountry: values.country,
+          //           guestRegion: values.country != "INA" ? " " : values.region,
+          //           agreedTerm: true,
+          //           purposeOfStay: values.purpose,
+          //         },
+          //       },
+          //     })
+          //     .json();
+          // console.log(parsed, "inputan3");
+          //   const tempMessResult = parsed.response.messResult.split(" ");
+          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          // })();
+          // this.scrollToTop();
+          // this.save();
+          // this.form.resetFields();
         }
       });
     },
@@ -1094,38 +989,45 @@ export default {
       } else {
         return true;
       }
-    }
+    },
   },
   computed: {
     formatDate() {
-      return datum => {
-        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(2, "0");
-        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(2, "0");
+      return (datum) => {
+        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(
+          2,
+          "0"
+        );
+        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+          2,
+          "0"
+        );
         const dYear = String(moment(datum, "YYYY-MM-DD").year());
         const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
 
         return fixDate;
       };
     },
-    getLabels(){
+    getLabels() {
       let fixLabel = "";
 
-      return (nameKey, used) =>{
-        const label = this.labels.find(el => {
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
           return el["lang-variable"] == nameKey;
         });
 
-        if(label === undefined){
-          fixLabel = "nameKey";                 
-        }
-        else{
+        if (label === undefined) {
+          fixLabel = "nameKey";
+        } else {
           if (used === "titleCase") {
-            fixLabel = label["lang-value"].replace(/\w\S*/g, function(txt) {
+            fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {
               return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });
           } else if (used === "sentenceCase") {
-            fixLabel = label["lang-value"].charAt(0).toUpperCase() + label["lang-value"].slice(1);
-          } else if (used === "upperCase"){
+            fixLabel =
+              label["lang-value"].charAt(0).toUpperCase() +
+              label["lang-value"].slice(1);
+          } else if (used === "upperCase") {
             fixLabel = label["lang-value"].toUpperCase();
           } else {
             fixLabel = label["lang-value"];
@@ -1134,7 +1036,7 @@ export default {
 
         return fixLabel;
       };
-    }
-  }
+    },
+  },
 };
 </script>

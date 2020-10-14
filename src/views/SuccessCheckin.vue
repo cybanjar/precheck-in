@@ -1,18 +1,21 @@
 <template>
   <div class="text-center">
     <canvas id="canvas"></canvas>
-    <p>{{ getLabels("room_number") }} : {{ taejin }}</p>
-    <p>{{ getLabels("wifi_address") }} : {{ wifiAddress }}</p>
-    <p>{{ getLabels("wifi_password") }} : {{ wifiPassword }}</p>
+    <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
+    <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
+    <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
+    <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
     <p>
       <br />
     </p>
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{ getLabels("mci_success") }}</p>
+    <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
     <p>
-      <a-button type="primary" href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb">{{
-        getLabels("done")
-      }}</a-button>
+      <a-button
+        type="primary"
+        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
+        >{{ getLabels("done") }}</a-button
+      >
     </p>
   </div>
 </template>
@@ -33,28 +36,19 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
+    console.log(this.$route.params, "nyampe");
     this.data = this.$route.params.jin;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.data.substring(
-      this.data.lastIndexOf(",") + 1,
-      this.data.lastIndexOf("!")
-    );
-    this.wifiPassword = this.data.substring(
-      this.data.lastIndexOf("!") + 1,
-      this.data.lastIndexOf("?")
-    );
-    this.arrangement = this.data.substring(
-      this.data.lastIndexOf("?") + 1,
-      this.data.lastIndexOf("}")
-    );
+    this.wifiAddress = this.$route.params.jun;
+    this.wifiPassword = this.$route.params.jen;
+    this.arrangement = this.$route.params.jon;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { width: 76 }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -81,33 +75,37 @@ export default {
     // })();
   },
   methods: {
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+
+      console.log(label["program-label1"]);
+      let fixLabel = "";
+
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
       } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
     goBack() {
-      route
+      route;
     },
   },
 };
