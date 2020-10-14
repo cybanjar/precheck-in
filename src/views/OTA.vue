@@ -373,9 +373,14 @@ export default {
       memberPhoto: "",
       member: "",
       loading: true,
+      confirmLoading: true,
+      webLabel: {
+        information: ''
+      }
     };
   },
   created() {
+    console.log('Log','Start Created');
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -445,6 +450,7 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
+      console.log(this.labels);
 
       const code = await ky
         .post("http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl", {
@@ -520,42 +526,55 @@ export default {
         this.informationmodal = true;
       }
     })();
-    this.loading = false;
+    // this.loading = false;
+
+    console.log('Log','Finish Created');
   },
 
-  methods: {
+  methods: {    
     onChange(date, dateString) {
+      console.log('Log','OnChange is Fired');
       // console.log(date, dateString);
       this.date = dateString;
     },
     showModalBookingCode() {
+      console.log('Log','showModalBookingCode is Fired');
       this.modalBookingCode = true;
     },
     showModalGuestName() {
+      console.log('Log','showModalGuestName is Fired');
       this.modalGuestName = true;
     },
     showModalEmailAddress() {
+      console.log('Log','showModalEmailAddress is Fired');
       this.modalEmailAddress = true;
     },
     showModalMembershipID() {
+      console.log('Log','showModalMembershipID is Fired');
       this.modalMembershipID = true;
     },
     errorbo() {
+      console.log('Log','errorbo is Fired');
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
     },
     errorname() {
+      console.log('Log','errorname is Fired');
       this.$message.error(this.getLabels("input_guest_name", `sentenceCase`));
     },
     erroremail() {
+      console.log('Log','erroremail is Fired');
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     errormember() {
+      console.log('Log','errormember is Fired');
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
     },
     errorco() {
+      console.log('Log','errorco is Fired');
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
     },
     error() {
+      console.log('Log','error is Fired');
       this.$message.error(
         this.getLabels("input_bookcode") +
           ", " +
@@ -563,6 +582,7 @@ export default {
       );
     },
     errorName() {
+      console.log('Log','errorName is Fired');
       this.$message.error(
         this.getLabels("guest_name") +
           ", " +
@@ -570,6 +590,7 @@ export default {
       );
     },
     errorMail() {
+      console.log('Log','errorMail is Fired');
       this.$message.error(
         this.getLabels("input_email") +
           ", " +
@@ -577,6 +598,7 @@ export default {
       );
     },
     errorMember() {
+      console.log('Log','errorMember is Fired');
       this.$message.error(
         this.getLabels("input_member") +
           ", " +
@@ -584,11 +606,13 @@ export default {
       );
     },
     goOTA() {
+      console.log('Log','goOTA is Fired');
       this.informationmodal = false;
       this.informationmodal1 = false;
       this.informationmodal2 = false;
     },
     handleOk() {
+      console.log('Log','handleOk is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -650,6 +674,7 @@ export default {
       }
     },
     handleOkBO() {
+      console.log('Log','handleOkBO is Fired');
       this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
@@ -715,6 +740,7 @@ export default {
       }
     },
     handleOkName() {
+      console.log('Log','handleOkName is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -776,6 +802,7 @@ export default {
       }
     },
     handleOkEmail() {
+      console.log('Log','handleOkEmail is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -837,6 +864,7 @@ export default {
       }
     },
     handleOkMember() {
+      console.log('Log','handleOkMember is Fired');
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -898,24 +926,24 @@ export default {
       }
     },
     handleCancel() {
+      console.log('Log','handleCancel is Fired');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
-    },
+    }    
   },
-  computed: {
-    getLabels() {
+  computed: {    
+    getLabels() {      
       let fixLabel = "";
 
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
         });
-
-        if (label === undefined) {
-          fixLabel = nameKey;
-        } else {
+        
+        if(label === undefined){          
+        }else{
           if (used === "titleCase") {
             fixLabel = label["program-label1"].replace(/\w\S*/g, function (
               txt
@@ -931,10 +959,14 @@ export default {
           } else {
             fixLabel = label["program-label1"];
           }
-        }
+        }        
         return fixLabel;
       };
     },
   },
+  mounted(){    
+    this.loading = false;    
+    console.log('Mounted is Executed');    
+  }
 };
 </script>
