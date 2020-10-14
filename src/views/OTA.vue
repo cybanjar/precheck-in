@@ -912,8 +912,7 @@ export default {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
         });
-        if (label === undefined) {
-          fixLabel = nameKey;
+        if (label === undefined) {          
         } else {
           if (used === "titleCase") {
             fixLabel = label["program-label1"].replace(/\w\S*/g, function (
