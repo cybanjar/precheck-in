@@ -57,7 +57,6 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
-
     this.taejin = this.data.substring(1, this.data.indexOf(";"));
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,

@@ -448,10 +448,9 @@
                 getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
-
             <a-button
+              class="q-mt-sm"
               v-if="current < steps.length - 1"
-              style="margin-left: 8px;"
               type="primary"
               @click="next"
               >{{ getLabels("next", `titleCase`) }}</a-button
