@@ -48,7 +48,7 @@ export default {
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { width: "76", height: "76" }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -101,13 +101,16 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    formatDate(datum){
-        const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2,"0");
-        const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(2,"0");
-        const dYear = String(moment(datum, "MM/DD/YYYY").year());
-        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+    formatDate(datum) {
+      const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
+      const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(datum, "MM/DD/YYYY").year());
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
 
-        return fixDate;
+      return fixDate;
     },
     goBack() {
       route;

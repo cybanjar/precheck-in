@@ -367,6 +367,7 @@
                 <a-form-item :label="getLabels('upload_id', `titleCase`)">
                   <input
                     class
+                    accept="image/*"
                     type="file"
                     @change="onFileChange"
                     v-decorator="[

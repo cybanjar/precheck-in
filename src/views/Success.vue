@@ -41,7 +41,7 @@ export default {
       taejin: "", //Booking Code
       iplyo: "", // Checkout Date
       jegal: "", // Check-in Time
-      url: "", 
+      url: "",
       labels: [],
       flagKiosk: false,
       urlMCI: "",
@@ -57,8 +57,8 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
-    
-    this.taejin = this.data.substring(1, this.data.indexOf(";") );
+
+    this.taejin = this.data.substring(1, this.data.indexOf(";"));
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,
       this.data.lastIndexOf(",")
@@ -81,7 +81,7 @@ export default {
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
-      { errorCorrectionLevel: "H", width: "300", height: "auto" }
+      { errorCorrectionLevel: "H", width: "145", height: "145" }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -109,7 +109,6 @@ export default {
   },
   methods: {
     getLabels(nameKey, used) {
-      
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
@@ -137,13 +136,16 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    formatDate(datum){
-        const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2,"0");
-        const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(2,"0");
-        const dYear = String(moment(datum, "MM/DD/YYYY").year());
-        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+    formatDate(datum) {
+      const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
+      const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(datum, "MM/DD/YYYY").year());
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
 
-        return fixDate;
+      return fixDate;
     },
   },
 };
