@@ -6,27 +6,26 @@
       <span class="font-weight-bold">{{ taejin }}</span>
     </p>
     <p>
-      {{ getLabels("co_date", `titleCase`) }} :
+      {{ getLabels("co_date", `titleCase`) }}
       <span class="font-weight-bold">{{ iplyo }}</span>
-    </p>
-    <p>
-      {{ getLabels("ci_time", `titleCase`) }} :
+      {{ getLabels("ci_time", `titleCase`) }}
       <span class="font-weight-bold">{{ jegal }}</span>
     </p>
-    <p>
-      <a-button type="primary" :href="urlMCI">{{
-        getLabels("ci_now", `titleCase`)
-      }}</a-button>
-    </p>
-    <p>
-      <br />
-    </p>
-    <p v-show="(!flagKiosk)">
-      {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
-    </p>
-    <p v-show="(flagKiosk)">
-      {{ getLabels("success_w_kiosk", `sentenceCase`) }}
-    </p>
+
+    <a-button type="primary" :href="urlMCI">{{
+      getLabels("ci_now", `titleCase`)
+    }}</a-button>
+
+    <div class="row justify-center q-mt-xl">
+      <div class="col-md-6 col-xs-11">
+        <p v-show="(!flagKiosk)">
+          {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
+        </p>
+        <p v-show="(flagKiosk)">
+          {{ getLabels("success_w_kiosk", `sentenceCase`) }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,7 +55,7 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
-    this.taejin = this.data.substring(1, this.data.indexOf(";") );
+    this.taejin = this.data.substring(1, this.data.indexOf(";"));
     this.iplyo = this.data.substring(
       this.data.lastIndexOf(";") + 1,
       this.data.lastIndexOf(",")
