@@ -721,7 +721,7 @@ export default {
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
-        this.term = this.getLabels(tempTerm[0]["setupvalue"], "sentenceCase");
+        this.term = tempTerm[0]["setupvalue"];
         const temRequest = this.tempsetup.filter((item, index) => {
           return item.number1 === 2 && item.setupflag === true;
         });
@@ -1000,7 +1000,7 @@ export default {
           //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           // })();
           // this.scrollToTop();
-          // this.save();
+          this.save();
           // this.form.resetFields();
         }
       });

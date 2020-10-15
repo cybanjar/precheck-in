@@ -5,7 +5,14 @@
     </a-spin>
   </div>
   <div v-else>
-    <div class="ota text-center">
+    <div :class="ota">
+      <q-img class="" :src="hotelImage">
+        <div
+          class="absolute-bottom font-weight-bold text-subtitle2 text-center"
+        >
+          {{ hotelName }}
+        </div>
+      </q-img>
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal"
@@ -44,10 +51,10 @@
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">
+          <h1 :class="FG">
             <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
           </h1>
-          <p class="text-white text-secondary">
+          <p :class="textOta">
             {{ getLabels("choose_option", `sentenceCase`) }}
           </p>
         </a-col>
@@ -387,6 +394,21 @@ export default {
       member: "",
       loading: true,
       confirmLoading: false,
+      FG: "",
+      hotelImage: "",
+      hotelName: "",
+      textOta: {
+        color: "",
+        opacity: "0.65",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        height: "100vh",
+        paddingTop: "10%",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
     };
   },
   created() {
@@ -409,7 +431,7 @@ export default {
             : "No query strings available";
         });
       this.hotelCode = tempParam["hotelcode"];
-      
+
       this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
@@ -469,6 +491,26 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      const tempBG = this.tempsetup.filter((item, index) => {
+        return item.number1 === 4 && item.setupflag === true;
+      });
+      this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      const tempFG = this.tempsetup.filter((item, index) => {
+        return item.number1 === 5 && item.setupflag === true;
+      });
+      this.textOta.color = tempFG[0]["setupvalue"];
+      this.FG = tempFG[0]["setupvalue"];
+
+      const tempImage = this.tempsetup.filter((item, index) => {
+        return item.number1 === 7 && item.number2 === 3;
+      });
+      this.hotelImage = tempImage[0]["setupvalue"];
+
+      const tempHotelName = this.tempsetup.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 1;
+      });
+      this.hotelName = tempHotelName[0]["setupvalue"];
+
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
