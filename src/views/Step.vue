@@ -369,6 +369,7 @@
                     class
                     type="file"
                     @change="onFileChange"
+                    accept="image/*"
                     v-decorator="[
                       'url',
                       {
@@ -820,10 +821,10 @@ export default {
           this.current = 2;
           this.y = true;
         }
-        if (this.hasUpload == "0 image id already exist") {
+        /*if (this.hasUpload == "0 image id already exist") {
           this.current = 3;
           this.y = true;
-        }
+        }*/
         this.loading = false;
       })();
     } else if (this.$route.params.id != undefined) {
@@ -869,10 +870,10 @@ export default {
         this.current = 2;
         this.y = true;
       }
-      if (this.hasUpload == "0 image id already exist") {
+      /*if (this.hasUpload == "0 image id already exist") {
         this.current = 3;
         this.y = true;
-      }
+      }*/
       this.loading = false;
     } else {
       router.push("notfound");
@@ -916,7 +917,11 @@ export default {
         }
       } else if (this.current == 1) {
         if (this.form.getFieldValue(["region"][0])) {
-          this.current++;
+          if (this.hasUpload == "0 image id already exist") {
+            this.current = 3;
+          } else {
+            this.current++;
+          }
           if (this.precheckin == true) {
             this.y = true;
           }
