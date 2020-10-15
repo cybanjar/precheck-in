@@ -5,18 +5,19 @@
     <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
     <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
     <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
-    <p>
-      <br />
-    </p>
+
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
-    <p>
-      <a-button
-        type="primary"
-        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
-        >{{ getLabels("done", `titleCase`) }}</a-button
-      >
-    </p>
+    <div class="row justify-center q-mt-xl">
+      <div class="col-md-6 col-xs-11">
+        <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+      </div>
+    </div>
+
+    <a-button
+      type="primary"
+      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
+      >{{ getLabels("done", `titleCase`) }}</a-button
+    >
   </div>
 </template>
 
@@ -48,7 +49,7 @@ export default {
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
-      { width: 300 }
+      { width: "76", height: "76" }
       // function (error) {
       // if (error) console.error(error);
       // console.log("success!");
@@ -75,30 +76,42 @@ export default {
     // })();
   },
   methods: {
-    getLabels(nameKey) {
+    getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-      if (label != undefined) {
-        return (
-          label["program-label1"].charAt(0).toUpperCase() +
-          label["program-label1"].slice(1)
-        );
+      let fixLabel = "";
+      if (label == undefined) {
+        fixLabel = "";
       } else {
-        return "";
-      }
-      /*for (let x = 0; x < this.labels.length; x++) {
-        if (this.labels[x]["program-variable"] === nameKey) {
-          const splitStr = this.labels[x]["program-label1"]
-            .toLowerCase()
-            .split(" ");
-          for (let y = 0; y < splitStr.length; y++) {
-            splitStr[y] =
-              splitStr[y].charAt(0).toUpperCase() + splitStr[y].substring(1);
-          }
-          return splitStr.join(" ");
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
+        } else {
+          fixLabel = label["program-label1"];
         }
-      }*/
+      }
+
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    },
+    formatDate(datum) {
+      const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
+      const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(datum, "MM/DD/YYYY").year());
+      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+
+      return fixDate;
     },
     goBack() {
       route;

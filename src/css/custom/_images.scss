@@ -47,9 +47,11 @@ img.preview {
     // height: 195px;
     height: auto;
   }
+
   .invisibles {
     display: none !important;
   }
+
   h2 {
     font-size: 1rem;
   }
@@ -90,4 +92,8 @@ img.preview {
     padding: 4px 0;
     left: -25px;
   }
+}
+
+.q-img__content>div {
+  padding: 8px;
 }

@@ -221,7 +221,13 @@
               :xs="24"
             >
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
-                <a-input class="ant-input-h" v-decorator="['flight', {}]" />
+                <a-input
+                  class="ant-input-h"
+                  v-decorator="[
+                    'flight',
+                    { rules: [{ required: showPrice == true ? true : false }] },
+                  ]"
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -384,7 +390,9 @@
                     v-for="item in FilterPurposeofStay"
                     :key="item.setupvalue"
                     :value="item.setupvalue"
-                    >{{ item.setupvalue }}</a-select-option
+                    >{{
+                      getLabels(item.setupvalue.toLowerCase())
+                    }}</a-select-option
                   >
                 </a-select>
               </a-form-item>
@@ -687,6 +695,8 @@ export default {
           JSON.stringify(parsed.response.languagesList["languages-list"])
         );
         this.labels = JSON.parse(localStorage.getItem("labels"));
+        this.langID =
+          parsed.response.languagesList["languages-list"]["0"]["lang-id"];
         const tempMessResult = parsed.response.messResult;
         this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
         if (tempMessResult == "99 - Pre Checkin Not Allowed!") {
@@ -719,7 +729,7 @@ export default {
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
-        this.term = this.getLabels(tempTerm[0]["setupvalue"], "sentenceCase");
+        this.term = tempTerm[0]["setupvalue"];
         const temRequest = this.tempsetup.filter((item, index) => {
           return item.number1 === 2 && item.setupflag === true;
         });
@@ -813,6 +823,7 @@ export default {
           obj["16"] = this.province;
           obj["17"] = this.hotelEndpoint;
           obj["18"] = this.hotelCode;
+          obj["19"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({ name: "List", params: { foo: nietos } });
@@ -868,6 +879,7 @@ export default {
       this.province = this.$route.params.id["setup"]["16"];
       this.hotelEndpoint = this.$route.params.id["setup"]["17"];
       this.hotelCode = this.$route.params.id["setup"]["18"];
+      this.langID = this.$route.params.id["setup"]["19"];
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
@@ -996,7 +1008,7 @@ export default {
           //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           // })();
           // this.scrollToTop();
-          // this.save();
+          this.save();
           // this.form.resetFields();
         }
       });
@@ -1083,7 +1095,7 @@ export default {
         });
 
         if (label === undefined) {
-          fixLabel = "nameKey";
+          fixLabel = "";
         } else {
           if (used === "titleCase") {
             fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {

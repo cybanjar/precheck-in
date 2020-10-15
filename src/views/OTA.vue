@@ -5,7 +5,14 @@
     </a-spin>
   </div>
   <div v-else>
-    <div class="ota text-center">
+    <div :class="ota">
+      <q-img class="" :src="hotelImage">
+        <div
+          class="absolute-bottom font-weight-bold text-subtitle2 text-center"
+        >
+          {{ hotelName }}
+        </div>
+      </q-img>
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal"
@@ -44,10 +51,10 @@
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 class="text-white">
+          <h1 :class="FG">
             <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
           </h1>
-          <p class="text-white text-secondary">
+          <p :class="textOta">
             {{ getLabels("choose_option", `sentenceCase`) }}
           </p>
         </a-col>
@@ -99,6 +106,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                         @input="$refs.qDateProxy.hide()"
@@ -164,6 +172,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                         @input="$refs.qDateProxy.hide()"
@@ -229,6 +238,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                         @input="$refs.qDateProxy.hide()"
@@ -294,6 +304,7 @@
                         mask="DD/MM/YYYY"
                         :navigation-min-year-month="minCalendar"
                         :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
                         @input="$refs.qDateProxy.hide()"
@@ -347,11 +358,9 @@ Vue.use(Quasar, {
   },
   plugins: {},
 });
-
 import moment from "moment";
 import ky from "ky";
 import CookieS from "vue-cookies";
-
 export default {
   data() {
     return {
@@ -388,7 +397,22 @@ export default {
       memberPhoto: "",
       member: "",
       loading: true,
-      confirmLoading: false
+      confirmLoading: false,
+      FG: "",
+      hotelImage: "",
+      hotelName: "",
+      textOta: {
+        color: "",
+        opacity: "0.65",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        height: "100vh",
+        paddingTop: "10%",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
     };
   },
   created() {
@@ -396,9 +420,7 @@ export default {
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     const yyyy = today.getFullYear();
-
     this.date = dd + "/" + mm + "/" + yyyy;
-
     (async () => {
       //const tempParam = location.search.substring(1);
       const tempParam = {};
@@ -412,22 +434,8 @@ export default {
             ? item.split("=")[1]
             : "No query strings available";
         });
-      if (tempParam.book != undefined) {
-        this.checkin = tempParam.citime.replace(/%3A/g, ":");
-        if ("14:00" < this.checkin) {
-          this.informationmodal = true;
-        } else {
-          this.bookingcode = tempParam.book;
-          this.date = tempParam.codate.replace(/%2F/g, "/");
-          this.handleOk();
-        }
-      } else if (tempParam.resultCd == "0000") {
-        const tmpParam = CookieS.get("data");
-        this.bookingcode = tmpParam.book;
-        this.date = tmpParam.codate;
-        this.payment = tmpParam.payment;
-        this.handleOk();
-      }
+      this.hotelCode = tempParam["hotelcode"];
+
       this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
@@ -440,7 +448,6 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
-      this.hotelCode = tempParam["hotelcode"];
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -461,7 +468,6 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
-
       const code = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
@@ -489,6 +495,25 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      const tempBG = this.tempsetup.filter((item, index) => {
+        return item.number1 === 4 && item.setupflag === true;
+      });
+      this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      const tempFG = this.tempsetup.filter((item, index) => {
+        return item.number1 === 5 && item.setupflag === true;
+      });
+      this.textOta.color = tempFG[0]["setupvalue"];
+      this.FG = tempFG[0]["setupvalue"];
+
+      const tempImage = this.tempsetup.filter((item, index) => {
+        return item.number1 === 7 && item.number2 === 3;
+      });
+      this.hotelImage = tempImage[0]["setupvalue"];
+
+      const tempHotelName = this.tempsetup.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 1;
+      });
+      this.hotelName = tempHotelName[0]["setupvalue"];
 
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
@@ -497,19 +522,15 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
-
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
-
       const systemDate = systemDateObj[0]["setupvalue"];
-
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
         "0"
@@ -519,12 +540,10 @@ export default {
       ).padStart(2, "0");
       const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
       const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
-
       this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -533,19 +552,31 @@ export default {
           this.checkin = this.tempsetup[i]["setupvalue"];
         }
       }
-
       const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
+      }
+      if (tempParam.book != undefined) {
+        this.checkin = tempParam.citime.replace(/%3A/g, ":");
+        if ("14:00" < this.checkin) {
+          this.informationmodal = true;
+        } else {
+          this.bookingcode = tempParam.book;
+          this.date = tempParam.codate.replace(/%2F/g, "/");
+          this.handleOk();
+        }
+      } else if (tempParam.resultCd == "0000") {
+        const tmpParam = CookieS.get("data");
+        this.bookingcode = tmpParam.book;
+        this.date = tmpParam.codate;
+        this.payment = tmpParam.payment;
+        this.handleOk();
       }
     })();
     this.loading = false;
   },
-
   methods: {
     onChange(date, dateString) {
-      // console.log(date, dateString);
       this.date = dateString;
     },
     showModalBookingCode() {
@@ -610,10 +641,7 @@ export default {
     },
     handleOk() {
       const reservation = [];
-      const dDate = moment(this.date, "DD/MM/YYYY").date();
-      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
-      const dYear = moment(this.date, "DD/MM/YYYY").year();
-      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      const coDate = this.date;
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
@@ -666,8 +694,6 @@ export default {
             });
           }
         })();
-
-        this.modalBookingCode = false;
       }
     },
     handleOkBO() {
@@ -730,7 +756,6 @@ export default {
             });
           }
         })();
-
         setTimeout(() => {
           this.modalBookingCode = false;
           this.confirmLoading = false;
@@ -795,7 +820,6 @@ export default {
             });
           }
         })();
-
         this.modalGuestName = false;
       }
     },
@@ -857,7 +881,6 @@ export default {
             });
           }
         })();
-
         this.modalEmailAddress = false;
       }
     },
@@ -919,7 +942,6 @@ export default {
             });
           }
         })();
-
         this.modalMembershipID = false;
       }
     },
@@ -933,12 +955,10 @@ export default {
   computed: {
     getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
         });
-
         if (label === undefined) {
           fixLabel = "";
         } else {
