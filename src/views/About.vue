@@ -221,7 +221,13 @@
               :xs="24"
             >
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
-                <a-input class="ant-input-h" v-decorator="['flight', {}]" />
+                <a-input
+                  class="ant-input-h"
+                  v-decorator="[
+                    'flight',
+                    { rules: [{ required: showPrice == true ? true : false }] },
+                  ]"
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -384,7 +390,9 @@
                     v-for="item in FilterPurposeofStay"
                     :key="item.setupvalue"
                     :value="item.setupvalue"
-                    >{{ item.setupvalue }}</a-select-option
+                    >{{
+                      getLabels(item.setupvalue.toLowerCase())
+                    }}</a-select-option
                   >
                 </a-select>
               </a-form-item>
