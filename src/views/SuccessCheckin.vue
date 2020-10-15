@@ -5,18 +5,19 @@
     <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
     <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
     <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
-    <p>
-      <br />
-    </p>
+
     <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
-    <p>
-      <a-button
-        type="primary"
-        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
-        >{{ getLabels("done", `titleCase`) }}</a-button
-      >
-    </p>
+    <div class="row justify-center q-mt-xl">
+      <div class="col-md-6 col-xs-11">
+        <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+      </div>
+    </div>
+
+    <a-button
+      type="primary"
+      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
+      >{{ getLabels("done", `titleCase`) }}</a-button
+    >
   </div>
 </template>
 
