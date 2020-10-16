@@ -15,14 +15,14 @@
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{ getLabels("disagree") }}
+            {{ getLabels("disagree", `titleCase`) }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree") }}</a-button
+            >{{ getLabels("agree", `titleCase`) }}</a-button
           >
         </template>
         <p>{{ terms }}</p>
@@ -161,7 +161,7 @@
                     outlined
                     dense
                     v-model="phone"
-                    mask="############"
+                    mask="################"
                   ></q-input>
                 </a-form-item>
               </a-col>
