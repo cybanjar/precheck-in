@@ -32,30 +32,19 @@
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
-              :class="
-                item['l-selected'] == true
-                  ? 'selected'
-                  : item['room-status'] != '0 Ready To Checkin'
-                  ? 'notready'
-                  : 'notselected'
-              "
-              @click="
-                item['room-status'] == '0 Ready To Checkin'
-                  ? select(item)
-                  : disabled
-              "
+              :class="item['l-selected'] == true ? 'selected' : 'notselected'"
+              @click="select(item)"
             >
               <h2
                 :class="
                   item['l-selected'] == true
                     ? 'selected pl-3 font-weight-bold'
-                    : item['room-status'] != '0 Ready To Checkin'
-                    ? 'notready pl-3 font-weight-bold'
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
                 {{ item["gast"].toUpperCase() }}
               </h2>
+              <p class="pl-3">{{ item["resnr"] }}</p>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}
               </p>
@@ -63,21 +52,27 @@
                 <br />
               </p>
               <p class="pl-3">
-                {{ getLabels("arrival") }}: {{ formatDate(item.ci) }}
-                {{ getLabels("departure") }}: {{ formatDate(item.co) }}
+                {{ getLabels("arrival", `titleCase`) }}:
+                {{ formatDate(item.ci) }}
+                {{ getLabels("departure", `titleCase`) }}:
+                {{ formatDate(item.co) }}
               </p>
               <p class="pl-3">
-                {{ item.adult }} {{ getLabels("adult") }}
+                {{ getLabels("room_number", `titleCase`) }}: {{ item.zinr }}
+              </p>
+              <p class="pl-3">
+                {{ item.adult }} {{ getLabels("adult", `titleCase`) }}
                 <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
               </p>
-              <p
+              <p class="pl-3">{{ item["argt-str"] }}</p>
+              <!-- <p
                 v-if="item['room-status'] != '0 Ready To Checkin'"
                 class="pl-3"
               >
-                {{ getLabels("mci_error_not_ready") }}
-                <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
-              </p>
-              <p v-else></p>
+                {{ getLabels("mci_error_not_ready") }} -->
+              <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
+              <!-- </p>
+              <p v-else></p> -->
             </a-card>
           </a-list-item>
         </a-list>
@@ -88,7 +83,7 @@
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-        >{{ getLabels("next") }}</a-button
+        >{{ getLabels("next", `titleCase`) }}</a-button
       >
     </div>
   </div>

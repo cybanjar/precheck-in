@@ -891,7 +891,7 @@ export default {
       }
     },
     next() {
-      console.log(this.hasUpload);
+      // console.log(this.hasUpload);
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
