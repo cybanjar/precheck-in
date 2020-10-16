@@ -428,7 +428,6 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
-                  v-model="country"
                   v-decorator="[
                     'country',
                     {
@@ -436,6 +435,7 @@
                       rules: [{ required: true }],
                     },
                   ]"
+                  @change="handleChangeCountry"
                 >
                   <a-select-option
                     v-for="item in FilterCountry"
@@ -969,6 +969,10 @@ export default {
     handleChangeRegion(value) {
       // console.log('handleChangeRegion is Fired');
       this.region = value;
+    },
+    handleChangeCountry(value) {
+      // console.log('handleChangeRegion is Fired');
+      this.country = value;
     },
     scrollToTop() {
       // console.log('scrollToTop is Fired');
