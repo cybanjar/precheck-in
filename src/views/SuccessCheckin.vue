@@ -15,7 +15,7 @@
 
     <a-button
       type="primary"
-      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
+      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelCode=vhpweb"
       >{{ getLabels("done", `titleCase`) }}</a-button
     >
   </div>

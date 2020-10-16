@@ -15,14 +15,14 @@
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{ getLabels("disagree", "titleCase") }}
+            {{ getLabels("disagree") }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree", "titleCase") }}</a-button
+            >{{ getLabels("agree") }}</a-button
           >
         </template>
         <p>{{ terms }}</p>
@@ -161,7 +161,7 @@
                     outlined
                     dense
                     v-model="phone"
-                    mask="##############"
+                    mask="############"
                   ></q-input>
                 </a-form-item>
               </a-col>
@@ -186,7 +186,7 @@
                       :key="item"
                       :value="item.setupvalue"
                       >{{
-                        getLabels(item.setupvalue.toLowerCase(), `titleCase`)
+                        getLabels(item.setupvalue.toLowerCase())
                       }}</a-select-option
                     >
                   </a-select>
@@ -443,21 +443,13 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <!--<div class="q-ml-sm" v-if="y">-->
             <div v-if="y">
               <a-button v-if="current > 0" @click="prev">{{
                 getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
-            <!--<a-button
-              class="q-mt-sm"
-              v-if="current < steps.length - 1"
-              type="primary"
-              @click="next"
-              >{{ getLabels("next", `titleCase`) }}</a-button
-            >-->
             <a-button
-              class="float-right"
+              class="q-mt-sm"
               v-if="current < steps.length - 1"
               type="primary"
               @click="next"
@@ -899,6 +891,7 @@ export default {
       }
     },
     next() {
+      // console.log(this.hasUpload);
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
@@ -946,11 +939,7 @@ export default {
           this.y = false;
         }
       }
-      if (this.hasUpload && this.current == 3) {
-        this.current = 1;
-      } else {
-        this.current--;
-      }
+      this.current--;
     },
     search() {
       const token = CryptoJS.SHA256(
@@ -1092,27 +1081,27 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-        })();
+        // (async () => {
+        //   const parsed = await ky
+        //     .post(this.hotelEndpoint + "mobileCI/resCI", {
+        //       json: {
+        //         request: {
+        //           rsvNumber: this.currDataPrepare.resnr,
+        //           rsvlineNumber: this.currDataPrepare.reslinnr,
+        //           userInit: "01",
+        //           newRoomno: this.currDataPrepare.zinr,
+        //           purposeOfStay: this.form.getFieldValue("purpose"),
+        //           email: this.form.getFieldValue("email"),
+        //           guestPhnumber: this.form.getFieldValue("phone"),
+        //           guestNation: this.form.getFieldValue("nationality"),
+        //           guestCountry: this.form.getFieldValue("country"),
+        //           guestRegion: this.form.getFieldValue("region"),
+        //           base64image: this.imgb64,
+        //         },
+        //       },
+        //     })
+        //     .json();
+        // })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +
