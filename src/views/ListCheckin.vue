@@ -44,7 +44,9 @@
               >
                 {{ item["gast"].toUpperCase() }}
               </h2>
-              <p class="pl-3">{{ item["resnr"] }}</p>
+              <p class="pl-3">
+                {{ getLabels("book_code", `titleCase`) }}: {{ item["resnr"] }}
+              </p>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}
               </p>
@@ -108,7 +110,9 @@ export default {
   },
   created() {
     // console.log(this.$route.params.foo[0], "goks");
-    this.data = this.$route.params.foo[0];
+    const tempData = this.$route.params.foo[0];
+    console.log(tempData.sort(this.sorting));
+    this.data = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
     this.langID = this.$route.params.fighter;
@@ -120,6 +124,15 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
+    sorting(a, b) {
+      if (a.resnr < b.resnr) {
+        return -1;
+      } else if (a.resnr > b.resnr) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
     select(client) {
       this.selectedData = client;
       if (client["l-selected"] == false) {
