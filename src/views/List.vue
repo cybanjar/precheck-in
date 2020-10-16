@@ -33,11 +33,7 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
               :class="item.isSelected == true ? 'selected' : 'notselected'"
-              @click="
-                item['gcomment-desc'] != 'GUEST ALREADY PCI'
-                  ? select(item)
-                  : disabled
-              "
+              @click="select(item)"
             >
               <h6
                 :class="

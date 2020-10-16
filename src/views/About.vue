@@ -446,7 +446,14 @@
               </a-form-item>
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div v-if="country === 'INA' || country === 'ina'">
+              <div
+                v-if="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  country === '' ||
+                  country === ' '
+                "
+              >
                 <a-form-item :label="getLabels('region', `titleCase`)">
                   <a-select
                     v-decorator="[
@@ -883,11 +890,34 @@ export default {
       this.id = this.$route.params.id["data"];
 
       this.currDataPrepare = this.id[this.counter];
-      this.country = this.currDataPrepare["guest-country"];
-      this.email = this.currDataPrepare["guest-email"];
-      this.phone = this.currDataPrepare["guest-phone"];
+      console.log(this.currDataPrepare, "lempar");
+      if (this.currDataPrepare["gcomment-desc"] == "GUEST ALREADY PCI") {
+        const mori =
+          "{" +
+          this.currDataPrepare["rsv-number"] +
+          ";" +
+          moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+          "," +
+          this.hour +
+          "}";
 
-      this.counter += 1;
+        router.push({
+          name: "Success",
+          params: {
+            jin: mori,
+            jun: this.langID,
+            jen: this.flagKiosk,
+            mihawk: this.hotelCode,
+            luffy: this.hotelEndpoint,
+          },
+        });
+      } else {
+        this.country = this.currDataPrepare["guest-country"];
+        this.email = this.currDataPrepare["guest-email"];
+        this.phone = this.currDataPrepare["guest-phone"];
+
+        this.counter += 1;
+      }
     }
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
@@ -1003,7 +1033,7 @@ export default {
           //       },
           //     })
           //     .json();
-          // console.log(parsed, "inputan3");
+          //   console.log(parsed, "inputan3");
           //   const tempMessResult = parsed.response.messResult.split(" ");
           //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           // })();
