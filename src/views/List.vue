@@ -33,11 +33,7 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
               :class="item.isSelected == true ? 'selected' : 'notselected'"
-              @click="
-                item['gcomment-desc'] != 'GUEST ALREADY PCI'
-                  ? select(item)
-                  : disabled
-              "
+              @click="select(item)"
             >
               <h6
                 :class="
@@ -56,17 +52,17 @@
                 <br />
               </p>
               <p class="pl-3">
-                {{ getLabels("arrival") }}:
+                {{ getLabels("arrival", `titleCase`) }}:
                 <span class="font-weight-bold">
                   {{ formatDate(item.arrive) }}
                 </span>
-                {{ getLabels("departure") }}:
+                {{ getLabels("departure", `titleCase`) }}:
                 <span class="font-weight-bold">
                   {{ formatDate(item.depart) }}
                 </span>
               </p>
               <p class="pl-3">
-                {{ item.rmqty }} {{ getLabels("adult") }}
+                {{ item.rmqty }} {{ getLabels("adult", `titleCase`) }}
                 <a-tag color="green">{{ item["rate-desc"] }}</a-tag>
               </p>
             </a-card>
@@ -80,7 +76,7 @@
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-        >{{ getLabels("next") }}</a-button
+        >{{ getLabels("next", `titleCase`) }}</a-button
       >
       <!-- </router-link> -->
     </div>

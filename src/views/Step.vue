@@ -899,6 +899,10 @@ export default {
       }
     },
     next() {
+<<<<<<< HEAD
+=======
+      // console.log(this.hasUpload);
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&

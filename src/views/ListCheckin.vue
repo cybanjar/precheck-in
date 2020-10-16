@@ -32,30 +32,21 @@
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
-              :class="
-                item['l-selected'] == true
-                  ? 'selected'
-                  : item['room-status'] != '0 Ready To Checkin'
-                  ? 'notready'
-                  : 'notselected'
-              "
-              @click="
-                item['room-status'] == '0 Ready To Checkin'
-                  ? select(item)
-                  : disabled
-              "
+              :class="item['l-selected'] == true ? 'selected' : 'notselected'"
+              @click="select(item)"
             >
               <h2
                 :class="
                   item['l-selected'] == true
                     ? 'selected pl-3 font-weight-bold'
-                    : item['room-status'] != '0 Ready To Checkin'
-                    ? 'notready pl-3 font-weight-bold'
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
                 {{ item["gast"].toUpperCase() }}
               </h2>
+              <p class="pl-3">
+                {{ getLabels("book_code", `titleCase`) }}: {{ item["resnr"] }}
+              </p>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}
               </p>
@@ -63,21 +54,39 @@
                 <br />
               </p>
               <p class="pl-3">
+<<<<<<< HEAD
                 {{ getLabels("arrival", `titleCase`) }}: {{ formatDate(item.ci) }}
                 {{ getLabels("departure", `titleCase`) }}: {{ formatDate(item.co) }}
+=======
+                {{ getLabels("arrival", `titleCase`) }}:
+                {{ formatDate(item.ci) }}
+                {{ getLabels("departure", `titleCase`) }}:
+                {{ formatDate(item.co) }}
+              </p>
+              <p class="pl-3">
+                {{ getLabels("room_number", `titleCase`) }}: {{ item.zinr }}
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
               </p>
               <p class="pl-3">
                 {{ item.adult }} {{ getLabels("adult", `titleCase`) }}
                 <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
               </p>
-              <p
+              <p class="pl-3">{{ item["argt-str"] }}</p>
+              <!-- <p
                 v-if="item['room-status'] != '0 Ready To Checkin'"
                 class="pl-3"
               >
+<<<<<<< HEAD
                 {{ getLabels("mci_error_not_ready", `sentenceCase`) }}
                 <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
               </p>
               <p v-else></p>
+=======
+                {{ getLabels("mci_error_not_ready") }} -->
+              <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
+              <!-- </p>
+              <p v-else></p> -->
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
             </a-card>
           </a-list-item>
         </a-list>
@@ -113,7 +122,9 @@ export default {
   },
   created() {
     // console.log(this.$route.params.foo[0], "goks");
-    this.data = this.$route.params.foo[0];
+    const tempData = this.$route.params.foo[0];
+    console.log(tempData.sort(this.sorting));
+    this.data = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
     this.langID = this.$route.params.fighter;
@@ -125,6 +136,15 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
+    sorting(a, b) {
+      if (a.resnr < b.resnr) {
+        return -1;
+      } else if (a.resnr > b.resnr) {
+        return 1;
+      } else {
+        return 0;
+      }
+    },
     select(client) {
       this.selectedData = client;
       if (client["l-selected"] == false) {

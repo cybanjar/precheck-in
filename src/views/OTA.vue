@@ -67,18 +67,28 @@
             :src="require(`../assets/${boPhoto}`)"
           />
           <a-modal
-            :confirm-loading="confirmLoading"
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
             :closable="false"
-            ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
+          >
+            <template slot="footer">
+              <a-button
+                key="back"
+                @click="handleCancel"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOkBO">
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOkBO"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
+<<<<<<< HEAD
             <a-form-item :label="getLabels('book_code', `titleCase`)">
               <a-input
                 class="ant-input-h"
@@ -109,8 +119,43 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+=======
+            <a-spin :spinning="confirmLoading">
+              <a-form-item :label="getLabels('book_code', `titleCase`)">
+                <a-input
+                  class="ant-input-h"
+                  v-model="bookingcode"
+                  :placeholder="getLabels('input_bookcode', `sentenceCase`)"
+                />
+              </a-form-item>
+              <a-form-item :label="getLabels('co_date', `titleCase`)">
+                <q-input
+                  v-model="date"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="calendar_today" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
                       >
-                        <!--<div class="row items-center justify-end">
+                        <q-date
+                          v-model="date"
+                          mask="DD/MM/YYYY"
+                          :navigation-min-year-month="minCalendar"
+                          :options="
+                            (date) => date >= minDate && date <= maxDate
+                          "
+                          @input="$refs.qDateProxy.hide()"
+                          today-btn
+                          no-unset
+                        >
+                          <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
@@ -118,12 +163,13 @@
                             flat
                           />
                         </div>-->
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </a-form-item>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </a-form-item>
+            </a-spin>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
@@ -137,13 +183,23 @@
             :title="getLabels('guest_name', `titleCase`)"
             :closable="false"
             ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
+              <a-button
+                key="back"
+                @click="handleCancel"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOkName">
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOkName"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
+<<<<<<< HEAD
             <a-form-item :label="getLabels('guest_name', `titleCase`)">
               <a-input
                 class="ant-input-h"
@@ -174,8 +230,43 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+=======
+            <a-spin :spinning="confirmLoading">
+              <a-form-item :label="getLabels('guest_name', `titleCase`)">
+                <a-input
+                  class="ant-input-h"
+                  v-model="name"
+                  :placeholder="getLabels('input_guest_name', `sentenceCase`)"
+                />
+              </a-form-item>
+              <a-form-item :label="getLabels('co_date', `titleCase`)">
+                <q-input
+                  v-model="date"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="calendar_today" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
                       >
-                        <!--<div class="row items-center justify-end">
+                        <q-date
+                          v-model="date"
+                          mask="DD/MM/YYYY"
+                          :navigation-min-year-month="minCalendar"
+                          :options="
+                            (date) => date >= minDate && date <= maxDate
+                          "
+                          @input="$refs.qDateProxy.hide()"
+                          today-btn
+                          no-unset
+                        >
+                          <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
@@ -183,12 +274,13 @@
                             flat
                           />
                         </div>-->
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </a-form-item>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </a-form-item>
+            </a-spin>
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
@@ -202,13 +294,23 @@
             :title="getLabels('email', `titleCase`)"
             :closable="false"
             ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
+              <a-button
+                key="back"
+                @click="handleCancel"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOkEmail">
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOkEmail"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
+<<<<<<< HEAD
             <a-form-item :label="getLabels('email', `titleCase`)">
               <a-input
                 class="ant-input-h"
@@ -239,8 +341,43 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+=======
+            <a-spin :spinning="confirmLoading">
+              <a-form-item :label="getLabels('email', `titleCase`)">
+                <a-input
+                  class="ant-input-h"
+                  v-model="email"
+                  :placeholder="getLabels('input_email', `sentenceCase`)"
+                />
+              </a-form-item>
+              <a-form-item :label="getLabels('co_date', `titleCase`)">
+                <q-input
+                  v-model="date"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="calendar_today" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
                       >
-                        <!--<div class="row items-center justify-end">
+                        <q-date
+                          v-model="date"
+                          mask="DD/MM/YYYY"
+                          :navigation-min-year-month="minCalendar"
+                          :options="
+                            (date) => date >= minDate && date <= maxDate
+                          "
+                          @input="$refs.qDateProxy.hide()"
+                          today-btn
+                          no-unset
+                        >
+                          <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
@@ -248,13 +385,14 @@
                             flat
                           />
                         </div>-->
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </a-form-item>
-          </a-modal>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </a-form-item>
+            </a-spin></a-modal
+          >
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
           <img
@@ -267,13 +405,23 @@
             :title="getLabels('membership_id', `titleCase`)"
             :closable="false"
             ><template slot="footer">
-              <a-button key="back" @click="handleCancel">
+              <a-button
+                key="back"
+                @click="handleCancel"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("cancel", `titleCase`) }}
               </a-button>
-              <a-button key="submit" type="primary" @click="handleOkMember">
+              <a-button
+                key="submit"
+                type="primary"
+                @click="handleOkMember"
+                :disabled="confirmLoading"
+              >
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
+<<<<<<< HEAD
             <a-form-item :label="getLabels('membership_id', `titleCase`)">
               <a-input
                 v-model="member"
@@ -304,8 +452,43 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+=======
+            <a-spin :spinning="confirmLoading">
+              <a-form-item :label="getLabels('membership_id', `titleCase`)">
+                <a-input
+                  v-model="member"
+                  class="ant-input-h"
+                  :placeholder="getLabels('input_membership', `sentenceCase`)"
+                />
+              </a-form-item>
+              <a-form-item :label="getLabels('co_date', `titleCase`)">
+                <q-input
+                  v-model="date"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="calendar_today" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
                       >
-                        <!--<div class="row items-center justify-end">
+                        <q-date
+                          v-model="date"
+                          mask="DD/MM/YYYY"
+                          :navigation-min-year-month="minCalendar"
+                          :options="
+                            (date) => date >= minDate && date <= maxDate
+                          "
+                          @input="$refs.qDateProxy.hide()"
+                          today-btn
+                          no-unset
+                        >
+                          <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
@@ -313,12 +496,13 @@
                             flat
                           />
                         </div>-->
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </a-form-item>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </a-form-item>
+            </a-spin>
           </a-modal>
         </a-col>
       </a-row>
@@ -701,10 +885,13 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.bookingcode && !this.date) {
         this.error();
+        this.confirmLoading = false;
       } else if (!this.bookingcode) {
         this.errorbo();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -722,7 +909,7 @@ export default {
               },
             })
             .json();
-            console.log(data["response"]["messResult"]);
+          console.log(data["response"]["messResult"]);
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
@@ -752,13 +939,12 @@ export default {
             });
           }
         })();
-        setTimeout(() => {
-          this.modalBookingCode = false;
-          this.confirmLoading = false;
-        }, 2000);
+        this.modalBookingCode = false;
+        this.confirmLoading = false;
       }
     },
     handleOkName() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -766,10 +952,13 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.name && !this.date) {
         this.errorName();
+        this.confirmLoading = false;
       } else if (!this.name) {
         this.errorname();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -817,9 +1006,11 @@ export default {
           }
         })();
         this.modalGuestName = false;
+        this.confirmLoading = false;
       }
     },
     handleOkEmail() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -827,10 +1018,13 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.email && !this.date) {
         this.errorMail();
+        this.confirmLoading = false;
       } else if (!this.email) {
         this.erroremail();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -878,9 +1072,11 @@ export default {
           }
         })();
         this.modalEmailAddress = false;
+        this.confirmLoading = false;
       }
     },
     handleOkMember() {
+      this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -888,10 +1084,13 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       if (!this.member && !this.date) {
         this.errorMember();
+        this.confirmLoading = false;
       } else if (!this.member) {
         this.errormember();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -939,6 +1138,7 @@ export default {
           }
         })();
         this.modalMembershipID = false;
+        this.confirmLoading = false;
       }
     },
     handleCancel() {
