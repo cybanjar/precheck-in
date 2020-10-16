@@ -98,7 +98,6 @@
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }}
           </h6>
-
           <p class="ant-card-meta-description text-white" :style="information">
             {{ getLabels("arrival", `titleCase`) }}:
             <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
@@ -428,6 +427,7 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
+                  @change="handleChangeCountry"
                   v-decorator="[
                     'country',
                     {
@@ -435,7 +435,6 @@
                       rules: [{ required: true }],
                     },
                   ]"
-                  @change="handleChangeCountry"
                 >
                   <a-select-option
                     v-for="item in FilterCountry"
@@ -448,7 +447,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div
-                v-if="
+                v-show="
                   country === 'INA' ||
                   country === 'ina' ||
                   country === '' ||
@@ -475,7 +474,7 @@
                   </a-select>
                 </a-form-item>
               </div>
-              <div v-else>
+              <!-- <div v-else>
                 <a-form-item :label="getLabels('state', `titleCase`)">
                   <a-input
                     class="ant-input-h"
@@ -488,7 +487,7 @@
                     ]"
                   />
                 </a-form-item>
-              </div>
+              </div> -->
             </a-col>
           </a-row>
 
@@ -570,7 +569,6 @@ import Antd, {
   DatePicker,
   Modal,
 } from "ant-design-vue";
-
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
 import ky from "ky";
@@ -697,7 +695,6 @@ export default {
             }
           )
           .json();
-
         localStorage.removeItem("labels");
         localStorage.setItem(
           "labels",
@@ -713,9 +710,7 @@ export default {
         } else if (tempMessResult == "2 - Guest Already Checkin.") {
           router.push("done");
         }
-
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
-
         const tempbC = this.tempsetup.filter((item, index) => {
           return item.number1 === 4;
         });
@@ -734,7 +729,6 @@ export default {
           return item.number1 === 7 && item.number2 === 1;
         });
         this.gambar = tempGambar[0].setupvalue;
-
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
         });
@@ -772,18 +766,15 @@ export default {
           return item.number1 === 8 && item.number2 === 10;
         });
         this.flagKiosk = tempKios[0]["setupflag"];
-
         const tempEndpoint = this.tempsetup.filter((item, index) => {
           return item.number1 === 99 && item.number2 === 2;
         });
         this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-
         const tempHotelCode = this.tempsetup.filter((item, index) => {
           return item.number1 === 99 && item.number2 === 3;
         });
         this.hotelCode = tempHotelCode[0]["setupvalue"];
         const jatah = [];
-
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
             this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
@@ -810,7 +801,6 @@ export default {
             this.province.push(air);
           }
         }
-
         if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -852,7 +842,6 @@ export default {
             "," +
             this.checkInTIme +
             "}";
-
           router.push({
             name: "Success",
             params: {
@@ -893,7 +882,6 @@ export default {
       this.langID = this.$route.params.id["setup"]["19"];
       this.checkInTIme = this.$route.params.id["setup"]["20"];
       this.id = this.$route.params.id["data"];
-
       this.currDataPrepare = this.id[this.counter];
       if (this.currDataPrepare["gcomment-desc"] == "GUEST ALREADY PCI") {
         const mori =
@@ -904,7 +892,6 @@ export default {
           "," +
           this.checkInTIme +
           "}";
-
         router.push({
           name: "Success",
           params: {
@@ -919,7 +906,6 @@ export default {
         this.country = this.currDataPrepare["guest-country"];
         this.email = this.currDataPrepare["guest-email"];
         this.phone = this.currDataPrepare["guest-phone"];
-
         this.counter += 1;
       }
     }
@@ -930,6 +916,10 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleChangeCountry(value) {
+      // console.log('handleChangeRegion is Fired');
+      this.country = value;
+    },
     showModalTerm() {
       // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
@@ -970,10 +960,6 @@ export default {
       // console.log('handleChangeRegion is Fired');
       this.region = value;
     },
-    handleChangeCountry(value) {
-      // console.log('handleChangeRegion is Fired');
-      this.country = value;
-    },
     scrollToTop() {
       // console.log('scrollToTop is Fired');
       window.scrollTo(0, 0);
@@ -1002,8 +988,8 @@ export default {
           //         : values.Request,
           //     guestPhnumber: this.phone,
           //     guestNationality: values.nationality,
-          //     guestCountry: values.country,
-          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     guestCountry: this.country,
+          //     guestRegion: this.country != "INA" ? " " : values.region,
           //     agreedTerm: true,
           //     purposeOfStay: values.purpose,
           //   },
@@ -1033,8 +1019,8 @@ export default {
                         : values.Request,
                     guestPhnumber: this.phone,
                     guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
+                    guestCountry: this.country,
+                    guestRegion: this.country != "INA" ? " " : values.region,
                     agreedTerm: true,
                     purposeOfStay: values.purpose,
                   },
@@ -1072,7 +1058,6 @@ export default {
             luffy: this.hotelEndpoint,
           },
         });
-
         // router.push("success");
       }
       this.currDataPrepare = this.id[this.counter];
@@ -1087,7 +1072,6 @@ export default {
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
     },
-
     onChange(e) {
       // console.log('onChange is Fired');
       this.showPrice = e.target.checked;
@@ -1120,18 +1104,15 @@ export default {
         );
         const dYear = String(moment(datum, "YYYY-MM-DD").year());
         const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
         return fixDate;
       };
     },
     getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["lang-variable"] == nameKey;
         });
-
         if (label === undefined) {
           fixLabel = "";
         } else {
@@ -1149,7 +1130,6 @@ export default {
             fixLabel = label["lang-value"];
           }
         }
-
         return fixLabel;
       };
     },
