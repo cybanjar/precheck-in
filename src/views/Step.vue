@@ -15,14 +15,14 @@
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{ getLabels("disagree") }}
+            {{ getLabels("disagree", `titleCase`) }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree") }}</a-button
+            >{{ getLabels("agree", `titleCase`) }}</a-button
           >
         </template>
         <p>{{ terms }}</p>
@@ -161,7 +161,7 @@
                     outlined
                     dense
                     v-model="phone"
-                    mask="############"
+                    mask="##############"
                   ></q-input>
                 </a-form-item>
               </a-col>
@@ -186,7 +186,7 @@
                       :key="item"
                       :value="item.setupvalue"
                       >{{
-                        getLabels(item.setupvalue.toLowerCase())
+                        getLabels(item.setupvalue.toLowerCase(), `titleCase`)
                       }}</a-select-option
                     >
                   </a-select>
@@ -370,7 +370,6 @@
                     accept="image/*"
                     type="file"
                     @change="onFileChange"
-                    accept="image/*"
                     v-decorator="[
                       'url',
                       {
@@ -444,13 +443,21 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <div v-if="y">
+            <!--<div class="q-ml-sm" v-if="y">-->
+              <div v-if="y">
               <a-button v-if="current > 0" @click="prev">{{
                 getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
-            <a-button
+            <!--<a-button
               class="q-mt-sm"
+              v-if="current < steps.length - 1"
+              type="primary"
+              @click="next"
+              >{{ getLabels("next", `titleCase`) }}</a-button
+            >-->
+            <a-button
+              class="float-right"
               v-if="current < steps.length - 1"
               type="primary"
               @click="next"
@@ -892,7 +899,6 @@ export default {
       }
     },
     next() {
-      console.log(this.hasUpload);
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
@@ -940,7 +946,11 @@ export default {
           this.y = false;
         }
       }
-      this.current--;
+      if (this.hasUpload && this.current == 3) {
+        this.current = 1;
+      } else {
+        this.current--;
+      }
     },
     search() {
       const token = CryptoJS.SHA256(
@@ -1082,27 +1092,27 @@ export default {
     },
     save() {
       if (this.counter == this.id.length) {
-        // (async () => {
-        //   const parsed = await ky
-        //     .post(this.hotelEndpoint + "mobileCI/resCI", {
-        //       json: {
-        //         request: {
-        //           rsvNumber: this.currDataPrepare.resnr,
-        //           rsvlineNumber: this.currDataPrepare.reslinnr,
-        //           userInit: "01",
-        //           newRoomno: this.currDataPrepare.zinr,
-        //           purposeOfStay: this.form.getFieldValue("purpose"),
-        //           email: this.form.getFieldValue("email"),
-        //           guestPhnumber: this.form.getFieldValue("phone"),
-        //           guestNation: this.form.getFieldValue("nationality"),
-        //           guestCountry: this.form.getFieldValue("country"),
-        //           guestRegion: this.form.getFieldValue("region"),
-        //           base64image: this.imgb64,
-        //         },
-        //       },
-        //     })
-        //     .json();
-        // })();
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
+                },
+              },
+            })
+            .json();
+        })();
         const mori =
           "{" +
           this.currDataPrepare.zinr +

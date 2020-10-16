@@ -63,18 +63,18 @@
                 <br />
               </p>
               <p class="pl-3">
-                {{ getLabels("arrival") }}: {{ formatDate(item.ci) }}
-                {{ getLabels("departure") }}: {{ formatDate(item.co) }}
+                {{ getLabels("arrival", `titleCase`) }}: {{ formatDate(item.ci) }}
+                {{ getLabels("departure", `titleCase`) }}: {{ formatDate(item.co) }}
               </p>
               <p class="pl-3">
-                {{ item.adult }} {{ getLabels("adult") }}
+                {{ item.adult }} {{ getLabels("adult", `titleCase`) }}
                 <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
               </p>
               <p
                 v-if="item['room-status'] != '0 Ready To Checkin'"
                 class="pl-3"
               >
-                {{ getLabels("mci_error_not_ready") }}
+                {{ getLabels("mci_error_not_ready", `sentenceCase`) }}
                 <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
               </p>
               <p v-else></p>
@@ -88,7 +88,7 @@
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
-        >{{ getLabels("next") }}</a-button
+        >{{ getLabels("next", `titleCase`) }}</a-button
       >
     </div>
   </div>
