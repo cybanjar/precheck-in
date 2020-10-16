@@ -370,7 +370,6 @@
                     accept="image/*"
                     type="file"
                     @change="onFileChange"
-                    accept="image/*"
                     v-decorator="[
                       'url',
                       {

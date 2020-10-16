@@ -109,7 +109,6 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
-                        @input="$refs.qDateProxy.hide()"
                       >
                         <!--<div class="row items-center justify-end">
                           <q-btn
@@ -175,7 +174,6 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
-                        @input="$refs.qDateProxy.hide()"
                       >
                         <!--<div class="row items-center justify-end">
                           <q-btn
@@ -241,7 +239,6 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
-                        @input="$refs.qDateProxy.hide()"
                       >
                         <!--<div class="row items-center justify-end">
                           <q-btn
@@ -307,7 +304,6 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
-                        @input="$refs.qDateProxy.hide()"
                       >
                         <!--<div class="row items-center justify-end">
                           <q-btn
