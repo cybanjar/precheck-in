@@ -109,15 +109,16 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+                        @input="$refs.qDateProxy.hide()"
                       >
-                        <div class="row items-center justify-end">
+                        <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
                             color="primary"
                             flat
                           />
-                        </div>
+                        </div>-->
                       </q-date>
                     </q-popup-proxy>
                   </q-icon>
@@ -174,15 +175,16 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+                        @input="$refs.qDateProxy.hide()"
                       >
-                        <div class="row items-center justify-end">
+                        <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
                             color="primary"
                             flat
                           />
-                        </div>
+                        </div>-->
                       </q-date>
                     </q-popup-proxy>
                   </q-icon>
@@ -239,15 +241,16 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+                        @input="$refs.qDateProxy.hide()"
                       >
-                        <div class="row items-center justify-end">
+                        <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
                             color="primary"
                             flat
                           />
-                        </div>
+                        </div>-->
                       </q-date>
                     </q-popup-proxy>
                   </q-icon>
@@ -304,15 +307,16 @@
                         @input="$refs.qDateProxy.hide()"
                         today-btn
                         no-unset
+                        @input="$refs.qDateProxy.hide()"
                       >
-                        <div class="row items-center justify-end">
+                        <!--<div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
                             label="Close"
                             color="primary"
                             flat
                           />
-                        </div>
+                        </div>-->
                       </q-date>
                     </q-popup-proxy>
                   </q-icon>
@@ -722,6 +726,7 @@ export default {
               },
             })
             .json();
+            console.log(data["response"]["messResult"]);
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
