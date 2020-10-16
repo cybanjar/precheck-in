@@ -777,7 +777,7 @@ export default {
               },
             })
             .json();
-          console.log(data["response"]["messResult"]);
+          // console.log(data["response"]["messResult"]);
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;

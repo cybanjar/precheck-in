@@ -428,6 +428,7 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
+                  v-model="country"
                   v-decorator="[
                     'country',
                     {

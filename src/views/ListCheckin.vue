@@ -111,7 +111,7 @@ export default {
   created() {
     // console.log(this.$route.params.foo[0], "goks");
     const tempData = this.$route.params.foo[0];
-    console.log(tempData.sort(this.sorting));
+    // console.log(tempData.sort(this.sorting));
     this.data = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
