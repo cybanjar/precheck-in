@@ -88,28 +88,37 @@
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
-            <a-spin :spinning="confirmLoading">
-              <a-form-item :label="getLabels('book_code', `titleCase`)">
-                <a-input
-                  class="ant-input-h"
-                  v-model="bookingcode"
-                  :placeholder="getLabels('input_bookcode', `sentenceCase`)"
-                />
-              </a-form-item>
-              <a-form-item :label="getLabels('co_date', `titleCase`)">
-                <q-input
-                  v-model="date"
-                  @click="$refs.qDateProxy.show()"
-                  outlined
-                  dense
-                  readonly
-                >
-                  <template v-slot:append>
-                    <q-icon name="calendar_today" class="cursor_pointer">
-                      <q-popup-proxy
-                        ref="qDateProxy"
-                        transition-show="scale"
-                        transition-hide="scale"
+          <a-spin :spinning="confirmLoading">
+            <a-form-item :label="getLabels('book_code', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                v-model="bookingcode"
+                :placeholder="getLabels('input_bookcode', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
+                        today-btn
+                        no-unset
                       >
                         <q-date
                           v-model="date"
@@ -166,28 +175,37 @@
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
-            <a-spin :spinning="confirmLoading">
-              <a-form-item :label="getLabels('guest_name', `titleCase`)">
-                <a-input
-                  class="ant-input-h"
-                  v-model="name"
-                  :placeholder="getLabels('input_guest_name', `sentenceCase`)"
-                />
-              </a-form-item>
-              <a-form-item :label="getLabels('co_date', `titleCase`)">
-                <q-input
-                  v-model="date"
-                  @click="$refs.qDateProxy.show()"
-                  outlined
-                  dense
-                  readonly
-                >
-                  <template v-slot:append>
-                    <q-icon name="calendar_today" class="cursor_pointer">
-                      <q-popup-proxy
-                        ref="qDateProxy"
-                        transition-show="scale"
-                        transition-hide="scale"
+        <a-spin :spinning="confirmLoading">
+            <a-form-item :label="getLabels('guest_name', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                v-model="name"
+                :placeholder="getLabels('input_guest_name', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
+                        today-btn
+                        no-unset
                       >
                         <q-date
                           v-model="date"
@@ -244,28 +262,37 @@
                 {{ getLabels("search", `titleCase`) }}
               </a-button>
             </template>
-            <a-spin :spinning="confirmLoading">
-              <a-form-item :label="getLabels('email', `titleCase`)">
-                <a-input
-                  class="ant-input-h"
-                  v-model="email"
-                  :placeholder="getLabels('input_email', `sentenceCase`)"
-                />
-              </a-form-item>
-              <a-form-item :label="getLabels('co_date', `titleCase`)">
-                <q-input
-                  v-model="date"
-                  @click="$refs.qDateProxy.show()"
-                  outlined
-                  dense
-                  readonly
-                >
-                  <template v-slot:append>
-                    <q-icon name="calendar_today" class="cursor_pointer">
-                      <q-popup-proxy
-                        ref="qDateProxy"
-                        transition-show="scale"
-                        transition-hide="scale"
+                    <a-spin :spinning="confirmLoading">
+    <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-input
+                class="ant-input-h"
+                v-model="email"
+                :placeholder="getLabels('input_email', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
+                        today-btn
+                        no-unset
                       >
                         <q-date
                           v-model="date"
@@ -323,27 +350,36 @@
               </a-button>
             </template>
             <a-spin :spinning="confirmLoading">
-              <a-form-item :label="getLabels('membership_id', `titleCase`)">
-                <a-input
-                  v-model="member"
-                  class="ant-input-h"
-                  :placeholder="getLabels('input_membership', `sentenceCase`)"
-                />
-              </a-form-item>
-              <a-form-item :label="getLabels('co_date', `titleCase`)">
-                <q-input
-                  v-model="date"
-                  @click="$refs.qDateProxy.show()"
-                  outlined
-                  dense
-                  readonly
-                >
-                  <template v-slot:append>
-                    <q-icon name="calendar_today" class="cursor_pointer">
-                      <q-popup-proxy
-                        ref="qDateProxy"
-                        transition-show="scale"
-                        transition-hide="scale"
+            <a-form-item :label="getLabels('membership_id', `titleCase`)">
+              <a-input
+                v-model="member"
+                class="ant-input-h"
+                :placeholder="getLabels('input_membership', `sentenceCase`)"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('co_date', `titleCase`)">
+              <q-input
+                v-model="date"
+                @click="$refs.qDateProxy.show()"
+                outlined
+                dense
+                readonly
+              >
+                <template v-slot:append>
+                  <q-icon name="calendar_today" class="cursor_pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="date"
+                        mask="DD/MM/YYYY"
+                        :navigation-min-year-month="minCalendar"
+                        :options="(date) => date >= minDate && date <= maxDate"
+                        @input="$refs.qDateProxy.hide()"
+                        today-btn
+                        no-unset
                       >
                         <q-date
                           v-model="date"

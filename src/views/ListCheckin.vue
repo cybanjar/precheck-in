@@ -54,6 +54,10 @@
                 <br />
               </p>
               <p class="pl-3">
+<<<<<<< HEAD
+                {{ getLabels("arrival", `titleCase`) }}: {{ formatDate(item.ci) }}
+                {{ getLabels("departure", `titleCase`) }}: {{ formatDate(item.co) }}
+=======
                 {{ getLabels("arrival", `titleCase`) }}:
                 {{ formatDate(item.ci) }}
                 {{ getLabels("departure", `titleCase`) }}:
@@ -61,6 +65,7 @@
               </p>
               <p class="pl-3">
                 {{ getLabels("room_number", `titleCase`) }}: {{ item.zinr }}
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
               </p>
               <p class="pl-3">
                 {{ item.adult }} {{ getLabels("adult", `titleCase`) }}
@@ -71,10 +76,17 @@
                 v-if="item['room-status'] != '0 Ready To Checkin'"
                 class="pl-3"
               >
+<<<<<<< HEAD
+                {{ getLabels("mci_error_not_ready", `sentenceCase`) }}
+                <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
+              </p>
+              <p v-else></p>
+=======
                 {{ getLabels("mci_error_not_ready") }} -->
               <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
               <!-- </p>
               <p v-else></p> -->
+>>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
             </a-card>
           </a-list-item>
         </a-list>
