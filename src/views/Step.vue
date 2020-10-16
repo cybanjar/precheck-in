@@ -443,13 +443,13 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <div class="q-ml-sm" v-if="y">
+            <div v-if="y">
               <a-button v-if="current > 0" @click="prev">{{
                 getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
             <a-button
-              class="float-right"
+              class="q-mt-sm"
               v-if="current < steps.length - 1"
               type="primary"
               @click="next"
