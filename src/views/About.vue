@@ -428,6 +428,7 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
+                  v-model="country"
                   v-decorator="[
                     'country',
                     {
@@ -474,7 +475,7 @@
                   </a-select>
                 </a-form-item>
               </div>
-              <div v-else>
+              <!--<div v-else>
                 <a-form-item :label="getLabels('state', `titleCase`)">
                   <a-input
                     class="ant-input-h"
@@ -487,7 +488,7 @@
                     ]"
                   />
                 </a-form-item>
-              </div>
+              </div>-->
             </a-col>
           </a-row>
 
