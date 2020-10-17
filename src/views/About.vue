@@ -158,15 +158,16 @@
                           mask="HH:mm"
                           :minute-options="[0, 30]"
                           format24h
+                          @input="$refs.qDateProxy.hide()"
                         >
-                          <div class="row items-center justify-end">
+                          <!--<div class="row items-center justify-end">
                             <q-btn
                               v-close-popup
                               label="Close"
                               color="primary"
                               flat
                             />
-                          </div>
+                          </div>-->
                         </q-time>
                       </q-popup-proxy>
                     </q-icon>
@@ -390,7 +391,7 @@
                     :key="item.setupvalue"
                     :value="item.setupvalue"
                     >{{
-                      getLabels(item.setupvalue.toLowerCase())
+                      getLabels(item.setupvalue.toLowerCase(), 'titleCase')
                     }}</a-select-option
                   >
                 </a-select>
@@ -427,7 +428,6 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
-                  @change="handleChangeCountry"
                   v-decorator="[
                     'country',
                     {
@@ -447,7 +447,7 @@
             </a-col>
             <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
               <div
-                v-show="
+                v-if="
                   country === 'INA' ||
                   country === 'ina' ||
                   country === '' ||
@@ -474,7 +474,7 @@
                   </a-select>
                 </a-form-item>
               </div>
-              <!-- <div v-else>
+              <div v-else>
                 <a-form-item :label="getLabels('state', `titleCase`)">
                   <a-input
                     class="ant-input-h"
@@ -487,7 +487,7 @@
                     ]"
                   />
                 </a-form-item>
-              </div> -->
+              </div>
             </a-col>
           </a-row>
 
@@ -916,10 +916,6 @@ export default {
     this.loading = false;
   },
   methods: {
-    handleChangeCountry(value) {
-      // console.log('handleChangeRegion is Fired');
-      this.country = value;
-    },
     showModalTerm() {
       // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
@@ -988,8 +984,8 @@ export default {
           //         : values.Request,
           //     guestPhnumber: this.phone,
           //     guestNationality: values.nationality,
-          //     guestCountry: this.country,
-          //     guestRegion: this.country != "INA" ? " " : values.region,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
           //     agreedTerm: true,
           //     purposeOfStay: values.purpose,
           //   },
@@ -1019,8 +1015,8 @@ export default {
                         : values.Request,
                     guestPhnumber: this.phone,
                     guestNationality: values.nationality,
-                    guestCountry: this.country,
-                    guestRegion: this.country != "INA" ? " " : values.region,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
                     agreedTerm: true,
                     purposeOfStay: values.purpose,
                   },
