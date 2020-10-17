@@ -159,15 +159,16 @@
                           mask="HH:mm"
                           :minute-options="[0, 30]"
                           format24h
+                          @input="$refs.qDateProxy.hide()"
                         >
-                          <div class="row items-center justify-end">
+                          <!--<div class="row items-center justify-end">
                             <q-btn
                               v-close-popup
                               label="Close"
                               color="primary"
                               flat
                             />
-                          </div>
+                          </div>-->
                         </q-time>
                       </q-popup-proxy>
                     </q-icon>

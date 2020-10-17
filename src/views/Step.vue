@@ -443,21 +443,13 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <!--<div class="q-ml-sm" v-if="y">-->
-              <div v-if="y">
+            <div v-if="y">
               <a-button v-if="current > 0" @click="prev">{{
                 getLabels("prev", `titleCase`)
               }}</a-button>
             </div>
-            <!--<a-button
-              class="q-mt-sm"
-              v-if="current < steps.length - 1"
-              type="primary"
-              @click="next"
-              >{{ getLabels("next", `titleCase`) }}</a-button
-            >-->
             <a-button
-              class="float-right"
+              class="q-mt-sm"
               v-if="current < steps.length - 1"
               type="primary"
               @click="next"
@@ -819,8 +811,13 @@ export default {
         }
         this.termcondition = true;
         if (this.precheckin == true) {
-          this.current = 2;
-          this.y = true;
+          if (this.hasUpload == "0 image id already exist") {
+            this.current = 3;
+            this.y = true;
+          } else {
+            this.current = 2;
+            this.y = true;
+          }
         }
         /*if (this.hasUpload == "0 image id already exist") {
           this.current = 3;
@@ -899,10 +896,7 @@ export default {
       }
     },
     next() {
-<<<<<<< HEAD
-=======
       // console.log(this.hasUpload);
->>>>>>> c701a21e42c642c9c8beb9f0382f367a11e45292
       if (this.current == 0) {
         if (
           this.form.getFieldValue(["email"][0]) &&
@@ -975,7 +969,7 @@ export default {
         this.form.getFieldValue(["email"][0]) +
         "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
         token.toString() +
-        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?hotelcode=vhpweb&lang=" +
+        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
