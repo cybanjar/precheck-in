@@ -392,7 +392,7 @@
                     :key="item.setupvalue"
                     :value="item.setupvalue"
                     >{{
-                      getLabels(item.setupvalue.toLowerCase())
+                      getLabels(item.setupvalue.toLowerCase(), 'titleCase')
                     }}</a-select-option
                   >
                 </a-select>

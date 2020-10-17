@@ -5,7 +5,7 @@
     </a-spin>
   </div>
   <div v-else>
-    <div :class="ota">
+    <div :style="ota">
       <q-img class="" :src="hotelImage">
         <div
           class="absolute-bottom font-weight-bold text-subtitle2 text-center"
@@ -13,6 +13,7 @@
           {{ hotelName }}
         </div>
       </q-img>
+
       <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal"
@@ -54,7 +55,7 @@
           <h1 :class="FG">
             <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
           </h1>
-          <p :class="textOta">
+          <p :style="textOta">
             {{ getLabels("choose_option", `sentenceCase`) }}
           </p>
         </a-col>
@@ -457,7 +458,6 @@ export default {
         backgroundColor: "",
         width: "100%",
         height: "100vh",
-        paddingTop: "10%",
         overflowX: "hidden",
         textAlign: "center",
       },
@@ -777,6 +777,7 @@ export default {
               },
             })
             .json();
+          // console.log(data["response"]["messResult"]);
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
