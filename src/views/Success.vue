@@ -67,7 +67,7 @@ export default {
       this.data.lastIndexOf("}")
     );
     this.urlMCI =
-      "http://localhost:8080/mobilecheckin?lang=" +
+      "http://vhp-online.com/mobilecheckin?lang=" +
       this.$route.params.jun +
       "&book=" +
       this.taejin +
