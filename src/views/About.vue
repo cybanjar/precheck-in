@@ -711,6 +711,7 @@ export default {
           router.push("done");
         }
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        //console.log('tempsetup',this.tempsetup);
         const tempbC = this.tempsetup.filter((item, index) => {
           return item.number1 === 4;
         });
@@ -728,6 +729,7 @@ export default {
         const tempGambar = this.tempsetup.filter((item, index) => {
           return item.number1 === 7 && item.number2 === 1;
         });
+        console.log(tempGambar);
         this.gambar = tempGambar[0].setupvalue;
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
