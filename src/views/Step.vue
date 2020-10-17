@@ -312,7 +312,7 @@
                     </a-select>
                   </a-form-item>
                 </div>
-                <div v-else>
+                <!--<div v-else>
                   <a-form-item :label="getLabels('state', `titleCase`)">
                     <a-input
                       v-decorator="[
@@ -324,7 +324,7 @@
                       ]"
                     />
                   </a-form-item>
-                </div>
+                </div>-->
               </a-col>
               <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
@@ -914,7 +914,20 @@ export default {
           }
         }
       } else if (this.current == 1) {
-        if (this.form.getFieldValue(["region"][0])) {
+        if (this.form.getFieldValue(["country"][0]) == 'INA' || this.form.getFieldValue(["country"][0]) == 'ina') {
+          if (this.form.getFieldValue(["region"][0])) {
+            if (this.hasUpload == "0 image id already exist") {
+              this.current = 3;
+            } else {
+              this.current++;
+            }
+            if (this.precheckin == true) {
+              this.y = true;
+            }
+          } else {
+            this.form.validateFields(["region"]);
+          }
+        } else {
           if (this.hasUpload == "0 image id already exist") {
             this.current = 3;
           } else {
@@ -923,8 +936,6 @@ export default {
           if (this.precheckin == true) {
             this.y = true;
           }
-        } else {
-          this.form.validateFields(["region"]);
         }
       } else if (this.current == 2) {
         if (this.form.getFieldValue(["url"][0])) {
