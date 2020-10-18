@@ -8,7 +8,7 @@
     <div class="home">
       <!-- <div v-show="term"> -->
       <a-modal
-        :title="getLabels('t_c')"
+        :title="getLabels('t_c',`titleCase`)"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -131,11 +131,11 @@
                         rules: [
                           {
                             required: true,
-                            message: getLabels('required_email'),
+                            message: getLabels('required_email',`sentenceCase`),
                           },
                           {
                             type: 'email',
-                            message: getLabels('not_valid_email'),
+                            message: getLabels('not_valid_email',`sentenceCase`),
                           },
                         ],
                       },
@@ -153,13 +153,14 @@
                         rules: [
                           {
                             required: true,
-                            message: getLabels('required_phone','sentenceCase'),
+                            message: getLabels('required_phone',`sentenceCase`),
                           },
                         ],
                       },
                     ]"
                     outlined
                     dense
+                    v-model="phone"
                     mask="##############"
                   ></q-input>
                 </a-form-item>
@@ -181,8 +182,8 @@
                       >{{ item.setupvalue }}</a-select-option
                     >-->
                     <a-select-option
-                      v-for="(item,index) in FilterPurposeofStay"
-                      :key="index"
+                      v-for="item in FilterPurposeofStay"
+                      :key="item"
                       :value="item.setupvalue"
                       >{{
                         getLabels(item.setupvalue.toLowerCase(), `titleCase`)
@@ -218,11 +219,11 @@
                         rules: [{ required: true }],
                       },
                     ]"
-                    @change="handleChangeNation"
+                    @change="Nationality"
                   >
                     <a-select-option
-                      v-for="(item,index) in FilterCountry"
-                      :key="index"
+                      v-for="item in FilterCountry"
+                      :key="item['descr']"
                       :value="item['descr']"
                       >{{ item.setupvalue }}</a-select-option
                     >
@@ -265,7 +266,7 @@
                   :label="getLabels('country_of_residence', `titleCase`)"
                 >
                   <a-select
-                    @change="handleChangeCountry"
+                    v-model="country"
                     v-decorator="[
                       'country',
                       {
@@ -275,8 +276,8 @@
                     ]"
                   >
                     <a-select-option
-                      v-for="(item,index) in FilterCountry"
-                      :key="index"
+                      v-for="item in FilterCountry"
+                      :key="item['descr']"
                       :value="item['descr']"
                       >{{ item.setupvalue }}</a-select-option
                     >
@@ -288,6 +289,7 @@
                 <div v-if="country === 'INA' || country === 'ina'">
                   <a-form-item :label="getLabels('region', `titleCase`)">
                     <a-select
+                      @change="handleChangeRegion"
                       v-decorator="[
                         'region',
                         {
@@ -295,15 +297,15 @@
                           rules: [
                             {
                               required: true,
-                              message: getLabels('required_province'),
+                              message: getLabels('required_province',`sentenceCase`),
                             },
                           ],
                         },
                       ]"
                     >
                       <a-select-option
-                        v-for="(item,index) in filteredRegion"
-                        :key="index"
+                        v-for="item in filteredRegion"
+                        :key="item['descr']"
                         :value="item['descr']"
                         >{{ item.setupvalue }}</a-select-option
                       >
@@ -373,7 +375,7 @@
                       {
                         initialValue: '',
                         rules: [
-                          { required: true, message: getLabels('required_id') },
+                          { required: true, message: getLabels('required_id',`sentenceCase`) },
                         ],
                       },
                     ]"
@@ -412,7 +414,7 @@
                   class="font-weight-bold mt-3 mr-3"
                   type="primary"
                   @click="search()"
-                  >{{ getLabels("pay") }}</a-button
+                  >{{ getLabels("pay",`titleCase`) }}</a-button
                 >
                 <!-- <img
                   class="rounded float-right"
@@ -517,7 +519,6 @@ import ky from "ky";
 import CryptoJS from "crypto-js";
 import CookieS from "vue-cookies";
 Vue.use(Antd);
-
 export default {
   data() {
     return {
@@ -648,14 +649,11 @@ export default {
             },
           })
           .json();
-
         this.tempsetup = parsed.response.pciSetup["pci-setup"];
         const jatah = [];
-
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 4) {
             jatah.push(this.tempsetup[i]);
-
             for (const heaven in jatah) {
               // console.log(jatah, "msk");
               if (jatah[heaven].setupflag == true) {
@@ -664,7 +662,6 @@ export default {
             }
           } else if (this.tempsetup[i]["number1"] == 5) {
             jatah.push(this.tempsetup[i]);
-
             for (const hell in jatah) {
               if (jatah[hell].setupflag == true) {
                 this.information.color = jatah[hell]["setupvalue"];
@@ -762,7 +759,6 @@ export default {
             this.region.push(air);
           }
         }
-
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -804,7 +800,6 @@ export default {
           } else {
             this.terms = this.term1;
           }
-
           this.country = this.currDataPrepare["guest-country"];
         }
         this.termcondition = true;
@@ -848,7 +843,6 @@ export default {
       this.hotelcode = this.$route.params.id["setup"]["22"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
-
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
       if (this.langID == "ENG" || this.langID == "eng") {
@@ -986,9 +980,7 @@ export default {
         codate: this.formatDate(this.currDataPrepare.co),
         payment: "success",
       };
-
       CookieS.set("data", datas);
-
       fetch(
         `https://api.allorigins.win/get?url=${encodeURIComponent(
           "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
@@ -1024,7 +1016,6 @@ export default {
         "iMid=IONPAYTEST&&merchantToken=" +
         token.toString() +
         "&tXid=IONPAYTEST01202009221236456216&amt=500000&referenceNo=TRX2020090700000002";
-
       fetch(
         `https://api.allorigins.win/get?url=${encodeURIComponent(
           "https://dev.nicepay.co.id/nicepay/api/onePassStatus.do?" + params
@@ -1258,12 +1249,6 @@ export default {
         this.form.validateFields(["nickname"], { force: true });
       });
     },
-    handleChangeNation(values){
-      this.nationality = values;
-    },
-    handleChangeCountry(values){
-      this.country = values
-    },
     disagree() {
       router.push({
         path: "mobilecheckin",
@@ -1293,19 +1278,15 @@ export default {
         String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
           ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
           : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
       return fixDate;
     },
     getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-
       let fixLabel = "";
-
       if (label["program-label1"] == "undefined") {
         fixLabel = "";
       } else {
@@ -1319,7 +1300,6 @@ export default {
           fixLabel = label["program-label1"];
         }
       }
-
       return fixLabel;
     },
     setTitleCase(label) {
