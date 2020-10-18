@@ -153,14 +153,13 @@
                         rules: [
                           {
                             required: true,
-                            message: getLabels('required_phone'),
+                            message: getLabels('required_phone','sentenceCase'),
                           },
                         ],
                       },
                     ]"
                     outlined
                     dense
-                    v-model="phone"
                     mask="##############"
                   ></q-input>
                 </a-form-item>
@@ -182,8 +181,8 @@
                       >{{ item.setupvalue }}</a-select-option
                     >-->
                     <a-select-option
-                      v-for="item in FilterPurposeofStay"
-                      :key="item"
+                      v-for="(item,index) in FilterPurposeofStay"
+                      :key="index"
                       :value="item.setupvalue"
                       >{{
                         getLabels(item.setupvalue.toLowerCase(), `titleCase`)
@@ -219,11 +218,11 @@
                         rules: [{ required: true }],
                       },
                     ]"
-                    @change="Nationality"
+                    @change="handleChangeNation"
                   >
                     <a-select-option
-                      v-for="item in FilterCountry"
-                      :key="item['descr']"
+                      v-for="(item,index) in FilterCountry"
+                      :key="index"
                       :value="item['descr']"
                       >{{ item.setupvalue }}</a-select-option
                     >
@@ -266,7 +265,7 @@
                   :label="getLabels('country_of_residence', `titleCase`)"
                 >
                   <a-select
-                    v-model="country"
+                    @change="handleChangeCountry"
                     v-decorator="[
                       'country',
                       {
@@ -276,8 +275,8 @@
                     ]"
                   >
                     <a-select-option
-                      v-for="item in FilterCountry"
-                      :key="item['descr']"
+                      v-for="(item,index) in FilterCountry"
+                      :key="index"
                       :value="item['descr']"
                       >{{ item.setupvalue }}</a-select-option
                     >
@@ -289,7 +288,6 @@
                 <div v-if="country === 'INA' || country === 'ina'">
                   <a-form-item :label="getLabels('region', `titleCase`)">
                     <a-select
-                      @change="handleChangeRegion"
                       v-decorator="[
                         'region',
                         {
@@ -304,8 +302,8 @@
                       ]"
                     >
                       <a-select-option
-                        v-for="item in filteredRegion"
-                        :key="item['descr']"
+                        v-for="(item,index) in filteredRegion"
+                        :key="index"
                         :value="item['descr']"
                         >{{ item.setupvalue }}</a-select-option
                       >
@@ -1052,42 +1050,85 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
-      let tmpImgb64 = "";
-      const toBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
 
-      async function Main() {
-        tmpImgb64 = await toBase64(file);
-        return tmpImgb64.substring(
-          tmpImgb64.indexOf(",") + 1,
-          tmpImgb64.length
-        );
-      }
-      (async () => {
-        this.imgb64 = await Main();
-        const uploadResult = await ky
-          .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
-            json: {
-              request: {
-                inpResnr: this.currDataPrepare.resnr,
-                inpReslinnr: this.currDataPrepare.reslinnr,
-                guestno: this.currDataPrepare.gastno,
-                imagedata: this.imgb64,
-                userinit: "01",
-              },
-            },
-          })
-          .json();
-        if (uploadResult.response.resultMessage != "") {
-          // console.log(uploadResult.response.resultMessage);
+      /* Start Handling Images Compression */
+      const reader = new FileReader();
+      
+      reader.readAsDataURL(file);
+
+      reader.onload = (event) => {
+        // Creating Image Element
+        const imgElement = document.createElement("img");
+        imgElement.src = event.target.result;
+
+        // Output to Web
+        this.url = event.target.result;
+
+        // Handling Image Element
+        imgElement.onload = (e) => {
+          // Creating Canvas and Scale Size
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 500;
+          const MAX_HEIGHT = 500;
+          
+          let scaleSize = 0;
+
+          // Scale Size Based on Image Mode Portrait or Landscape
+          if(imgElement.width >= imgElement.height){
+            // Landscape Images
+            scaleSize = MAX_WIDTH / e.target.width;
+            canvas.width = MAX_WIDTH;
+            canvas.height = e.target.height * scaleSize;
+          }
+          else{
+            // Portrait Images
+            scaleSize = MAX_HEIGHT / e.target.height;
+            canvas.height = MAX_HEIGHT;
+            canvas.width = e.target.width * scaleSize;
+          }
+          
+          // Create Canvas Context
+          const ctx = canvas.getContext("2d");
+
+          // Draw Images into Canvas and equal to Width and Height
+          ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+          //Draw watermark on canvas
+          for (let i = 0; i < 10; i++) {
+          
+            ctx.font = "100px Georgia";
+            ctx.fillStyle = "rgba(0,0,0,0.1)";
+            ctx.fillText("COPY COPY COPY COPY COPY COPY COPY",0,i * 100);
+          }
+
+          // Convert Canvas to DataURL
+          const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
+          this.url = srcEncoded;
+
+          // Create Base64 Images
+          const base64Canvas = ctx.canvas.toDataURL("image/jpeg").split(';base64,')[1];     
+          
+          (async () => {
+            this.imgb64 = base64Canvas;
+            const uploadResult = await ky
+              .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
+                json: {
+                  request: {
+                    inpResnr: this.currDataPrepare.resnr,
+                    inpReslinnr: this.currDataPrepare.reslinnr,
+                    guestno: this.currDataPrepare.gastno,
+                    imagedata: this.imgb64,
+                    userinit: "01",
+                  },
+                },
+              })
+              .json();
+            if (uploadResult.response.resultMessage != "") {
+              // console.log(uploadResult.response.resultMessage);
+            }
+          })();
         }
-      })();
+      }
     },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
@@ -1216,6 +1257,12 @@ export default {
       this.$nextTick(() => {
         this.form.validateFields(["nickname"], { force: true });
       });
+    },
+    handleChangeNation(values){
+      this.nationality = values;
+    },
+    handleChangeCountry(values){
+      this.country = values
     },
     disagree() {
       router.push({

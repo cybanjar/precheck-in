@@ -150,7 +150,7 @@
                     <q-icon name="schedule" class="cursor_pointer">
                       <q-popup-proxy
                         ref="qDateProxy"
-                        transition-show="scale"
+                        transition-show="scale" 
                         transition-hide="scale"
                       >
                         <q-time
@@ -158,7 +158,7 @@
                           mask="HH:mm"
                           :minute-options="[0, 30]"
                           format24h
-                          @input="$refs.qDateProxy.hide()"
+                          @input="handleQTime"
                         >
                           <!--<div class="row items-center justify-end">
                             <q-btn
@@ -428,7 +428,6 @@
                 :label="getLabels('country_of_residence', `titleCase`)"
               >
                 <a-select
-                  v-model="country"
                   v-decorator="[
                     'country',
                     {
@@ -436,6 +435,7 @@
                       rules: [{ required: true }],
                     },
                   ]"
+                  @change="handleChangeCountry"
                 >
                   <a-select-option
                     v-for="item in FilterCountry"
@@ -729,8 +729,7 @@ export default {
         this.information.color = fC[0].setupvalue;
         const tempGambar = this.tempsetup.filter((item, index) => {
           return item.number1 === 7 && item.number2 === 1;
-        });
-        console.log(tempGambar);
+        });        
         this.gambar = tempGambar[0].setupvalue;
         const tempTerm = this.tempsetup.filter((item, index) => {
           return item.number1 === 6 && item.setupflag === true;
@@ -919,6 +918,10 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleQTime(values,details){
+      this.$refs.qDateProxy.hide();
+      console.log(values,details);
+    },
     showModalTerm() {
       // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
@@ -958,6 +961,10 @@ export default {
     handleChangeRegion(value) {
       // console.log('handleChangeRegion is Fired');
       this.region = value;
+    },
+    handleChangeCountry(value) {
+      // console.log('handleChangeRegion is Fired');
+      this.country = value;
     },
     scrollToTop() {
       // console.log('scrollToTop is Fired');
