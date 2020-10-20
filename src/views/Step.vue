@@ -8,7 +8,7 @@
     <div class="home">
       <!-- <div v-show="term"> -->
       <a-modal
-        :title="getLabels('t_c',`titleCase`)"
+        :title="getLabels('t_c', `titleCase`)"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -131,11 +131,17 @@
                         rules: [
                           {
                             required: true,
-                            message: getLabels('required_email',`sentenceCase`),
+                            message: getLabels(
+                              'required_email',
+                              `sentenceCase`
+                            ),
                           },
                           {
                             type: 'email',
-                            message: getLabels('not_valid_email',`sentenceCase`),
+                            message: getLabels(
+                              'not_valid_email',
+                              `sentenceCase`
+                            ),
                           },
                         ],
                       },
@@ -153,7 +159,10 @@
                         rules: [
                           {
                             required: true,
-                            message: getLabels('required_phone',`sentenceCase`),
+                            message: getLabels(
+                              'required_phone',
+                              `sentenceCase`
+                            ),
                           },
                         ],
                       },
@@ -297,7 +306,10 @@
                           rules: [
                             {
                               required: true,
-                              message: getLabels('required_province',`sentenceCase`),
+                              message: getLabels(
+                                'required_province',
+                                `sentenceCase`
+                              ),
                             },
                           ],
                         },
@@ -375,7 +387,10 @@
                       {
                         initialValue: '',
                         rules: [
-                          { required: true, message: getLabels('required_id',`sentenceCase`) },
+                          {
+                            required: true,
+                            message: getLabels('required_id', `sentenceCase`),
+                          },
                         ],
                       },
                     ]"
@@ -414,7 +429,7 @@
                   class="font-weight-bold mt-3 mr-3"
                   type="primary"
                   @click="search()"
-                  >{{ getLabels("pay",`titleCase`) }}</a-button
+                  >{{ getLabels("pay", `titleCase`) }}</a-button
                 >
                 <!-- <img
                   class="rounded float-right"
@@ -443,18 +458,22 @@
             </a-row>
           </div>
           <div class="steps-action">
-            <div v-if="y">
-              <a-button v-if="current > 0" @click="prev">{{
-                getLabels("prev", `titleCase`)
-              }}</a-button>
+            <div class="row justify-between">
+              <div class="col-6 col-xs-6">
+                <div v-if="y">
+                  <a-button v-if="current > 0" @click="prev">{{
+                    getLabels("prev", `titleCase`)
+                  }}</a-button>
+                </div>
+              </div>
+              <div class="col-6 col-xs-6">
+                <div v-if="current < steps.length - 1">
+                  <a-button class="float-right" type="primary" @click="next">{{
+                    getLabels("next", `titleCase`)
+                  }}</a-button>
+                </div>
+              </div>
             </div>
-            <a-button
-              class="q-mt-sm"
-              v-if="current < steps.length - 1"
-              type="primary"
-              @click="next"
-              >{{ getLabels("next", `titleCase`) }}</a-button
-            >
           </div>
 
           <!-- <a-button
@@ -906,7 +925,10 @@ export default {
           }
         }
       } else if (this.current == 1) {
-        if (this.form.getFieldValue(["country"][0]) == 'INA' || this.form.getFieldValue(["country"][0]) == 'ina') {
+        if (
+          this.form.getFieldValue(["country"][0]) == "INA" ||
+          this.form.getFieldValue(["country"][0]) == "ina"
+        ) {
           if (this.form.getFieldValue(["region"][0])) {
             if (this.hasUpload == "0 image id already exist") {
               this.current = 3;
@@ -1044,7 +1066,7 @@ export default {
 
       /* Start Handling Images Compression */
       const reader = new FileReader();
-      
+
       reader.readAsDataURL(file);
 
       reader.onload = (event) => {
@@ -1061,23 +1083,22 @@ export default {
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
           const MAX_HEIGHT = 500;
-          
+
           let scaleSize = 0;
 
           // Scale Size Based on Image Mode Portrait or Landscape
-          if(imgElement.width >= imgElement.height){
+          if (imgElement.width >= imgElement.height) {
             // Landscape Images
             scaleSize = MAX_WIDTH / e.target.width;
             canvas.width = MAX_WIDTH;
             canvas.height = e.target.height * scaleSize;
-          }
-          else{
+          } else {
             // Portrait Images
             scaleSize = MAX_HEIGHT / e.target.height;
             canvas.height = MAX_HEIGHT;
             canvas.width = e.target.width * scaleSize;
           }
-          
+
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
 
@@ -1086,10 +1107,9 @@ export default {
 
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
-          
             ctx.font = "100px Georgia";
             ctx.fillStyle = "rgba(0,0,0,0.1)";
-            ctx.fillText("COPY COPY COPY COPY COPY COPY COPY",0,i * 100);
+            ctx.fillText("COPY COPY COPY COPY COPY COPY COPY", 0, i * 100);
           }
 
           // Convert Canvas to DataURL
@@ -1097,8 +1117,10 @@ export default {
           this.url = srcEncoded;
 
           // Create Base64 Images
-          const base64Canvas = ctx.canvas.toDataURL("image/jpeg").split(';base64,')[1];     
-          
+          const base64Canvas = ctx.canvas
+            .toDataURL("image/jpeg")
+            .split(";base64,")[1];
+
           (async () => {
             this.imgb64 = base64Canvas;
             const uploadResult = await ky
@@ -1118,8 +1140,8 @@ export default {
               // console.log(uploadResult.response.resultMessage);
             }
           })();
-        }
-      }
+        };
+      };
     },
     onKeydown(event) {
       const char = String.fromCharCode(event.keyCode);
