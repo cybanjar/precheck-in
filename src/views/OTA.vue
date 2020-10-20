@@ -483,7 +483,6 @@ export default {
             : "No query strings available";
         });
       this.hotelCode = tempParam["hotelcode"];
-
       this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
@@ -552,17 +551,14 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-
       const tempImage = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
-
       const tempHotelName = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -593,7 +589,6 @@ export default {
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
