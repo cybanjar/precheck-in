@@ -32,13 +32,21 @@
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
-              :class="item.isSelected == true ? 'selected' : 'notselected'"
+              :class="
+                item.isSelected == true
+                  ? 'selected'
+                  : item['gcomment-desc'] == 'GUEST ALREADY PCI'
+                  ? 'notready'
+                  : 'notselected'
+              "
               @click="select(item)"
             >
               <h6
                 :class="
                   item.isSelected == true
                     ? 'selected pl-3 font-weight-bold'
+                    : item['gcomment-desc'] == 'GUEST ALREADY PCI'
+                    ? 'notready pl-3 font-weight-bold'
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
@@ -119,6 +127,11 @@ export default {
   },
   methods: {
     send() {
+      for (const i in this.selectedData) {
+        if (this.selectedData[i]["gcomment-desc"] == "GUEST ALREADY PCI") {
+          this.selectedData.splice(i, 1);
+        }
+      }
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       router.push({ name: "Home", params: { id: this.fairy } });
