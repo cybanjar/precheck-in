@@ -566,7 +566,7 @@ export default {
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
-          item.number2 === 3 &&
+          item.number2 === 7 &&
           item.descr == "SERVER TIME"
         );
       });
@@ -578,6 +578,7 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
+      
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -592,6 +593,7 @@ export default {
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
+
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
