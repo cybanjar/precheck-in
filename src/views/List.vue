@@ -42,7 +42,7 @@
                     : 'notselected pl-3 font-weight-bold'
                 "
               >
-                {{ item["guest-lname"] }},
+                {{ item["guest-fname"] }} {{ item["guest-lname"] }},
                 {{ item["guest-pname"] }}
               </h6>
               <p v-if="item['guest-member-name'] != ''" class="pl-3">
