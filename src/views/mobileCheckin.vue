@@ -487,36 +487,44 @@ export default {
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
     (async () => {
+      //const tempParam = location.search.substring(1);
+      const tempParam = {};
+      location.search
+        .split("&")
+        .toString()
+        .substr(1)
+        .split(",")
+        .forEach((item) => {
+          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
+            ? item.split("=")[1]
+            : "No query strings available";
+        });
+      this.hotelCode = tempParam["hotelcode"];
+      const param = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
+
       const code = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
           {
             json: {
               request: {
-                hotelCode: this.hotelParams,
+                hotelCode: param,
               },
             },
           }
         )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
-      console.log(code);
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      const tempCode = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 3;
-      });
-      const tempLang = this.tempHotel.filter((item, index) => {
+      const tempLangID = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 5;
       });
-
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      this.langID = tempLangID[0]["setupvalue"];
 
-      this.hotelCode = tempCode[0]["setupvalue"];
-
-      this.langID = tempLang[0]["setupvalue"];
-
+      //this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
         this.namePhoto = "Name.svg";
@@ -715,6 +723,10 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
+    errorMailNotValid() {
+      this.$message.error(this.getLabels("not_valid_email", `sentenceCase`)
+      );
+    },
     goOTA() {
       this.informationmodal = false;
       this.informationmodal1 = false;
@@ -910,6 +922,7 @@ export default {
       }
     },
     handleOkEmail() {
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
@@ -924,6 +937,9 @@ export default {
         this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
+      } else if (!this.email.match(mailformat)) {
+        this.errorMailNotValid()
         this.confirmLoading = false;
       } else {
         (async () => {
