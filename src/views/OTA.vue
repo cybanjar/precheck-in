@@ -483,8 +483,31 @@ export default {
             : "No query strings available";
         });
       this.hotelCode = tempParam["hotelcode"];
+      const param = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
 
-      this.langID = tempParam.lang;
+      const code = await ky
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
+          {
+            json: {
+              request: {
+                hotelCode: param,
+              },
+            },
+          }
+        )
+        .json();
+      this.tempHotel = code.response.pciSetup["pci-setup"];
+      const tempEndpoint = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 2;
+      });
+      const tempLangID = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 5;
+      });
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      this.langID = tempLangID[0]["setupvalue"];
+
+      //this.langID = tempParam.lang;
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
         this.namePhoto = "Name.svg";
@@ -502,7 +525,7 @@ export default {
           {
             json: {
               request: {
-                countryId1: tempParam.lang,
+                countryId1: this.langID,
                 countryId2: "",
                 inpVariable: " ",
               },
@@ -516,23 +539,6 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
-      const code = await ky
-        .post(
-          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
-          {
-            json: {
-              request: {
-                hotelCode: this.hotelCode,
-              },
-            },
-          }
-        )
-        .json();
-      this.tempHotel = code.response.pciSetup["pci-setup"];
-      const tempEndpoint = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 2;
-      });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -694,6 +700,10 @@ export default {
         this.getLabels("input_member") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
+      );
+    },
+    errorMailNotValid() {
+      this.$message.error(this.getLabels("not_valid_email", `sentenceCase`)
       );
     },
     goOTA() {
@@ -891,6 +901,7 @@ export default {
       }
     },
     handleOkEmail() {
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       this.confirmLoading = true;
       const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
@@ -905,6 +916,9 @@ export default {
         this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
+      } else if (!this.email.match(mailformat)) {
+        this.errorMailNotValid()
         this.confirmLoading = false;
       } else {
         (async () => {

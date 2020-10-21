@@ -910,8 +910,10 @@ export default {
     next() {
       // console.log(this.hasUpload);
       if (this.current == 0) {
+        const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (
           this.form.getFieldValue(["email"][0]) &&
+          this.form.getFieldValue(["email"][0]).match(mailformat) &&
           this.form.getFieldValue(["phone"][0])
         ) {
           this.current++;
@@ -923,6 +925,8 @@ export default {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
             this.form.validateFields(["phone"]);
+          } else if(!this.form.getFieldValue(["email"][0]).match(mailformat)) {
+            this.form.validateFields(["email"]);
           }
         }
       } else if (this.current == 1) {
