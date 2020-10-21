@@ -465,6 +465,7 @@ export default {
       tempParambook: "",
       tempParamcodate: "",
       tempParamcitime: "",
+      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
     };
   },
   created() {
@@ -512,7 +513,7 @@ export default {
       });
 
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-
+      console.log(this.hotelEndpoint,"endpoint");
       this.hotelCode = tempCode[0]["setupvalue"];
 
       this.langID = tempLang[0]["setupvalue"];
@@ -654,6 +655,7 @@ export default {
         });
       }
     })();
+    console.log(this.hotelEndpoint,"api");
     this.loading = false;
   },
   methods: {
@@ -680,6 +682,9 @@ export default {
     },
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
+    },
+    erroremailNotTrue() {
+      this.$message.error('hint example@gmail.com');
     },
     errormember() {
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
@@ -708,6 +713,7 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
+
     errorMember() {
       this.$message.error(
         this.getLabels("input_member") +
@@ -921,6 +927,9 @@ export default {
         this.confirmLoading = false;
       } else if (!this.email) {
         this.erroremail();
+        this.confirmLoading = false;
+      } else if (!this.reg.test(this.email)) {
+        this.erroremailNotTrue();
         this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
