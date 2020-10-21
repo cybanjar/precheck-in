@@ -643,6 +643,7 @@ export default {
       hasUpload: false,
       hotelEndpoint: "",
       hotelcode: "",
+      ipAddr: "",
     };
   },
   watch: {
@@ -976,6 +977,12 @@ export default {
       }
     },
     search() {
+        async function getIP(){
+          const response = await fetch('http://api.ipify.org/?format=json');
+          const data = await response.json();
+          return data.ip;
+        }
+        getIP().then(data => this.ipAddr = data);
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
           this.minimumDeposit +
@@ -994,9 +1001,12 @@ export default {
         this.form.getFieldValue(["email"][0]) +
         "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
         token.toString() +
-        "&userIP=202.135.55.101&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
+        "&userIP=" +
+        this.ipAddr +
+        "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
+
       const datas = {
         book: this.currDataPrepare.resnr,
         codate: this.formatDate(this.currDataPrepare.co),
@@ -1066,7 +1076,6 @@ export default {
 
       /* Start Handling Images Compression */
       const reader = new FileReader();
-
       reader.readAsDataURL(file);
 
       reader.onload = (event) => {
@@ -1098,7 +1107,6 @@ export default {
             canvas.height = MAX_HEIGHT;
             canvas.width = e.target.width * scaleSize;
           }
-
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
 

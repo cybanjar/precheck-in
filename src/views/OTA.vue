@@ -615,7 +615,19 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
-        this.handleOk();
+
+        reservation.push(
+          data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+        );
+        router.push({
+          name: "Step",
+          params: {
+            foo: reservation,
+            fighter: this.langID,
+            endpoint: this.hotelEndpoint,
+            hotelcode: this.hotelCode,
+          },
+        });
       }
     })();
     this.loading = false;
@@ -774,7 +786,6 @@ export default {
               },
             })
             .json();
-          // console.log(data["response"]["messResult"]);
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
             this.informationmodal = true;
