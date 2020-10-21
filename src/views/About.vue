@@ -515,13 +515,9 @@
               :closable="false"
             >
               <template slot="footer">
-                <a-button
-                  key="submit"
-                  type="primary"
-                  :loading="loading"
-                  @click="handleOkTerm"
-                  >{{ getLabels("close", `sentenceCase`) }}</a-button
-                >
+                <a-button key="submit" type="primary" @click="handleOkTerm">{{
+                  getLabels("close", `sentenceCase`)
+                }}</a-button>
               </template>
               <p>{{ term }}</p>
             </a-modal>
@@ -675,7 +671,7 @@ export default {
       flagKiosk: false,
       langID: "",
       hotelEndpoint: "",
-      hotelCode: "",
+      hotelParams: "",
       phone: "",
       State: "",
       flight: "",
@@ -775,10 +771,12 @@ export default {
           return item.number1 === 99 && item.number2 === 2;
         });
         this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-        const tempHotelCode = this.tempsetup.filter((item, index) => {
-          return item.number1 === 99 && item.number2 === 3;
-        });
-        this.hotelCode = tempHotelCode[0]["setupvalue"];
+        const tempHOTELENCRIPTIONPARAMS = this.tempsetup.filter(
+          (item, index) => {
+            return item.number1 === 99 && item.number2 === 4;
+          }
+        );
+        this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
@@ -827,7 +825,7 @@ export default {
           obj["15"] = this.countries;
           obj["16"] = this.province;
           obj["17"] = this.hotelEndpoint;
-          obj["18"] = this.hotelCode;
+          obj["18"] = this.hotelParams;
           obj["19"] = this.langID;
           obj["20"] = this.checkInTIme;
           nietos.push(this.dataGuest);
@@ -853,7 +851,7 @@ export default {
               jin: mori,
               jun: this.langID,
               jen: this.flagKiosk,
-              mihawk: this.hotelCode,
+              mihawk: this.hotelParams,
               luffy: this.hotelEndpoint,
             },
           });
@@ -883,7 +881,7 @@ export default {
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
       this.hotelEndpoint = this.$route.params.id["setup"]["17"];
-      this.hotelCode = this.$route.params.id["setup"]["18"];
+      this.hotelParams = this.$route.params.id["setup"]["18"];
       this.langID = this.$route.params.id["setup"]["19"];
       this.checkInTIme = this.$route.params.id["setup"]["20"];
       this.id = this.$route.params.id["data"];
@@ -904,7 +902,7 @@ export default {
             jin: mori,
             jun: this.langID,
             jen: this.flagKiosk,
-            mihawk: this.hotelCode,
+            mihawk: this.hotelParams,
             luffy: this.hotelEndpoint,
           },
         });
@@ -919,9 +917,7 @@ export default {
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    console.log(this.Paramloading, "sebelum");
     this.Paramloading = false;
-    console.log(this.Paramloading, "sesudah");
   },
   methods: {
     showModalTerm() {
@@ -989,10 +985,7 @@ export default {
                   ? ""
                   : values.flight,
               roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
+              specialReq: this.text,
               guestPhnumber: values.phone,
               guestNationality: values.nationality,
               guestCountry: values.country,
@@ -1020,10 +1013,7 @@ export default {
           //               : values.flight,
           //           roomPreferences:
           //             this.room + "$" + this.floor + "$" + this.bed,
-          //           specialReq:
-          //             values.Request == " " || values.Request == undefined
-          //               ? ""
-          //               : values.Request,
+          //           specialReq: this.text,
           //           guestPhnumber: values.phone,
           //           guestNationality: values.nationality,
           //           guestCountry: values.country,
@@ -1061,7 +1051,7 @@ export default {
             jin: mori,
             jun: this.langID,
             jen: this.flagKiosk,
-            mihawk: this.hotelCode,
+            mihawk: this.hotelParams,
             luffy: this.hotelEndpoint,
           },
         });

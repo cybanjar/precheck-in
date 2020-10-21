@@ -25,8 +25,8 @@ const routes = [
   },
   {
     path: "/mobilecheckin",
-    name: "OTA",
-    component: () => import("../views/OTA"),
+    name: "MobileCheckin",
+    component: () => import("../views/mobileCheckin"),
   },
   {
     path: "/success",
