@@ -461,9 +461,16 @@ export default {
         overflowX: "hidden",
         textAlign: "center",
       },
+      hotelParams: "",
     };
   },
   created() {
+    console.log(this.$route.params);
+    this.hotelParams = this.$route.params.hotelParameter;
+    const tempParambook = this.$route.params.bookingcode;
+    const tempParamcodate = this.$route.params.coDate;
+    const tempParamcitime = this.$route.params.citime;
+
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -519,6 +526,7 @@ export default {
         this.emailPhoto = "AlamatEmail.svg";
         this.memberPhoto = "keanggotaan.svg";
       }
+
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -584,7 +592,7 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
-      
+
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -612,13 +620,13 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
-      if (tempParam.book != undefined) {
-        this.checkin = tempParam.citime.replace(/%3A/g, ":");
+      if (tempParambook != undefined) {
+        this.checkin = tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          this.bookingcode = tempParam.book;
-          this.date = tempParam.codate.replace(/%2F/g, "/");
+          this.bookingcode = tempParambook;
+          this.date = tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
       } else if (tempParam.resultCd == "0000") {
@@ -1043,35 +1051,35 @@ export default {
       this.modalMembershipID = false;
     },
   },
-  computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label["program-label1"].charAt(0).toUpperCase() +
-              label["program-label1"].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label["program-label1"].toUpperCase();
-          } else {
-            fixLabel = label["program-label1"];
-          }
-        }
-        return fixLabel;
-      };
-    },
-  },
+  // computed: {
+  //   getLabels() {
+  //     let fixLabel = "";
+  //     return (nameKey, used) => {
+  //       const label = this.labels.find((el) => {
+  //         return el["program-variable"] == nameKey;
+  //       });
+  //       if (label === undefined) {
+  //         fixLabel = "";
+  //       } else {
+  //         if (used === "titleCase") {
+  //           fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+  //             txt
+  //           ) {
+  //             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  //           });
+  //         } else if (used === "sentenceCase") {
+  //           fixLabel =
+  //             label["program-label1"].charAt(0).toUpperCase() +
+  //             label["program-label1"].slice(1);
+  //         } else if (used === "upperCase") {
+  //           fixLabel = label["program-label1"].toUpperCase();
+  //         } else {
+  //           fixLabel = label["program-label1"];
+  //         }
+  //       }
+  //       return fixLabel;
+  //     };
+  //   },
+  // },
 };
 </script>

@@ -14,7 +14,7 @@
       <span class="font-weight-bold">{{ jegal }}</span>
     </p>
     <p>
-      <a-button type="primary" :href="urlMCI">{{
+      <a-button type="primary" @click="checkin">{{
         getLabels("ci_now", `titleCase`)
       }}</a-button>
     </p>
@@ -34,6 +34,7 @@
 import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
+import router from "../router";
 
 export default {
   data() {
@@ -45,14 +46,14 @@ export default {
       labels: [],
       flagKiosk: false,
       urlMCI: "",
-      hotelCode: "",
       hotelEndpoint: "",
+      hotelParams: "",
     };
   },
   mounted() {
     this.data = this.$route.params.jin;
     this.flagKiosk = this.$route.params.jen;
-    this.hotelCode = this.$route.params.mihawk;
+    this.hotelParams = this.$route.params.mihawk;
     this.hotelEndpoint = this.$route.params.luffy;
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
@@ -66,17 +67,17 @@ export default {
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
-    this.urlMCI =
-      "http://vhp-online.com/mobilecheckin?lang=" +
-      this.$route.params.jun +
-      "&book=" +
-      this.taejin +
-      "&codate=" +
-      this.iplyo +
-      "&citime=" +
-      this.jegal +
-      "&hotelcode=" +
-      this.hotelCode;
+    // this.urlMCI =
+    //   "http://vhp-online.com/mobilecheckin?lang=" +
+    //   this.$route.params.jun +
+    //   "&book=" +
+    //   this.taejin +
+    //   "&codate=" +
+    //   this.iplyo +
+    //   "&citime=" +
+    //   this.jegal +
+    //   "&hotelcode=" +
+    //   this.hotelCode;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
@@ -107,6 +108,17 @@ export default {
     })();
   },
   methods: {
+    checkin() {
+      router.push({
+        name: "MobileCheckin",
+        params: {
+          hotelParameter: this.hotelParams,
+          bookingcode: this.taejin,
+          coDate: this.iplyo,
+          citime: this.jegal,
+        },
+      });
+    },
     getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
