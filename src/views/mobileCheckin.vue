@@ -461,29 +461,47 @@ export default {
         overflowX: "hidden",
         textAlign: "center",
       },
+      hotelParams: "",
     };
   },
   created() {
+    console.log(this.$route.params);
+    this.hotelParams = this.$route.params.hotelParameter;
+    const tempParambook = this.$route.params.bookingcode;
+    const tempParamcodate = this.$route.params.coDate;
+    const tempParamcitime = this.$route.params.citime;
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
     (async () => {
-      //const tempParam = location.search.substring(1);
-      const tempParam = {};
-      location.search
-        .split("&")
-        .toString()
-        .substr(1)
-        .split(",")
-        .forEach((item) => {
-          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
-            ? item.split("=")[1]
-            : "No query strings available";
-        });
-      this.hotelCode = tempParam["hotelcode"];
-      this.langID = tempParam.lang;
+      const code = await ky
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
+          {
+            json: {
+              request: {
+                hotelCode: this.hotelParams,
+              },
+            },
+          }
+        )
+        .json();
+      this.tempHotel = code.response.pciSetup["pci-setup"];
+      console.log(code);
+      const tempEndpoint = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 2;
+      });
+      const tempCode = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 3;
+      });
+      const tempLang = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 5;
+      });
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      this.hotelCode = tempCode[0]["setupvalue"];
+      this.langID = tempLang[0]["setupvalue"];
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = "booking-code.svg";
         this.namePhoto = "Name.svg";
@@ -501,7 +519,7 @@ export default {
           {
             json: {
               request: {
-                countryId1: tempParam.lang,
+                countryId1: this.langID,
                 countryId2: "",
                 inpVariable: " ",
               },
@@ -515,23 +533,6 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
-      const code = await ky
-        .post(
-          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
-          {
-            json: {
-              request: {
-                hotelCode: this.hotelCode,
-              },
-            },
-          }
-        )
-        .json();
-      this.tempHotel = code.response.pciSetup["pci-setup"];
-      const tempEndpoint = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 2;
-      });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -574,7 +575,6 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
-      
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -601,13 +601,13 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
-      if (tempParam.book != undefined) {
-        this.checkin = tempParam.citime.replace(/%3A/g, ":");
+      if (tempParambook != undefined) {
+        this.checkin = tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          this.bookingcode = tempParam.book;
-          this.date = tempParam.codate.replace(/%2F/g, "/");
+          this.bookingcode = tempParambook;
+          this.date = tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
       } else if (tempParam.resultCd == "0000") {
@@ -615,7 +615,6 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
-
         reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
@@ -1024,35 +1023,35 @@ export default {
       this.modalMembershipID = false;
     },
   },
-  computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label["program-label1"].charAt(0).toUpperCase() +
-              label["program-label1"].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label["program-label1"].toUpperCase();
-          } else {
-            fixLabel = label["program-label1"];
-          }
-        }
-        return fixLabel;
-      };
-    },
-  },
+  // computed: {
+  //   getLabels() {
+  //     let fixLabel = "";
+  //     return (nameKey, used) => {
+  //       const label = this.labels.find((el) => {
+  //         return el["program-variable"] == nameKey;
+  //       });
+  //       if (label === undefined) {
+  //         fixLabel = "";
+  //       } else {
+  //         if (used === "titleCase") {
+  //           fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+  //             txt
+  //           ) {
+  //             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  //           });
+  //         } else if (used === "sentenceCase") {
+  //           fixLabel =
+  //             label["program-label1"].charAt(0).toUpperCase() +
+  //             label["program-label1"].slice(1);
+  //         } else if (used === "upperCase") {
+  //           fixLabel = label["program-label1"].toUpperCase();
+  //         } else {
+  //           fixLabel = label["program-label1"];
+  //         }
+  //       }
+  //       return fixLabel;
+  //     };
+  //   },
+  // },
 };
 </script>

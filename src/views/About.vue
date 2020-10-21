@@ -515,13 +515,9 @@
               :closable="false"
             >
               <template slot="footer">
-                <a-button
-                  key="submit"
-                  type="primary"
-                  :loading="loading"
-                  @click="handleOkTerm"
-                  >{{ getLabels("close", `sentenceCase`) }}</a-button
-                >
+                <a-button key="submit" type="primary" @click="handleOkTerm">{{
+                  getLabels("close", `sentenceCase`)
+                }}</a-button>
               </template>
               <p>{{ term }}</p>
             </a-modal>
@@ -675,7 +671,7 @@ export default {
       flagKiosk: false,
       langID: "",
       hotelEndpoint: "",
-      hotelCode: "",
+      hotelParams: "",
       phone: "",
       State: "",
       flight: "",
@@ -775,10 +771,12 @@ export default {
           return item.number1 === 99 && item.number2 === 2;
         });
         this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-        const tempHotelCode = this.tempsetup.filter((item, index) => {
-          return item.number1 === 99 && item.number2 === 3;
-        });
-        this.hotelCode = tempHotelCode[0]["setupvalue"];
+        const tempHOTELENCRIPTIONPARAMS = this.tempsetup.filter(
+          (item, index) => {
+            return item.number1 === 99 && item.number2 === 4;
+          }
+        );
+        this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
@@ -827,7 +825,7 @@ export default {
           obj["15"] = this.countries;
           obj["16"] = this.province;
           obj["17"] = this.hotelEndpoint;
-          obj["18"] = this.hotelCode;
+          obj["18"] = this.hotelParams;
           obj["19"] = this.langID;
           obj["20"] = this.checkInTIme;
           nietos.push(this.dataGuest);
@@ -853,7 +851,7 @@ export default {
               jin: mori,
               jun: this.langID,
               jen: this.flagKiosk,
-              mihawk: this.hotelCode,
+              mihawk: this.hotelParams,
               luffy: this.hotelEndpoint,
             },
           });
@@ -883,7 +881,7 @@ export default {
       this.countries = this.$route.params.id["setup"]["15"];
       this.province = this.$route.params.id["setup"]["16"];
       this.hotelEndpoint = this.$route.params.id["setup"]["17"];
-      this.hotelCode = this.$route.params.id["setup"]["18"];
+      this.hotelParams = this.$route.params.id["setup"]["18"];
       this.langID = this.$route.params.id["setup"]["19"];
       this.checkInTIme = this.$route.params.id["setup"]["20"];
       this.id = this.$route.params.id["data"];
@@ -904,7 +902,7 @@ export default {
             jin: mori,
             jun: this.langID,
             jen: this.flagKiosk,
-            mihawk: this.hotelCode,
+            mihawk: this.hotelParams,
             luffy: this.hotelEndpoint,
           },
         });
@@ -919,9 +917,7 @@ export default {
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    console.log(this.Paramloading, "sebelum");
     this.Paramloading = false;
-    console.log(this.Paramloading, "sesudah");
   },
   methods: {
     showModalTerm() {
@@ -976,68 +972,62 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(
-            {
-              resNumber: this.currDataPrepare["rsv-number"],
-              reslineNumber: this.currDataPrepare["rsvline-number"],
-              estAT: this.hour,
-              pickrequest: this.showPrice,
-              pickdetail:
-                this.showPrice == false ||
-                values.flight == " " ||
-                values.flight == undefined
-                  ? ""
-                  : values.flight,
-              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
-              specialReq:
-                values.Request == " " || values.Request == undefined
-                  ? ""
-                  : values.Request,
-              guestPhnumber: values.phone,
-              guestNationality: values.nationality,
-              guestCountry: values.country,
-              guestRegion: values.country != "INA" ? " " : values.region,
-              agreedTerm: true,
-              purposeOfStay: values.purpose,
-            },
-            "inputan"
-          );
-          // (async () => {
-          //   const tempParam = location.search.substring(1);
-          //   const parsed = await ky
-          //     .post(this.hotelEndpoint + "preCI/updateData", {
-          //       json: {
-          //         request: {
-          //           resNumber: this.currDataPrepare["rsv-number"],
-          //           reslineNumber: this.currDataPrepare["rsvline-number"],
-          //           estAT: this.hour,
-          //           pickrequest: this.showPrice,
-          //           pickdetail:
-          //             this.showPrice == false ||
-          //             values.flight == " " ||
-          //             values.flight == undefined
-          //               ? ""
-          //               : values.flight,
-          //           roomPreferences:
-          //             this.room + "$" + this.floor + "$" + this.bed,
-          //           specialReq:
-          //             values.Request == " " || values.Request == undefined
-          //               ? ""
-          //               : values.Request,
-          //           guestPhnumber: values.phone,
-          //           guestNationality: values.nationality,
-          //           guestCountry: values.country,
-          //           guestRegion: values.country != "INA" ? " " : values.region,
-          //           agreedTerm: true,
-          //           purposeOfStay: values.purpose,
-          //         },
-          //       },
-          //     })
-          //     .json();
-          //   console.log(parsed, "inputan3");
-          //   const tempMessResult = parsed.response.messResult.split(" ");
-          //   this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          // })();
+          // console.log(
+          //   {
+          //     resNumber: this.currDataPrepare["rsv-number"],
+          //     reslineNumber: this.currDataPrepare["rsvline-number"],
+          //     estAT: this.hour,
+          //     pickrequest: this.showPrice,
+          //     pickdetail:
+          //       this.showPrice == false ||
+          //       values.flight == " " ||
+          //       values.flight == undefined
+          //         ? ""
+          //         : values.flight,
+          //     roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+          //     specialReq: this.text,
+          //     guestPhnumber: values.phone,
+          //     guestNationality: values.nationality,
+          //     guestCountry: values.country,
+          //     guestRegion: values.country != "INA" ? " " : values.region,
+          //     agreedTerm: true,
+          //     purposeOfStay: values.purpose,
+          //   },
+          //   "inputan"
+          // );
+          (async () => {
+            const tempParam = location.search.substring(1);
+            const parsed = await ky
+              .post(this.hotelEndpoint + "preCI/updateData", {
+                json: {
+                  request: {
+                    resNumber: this.currDataPrepare["rsv-number"],
+                    reslineNumber: this.currDataPrepare["rsvline-number"],
+                    estAT: this.hour,
+                    pickrequest: this.showPrice,
+                    pickdetail:
+                      this.showPrice == false ||
+                      values.flight == " " ||
+                      values.flight == undefined
+                        ? ""
+                        : values.flight,
+                    roomPreferences:
+                      this.room + "$" + this.floor + "$" + this.bed,
+                    specialReq: this.text,
+                    guestPhnumber: values.phone,
+                    guestNationality: values.nationality,
+                    guestCountry: values.country,
+                    guestRegion: values.country != "INA" ? " " : values.region,
+                    agreedTerm: true,
+                    purposeOfStay: values.purpose,
+                  },
+                },
+              })
+              .json();
+            console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          })();
           this.scrollToTop();
           this.save();
           this.form.resetFields();
@@ -1061,7 +1051,7 @@ export default {
             jin: mori,
             jun: this.langID,
             jen: this.flagKiosk,
-            mihawk: this.hotelCode,
+            mihawk: this.hotelParams,
             luffy: this.hotelEndpoint,
           },
         });
