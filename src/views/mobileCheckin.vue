@@ -462,22 +462,23 @@ export default {
         textAlign: "center",
       },
       hotelParams: "",
+      tempParambook: "",
+      tempParamcodate: "",
+      tempParamcitime: "",
     };
   },
   created() {
-    if (
-      location.search.substring(1) != undefined ||
-      location.search.substring(1) != ""
-    ) {
-      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-      const tempParambook = undefined;
-      const tempParamcodate = undefined;
-      const tempParamcitime = undefined;
-    } else {
+    console.log(this.$route.params.bookingcode);
+    if (this.$route.params.hotelParameter != undefined) {
+      console.log("msk");
       this.hotelParams = this.$route.params.hotelParameter;
-      const tempParambook = this.$route.params.bookingcode;
-      const tempParamcodate = this.$route.params.coDate;
-      const tempParamcitime = this.$route.params.citime;
+      this.tempParambook = this.$route.params.bookingcode;
+      console.log(this.tempParambook, "thus");
+      this.tempParamcodate = this.$route.params.coDate;
+      this.tempParamcitime = this.$route.params.citime;
+    } else {
+      console.log("msk2");
+      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
     }
 
     const today = new Date();
@@ -621,16 +622,19 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
-      if (tempParambook != undefined) {
-        this.checkin = tempParamcitime.replace(/%3A/g, ":");
+      if (this.tempParambook != '') {
+        this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          this.bookingcode = tempParambook;
-          this.date = tempParamcodate.replace(/%2F/g, "/");
+          console.log("gkkesini?");
+          this.bookingcode = this.tempParambook;
+          this.date = this.tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
-      } else if (tempParam.resultCd == "0000") {
+      } else if (this.tempParam.resultCd == "0000") {
+        console.log("gkkesini?2");
+
         const tmpParam = CookieS.get("data");
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
@@ -1044,35 +1048,35 @@ export default {
       this.modalMembershipID = false;
     },
   },
-  computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label["program-label1"].charAt(0).toUpperCase() +
-              label["program-label1"].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label["program-label1"].toUpperCase();
-          } else {
-            fixLabel = label["program-label1"];
-          }
-        }
-        return fixLabel;
-      };
-    },
-  },
+  // computed: {
+  //   getLabels() {
+  //     let fixLabel = "";
+  //     return (nameKey, used) => {
+  //       const label = this.labels.find((el) => {
+  //         return el["program-variable"] == nameKey;
+  //       });
+  //       if (label === undefined) {
+  //         fixLabel = "";
+  //       } else {
+  //         if (used === "titleCase") {
+  //           fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+  //             txt
+  //           ) {
+  //             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  //           });
+  //         } else if (used === "sentenceCase") {
+  //           fixLabel =
+  //             label["program-label1"].charAt(0).toUpperCase() +
+  //             label["program-label1"].slice(1);
+  //         } else if (used === "upperCase") {
+  //           fixLabel = label["program-label1"].toUpperCase();
+  //         } else {
+  //           fixLabel = label["program-label1"];
+  //         }
+  //       }
+  //       return fixLabel;
+  //     };
+  //   },
+  // },
 };
 </script>
