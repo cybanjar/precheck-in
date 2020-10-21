@@ -62,11 +62,7 @@
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalBookingCode"
-            class="img-ota"
-            :src="require(`../assets/${boPhoto}`)"
-          />
+          <img @click="showModalBookingCode" class="img-ota" :src="boPhoto" />
           <a-modal
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
@@ -144,7 +140,7 @@
           <img
             @click="showModalGuestName"
             class="img-ota"
-            :src="require(`../assets/${namePhoto}`)"
+            :src="namePhoto"
           />
           <a-modal
             v-model="modalGuestName"
@@ -222,7 +218,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            :src="require(`../assets/${emailPhoto}`)"
+            :src="emailPhoto"
           />
           <a-modal
             v-model="modalEmailAddress"
@@ -300,7 +296,7 @@
           <img
             class="img-ota"
             @click="showModalMembershipID"
-            :src="require(`../assets/${memberPhoto}`)"
+            :src="memberPhoto"
           />
           <a-modal
             v-model="modalMembershipID"
@@ -469,17 +465,25 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.bookingcode);
     if (this.$route.params.hotelParameter != undefined) {
-      console.log("msk");
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
-      console.log(this.tempParambook, "thus");
       this.tempParamcodate = this.$route.params.coDate;
       this.tempParamcitime = this.$route.params.citime;
-    } else {
-      console.log("msk2");
+    } else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
+    } else {
+      const tempParam = {};
+      location.search
+        .split("&")
+        .toString()
+        .substr(1)
+        .split(",")
+        .forEach((item) => {
+          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
+            ? item.split("=")[1]
+            : "No query strings available";
+        });
     }
 
     const today = new Date();
@@ -501,7 +505,6 @@ export default {
         )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
-      console.log(code);
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
@@ -513,21 +516,19 @@ export default {
       });
 
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-      console.log(this.hotelEndpoint,"endpoint");
       this.hotelCode = tempCode[0]["setupvalue"];
 
       this.langID = tempLang[0]["setupvalue"];
-      console.log(this.langID, "bahasa");
       if (this.langID == "eng" || this.langID == "ENG") {
-        this.boPhoto = "booking-code.svg";
-        this.namePhoto = "Name.svg";
-        this.emailPhoto = "EmailAddress.svg";
-        this.memberPhoto = "membership.svg";
+        this.boPhoto = require(`../assets/booking-code.svg`);
+        this.namePhoto = require(`../assets/Name.svg`);
+        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.memberPhoto = require(`../assets/membership.svg`);
       } else {
-        this.boPhoto = "kodeBooking.svg";
-        this.namePhoto = "Nama.svg";
-        this.emailPhoto = "AlamatEmail.svg";
-        this.memberPhoto = "keanggotaan.svg";
+        this.boPhoto = require(`../assets/kodeBooking.svg`);
+        this.namePhoto = require(`../assets/Nama.svg`);
+        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
+        this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
 
       const parsed = await ky
@@ -628,14 +629,11 @@ export default {
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          console.log("gkkesini?");
           this.bookingcode = this.tempParambook;
           this.date = this.tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
-      } else if (this.tempParam.resultCd == "0000") {
-        console.log("gkkesini?2");
-
+      } else if (tempParam.resultCd == "0000") {
         const tmpParam = CookieS.get("data");
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
@@ -655,7 +653,6 @@ export default {
         });
       }
     })();
-    console.log(this.hotelEndpoint,"api");
     this.loading = false;
   },
   methods: {
@@ -684,7 +681,7 @@ export default {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     erroremailNotTrue() {
-      this.$message.error('hint example@gmail.com');
+      this.$message.error("hint example@gmail.com");
     },
     errormember() {
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
