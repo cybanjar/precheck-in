@@ -469,6 +469,7 @@ export default {
     };
   },
   created() {
+    const tempParam = {};
     if (this.$route.params.hotelParameter != undefined) {
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
@@ -476,8 +477,7 @@ export default {
       this.tempParamcitime = this.$route.params.citime;
     } else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-    } else {
-      const tempParam = {};
+    } else {      
       location.search
         .split("&")
         .toString()
