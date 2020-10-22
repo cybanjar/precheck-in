@@ -169,6 +169,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="name"
+                  ref="name"
                   :placeholder="getLabels('input_guest_name', `sentenceCase`)"
                 />
               </a-form-item>
@@ -247,6 +248,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="email"
+                  ref="email"
                   :placeholder="getLabels('input_email', `sentenceCase`)"
                 />
               </a-form-item>
@@ -325,6 +327,7 @@
                 <a-input
                   v-model="member"
                   class="ant-input-h"
+                  ref="member"
                   :placeholder="getLabels('input_membership', `sentenceCase`)"
                 />
               </a-form-item>
@@ -486,7 +489,6 @@ export default {
             : "No query strings available";
         });
     }
-
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -515,10 +517,8 @@ export default {
       const tempLang = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 5;
       });
-
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
-
       this.langID = tempLang[0]["setupvalue"];
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = require(`../assets/booking-code.svg`);
@@ -531,7 +531,6 @@ export default {
         this.emailPhoto = require(`../assets/AlamatEmail.svg`);
         this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
-
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -571,17 +570,14 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-
       const tempImage = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
-
       const tempHotelName = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -597,7 +593,6 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
-
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -612,7 +607,6 @@ export default {
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -639,7 +633,6 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
-
         reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
@@ -665,14 +658,20 @@ export default {
       await this.$nextTick()
         this.$refs.bookingcode.focus();
     },
-    showModalGuestName() {
+    async showModalGuestName() {
       this.modalGuestName = true;
+      await this.$nextTick()
+        this.$refs.name.focus();
     },
-    showModalEmailAddress() {
+    async showModalEmailAddress() {
       this.modalEmailAddress = true;
+      await this.$nextTick()
+        this.$refs.email.focus();
     },
-    showModalMembershipID() {
+    async showModalMembershipID() {
       this.modalMembershipID = true;
+      await this.$nextTick()
+        this.$refs.member.focus();
     },
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
@@ -713,7 +712,6 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
-
     errorMember() {
       this.$message.error(
         this.getLabels("input_member") +
