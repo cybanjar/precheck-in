@@ -1,23 +1,41 @@
 <template>
   <div class="text-center">
-    <canvas id="canvas"></canvas>
-    <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
-    <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
-    <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
-    <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
+    <div v-if="!roomNotReady">
+      <canvas id="canvas"></canvas>
+      <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
+      <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
+      <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
+      <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
 
-    <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <div class="row justify-center q-mt-xl">
-      <div class="col-md-6 col-xs-11">
-        <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+      <div class="row justify-center q-mt-xl">
+        <div class="col-md-6 col-xs-11">
+          <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+        </div>
       </div>
-    </div>
 
-    <a-button
-      type="primary"
-      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
-      >{{ getLabels("done", `titleCase`) }}</a-button
-    >
+      <a-button
+        type="primary"
+        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
+        >{{ getLabels("done", `titleCase`) }}</a-button
+      >
+    </div>
+    <div v-else>
+      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+      <div class="row justify-center q-mt-xl">
+        <div class="col-md-6 col-xs-11">
+          <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
+          <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
+          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p>
+        </div>
+      </div>
+
+      <a-button
+        type="primary"
+        @click="goBack"
+        >{{ getLabels("done", `titleCase`) }}</a-button
+      >
+    </div>
   </div>
 </template>
 
@@ -34,6 +52,10 @@ export default {
       wifiPassword: "",
       arrangement: "",
       labels: [],
+      roomNotReady: false,
+      email: "",
+      phone: "",
+      param: "",
     };
   },
   mounted() {
@@ -45,6 +67,10 @@ export default {
     this.wifiAddress = this.$route.params.jun;
     this.wifiPassword = this.$route.params.jen;
     this.arrangement = this.$route.params.jon;
+    this.roomNotReady = this.$route.params.jan;
+    this.email = this.$route.params.email;
+    this.phone = this.$route.params.phnum;
+    this.param = this.$route.params.param;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
@@ -114,7 +140,7 @@ export default {
       return fixDate;
     },
     goBack() {
-      route;
+      window.open("http://vhp-online.com/mobilecheckin?param=" + this.param, "_self")
     },
   },
 };

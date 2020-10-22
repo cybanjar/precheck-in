@@ -478,9 +478,9 @@ export default {
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
       this.tempParamcitime = this.$route.params.citime;
-    } else if (location.search.substring(1) != undefined) {
+    } /*else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-    } else {
+    }*/ else {
       const tempParam = {};
       location.search
         .split("&")
@@ -663,6 +663,7 @@ export default {
       }
     })();
     this.loading = false;
+  }
   },
   methods: {
     onChange(date, dateString) {
@@ -776,15 +777,34 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelParams,
-              },
-            });
+            if (this.reservation.length == 1) {
+              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+                this.informationmodal2 = false;
+                this.roomNotReady = false;
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                  },
+                });
+              } else {
+                this.informationmodal2 = true;
+                this.roomNotReady = true;
+              }
+            } else {
+              router.push({
+                name: "Step",
+                params: {
+                  foo: this.reservation,
+                  fighter: this.langID,
+                  endpoint: this.hotelEndpoint,
+                  hotelcode: this.hotelParams,
+                },
+              });
+            }
           }
         })();
       }
@@ -840,21 +860,33 @@ export default {
             this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (data["response"]["arrivalGuestlist"]["arrival-guestlist"]["room-status"] == "0 Ready To Checkin") {
-              this.informationmodal2 = false;
-              this.roomNotReady = false;
+            if (this.reservation.length == 1) {
+              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+                this.informationmodal2 = false;
+                this.roomNotReady = false;
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                  },
+                });
+              } else {
+                this.informationmodal2 = true;
+                this.roomNotReady = true;
+              }
+            } else {
               router.push({
                 name: "Step",
                 params: {
-                  foo: reservation,
+                  foo: this.reservation,
                   fighter: this.langID,
                   endpoint: this.hotelEndpoint,
                   hotelcode: this.hotelParams,
                 },
               });
-            } else {
-              this.informationmodal2 = true;
-              this.roomNotReady = true;
             }
           }
         })();
@@ -910,18 +942,37 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            reservation.push(
+            this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelParams,
-              },
-            });
+            if (this.reservation.length == 1) {
+              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+                this.informationmodal2 = false;
+                this.roomNotReady = false;
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                  },
+                });
+              } else {
+                this.informationmodal2 = true;
+                this.roomNotReady = true;
+              }
+            } else {
+              router.push({
+                name: "Step",
+                params: {
+                  foo: this.reservation,
+                  fighter: this.langID,
+                  endpoint: this.hotelEndpoint,
+                  hotelcode: this.hotelParams,
+                },
+              });
+            }
           }
         })();
         this.modalGuestName = false;
@@ -982,15 +1033,34 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelParams,
-              },
-            });
+            if (this.reservation.length == 1) {
+              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+                this.informationmodal2 = false;
+                this.roomNotReady = false;
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                  },
+                });
+              } else {
+                this.informationmodal2 = true;
+                this.roomNotReady = true;
+              }
+            } else {
+              router.push({
+                name: "Step",
+                params: {
+                  foo: this.reservation,
+                  fighter: this.langID,
+                  endpoint: this.hotelEndpoint,
+                  hotelcode: this.hotelParams,
+                },
+              });
+            }
           }
         })();
         this.modalEmailAddress = false;
@@ -1048,15 +1118,34 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelParams,
-              },
-            });
+            if (this.reservation.length == 1) {
+              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+                this.informationmodal2 = false;
+                this.roomNotReady = false;
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                  },
+                });
+              } else {
+                this.informationmodal2 = true;
+                this.roomNotReady = true;
+              }
+            } else {
+              router.push({
+                name: "Step",
+                params: {
+                  foo: this.reservation,
+                  fighter: this.langID,
+                  endpoint: this.hotelEndpoint,
+                  hotelcode: this.hotelParams,
+                },
+              });
+            }
           }
         })();
         this.modalMembershipID = false;
@@ -1078,6 +1167,7 @@ export default {
           fighter: this.langID,
           endpoint: this.hotelEndpoint,
           hotelcode: this.hotelParams,
+          notready: this.roomNotReady,
         },
       });
     },

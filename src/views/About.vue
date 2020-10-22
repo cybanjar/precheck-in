@@ -886,7 +886,7 @@ export default {
       this.checkInTIme = this.$route.params.id["setup"]["20"];
       this.id = this.$route.params.id["data"];
       this.currDataPrepare = this.id[this.counter];
-      console.log(this.currDataPrepare, "else");
+      // console.log(this.currDataPrepare, "else");
       if (this.currDataPrepare["gcomment-desc"] == "GUEST ALREADY PCI") {
         const mori =
           "{" +

@@ -338,6 +338,11 @@
                   </a-form-item>
                 </div>-->
               </a-col>
+              <a-col :span="5" :xl="5" :xs="24">
+                <a-form-item :label="getLabels('vehicle_regident', `titleCase`)">
+                  <a-input v-model="vRegident" />
+                </a-form-item>
+              </a-col>
               <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
@@ -460,6 +465,11 @@
           <div class="steps-action">
             <div class="row justify-between">
               <div class="col-6 col-xs-6">
+                <div v-if="current == 0">
+                  <a-button @click="handleBack">{{
+                    getLabels("back", `titleCase`)
+                  }}</a-button>
+                </div>
                 <div v-if="y">
                   <a-button v-if="current > 0" @click="prev">{{
                     getLabels("prev", `titleCase`)
@@ -644,6 +654,9 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
+      roomNotReady: false,
+      freeParking: false,
+      vRegident: "",
     };
   },
   watch: {
@@ -657,7 +670,7 @@ export default {
     this.hotelEndpoint = this.$route.params.endpoint;
     this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    // console.log(this.$route.params.id, "nyamtuh");
+    this.roomNotReady = this.$route.params.notready;
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -777,6 +790,8 @@ export default {
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.region.push(air);
+          } else if (this.tempsetup[i]["number1"] == 8 && this.tempsetup[i]["number2"] == 14) {
+            this.freeParking = this.tempsetup[i]["setupflag"];
           }
         }
         if (this.currData["0"].length > 1) {
@@ -809,7 +824,7 @@ export default {
           nietos.push(obj);
           router.push({
             name: "ListCheckIn",
-            params: { foo: nietos, fighter: this.langID },
+            params: { foo: nietos, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelcode },
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
@@ -1204,6 +1219,10 @@ export default {
             jun: this.wifiAddress,
             jen: this.wifiPassword,
             jon: this.currDataPrepare["argt-str"],
+            jan: this.roomNotReady,
+            email: this.form.getFieldValue(["email"][0]),
+            phnum: this.form.getFieldValue(["phone"][0]),
+            param: this.hotelcode,
           },
         });
         //} else {
@@ -1284,10 +1303,11 @@ export default {
       });
     },
     disagree() {
-      router.push({
+      window.open("http://vhp-online.com/mobilecheckin?param=" + this.hotelcode, "_self")
+      /*router.push({
         path: "mobilecheckin",
         query: { lang: this.langID, hotelcode: this.hotelcode },
-      });
+      });*/
       // router.push("mobilecheckin");
     },
     handleBlur() {
@@ -1340,6 +1360,9 @@ export default {
       return label.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
+    },
+    handleBack(){
+      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelcode, "_self");
     },
   },
 };

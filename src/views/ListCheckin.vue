@@ -1,6 +1,26 @@
 <template>
   <div>
     <div class="home">
+      <div v-show="informationModal">
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationModal"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="back" @click="handleNo">
+            {{ getLabels("no", `titleCase`) }}
+          </a-button>
+          <a-button
+            key="submit"
+            type="primary"
+            @click="handleYes"
+            >{{ getLabels("yes", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
+      </a-modal>
+      </div>
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -80,6 +100,13 @@
         </a-list>
       </div>
       <a-button
+        class="mr-3"
+        type="primary"
+        size="large"
+        @click="handleBack"
+        >{{ getLabels("back", `titleCase`) }}</a-button
+      >
+      <a-button
         class="mr-3 float-right"
         type="primary"
         size="large"
@@ -103,9 +130,13 @@ export default {
       hotelname: "",
       information: {},
       lemparsetup: [],
-      fairy: {},
+      fairy: [],
       labels: [],
       langID: "",
+      informationModal: false,
+      roomNotReady: false,
+      hotelEndpoint: "",
+      hotelCode: "",
     };
   },
   created() {
@@ -119,6 +150,8 @@ export default {
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
+    this.hotelEndpoint = this.$route.params.endpoint;
+    this.hotelCode = this.$route.params.hotelcode;
   },
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
@@ -184,14 +217,20 @@ export default {
       // }
     },
     send() {
-      // console.log(this.selectedData['0']);
-      this.fairy["data"] = this.selectedData;
-      this.fairy["setup"] = this.lemparsetup;
-      // console.log(this.fairy);
-      router.push({
-        name: "Step",
-        params: { id: this.fairy, fighter: this.langID },
-      });
+      // this.fairy["data"] = this.selectedData;
+      // this.fairy["setup"] = this.lemparsetup;
+      this.fairy.push(this.selectedData);
+      if (this.selectedData["room-status"] == "0 Ready To Checkin") {
+        this.informationModal = false;
+        this.roomNotReady = false;
+        router.push({
+          name: "Step",
+          params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+        });
+      } else {
+        this.informationModal = true;
+        this.roomNotReady = true;
+      }
     },
     formatDate(datum) {
       const dDate =
@@ -235,6 +274,19 @@ export default {
       return label.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
+    },
+    handleYes() {
+      this.informationModal = false;
+      router.push({
+        name: "Step",
+        params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+      });
+    },
+    handleNo() {
+      this.informationModal = false;
+    },
+    handleBack(){
+      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelCode, "_self");
     },
   },
 };
