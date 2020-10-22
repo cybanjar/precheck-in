@@ -96,6 +96,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="bookingcode"
+                  ref="bookingcode"
                   :placeholder="getLabels('input_bookcode', `sentenceCase`)"
                 />
               </a-form-item>
@@ -174,6 +175,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="name"
+                  ref="name"
                   :placeholder="getLabels('input_guest_name', `sentenceCase`)"
                 />
               </a-form-item>
@@ -252,6 +254,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="email"
+                  ref="email"
                   :placeholder="getLabels('input_email', `sentenceCase`)"
                 />
               </a-form-item>
@@ -330,6 +333,7 @@
                 <a-input
                   v-model="member"
                   class="ant-input-h"
+                  ref="member"
                   :placeholder="getLabels('input_membership', `sentenceCase`)"
                 />
               </a-form-item>
@@ -473,15 +477,15 @@ export default {
     };
   },
   created() {
+    const tempParam = {};
     if (this.$route.params.hotelParameter != undefined) {
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
       this.tempParamcitime = this.$route.params.citime;
-    } /*else if (location.search.substring(1) != undefined) {
+    } else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-    }*/ else {
-      const tempParam = {};
+    } else {      
       location.search
         .split("&")
         .toString()
@@ -492,9 +496,7 @@ export default {
             ? item.split("=")[1]
             : "No query strings available";
         });
-      this.hotelCode = tempParam["hotelcode"];
-      this.hotelParams = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
-
+    }
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -663,23 +665,30 @@ export default {
       }
     })();
     this.loading = false;
-  }
   },
   methods: {
     onChange(date, dateString) {
       this.date = dateString;
     },
-    showModalBookingCode() {
+    async showModalBookingCode() {
       this.modalBookingCode = true;
+      await this.$nextTick()
+        this.$refs.bookingcode.focus();
     },
-    showModalGuestName() {
+    async showModalGuestName() {
       this.modalGuestName = true;
+      await this.$nextTick()
+        this.$refs.name.focus();
     },
-    showModalEmailAddress() {
+    async showModalEmailAddress() {
       this.modalEmailAddress = true;
+      await this.$nextTick()
+        this.$refs.email.focus();
     },
-    showModalMembershipID() {
+    async showModalMembershipID() {
       this.modalMembershipID = true;
+      await this.$nextTick()
+        this.$refs.member.focus();
     },
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
