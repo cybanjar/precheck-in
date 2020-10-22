@@ -62,11 +62,7 @@
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalBookingCode"
-            class="img-ota"
-            :src="require(`../assets/${boPhoto}`)"
-          />
+          <img @click="showModalBookingCode" class="img-ota" :src="boPhoto" />
           <a-modal
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
@@ -94,6 +90,7 @@
                 <a-input
                   class="ant-input-h"
                   v-model="bookingcode"
+                  ref="bookingcode"
                   :placeholder="getLabels('input_bookcode', `sentenceCase`)"
                 />
               </a-form-item>
@@ -144,7 +141,7 @@
           <img
             @click="showModalGuestName"
             class="img-ota"
-            :src="require(`../assets/${namePhoto}`)"
+            :src="namePhoto"
           />
           <a-modal
             v-model="modalGuestName"
@@ -222,7 +219,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            :src="require(`../assets/${emailPhoto}`)"
+            :src="emailPhoto"
           />
           <a-modal
             v-model="modalEmailAddress"
@@ -300,7 +297,7 @@
           <img
             class="img-ota"
             @click="showModalMembershipID"
-            :src="require(`../assets/${memberPhoto}`)"
+            :src="memberPhoto"
           />
           <a-modal
             v-model="modalMembershipID"
@@ -462,14 +459,34 @@ export default {
         textAlign: "center",
       },
       hotelParams: "",
+      tempParambook: "",
+      tempParamcodate: "",
+      tempParamcitime: "",
+      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
     };
   },
   created() {
-    console.log(this.$route.params);
-    this.hotelParams = this.$route.params.hotelParameter;
-    const tempParambook = this.$route.params.bookingcode;
-    const tempParamcodate = this.$route.params.coDate;
-    const tempParamcitime = this.$route.params.citime;
+    if (this.$route.params.hotelParameter != undefined) {
+      this.hotelParams = this.$route.params.hotelParameter;
+      this.tempParambook = this.$route.params.bookingcode;
+      this.tempParamcodate = this.$route.params.coDate;
+      this.tempParamcitime = this.$route.params.citime;
+    } else if (location.search.substring(1) != undefined) {
+      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
+    } else {
+      const tempParam = {};
+      location.search
+        .split("&")
+        .toString()
+        .substr(1)
+        .split(",")
+        .forEach((item) => {
+          tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
+            ? item.split("=")[1]
+            : "No query strings available";
+        });
+    }
+
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -489,7 +506,6 @@ export default {
         )
         .json();
       this.tempHotel = code.response.pciSetup["pci-setup"];
-      console.log(code);
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
@@ -499,20 +515,23 @@ export default {
       const tempLang = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 5;
       });
+
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
+
       this.langID = tempLang[0]["setupvalue"];
       if (this.langID == "eng" || this.langID == "ENG") {
-        this.boPhoto = "booking-code.svg";
-        this.namePhoto = "Name.svg";
-        this.emailPhoto = "EmailAddress.svg";
-        this.memberPhoto = "membership.svg";
+        this.boPhoto = require(`../assets/booking-code.svg`);
+        this.namePhoto = require(`../assets/Name.svg`);
+        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.memberPhoto = require(`../assets/membership.svg`);
       } else {
-        this.boPhoto = "kodeBooking.svg";
-        this.namePhoto = "Nama.svg";
-        this.emailPhoto = "AlamatEmail.svg";
-        this.memberPhoto = "keanggotaan.svg";
+        this.boPhoto = require(`../assets/kodeBooking.svg`);
+        this.namePhoto = require(`../assets/Nama.svg`);
+        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
+        this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
+
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -552,14 +571,17 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
+
       const tempImage = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
+
       const tempHotelName = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
+
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -575,6 +597,7 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
+
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -589,6 +612,7 @@ export default {
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
+
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -601,13 +625,13 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
-      if (tempParambook != undefined) {
-        this.checkin = tempParamcitime.replace(/%3A/g, ":");
+      if (this.tempParambook != "") {
+        this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          this.bookingcode = tempParambook;
-          this.date = tempParamcodate.replace(/%2F/g, "/");
+          this.bookingcode = this.tempParambook;
+          this.date = this.tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
       } else if (tempParam.resultCd == "0000") {
@@ -615,6 +639,7 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
+
         reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
@@ -635,8 +660,10 @@ export default {
     onChange(date, dateString) {
       this.date = dateString;
     },
-    showModalBookingCode() {
+    async showModalBookingCode() {
       this.modalBookingCode = true;
+      await this.$nextTick()
+        this.$refs.bookingcode.focus();
     },
     showModalGuestName() {
       this.modalGuestName = true;
@@ -655,6 +682,9 @@ export default {
     },
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
+    },
+    erroremailNotTrue() {
+      this.$message.error("hint example@gmail.com");
     },
     errormember() {
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
@@ -683,6 +713,7 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
+
     errorMember() {
       this.$message.error(
         this.getLabels("input_member") +
@@ -897,6 +928,9 @@ export default {
       } else if (!this.email) {
         this.erroremail();
         this.confirmLoading = false;
+      } else if (!this.reg.test(this.email)) {
+        this.erroremailNotTrue();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
         this.confirmLoading = false;
@@ -1023,35 +1057,35 @@ export default {
       this.modalMembershipID = false;
     },
   },
-  // computed: {
-  //   getLabels() {
-  //     let fixLabel = "";
-  //     return (nameKey, used) => {
-  //       const label = this.labels.find((el) => {
-  //         return el["program-variable"] == nameKey;
-  //       });
-  //       if (label === undefined) {
-  //         fixLabel = "";
-  //       } else {
-  //         if (used === "titleCase") {
-  //           fixLabel = label["program-label1"].replace(/\w\S*/g, function (
-  //             txt
-  //           ) {
-  //             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  //           });
-  //         } else if (used === "sentenceCase") {
-  //           fixLabel =
-  //             label["program-label1"].charAt(0).toUpperCase() +
-  //             label["program-label1"].slice(1);
-  //         } else if (used === "upperCase") {
-  //           fixLabel = label["program-label1"].toUpperCase();
-  //         } else {
-  //           fixLabel = label["program-label1"];
-  //         }
-  //       }
-  //       return fixLabel;
-  //     };
-  //   },
-  // },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["program-label1"].charAt(0).toUpperCase() +
+              label["program-label1"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["program-label1"].toUpperCase();
+          } else {
+            fixLabel = label["program-label1"];
+          }
+        }
+        return fixLabel;
+      };
+    },
+  },
 };
 </script>
