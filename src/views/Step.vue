@@ -338,11 +338,13 @@
                   </a-form-item>
                 </div>-->
               </a-col>
-              <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('vehicle_regident', `titleCase`)">
-                  <a-input v-model="vRegident" />
-                </a-form-item>
-              </a-col>
+              <div v-if="freeParking">
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item :label="getLabels('vehicle_regident', `titleCase`)">
+                    <a-input v-model="vRegident" />
+                  </a-form-item>
+                </a-col>
+              </div>
               <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
