@@ -68,11 +68,7 @@
       </a-row>
       <a-row :gutter="[8, 32]" class="mt-3" type="flex" justify="center">
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalBookingCode"
-            class="img-ota"
-            :src="require(`../assets/${boPhoto}`)"
-          />
+          <img @click="showModalBookingCode" class="img-ota" :src="boPhoto" />
           <a-modal
             v-model="modalBookingCode"
             :title="getLabels('book_code', `titleCase`)"
@@ -150,7 +146,7 @@
           <img
             @click="showModalGuestName"
             class="img-ota"
-            :src="require(`../assets/${namePhoto}`)"
+            :src="namePhoto"
           />
           <a-modal
             v-model="modalGuestName"
@@ -228,7 +224,7 @@
           <img
             class="img-ota"
             @click="showModalEmailAddress"
-            :src="require(`../assets/${emailPhoto}`)"
+            :src="emailPhoto"
           />
           <a-modal
             v-model="modalEmailAddress"
@@ -306,7 +302,7 @@
           <img
             class="img-ota"
             @click="showModalMembershipID"
-            :src="require(`../assets/${memberPhoto}`)"
+            :src="memberPhoto"
           />
           <a-modal
             v-model="modalMembershipID"
@@ -470,31 +466,21 @@ export default {
       hotelParams: "",
       roomNotReady: false,
       reservation: [],
+      tempParambook: "",
+      tempParamcodate: "",
+      tempParamcitime: "",
+      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
     };
   },
   created() {
-    if (
-      location.search.substring(1) != undefined ||
-      location.search.substring(1) != ""
-    ) {
-      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-      const tempParambook = undefined;
-      const tempParamcodate = undefined;
-      const tempParamcitime = undefined;
-    } else {
+    if (this.$route.params.hotelParameter != undefined) {
       this.hotelParams = this.$route.params.hotelParameter;
-      const tempParambook = this.$route.params.bookingcode;
-      const tempParamcodate = this.$route.params.coDate;
-      const tempParamcitime = this.$route.params.citime;
-    }
-
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();
-    this.date = dd + "/" + mm + "/" + yyyy;
-    (async () => {
-      //const tempParam = location.search.substring(1);
+      this.tempParambook = this.$route.params.bookingcode;
+      this.tempParamcodate = this.$route.params.coDate;
+      this.tempParamcitime = this.$route.params.citime;
+    } else if (location.search.substring(1) != undefined) {
+      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
+    } else {
       const tempParam = {};
       location.search
         .split("&")
@@ -509,6 +495,12 @@ export default {
       this.hotelCode = tempParam["hotelcode"];
       this.hotelParams = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
 
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+    this.date = dd + "/" + mm + "/" + yyyy;
+    (async () => {
       const code = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
@@ -525,23 +517,27 @@ export default {
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
       });
-      const tempLangID = this.tempHotel.filter((item, index) => {
+      const tempCode = this.tempHotel.filter((item, index) => {
+        return item.number1 === 99 && item.number2 === 3;
+      });
+      const tempLang = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 5;
       });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-      this.langID = tempLangID[0]["setupvalue"];
 
-      //this.langID = tempParam.lang;
+      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+      this.hotelCode = tempCode[0]["setupvalue"];
+
+      this.langID = tempLang[0]["setupvalue"];
       if (this.langID == "eng" || this.langID == "ENG") {
-        this.boPhoto = "booking-code.svg";
-        this.namePhoto = "Name.svg";
-        this.emailPhoto = "EmailAddress.svg";
-        this.memberPhoto = "membership.svg";
+        this.boPhoto = require(`../assets/booking-code.svg`);
+        this.namePhoto = require(`../assets/Name.svg`);
+        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.memberPhoto = require(`../assets/membership.svg`);
       } else {
-        this.boPhoto = "kodeBooking.svg";
-        this.namePhoto = "Nama.svg";
-        this.emailPhoto = "AlamatEmail.svg";
-        this.memberPhoto = "keanggotaan.svg";
+        this.boPhoto = require(`../assets/kodeBooking.svg`);
+        this.namePhoto = require(`../assets/Nama.svg`);
+        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
+        this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
 
       const parsed = await ky
@@ -637,13 +633,13 @@ export default {
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
       }
-      if (tempParambook != undefined) {
-        this.checkin = tempParamcitime.replace(/%3A/g, ":");
+      if (this.tempParambook != "") {
+        this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
           this.informationmodal = true;
         } else {
-          this.bookingcode = tempParambook;
-          this.date = tempParamcodate.replace(/%2F/g, "/");
+          this.bookingcode = this.tempParambook;
+          this.date = this.tempParamcodate.replace(/%2F/g, "/");
           this.handleOk();
         }
       } else if (tempParam.resultCd == "0000") {
@@ -693,6 +689,9 @@ export default {
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
+    erroremailNotTrue() {
+      this.$message.error("hint example@gmail.com");
+    },
     errormember() {
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
     },
@@ -720,15 +719,12 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
+
     errorMember() {
       this.$message.error(
         this.getLabels("input_member") +
           ", " +
           this.getLabels("input_codate", `sentenceCase`)
-      );
-    },
-    errorMailNotValid() {
-      this.$message.error(this.getLabels("not_valid_email", `sentenceCase`)
       );
     },
     goOTA() {
@@ -933,7 +929,6 @@ export default {
       }
     },
     handleOkEmail() {
-      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       this.confirmLoading = true;
       // const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
@@ -946,11 +941,11 @@ export default {
       } else if (!this.email) {
         this.erroremail();
         this.confirmLoading = false;
+      } else if (!this.reg.test(this.email)) {
+        this.erroremailNotTrue();
+        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
-        this.confirmLoading = false;
-      } else if (!this.email.match(mailformat)) {
-        this.errorMailNotValid()
         this.confirmLoading = false;
       } else {
         (async () => {
