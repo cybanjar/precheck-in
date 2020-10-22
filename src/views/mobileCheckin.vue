@@ -44,11 +44,17 @@
         :closable="false"
       >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{
-            getLabels("close", `titleCase`)
-          }}</a-button>
+          <a-button key="back" @click="handleNo">
+            {{ getLabels("no", `titleCase`) }}
+          </a-button>
+          <a-button
+            key="submit"
+            type="primary"
+            @click="handleYes"
+            >{{ getLabels("yes", `titleCase`) }}</a-button
+          >
         </template>
-        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
+        <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
@@ -462,6 +468,8 @@ export default {
         textAlign: "center",
       },
       hotelParams: "",
+      roomNotReady: false,
+      reservation: [],
     };
   },
   created() {
@@ -499,7 +507,7 @@ export default {
             : "No query strings available";
         });
       this.hotelCode = tempParam["hotelcode"];
-      const param = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
+      this.hotelParams = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
 
       const code = await ky
         .post(
@@ -507,7 +515,7 @@ export default {
           {
             json: {
               request: {
-                hotelCode: param,
+                hotelCode: this.hotelParams,
               },
             },
           }
@@ -729,7 +737,7 @@ export default {
       this.informationmodal2 = false;
     },
     handleOk() {
-      const reservation = [];
+      // const reservation = [];
       const coDate = this.date;
       if (!this.bookingcode && !this.date) {
         this.error();
@@ -778,7 +786,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
+                hotelcode: this.hotelParams,
               },
             });
           }
@@ -787,7 +795,7 @@ export default {
     },
     handleOkBO() {
       this.confirmLoading = true;
-      const reservation = [];
+      // const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -833,18 +841,25 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            reservation.push(
+            this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-              },
-            });
+            if (data["response"]["arrivalGuestlist"]["arrival-guestlist"]["room-status"] == "0 Ready To Checkin") {
+              this.informationmodal2 = false;
+              this.roomNotReady = false;
+              router.push({
+                name: "Step",
+                params: {
+                  foo: reservation,
+                  fighter: this.langID,
+                  endpoint: this.hotelEndpoint,
+                  hotelcode: this.hotelParams,
+                },
+              });
+            } else {
+              this.informationmodal2 = true;
+              this.roomNotReady = true;
+            }
           }
         })();
         this.modalBookingCode = false;
@@ -853,7 +868,7 @@ export default {
     },
     handleOkName() {
       this.confirmLoading = true;
-      const reservation = [];
+      // const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -908,7 +923,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
+                hotelcode: this.hotelParams,
               },
             });
           }
@@ -920,7 +935,7 @@ export default {
     handleOkEmail() {
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       this.confirmLoading = true;
-      const reservation = [];
+      // const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -978,7 +993,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
+                hotelcode: this.hotelParams,
               },
             });
           }
@@ -989,7 +1004,7 @@ export default {
     },
     handleOkMember() {
       this.confirmLoading = true;
-      const reservation = [];
+      // const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1044,7 +1059,7 @@ export default {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
+                hotelcode: this.hotelParams,
               },
             });
           }
@@ -1059,6 +1074,21 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
+    handleYes() {
+      this.informationmodal2 = false;
+      router.push({
+        name: "Step",
+        params: {
+          foo: this.reservation,
+          fighter: this.langID,
+          endpoint: this.hotelEndpoint,
+          hotelcode: this.hotelParams,
+        },
+      });
+    },
+    handleNo() {
+      this.informationmodal2 = false;
+    }
   },
   computed: {
     getLabels() {
