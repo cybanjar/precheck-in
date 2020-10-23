@@ -634,10 +634,13 @@ export default {
       const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
+        console.log(vServerClock);
+        console.log(vCheckinClock);
       }
       if (this.tempParambook != "") {
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
+          console.log(checkin);
           this.informationmodal = true;
         } else {
           this.bookingcode = this.tempParambook;
@@ -650,13 +653,13 @@ export default {
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
 
-        reservation.push(
+        this.reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
         router.push({
           name: "Step",
           params: {
-            foo: reservation,
+            foo: this.reservation,
             fighter: this.langID,
             endpoint: this.hotelEndpoint,
             hotelcode: this.hotelCode,
@@ -783,7 +786,7 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            reservation.push(
+            this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
@@ -1039,7 +1042,7 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            reservation.push(
+            this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
@@ -1124,7 +1127,7 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            reservation.push(
+            this.reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
