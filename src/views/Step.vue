@@ -132,152 +132,103 @@
                 :name="0"
                 title="Select campaign settings"
                 icon="people"
+                style="font-size: 3em;"
                 :done="current + 1 > 1"
               >
-                Guest Detail
-              </q-step>
-
-              <q-step
-                :name="1"
-                title="Select campaign settings"
-                icon="people"
-                :done="current + 1 > 1"
-              >
-                Guest Detail
-              </q-step>
-
-              <q-step
-                :name="2"
-                title="Create an ad group"
-                caption="Optional"
-                icon="room"
-                :done="current + 1 > 2"
-              >
-                Scan ID
-              </q-step>
-
-              <q-step
-                :name="3"
-                title="Create an ad"
-                icon="account_balance_wallet"
-              >
-                Pay
-              </q-step>
-
-              <template v-slot:navigation>
-                <q-stepper-navigation>
-                  <div class="row justify-between">
-                    <div v-if="y" class="col-6 col-xs-6">
-                      <q-btn
-                        v-if="current > 0"
-                        @click="prev"
-                        outline
-                        color="primary"
-                        label="Back"
-                      />
-                    </div>
-                    <div
-                      v-if="current < steps.length - 1"
-                      class="col-6 col-xs-6"
-                    >
-                      <q-btn
-                        @click="next"
-                        color="primary"
-                        unelevated
-                        class="float-right"
-                        label="Next"
-                      />
-                    </div>
-                  </div>
-                </q-stepper-navigation>
-              </template>
-            </q-stepper>
-          </div>
-
-          <div class="steps-content" v-show="current === 0">
-            <a-row class :gutter="[16, 8]">
-              <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('email', `titleCase`)">
-                  <a-input
-                    v-decorator="[
-                      'email',
-                      {
-                        initialValue: currDataPrepare['guest-email'],
-                        rules: [
-                          {
-                            required: true,
-                            message: getLabels(
-                              'required_email',
-                              `sentenceCase`
-                            ),
-                          },
-                          {
-                            type: 'email',
-                            message: getLabels(
-                              'not_valid_email',
-                              `sentenceCase`
-                            ),
-                          },
-                        ],
-                      },
-                    ]"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('phone_number', `titleCase`)">
-                  <q-input
-                    v-decorator="[
-                      'phone',
-                      {
-                        initialValue: currDataPrepare['guest-phnumber'],
-                        rules: [
-                          {
-                            required: true,
-                            message: getLabels(
-                              'required_phone',
-                              `sentenceCase`
-                            ),
-                          },
-                        ],
-                      },
-                    ]"
-                    outlined
-                    dense
-                    v-model="phone"
-                    mask="##############"
-                  ></q-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row class :gutter="[16, 8]">
-              <a-col :span="3" :xl="3" :xs="24">
-                <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
-                  <a-select
-                    v-decorator="[
-                      'purpose',
-                      { initialValue: purpose, rules: [{ required: true }] },
-                    ]"
-                  >
-                    <!--<a-select-option
+                <div class="steps-content" v-show="current === 0">
+                  <a-row class :gutter="[16, 8]">
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item :label="getLabels('email', `titleCase`)">
+                        <a-input
+                          v-decorator="[
+                            'email',
+                            {
+                              initialValue: currDataPrepare['guest-email'],
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_email',
+                                    `sentenceCase`
+                                  ),
+                                },
+                                {
+                                  type: 'email',
+                                  message: getLabels(
+                                    'not_valid_email',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
+                    </a-col>
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item
+                        :label="getLabels('phone_number', `titleCase`)"
+                      >
+                        <q-input
+                          v-decorator="[
+                            'phone',
+                            {
+                              initialValue: currDataPrepare['guest-phnumber'],
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_phone',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                          outlined
+                          dense
+                          v-model="phone"
+                          mask="##############"
+                        ></q-input>
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <a-row class :gutter="[16, 8]">
+                    <a-col :span="3" :xl="3" :xs="24">
+                      <a-form-item
+                        :label="getLabels('purpose_stay', `titleCase`)"
+                      >
+                        <a-select
+                          v-decorator="[
+                            'purpose',
+                            {
+                              initialValue: purpose,
+                              rules: [{ required: true }],
+                            },
+                          ]"
+                        >
+                          <!--<a-select-option
                       v-for="item in FilterPurposeofStay"
                       :key="item"
                       :value="item.setupvalue"
                       >{{ item.setupvalue }}</a-select-option
                     >-->
-                    <a-select-option
-                      v-for="item in FilterPurposeofStay"
-                      :key="item"
-                      :value="item.setupvalue"
-                      >{{
-                        getLabels(item.setupvalue.toLowerCase(), `titleCase`)
-                      }}</a-select-option
-                    >
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <!-- <a-row class gutter="16">
+                          <a-select-option
+                            v-for="item in FilterPurposeofStay"
+                            :key="item"
+                            :value="item.setupvalue"
+                            >{{
+                              getLabels(
+                                item.setupvalue.toLowerCase(),
+                                `titleCase`
+                              )
+                            }}</a-select-option
+                          >
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <!-- <a-row class gutter="16">
               <a-col>
                 <p
                   class="font-weight-bold"
@@ -290,35 +241,46 @@
                 </ul>
               </a-col>
             </a-row>-->
-          </div>
-          <div class="steps-content" v-show="current === 1">
-            <a-row class :gutter="[16, 8]">
-              <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item :label="getLabels('nationality', `titleCase`)">
-                  <a-select
-                    v-decorator="[
-                      'nationality',
-                      {
-                        initialValue: currDataPrepare['guest-nation'],
-                        rules: [{ required: true }],
-                      },
-                    ]"
-                    @change="Nationality"
-                  >
-                    <a-select-option
-                      v-for="item in FilterCountry"
-                      :key="item['descr']"
-                      :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
-                  </a-select>
-                  <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                </div>
+              </q-step>
+
+              <q-step
+                :name="1"
+                title="Select campaign settings"
+                icon="people"
+                style="font-size: 3em;"
+                :done="current + 1 > 1"
+              >
+                <div class="steps-content" v-show="current === 1">
+                  <a-row class :gutter="[16, 8]">
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item
+                        :label="getLabels('nationality', `titleCase`)"
+                      >
+                        <a-select
+                          v-decorator="[
+                            'nationality',
+                            {
+                              initialValue: currDataPrepare['guest-nation'],
+                              rules: [{ required: true }],
+                            },
+                          ]"
+                          @change="Nationality"
+                        >
+                          <a-select-option
+                            v-for="item in FilterCountry"
+                            :key="item['descr']"
+                            :value="item['descr']"
+                            >{{ item.setupvalue }}</a-select-option
+                          >
+                        </a-select>
+                        <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
                   <a-select-option value="America">America</a-select-option>
                   <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
-                  <!-- </a-select> -->
-                </a-form-item>
-              </a-col>
-              <!-- <a-col :span="5" :xl="5" :xs="24">
+                        <!-- </a-select> -->
+                      </a-form-item>
+                    </a-col>
+                    <!-- <a-col :span="5" :xl="5" :xs="24">
               <a-form-item label="Choose of Document ID">
                 <a-select default-value="E-KTP">
                   <a-select-option value="id_card">E-KTP</a-select-option>
@@ -343,63 +305,63 @@
                 <a-date-picker @change="onChange" />
               </a-form-item>
               </a-col>-->
-            </a-row>
-            <a-row class :gutter="[16, 8]">
-              <a-col :span="5" :xl="5" :xs="24">
-                <a-form-item
-                  :label="getLabels('country_of_residence', `titleCase`)"
-                >
-                  <a-select
-                    v-model="country"
-                    v-decorator="[
-                      'country',
-                      {
-                        initialValue: currDataPrepare['guest-country'],
-                        rules: [{ required: true }],
-                      },
-                    ]"
-                  >
-                    <a-select-option
-                      v-for="item in FilterCountry"
-                      :key="item['descr']"
-                      :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
-                  </a-select>
-                </a-form-item>
-              </a-col>
-
-              <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-                <div v-if="country === 'INA' || country === 'ina'">
-                  <a-form-item :label="getLabels('region', `titleCase`)">
-                    <a-select
-                      @change="handleChangeRegion"
-                      v-decorator="[
-                        'region',
-                        {
-                          initialValue: currDataPrepare['guest-region'],
-                          rules: [
-                            {
-                              required: true,
-                              message: getLabels(
-                                'required_province',
-                                `sentenceCase`
-                              ),
-                            },
-                          ],
-                        },
-                      ]"
-                    >
-                      <a-select-option
-                        v-for="item in filteredRegion"
-                        :key="item['descr']"
-                        :value="item['descr']"
-                        >{{ item.setupvalue }}</a-select-option
+                  </a-row>
+                  <a-row class :gutter="[16, 8]">
+                    <a-col :span="5" :xl="5" :xs="24">
+                      <a-form-item
+                        :label="getLabels('country_of_residence', `titleCase`)"
                       >
-                    </a-select>
-                  </a-form-item>
-                </div>
-                <!--<div v-else>
+                        <a-select
+                          v-model="country"
+                          v-decorator="[
+                            'country',
+                            {
+                              initialValue: currDataPrepare['guest-country'],
+                              rules: [{ required: true }],
+                            },
+                          ]"
+                        >
+                          <a-select-option
+                            v-for="item in FilterCountry"
+                            :key="item['descr']"
+                            :value="item['descr']"
+                            >{{ item.setupvalue }}</a-select-option
+                          >
+                        </a-select>
+                      </a-form-item>
+                    </a-col>
+
+                    <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+                      <div v-if="country === 'INA' || country === 'ina'">
+                        <a-form-item :label="getLabels('region', `titleCase`)">
+                          <a-select
+                            @change="handleChangeRegion"
+                            v-decorator="[
+                              'region',
+                              {
+                                initialValue: currDataPrepare['guest-region'],
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: getLabels(
+                                      'required_province',
+                                      `sentenceCase`
+                                    ),
+                                  },
+                                ],
+                              },
+                            ]"
+                          >
+                            <a-select-option
+                              v-for="item in filteredRegion"
+                              :key="item['descr']"
+                              :value="item['descr']"
+                              >{{ item.setupvalue }}</a-select-option
+                            >
+                          </a-select>
+                        </a-form-item>
+                      </div>
+                      <!--<div v-else>
                   <a-form-item :label="getLabels('state', `titleCase`)">
                     <a-input
                       v-decorator="[
@@ -412,8 +374,8 @@
                     />
                   </a-form-item>
                 </div>-->
-              </a-col>
-              <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
+                    </a-col>
+                    <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
                   show-search
@@ -446,93 +408,152 @@
                 <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
               </a-form-item>
               </a-col>-->
-            </a-row>
-          </div>
-          <div class="steps-content" v-show="current === 2">
-            <a-row class :gutter="[16, 8]">
-              <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('upload_id', `titleCase`)">
-                  <input
-                    class
-                    accept="image/*"
-                    type="file"
-                    @change="onFileChange"
-                    v-decorator="[
-                      'url',
-                      {
-                        initialValue: '',
-                        rules: [
-                          {
-                            required: true,
-                            message: getLabels('required_id', `sentenceCase`),
-                          },
-                        ],
-                      },
-                    ]"
-                  />
-                </a-form-item>
+                  </a-row>
+                </div>
+              </q-step>
 
-                <img class="preview" v-if="url" :src="url" />
-              </a-col>
-            </a-row>
-          </div>
-          <div class="steps-content" v-show="current === 3">
-            <a-row :gutter="[16, 8]" v-if="pay == false">
-              <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('deposit_payment', `titleCase`)">
-                  <h2>
-                    <strong>
-                      {{ this.currDataPrepare["currency-usage"] }}
-                      {{
-                        `${minimumDeposit}`.replace(
-                          /\B(?=(\d{3})+(?!\d))/g,
-                          ","
-                        )
-                      }}
-                    </strong>
-                  </h2>
-                </a-form-item>
-                <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
+              <q-step
+                :name="2"
+                title="Create an ad group"
+                caption="Optional"
+                icon="room"
+                style="font-size: 3em;"
+                :done="current + 1 > 2"
+              >
+                <div class="steps-content" v-show="current === 2">
+                  <a-row class :gutter="[16, 8]">
+                    <a-col :span="12" :xl="12" :xs="12">
+                      <a-form-item :label="getLabels('upload_id', `titleCase`)">
+                        <input
+                          class
+                          accept="image/*"
+                          type="file"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
+
+                      <img class="preview" v-if="url" :src="url" />
+                    </a-col>
+                  </a-row>
+                </div>
+              </q-step>
+
+              <q-step
+                :name="3"
+                title="Create an ad"
+                icon="account_balance_wallet"
+                style="font-size: 3em;"
+              >
+                <div class="steps-content" v-show="current === 3">
+                  <a-row :gutter="[16, 8]" v-if="pay == false">
+                    <a-col :span="12" :xl="12" :xs="12">
+                      <a-form-item
+                        :label="getLabels('deposit_payment', `titleCase`)"
+                      >
+                        <h2>
+                          <strong>
+                            {{ this.currDataPrepare["currency-usage"] }}
+                            {{
+                              `${minimumDeposit}`.replace(
+                                /\B(?=(\d{3})+(?!\d))/g,
+                                ","
+                              )
+                            }}
+                          </strong>
+                        </h2>
+                      </a-form-item>
+                      <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
                   <template slot="footer">
                     <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
                   </template>
                   <p>{{getLabels('payment_error')}}</p>
                 </a-modal>-->
-              </a-col>
-              <a-col :span="10" :xl="10" :xs="12">
-                <a-button
-                  class="font-weight-bold mt-3 mr-3"
-                  type="primary"
-                  @click="search()"
-                  >{{ getLabels("pay", `titleCase`) }}</a-button
-                >
-                <!-- <img
+                    </a-col>
+                    <a-col :span="10" :xl="10" :xs="12">
+                      <a-button
+                        class="font-weight-bold mt-3 mr-3"
+                        type="primary"
+                        @click="search()"
+                        >{{ getLabels("pay", `titleCase`) }}</a-button
+                      >
+                      <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
                   style="height:50px;width:50px; opacity: .65;"
                 />-->
-              </a-col>
-            </a-row>
-            <a-row :gutter="[16, 8]" v-else>
-              <a-col :span="12" :xl="12" :xs="12">
-                <a-form-item :label="getLabels('deposit', `titleCase`)">
-                  <h2>
-                    <strong>{{ getLabels("cash_basis", `titleCase`) }}</strong>
-                  </h2>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
-              <a-col :span="12" :xl="12" :xs="24">
-                <p>
-                  <a-checkbox v-model="pay">
-                    {{ getLabels("term_cash_basis", `titleCase`) }}
-                  </a-checkbox>
-                </p>
-              </a-col>
-            </a-row>
+                    </a-col>
+                  </a-row>
+                  <a-row :gutter="[16, 8]" v-else>
+                    <a-col :span="12" :xl="12" :xs="12">
+                      <a-form-item :label="getLabels('deposit', `titleCase`)">
+                        <h2>
+                          <strong>{{
+                            getLabels("cash_basis", `titleCase`)
+                          }}</strong>
+                        </h2>
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                  <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
+                    <a-col :span="12" :xl="12" :xs="24">
+                      <p>
+                        <a-checkbox v-model="pay">
+                          {{ getLabels("term_cash_basis", `titleCase`) }}
+                        </a-checkbox>
+                      </p>
+                    </a-col>
+                  </a-row>
+                </div>
+              </q-step>
+
+              <template v-slot:navigation>
+                <q-stepper-navigation>
+                  <div class="row justify-between">
+                    <div v-if="y" class="col-6 col-xs-6">
+                      <q-btn
+                        v-if="current > 0"
+                        @click="prev"
+                        outline
+                        color="primary"
+                      >
+                        {{ getLabels("prev", `titleCase`) }}
+                      </q-btn>
+                    </div>
+                    <div
+                      v-if="current < steps.length - 1"
+                      class="col-6 col-xs-6"
+                    >
+                      <q-btn
+                        @click="next"
+                        color="primary"
+                        unelevated
+                        class="float-right"
+                      >
+                        {{ getLabels("next", `titleCase`) }}</q-btn
+                      >
+                    </div>
+                  </div>
+                </q-stepper-navigation>
+              </template>
+            </q-stepper>
           </div>
-          <div class="steps-action">
+
+          <!-- <div class="steps-action">
             <div class="row justify-between">
               <div class="col-6 col-xs-6">
                 <div v-if="y">
@@ -549,7 +570,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- <a-button
               v-if="current == steps.length - 1"
