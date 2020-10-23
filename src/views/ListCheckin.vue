@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home">
-      <div v-show="informationModal">
+      <!-- <div v-show="informationModal">
         <a-modal
           :title="getLabels('information', `titleCase`)"
           :visible="informationModal"
@@ -17,7 +17,7 @@
           </template>
           <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
         </a-modal>
-      </div>
+      </div> -->
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -126,7 +126,7 @@ export default {
       fairy: [],
       labels: [],
       langID: "",
-      informationModal: false,
+      // informationModal: false,
       roomNotReady: false,
       hotelEndpoint: "",
       hotelCode: "",
@@ -210,26 +210,26 @@ export default {
       // }
     },
     send() {
-      // this.fairy["data"] = this.selectedData;
-      // this.fairy["setup"] = this.lemparsetup;
-      this.fairy.push(this.selectedData);
-      if (this.selectedData["room-status"] == "0 Ready To Checkin") {
-        this.informationModal = false;
-        this.roomNotReady = false;
-        router.push({
-          name: "Step",
-          params: {
-            foo: this.fairy,
-            fighter: this.langID,
-            endpoint: this.hotelEndpoint,
-            hotelcode: this.hotelCode,
-            notready: this.roomNotReady,
-          },
-        });
-      } else {
-        this.informationModal = true;
-        this.roomNotReady = true;
-      }
+      this.fairy["data"] = this.selectedData;
+      this.fairy["setup"] = this.lemparsetup;
+      // if (this.fairy["data"]["room-status"] == "0 Ready To Checkin") {
+      //   this.informationModal = false;
+      //   this.roomNotReady = false;
+      router.push({
+        name: "Step",
+        params: { id: this.fairy, fighter: this.langID },
+        // params: {
+        //   foo: this.fairy,
+        //   fighter: this.langID,
+        //   endpoint: this.hotelEndpoint,
+        //   hotelcode: this.hotelCode,
+        //   notready: this.roomNotReady,
+        // },
+      });
+      // } else {
+      //   this.informationModal = true;
+      //   this.roomNotReady = true;
+      // }
     },
     formatDate(datum) {
       const dDate =
@@ -274,22 +274,22 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    handleYes() {
-      this.informationModal = false;
-      router.push({
-        name: "Step",
-        params: {
-          foo: this.fairy,
-          fighter: this.langID,
-          endpoint: this.hotelEndpoint,
-          hotelcode: this.hotelCode,
-          notready: this.roomNotReady,
-        },
-      });
-    },
-    handleNo() {
-      this.informationModal = false;
-    },
+    // handleYes() {
+    //   this.informationModal = false;
+    //   router.push({
+    //     name: "Step",
+    //     params: {
+    //       foo: this.fairy,
+    //       fighter: this.langID,
+    //       endpoint: this.hotelEndpoint,
+    //       hotelcode: this.hotelCode,
+    //       notready: this.roomNotReady,
+    //     },
+    //   });
+    // },
+    // handleNo() {
+    //   this.informationModal = false;
+    // },
     handleBack() {
       window.open(
         "http://localhost:8080/mobilecheckin?" + this.hotelCode,

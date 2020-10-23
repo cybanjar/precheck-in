@@ -38,7 +38,7 @@
         </template>
         <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
       </a-modal>
-      <a-modal
+      <!-- <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal2"
         :closable="false"
@@ -52,7 +52,7 @@
           }}</a-button>
         </template>
         <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-      </a-modal>
+      </a-modal> -->
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 :class="FG">
@@ -427,7 +427,7 @@ export default {
       hour: "",
       informationmodal: false,
       informationmodal1: false,
-      informationmodal2: false,
+      // informationmodal2: false,
       informationterm: "",
       message: "",
       labels: [],
@@ -1170,22 +1170,22 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    handleYes() {
-      this.informationmodal2 = false;
-      router.push({
-        name: "Step",
-        params: {
-          foo: this.reservation,
-          fighter: this.langID,
-          endpoint: this.hotelEndpoint,
-          hotelcode: this.hotelParams,
-          notready: this.roomNotReady,
-        },
-      });
-    },
-    handleNo() {
-      this.informationmodal2 = false;
-    },
+    //   handleYes() {
+    //     this.informationmodal2 = false;
+    //     router.push({
+    //       name: "Step",
+    //       params: {
+    //         foo: this.reservation,
+    //         fighter: this.langID,
+    //         endpoint: this.hotelEndpoint,
+    //         hotelcode: this.hotelParams,
+    //         notready: this.roomNotReady,
+    //       },
+    //     });
+    //   },
+    //   handleNo() {
+    //     this.informationmodal2 = false;
+    //   },
   },
   computed: {
     getLabels() {
