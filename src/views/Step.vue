@@ -118,10 +118,11 @@
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
+            {{current}}
 
           <div>
             <q-stepper
-              v-model="step"
+              v-model="current"
               flat
               bordered
               ref="stepper"
@@ -129,11 +130,20 @@
               color="primary"
               animated
             >
+            <q-step
+                :name="0"
+                title="Select campaign settings"
+                icon="people"
+                :done="current + 1 > 1"
+              >
+                Guest Detail
+              </q-step>
+
               <q-step
                 :name="1"
                 title="Select campaign settings"
                 icon="people"
-                :done="step > 1"
+                :done="current + 1 > 1"
               >
                 Guest Detail
               </q-step>
@@ -143,7 +153,7 @@
                 title="Create an ad group"
                 caption="Optional"
                 icon="room"
-                :done="step > 2"
+                :done="current + 1 > 2"
               >
                 Location
               </q-step>
@@ -715,7 +725,6 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
-      step: 1,
     };
   },
   watch: {
