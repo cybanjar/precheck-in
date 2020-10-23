@@ -119,6 +119,77 @@
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
 
+          <div>
+            <q-stepper
+              v-model="step"
+              flat
+              bordered
+              ref="stepper"
+              contracted
+              color="primary"
+              animated
+            >
+              <q-step
+                :name="1"
+                title="Select campaign settings"
+                icon="people"
+                :done="step > 1"
+              >
+                Guest Detail
+              </q-step>
+
+              <q-step
+                :name="2"
+                title="Create an ad group"
+                caption="Optional"
+                icon="room"
+                :done="step > 2"
+              >
+                Location
+              </q-step>
+
+              <q-step :name="3" title="Create an ad" icon="local_see">
+                Scan ID
+              </q-step>
+
+              <q-step
+                :name="4"
+                title="Create an ad"
+                icon="account_balance_wallet"
+              >
+                Pay
+              </q-step>
+
+              <template v-slot:navigation>
+                <q-stepper-navigation>
+                  <div class="row justify-between">
+                    <div v-if="y" class="col-6 col-xs-6">
+                      <q-btn
+                        v-if="current > 0"
+                        @click="prev"
+                        outline
+                        color="primary"
+                        label="Back"
+                      />
+                    </div>
+                    <div
+                      v-if="current < steps.length - 1"
+                      class="col-6 col-xs-6"
+                    >
+                      <q-btn
+                        @click="next"
+                        color="primary"
+                        unelevated
+                        class="float-right"
+                        label="Next"
+                      />
+                    </div>
+                  </div>
+                </q-stepper-navigation>
+              </template>
+            </q-stepper>
+          </div>
+
           <div class="steps-content" v-show="current === 0">
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
@@ -644,6 +715,7 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
+      step: 1,
     };
   },
   watch: {
@@ -925,7 +997,7 @@ export default {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
             this.form.validateFields(["phone"]);
-          } else if(!this.form.getFieldValue(["email"][0]).match(mailformat)) {
+          } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
           }
         }
@@ -981,12 +1053,12 @@ export default {
       }
     },
     search() {
-        async function getIP(){
-          const response = await fetch('http://api.ipify.org/?format=json');
-          const data = await response.json();
-          return data.ip;
-        }
-        getIP().then(data => this.ipAddr = data);
+      async function getIP() {
+        const response = await fetch("http://api.ipify.org/?format=json");
+        const data = await response.json();
+        return data.ip;
+      }
+      getIP().then((data) => (this.ipAddr = data));
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
           this.minimumDeposit +
