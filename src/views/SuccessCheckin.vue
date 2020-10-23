@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <div v-if="!roomNotReady">
+    <div v-if="roomNotReady">
       <canvas id="canvas"></canvas>
       <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
       <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
@@ -24,9 +24,12 @@
       <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
       <div class="row justify-center q-mt-xl">
         <div class="col-md-6 col-xs-11">
-          <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
-          <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
-          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p>
+          <canvas id="canvas"></canvas>
+          <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
+          <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
+          <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+          <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
+          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p> -->
         </div>
       </div>
 
@@ -59,10 +62,12 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
+    
     this.data = this.$route.params.jin;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     const success = btoa(this.data);
+
+    console.log(this.$route.params.jin, success, "nyampe");
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
     this.wifiAddress = this.$route.params.jun;
     this.wifiPassword = this.$route.params.jen;

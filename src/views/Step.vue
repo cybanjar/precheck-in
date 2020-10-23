@@ -22,7 +22,22 @@
             >{{ getLabels("yes", `titleCase`) }}</a-button
           >
         </template>
-        <p>{{ responseStatus.statusMessage }}</p>
+        <p>Sorry, your room is not ready yet. But you can still continue to check-in. We will notify you by email and SMS when your room is ready.</p>
+        <p>Please re-confirm your phone number and email.</p>
+        <div>
+          <a-form layout="vertical" :form="formresubmit">
+            <a-form-item :label="getLabels('phone_number', `titleCase`)">
+              <a-input
+                v-decorator="['guest-phone', { initialValue:currDataPrepare['guest-phnumber'], rules: [{ required: true, message: 'Please input your phone number!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-input
+                v-decorator="['guest-email', { initialValue:currDataPrepare['guest-email'],rules: [{ required: true, message: 'Please input your email!' }] }]"
+              />
+            </a-form-item>
+          </a-form>
+        </div>
       </a-modal>
 
       <!-- <div v-show="term"> -->
@@ -519,7 +534,6 @@
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>-->
-          {{ informationModal }}
           <a-row class :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item>
@@ -626,6 +640,7 @@ export default {
       showPickupRequest: true,
       showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
+      formresubmit: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -1219,13 +1234,43 @@ export default {
     save() {
       // if (this.counter == this.id.length) {
       //   console.log(this.currDataPrepare);
-      if (
-        this.currDataPrepare["room-status"] ==
-        "1 Room Already assign or Overlapping"
-      ) {
+      if (this.currDataPrepare["room-status"] == "1 Room Already assign or Overlapping") {
         // Cek status kamar pertama kalo Overlapping
         console.log("overlapping");
-        this.handlingResCI();
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
+                },
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+
+          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+
+          if (this.responseStatus.statusNumber == "99") {
+            /* Handling Room Vacant Dirty */
+            this.informationModal = true;
+            this.roomNotReady = false;
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+          }
+        })();
       } else if (
         this.currDataPrepare["room-status"] ==
         "2 Room Status Not Ready To Checkin"
@@ -1257,59 +1302,130 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
 
-          console.log(this.responseStatus.statusNumber);
+          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
 
           if (this.responseStatus.statusNumber == "99") {
-            console.log("If 2");
             /* Handling Room Vacant Dirty */
-            console.log(this.informationModal);
-
             this.informationModal = true;
-            console.log(this.informationModal);
+            this.roomNotReady = false;
           } else {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+            this.roomNotReady = true;
+
+            const mori =
+                "{" +
+                this.currDataPrepare.zinr +
+                ";" +
+                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+                "}";
+              //this.check();
+              //if (this.paymentStatus) {
+              //console.log(this.paymentStatus);
+            router.push({
+              name: "SuccessCheckIn",
+              params: {
+                jin: mori,
+                jun: this.wifiAddress,
+                jen: this.wifiPassword,
+                jon: this.currDataPrepare["argt-str"],
+                jan: this.roomNotReady,
+                email: this.form.getFieldValue(["email"][0]),
+                phnum: this.form.getFieldValue(["phone"][0]),
+                param: this.hotelcode,
+              },
+            });
           }
         })();
       } else {
         // Cek status kamar pertama kalo VC
         console.log("VC");
-        this.handlingResCI();
 
-        //     /*
-        //       const mori =
-        //         "{" +
-        //         this.currDataPrepare.zinr +
-        //         ";" +
-        //         moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-        //         "}";
-        //       //this.check();
-        //       //if (this.paymentStatus) {
-        //       //console.log(this.paymentStatus);
-        //       router.push({
-        //         name: "SuccessCheckIn",
-        //         params: {
-        //           jin: mori,
-        //           jun: this.wifiAddress,
-        //           jen: this.wifiPassword,
-        //           jon: this.currDataPrepare["argt-str"],
-        //           jan: this.roomNotReady,
-        //           email: this.form.getFieldValue(["email"][0]),
-        //           phnum: this.form.getFieldValue(["phone"][0]),
-        //           param: this.hotelcode,
-        //         },
-        //       });
-        //       //} else {
-        //       //this.paymentModal = true;
-        //       // }
-        //     */
-        //   }
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
+                },
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+
+          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+
+          if (this.responseStatus.statusNumber == "99") {
+            /* Handling Room Vacant Dirty */
+            this.informationModal = true;
+            this.roomNotReady = false;
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+            this.roomNotReady = true;
+
+            const mori =
+                "{" +
+                this.currDataPrepare.zinr +
+                ";" +
+                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+                "}";
+              //this.check();
+              //if (this.paymentStatus) {
+              //console.log(this.paymentStatus);
+            router.push({
+              name: "SuccessCheckIn",
+              params: {
+                jin: mori,
+                jun: this.wifiAddress,
+                jen: this.wifiPassword,
+                jon: this.currDataPrepare["argt-str"],
+                jan: this.roomNotReady,
+                email: this.form.getFieldValue(["email"][0]),
+                phnum: this.form.getFieldValue(["phone"][0]),
+                param: this.hotelcode,
+              },
+            });
+          }
+        })();         
       }
       // this.currDataPrepare = this.id[this.counter];
       // this.counter += 1;
       // this.agree = false;
     },
     handleYes() {
-      console.log("hello world");
+      const mori =
+          "{" +
+          this.currDataPrepare.zinr +
+          ";" +
+          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+          "}";
+        //this.check();
+        //if (this.paymentStatus) {
+        //console.log(this.paymentStatus);
+      router.push({
+        name: "SuccessCheckIn",
+        params: {
+          jin: mori,
+          jun: this.wifiAddress,
+          jen: this.wifiPassword,
+          jon: this.currDataPrepare["argt-str"],
+          jan: this.roomNotReady,
+          email: this.formresubmit.getFieldValue(["guest-email"][0]),
+          phnum: this.formresubmit.getFieldValue(["guest-phone"][0]),
+          param: this.hotelcode,
+        },
+      });
     },
     back() {
       if (this.counter == this.id.length) {
