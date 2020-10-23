@@ -118,8 +118,6 @@
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
-          {{ current }}
-
           <div>
             <q-stepper
               v-model="current"
