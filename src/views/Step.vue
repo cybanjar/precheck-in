@@ -677,10 +677,10 @@ export default {
       roomNotReady: false,
       freeParking: false,
       vRegident: "",
-      responseStatus: {
-        statusNumber: 0,
-        statusMessage: ""
-      },
+      responseStatus:{
+        statusNumber: "",
+        statusMessage: "",
+      },      
       informationModal: false,
     };
   },
@@ -1215,34 +1215,6 @@ export default {
       window.scrollTo(0, 0);
       this.current = 0;
     },
-    handlingResCI(){
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "mobileCI/resCI", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare.resnr,
-                rsvlineNumber: this.currDataPrepare.reslinnr,
-                userInit: "01",
-                newRoomno: this.currDataPrepare.zinr,
-                purposeOfStay: this.form.getFieldValue("purpose"),
-                email: this.form.getFieldValue("email"),
-                guestPhnumber: this.form.getFieldValue("phone"),
-                guestNation: this.form.getFieldValue("nationality"),
-                guestCountry: this.form.getFieldValue("country"),
-                guestRegion: this.form.getFieldValue("region"),
-                base64image: this.imgb64,
-              },
-            },
-          })
-          .json();
-        const responses = parsed.response['resultMessage'].split(' - ');
-        this.responseStatus.statusNumber = responses[0];
-        this.responseStatus.statusMessage = responses[1];
-
-        return this.responseStatus;
-      })();      
-    },
     save() {
       if (this.counter == this.id.length) {
         console.log(this.currDataPrepare);
@@ -1252,17 +1224,40 @@ export default {
         }
         else if(this.currDataPrepare['room-status'] == '2 Room Status Not Ready To Checkin'){ // Cek status kamar pertama kalo VD
           console.log('VD');
-          this.handlingResCI();
+          
+          (async () => {
+            const parsed = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare.resnr,
+                    rsvlineNumber: this.currDataPrepare.reslinnr,
+                    userInit: "01",
+                    newRoomno: this.currDataPrepare.zinr,
+                    purposeOfStay: this.form.getFieldValue("purpose"),
+                    email: this.form.getFieldValue("email"),
+                    guestPhnumber: this.form.getFieldValue("phone"),
+                    guestNation: this.form.getFieldValue("nationality"),
+                    guestCountry: this.form.getFieldValue("country"),
+                    guestRegion: this.form.getFieldValue("region"),
+                    base64image: this.imgb64,
+                  },
+                },
+              })
+              .json();
+            const responses = parsed.response['resultMessage'].split(' - ');
+            this.responseStatus.statusNumber = responses[0];
+            this.responseStatus.statusMessage = responses[1];
 
-          console.log(this.responseStatus);
-          if(this.responseStatus.statusNumber == '99'){
-            console.log('If 2');
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-          }
-          else{
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-          }
+            if(this.responseStatus.statusNumber == '99'){
+              console.log('If 2');
+              /* Handling Room Vacant Dirty */
+              this.informationModal = true;
+            }
+            else{
+              /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+            }
+          })();          
         }
         else{ // Cek status kamar pertama kalo VC
           console.log('VC');
