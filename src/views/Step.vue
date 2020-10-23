@@ -7,20 +7,23 @@
   <div v-else>
     <div class="home">
       <!-- Modal Response Room Status -->
-      <div v-show="informationModal">
-        <a-modal
-          :title="getLabels('information', `titleCase`)"
-          :visible="informationModal"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="submit" type="primary" @click="handleYes">{{
-              getLabels("yes", `titleCase`)
-            }}</a-button>
-          </template>
-          <p>{{ responseStatus.statusMessage }}</p>
-        </a-modal>
-      </div>
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="handleYes"
+            >{{ getLabels("yes", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ responseStatus.statusMessage }}</p>
+      </a-modal>
 
       <!-- <div v-show="term"> -->
       <a-modal
@@ -516,6 +519,7 @@
               <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
             </a-col>
           </a-row>-->
+          {{ informationModal }}
           <a-row class :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item>
@@ -525,10 +529,7 @@
                   type="primary"
                   block
                   :size="size"
-                  @click="
-                    save();
-                    scrollToTop();
-                  "
+                  @click="save"
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
@@ -677,11 +678,11 @@ export default {
       roomNotReady: false,
       freeParking: false,
       vRegident: "",
-      responseStatus:{
+      informationModal: false,
+      responseStatus: {
         statusNumber: "",
         statusMessage: "",
-      },      
-      informationModal: false,
+      },
     };
   },
   watch: {
@@ -1216,88 +1217,99 @@ export default {
       this.current = 0;
     },
     save() {
-      if (this.counter == this.id.length) {
-        console.log(this.currDataPrepare);
-        if(this.currDataPrepare['room-status'] == '1 Room Already assign or Overlapping'){ // Cek status kamar pertama kalo Overlapping
-          console.log('overlapping');
-          this.handlingResCI();
-        }
-        else if(this.currDataPrepare['room-status'] == '2 Room Status Not Ready To Checkin'){ // Cek status kamar pertama kalo VD
-          console.log('VD');
-          
-          (async () => {
-            const parsed = await ky
-              .post(this.hotelEndpoint + "mobileCI/resCI", {
-                json: {
-                  request: {
-                    rsvNumber: this.currDataPrepare.resnr,
-                    rsvlineNumber: this.currDataPrepare.reslinnr,
-                    userInit: "01",
-                    newRoomno: this.currDataPrepare.zinr,
-                    purposeOfStay: this.form.getFieldValue("purpose"),
-                    email: this.form.getFieldValue("email"),
-                    guestPhnumber: this.form.getFieldValue("phone"),
-                    guestNation: this.form.getFieldValue("nationality"),
-                    guestCountry: this.form.getFieldValue("country"),
-                    guestRegion: this.form.getFieldValue("region"),
-                    base64image: this.imgb64,
-                  },
+      // if (this.counter == this.id.length) {
+      //   console.log(this.currDataPrepare);
+      if (
+        this.currDataPrepare["room-status"] ==
+        "1 Room Already assign or Overlapping"
+      ) {
+        // Cek status kamar pertama kalo Overlapping
+        console.log("overlapping");
+        this.handlingResCI();
+      } else if (
+        this.currDataPrepare["room-status"] ==
+        "2 Room Status Not Ready To Checkin"
+      ) {
+        // Cek status kamar pertama kalo VD
+        console.log("VD");
+
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
                 },
-              })
-              .json();
-            const responses = parsed.response['resultMessage'].split(' - ');
-            this.responseStatus.statusNumber = responses[0];
-            this.responseStatus.statusMessage = responses[1];
-
-            if(this.responseStatus.statusNumber == '99'){
-              console.log('If 2');
-              /* Handling Room Vacant Dirty */
-              this.informationModal = true;
-            }
-            else{
-              /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-            }
-          })();          
-        }
-        else{ // Cek status kamar pertama kalo VC
-          console.log('VC');
-          this.handlingResCI();
-
-          /* 
-            const mori =
-              "{" +
-              this.currDataPrepare.zinr +
-              ";" +
-              moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-              "}";
-            //this.check();
-            //if (this.paymentStatus) {
-            //console.log(this.paymentStatus);
-            router.push({
-              name: "SuccessCheckIn",
-              params: {
-                jin: mori,
-                jun: this.wifiAddress,
-                jen: this.wifiPassword,
-                jon: this.currDataPrepare["argt-str"],
-                jan: this.roomNotReady,
-                email: this.form.getFieldValue(["email"][0]),
-                phnum: this.form.getFieldValue(["phone"][0]),
-                param: this.hotelcode,
               },
-            });
-            //} else {
-            //this.paymentModal = true;
-            // }
-          */
-        }                
+            })
+            .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+
+          console.log(this.responseStatus.statusNumber);
+
+          if (this.responseStatus.statusNumber == "99") {
+            console.log("If 2");
+            /* Handling Room Vacant Dirty */
+            console.log(this.informationModal);
+
+            this.informationModal = true;
+            console.log(this.informationModal);
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+          }
+        })();
+      } else {
+        // Cek status kamar pertama kalo VC
+        console.log("VC");
+        this.handlingResCI();
+
+        //     /*
+        //       const mori =
+        //         "{" +
+        //         this.currDataPrepare.zinr +
+        //         ";" +
+        //         moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+        //         "}";
+        //       //this.check();
+        //       //if (this.paymentStatus) {
+        //       //console.log(this.paymentStatus);
+        //       router.push({
+        //         name: "SuccessCheckIn",
+        //         params: {
+        //           jin: mori,
+        //           jun: this.wifiAddress,
+        //           jen: this.wifiPassword,
+        //           jon: this.currDataPrepare["argt-str"],
+        //           jan: this.roomNotReady,
+        //           email: this.form.getFieldValue(["email"][0]),
+        //           phnum: this.form.getFieldValue(["phone"][0]),
+        //           param: this.hotelcode,
+        //         },
+        //       });
+        //       //} else {
+        //       //this.paymentModal = true;
+        //       // }
+        //     */
+        //   }
       }
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-      this.agree = false;
+      // this.currDataPrepare = this.id[this.counter];
+      // this.counter += 1;
+      // this.agree = false;
     },
-    handleYes(){
-      console.log('hello world');
+    handleYes() {
+      console.log("hello world");
     },
     back() {
       if (this.counter == this.id.length) {
