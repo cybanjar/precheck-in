@@ -47,12 +47,9 @@
           <a-button key="back" @click="handleNo">
             {{ getLabels("no", `titleCase`) }}
           </a-button>
-          <a-button
-            key="submit"
-            type="primary"
-            @click="handleYes"
-            >{{ getLabels("yes", `titleCase`) }}</a-button
-          >
+          <a-button key="submit" type="primary" @click="handleYes">{{
+            getLabels("yes", `titleCase`)
+          }}</a-button>
         </template>
         <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
       </a-modal>
@@ -144,11 +141,7 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalGuestName"
-            class="img-ota"
-            :src="namePhoto"
-          />
+          <img @click="showModalGuestName" class="img-ota" :src="namePhoto" />
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
@@ -485,7 +478,7 @@ export default {
       this.tempParamcitime = this.$route.params.citime;
     } else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-    } else {      
+    } else {
       location.search
         .split("&")
         .toString()
@@ -634,13 +627,10 @@ export default {
       const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
       if (vServerClock < vCheckinClock) {
         this.informationmodal = true;
-        console.log(vServerClock);
-        console.log(vCheckinClock);
       }
       if (this.tempParambook != "") {
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
         if ("14:00" < this.checkin) {
-          console.log(checkin);
           this.informationmodal = true;
         } else {
           this.bookingcode = this.tempParambook;
@@ -675,23 +665,23 @@ export default {
     },
     async showModalBookingCode() {
       this.modalBookingCode = true;
-      await this.$nextTick()
-        this.$refs.bookingcode.focus();
+      await this.$nextTick();
+      this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
       this.modalGuestName = true;
-      await this.$nextTick()
-        this.$refs.name.focus();
+      await this.$nextTick();
+      this.$refs.name.focus();
     },
     async showModalEmailAddress() {
       this.modalEmailAddress = true;
-      await this.$nextTick()
-        this.$refs.email.focus();
+      await this.$nextTick();
+      this.$refs.email.focus();
     },
     async showModalMembershipID() {
       this.modalMembershipID = true;
-      await this.$nextTick()
-        this.$refs.member.focus();
+      await this.$nextTick();
+      this.$refs.member.focus();
     },
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
@@ -790,7 +780,9 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
-              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+              if (
+                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
+              ) {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
                 router.push({
@@ -873,7 +865,9 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
-              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+              if (
+                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
+              ) {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
                 router.push({
@@ -958,7 +952,9 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
-              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+              if (
+                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
+              ) {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
                 router.push({
@@ -1046,7 +1042,9 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
-              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+              if (
+                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
+              ) {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
                 router.push({
@@ -1131,7 +1129,9 @@ export default {
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
             if (this.reservation.length == 1) {
-              if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
+              if (
+                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
+              ) {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
                 router.push({
@@ -1185,7 +1185,7 @@ export default {
     },
     handleNo() {
       this.informationmodal2 = false;
-    }
+    },
   },
   computed: {
     getLabels() {

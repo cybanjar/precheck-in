@@ -2,24 +2,21 @@
   <div>
     <div class="home">
       <div v-show="informationModal">
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="informationModal"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button key="back" @click="handleNo">
-            {{ getLabels("no", `titleCase`) }}
-          </a-button>
-          <a-button
-            key="submit"
-            type="primary"
-            @click="handleYes"
-            >{{ getLabels("yes", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-      </a-modal>
+        <a-modal
+          :title="getLabels('information', `titleCase`)"
+          :visible="informationModal"
+          :closable="false"
+        >
+          <template slot="footer">
+            <a-button key="back" @click="handleNo">
+              {{ getLabels("no", `titleCase`) }}
+            </a-button>
+            <a-button key="submit" type="primary" @click="handleYes">{{
+              getLabels("yes", `titleCase`)
+            }}</a-button>
+          </template>
+          <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
+        </a-modal>
       </div>
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
@@ -99,13 +96,9 @@
           </a-list-item>
         </a-list>
       </div>
-      <a-button
-        class="mr-3"
-        type="primary"
-        size="large"
-        @click="handleBack"
-        >{{ getLabels("back", `titleCase`) }}</a-button
-      >
+      <a-button class="mr-3" type="primary" size="large" @click="handleBack">{{
+        getLabels("back", `titleCase`)
+      }}</a-button>
       <a-button
         class="mr-3 float-right"
         type="primary"
@@ -225,7 +218,13 @@ export default {
         this.roomNotReady = false;
         router.push({
           name: "Step",
-          params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+          params: {
+            foo: this.fairy,
+            fighter: this.langID,
+            endpoint: this.hotelEndpoint,
+            hotelcode: this.hotelCode,
+            notready: this.roomNotReady,
+          },
         });
       } else {
         this.informationModal = true;
@@ -279,14 +278,23 @@ export default {
       this.informationModal = false;
       router.push({
         name: "Step",
-        params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+        params: {
+          foo: this.fairy,
+          fighter: this.langID,
+          endpoint: this.hotelEndpoint,
+          hotelcode: this.hotelCode,
+          notready: this.roomNotReady,
+        },
       });
     },
     handleNo() {
       this.informationModal = false;
     },
-    handleBack(){
-      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelCode, "_self");
+    handleBack() {
+      window.open(
+        "http://localhost:8080/mobilecheckin?" + this.hotelCode,
+        "_self"
+      );
     },
   },
 };
