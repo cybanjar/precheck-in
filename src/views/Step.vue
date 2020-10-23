@@ -118,7 +118,7 @@
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
-            {{current}}
+          {{ current }}
 
           <div>
             <q-stepper
@@ -130,7 +130,7 @@
               color="primary"
               animated
             >
-            <q-step
+              <q-step
                 :name="0"
                 title="Select campaign settings"
                 icon="people"
@@ -155,15 +155,11 @@
                 icon="room"
                 :done="current + 1 > 2"
               >
-                Location
-              </q-step>
-
-              <q-step :name="3" title="Create an ad" icon="local_see">
                 Scan ID
               </q-step>
 
               <q-step
-                :name="4"
+                :name="3"
                 title="Create an ad"
                 icon="account_balance_wallet"
               >
