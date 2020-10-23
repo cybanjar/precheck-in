@@ -736,7 +736,7 @@ export default {
       this.informationmodal2 = false;
     },
     handleOk() {
-      // const reservation = [];
+      const reservation = [];
       const coDate = this.date;
       if (!this.bookingcode && !this.date) {
         this.error();
@@ -776,46 +776,25 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            this.reservation.push(
+            reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (this.reservation.length == 1) {
-              if (
-                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
-              ) {
-                this.informationmodal2 = false;
-                this.roomNotReady = false;
-                router.push({
-                  name: "Step",
-                  params: {
-                    foo: this.reservation,
-                    fighter: this.langID,
-                    endpoint: this.hotelEndpoint,
-                    hotelcode: this.hotelParams,
-                  },
-                });
-              } else {
-                this.informationmodal2 = true;
-                this.roomNotReady = true;
-              }
-            } else {
-              router.push({
-                name: "Step",
-                params: {
-                  foo: this.reservation,
-                  fighter: this.langID,
-                  endpoint: this.hotelEndpoint,
-                  hotelcode: this.hotelParams,
-                },
-              });
-            }
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
           }
         })();
       }
     },
     handleOkBO() {
       this.confirmLoading = true;
-      // const reservation = [];
+      const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -861,39 +840,18 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            this.reservation.push(
+            reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (this.reservation.length == 1) {
-              if (
-                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
-              ) {
-                this.informationmodal2 = false;
-                this.roomNotReady = false;
-                router.push({
-                  name: "Step",
-                  params: {
-                    foo: this.reservation,
-                    fighter: this.langID,
-                    endpoint: this.hotelEndpoint,
-                    hotelcode: this.hotelParams,
-                  },
-                });
-              } else {
-                this.informationmodal2 = true;
-                this.roomNotReady = true;
-              }
-            } else {
-              router.push({
-                name: "Step",
-                params: {
-                  foo: this.reservation,
-                  fighter: this.langID,
-                  endpoint: this.hotelEndpoint,
-                  hotelcode: this.hotelParams,
-                },
-              });
-            }
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
           }
         })();
         this.modalBookingCode = false;
@@ -902,7 +860,7 @@ export default {
     },
     handleOkName() {
       this.confirmLoading = true;
-      // const reservation = [];
+      const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -948,39 +906,18 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            this.reservation.push(
+            reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (this.reservation.length == 1) {
-              if (
-                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
-              ) {
-                this.informationmodal2 = false;
-                this.roomNotReady = false;
-                router.push({
-                  name: "Step",
-                  params: {
-                    foo: this.reservation,
-                    fighter: this.langID,
-                    endpoint: this.hotelEndpoint,
-                    hotelcode: this.hotelParams,
-                  },
-                });
-              } else {
-                this.informationmodal2 = true;
-                this.roomNotReady = true;
-              }
-            } else {
-              router.push({
-                name: "Step",
-                params: {
-                  foo: this.reservation,
-                  fighter: this.langID,
-                  endpoint: this.hotelEndpoint,
-                  hotelcode: this.hotelParams,
-                },
-              });
-            }
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
           }
         })();
         this.modalGuestName = false;
@@ -989,7 +926,7 @@ export default {
     },
     handleOkEmail() {
       this.confirmLoading = true;
-      // const reservation = [];
+      const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1038,39 +975,18 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            this.reservation.push(
+            reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (this.reservation.length == 1) {
-              if (
-                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
-              ) {
-                this.informationmodal2 = false;
-                this.roomNotReady = false;
-                router.push({
-                  name: "Step",
-                  params: {
-                    foo: this.reservation,
-                    fighter: this.langID,
-                    endpoint: this.hotelEndpoint,
-                    hotelcode: this.hotelParams,
-                  },
-                });
-              } else {
-                this.informationmodal2 = true;
-                this.roomNotReady = true;
-              }
-            } else {
-              router.push({
-                name: "Step",
-                params: {
-                  foo: this.reservation,
-                  fighter: this.langID,
-                  endpoint: this.hotelEndpoint,
-                  hotelcode: this.hotelParams,
-                },
-              });
-            }
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
           }
         })();
         this.modalEmailAddress = false;
@@ -1079,7 +995,7 @@ export default {
     },
     handleOkMember() {
       this.confirmLoading = true;
-      // const reservation = [];
+      const reservation = [];
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1125,39 +1041,18 @@ export default {
           ) {
             this.informationmodal1 = true;
           } else {
-            this.reservation.push(
+            reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            if (this.reservation.length == 1) {
-              if (
-                this.reservation[0][0]["room-status"] == "0 Ready To Checkin"
-              ) {
-                this.informationmodal2 = false;
-                this.roomNotReady = false;
-                router.push({
-                  name: "Step",
-                  params: {
-                    foo: this.reservation,
-                    fighter: this.langID,
-                    endpoint: this.hotelEndpoint,
-                    hotelcode: this.hotelParams,
-                  },
-                });
-              } else {
-                this.informationmodal2 = true;
-                this.roomNotReady = true;
-              }
-            } else {
-              router.push({
-                name: "Step",
-                params: {
-                  foo: this.reservation,
-                  fighter: this.langID,
-                  endpoint: this.hotelEndpoint,
-                  hotelcode: this.hotelParams,
-                },
-              });
-            }
+            router.push({
+              name: "Step",
+              params: {
+                foo: reservation,
+                fighter: this.langID,
+                endpoint: this.hotelEndpoint,
+                hotelcode: this.hotelCode,
+              },
+            });
           }
         })();
         this.modalMembershipID = false;
