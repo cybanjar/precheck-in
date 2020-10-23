@@ -139,12 +139,12 @@ export default {
     this.data = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
-    this.langID = this.$route.params.fighter;
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
-    this.hotelEndpoint = this.$route.params.endpoint;
-    this.hotelCode = this.$route.params.hotelcode;
+    this.langID = this.setup["24"];
+    this.hotelEndpoint = this.setup["23"];
+    this.hotelCode = this.setup["22"];
   },
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
@@ -217,7 +217,7 @@ export default {
       //   this.roomNotReady = false;
       router.push({
         name: "Step",
-        params: { id: this.fairy, fighter: this.langID },
+        params: { id: this.fairy },
         // params: {
         //   foo: this.fairy,
         //   fighter: this.langID,

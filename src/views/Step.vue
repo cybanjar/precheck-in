@@ -340,7 +340,9 @@
               </a-col>
               <div v-if="freeParking">
                 <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item :label="getLabels('vehicle_regident', `titleCase`)">
+                  <a-form-item
+                    :label="getLabels('vehicle_regident', `titleCase`)"
+                  >
                     <a-input v-model="vRegident" />
                   </a-form-item>
                 </a-col>
@@ -792,7 +794,10 @@ export default {
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.region.push(air);
-          } else if (this.tempsetup[i]["number1"] == 8 && this.tempsetup[i]["number2"] == 14) {
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 14
+          ) {
             this.freeParking = this.tempsetup[i]["setupflag"];
           }
         }
@@ -822,11 +827,13 @@ export default {
           obj["20"] = this.region;
           obj["21"] = this.term1;
           obj["22"] = this.hotelcode;
+          obj["23"] = this.hotelEndpoint;
+          obj["24"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({
             name: "ListCheckIn",
-            params: { foo: nietos, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelcode },
+            params: { foo: nietos },
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
@@ -878,6 +885,8 @@ export default {
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
       this.hotelcode = this.$route.params.id["setup"]["22"];
+      this.hotelEndpoint = this.$route.params.id["setup"]["23"];
+      this.langID = this.$route.params.id["setup"]["24"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
       this.country = this.currDataPrepare["guest-country"];
@@ -942,7 +951,7 @@ export default {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
             this.form.validateFields(["phone"]);
-          } else if(!this.form.getFieldValue(["email"][0]).match(mailformat)) {
+          } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
           }
         }
@@ -998,12 +1007,12 @@ export default {
       }
     },
     search() {
-        async function getIP(){
-          const response = await fetch('http://api.ipify.org/?format=json');
-          const data = await response.json();
-          return data.ip;
-        }
-        getIP().then(data => this.ipAddr = data);
+      async function getIP() {
+        const response = await fetch("http://api.ipify.org/?format=json");
+        const data = await response.json();
+        return data.ip;
+      }
+      getIP().then((data) => (this.ipAddr = data));
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
           this.minimumDeposit +
@@ -1152,6 +1161,8 @@ export default {
 
           (async () => {
             this.imgb64 = base64Canvas;
+            console.log(this.currDataPrepare, "save");
+            console.log(this.imgb64, "save2");
             const uploadResult = await ky
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
@@ -1305,7 +1316,10 @@ export default {
       });
     },
     disagree() {
-      window.open("http://vhp-online.com/mobilecheckin?param=" + this.hotelcode, "_self")
+      window.open(
+        "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
+        "_self"
+      );
       /*router.push({
         path: "mobilecheckin",
         query: { lang: this.langID, hotelcode: this.hotelcode },
@@ -1363,8 +1377,11 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    handleBack(){
-      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelcode, "_self");
+    handleBack() {
+      window.open(
+        "http://localhost:8080/mobilecheckin?param=" + this.hotelcode,
+        "_self"
+      );
     },
   },
 };
