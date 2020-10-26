@@ -326,7 +326,7 @@ export default {
       this.fairy["setup"] = this.lemparsetup;
       //console.log(this.fairy);
       
-      router.push({
+      router.replace({
         name: "Step",
         params: { id: this.fairy },
         // params: {
