@@ -22,18 +22,40 @@
             >{{ getLabels("yes", `titleCase`) }}</a-button
           >
         </template>
-        <p>Sorry, your room is not ready yet. But you can still continue to check-in. We will notify you by email and SMS when your room is ready.</p>
+        <p>
+          Sorry, your room is not ready yet. But you can still continue to
+          check-in. We will notify you by email and SMS when your room is ready.
+        </p>
         <p>Please re-confirm your phone number and email.</p>
         <div>
           <a-form layout="vertical" :form="formresubmit">
             <a-form-item :label="getLabels('phone_number', `titleCase`)">
               <a-input
-                v-decorator="['guest-phone', { initialValue:currDataPrepare['guest-phnumber'], rules: [{ required: true, message: 'Please input your phone number!' }] }]"
+                v-decorator="[
+                  'guest-phone',
+                  {
+                    initialValue: currDataPrepare['guest-phnumber'],
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your phone number!',
+                      },
+                    ],
+                  },
+                ]"
               />
             </a-form-item>
             <a-form-item :label="getLabels('email', `titleCase`)">
               <a-input
-                v-decorator="['guest-email', { initialValue:currDataPrepare['guest-email'],rules: [{ required: true, message: 'Please input your email!' }] }]"
+                v-decorator="[
+                  'guest-email',
+                  {
+                    initialValue: currDataPrepare['guest-email'],
+                    rules: [
+                      { required: true, message: 'Please input your email!' },
+                    ],
+                  },
+                ]"
               />
             </a-form-item>
           </a-form>
@@ -1234,7 +1256,10 @@ export default {
     save() {
       // if (this.counter == this.id.length) {
       //   console.log(this.currDataPrepare);
-      if (this.currDataPrepare["room-status"] == "1 Room Already assign or Overlapping") {
+      if (
+        this.currDataPrepare["room-status"] ==
+        "1 Room Already assign or Overlapping"
+      ) {
         // Cek status kamar pertama kalo Overlapping
         console.log("overlapping");
         (async () => {
@@ -1261,7 +1286,10 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
 
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          console.log(
+            this.responseStatus.statusNumber,
+            this.responseStatus.statusMessage
+          );
 
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
@@ -1302,7 +1330,10 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
 
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          console.log(
+            this.responseStatus.statusNumber,
+            this.responseStatus.statusMessage
+          );
 
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
@@ -1313,14 +1344,14 @@ export default {
             this.roomNotReady = true;
 
             const mori =
-                "{" +
-                this.currDataPrepare.zinr +
-                ";" +
-                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-                "}";
-              //this.check();
-              //if (this.paymentStatus) {
-              //console.log(this.paymentStatus);
+              "{" +
+              this.currDataPrepare.zinr +
+              ";" +
+              moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+              "}";
+            //this.check();
+            //if (this.paymentStatus) {
+            //console.log(this.paymentStatus);
             router.push({
               name: "SuccessCheckIn",
               params: {
@@ -1364,7 +1395,10 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
 
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          console.log(
+            this.responseStatus.statusNumber,
+            this.responseStatus.statusMessage
+          );
 
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
@@ -1375,14 +1409,14 @@ export default {
             this.roomNotReady = true;
 
             const mori =
-                "{" +
-                this.currDataPrepare.zinr +
-                ";" +
-                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-                "}";
-              //this.check();
-              //if (this.paymentStatus) {
-              //console.log(this.paymentStatus);
+              "{" +
+              this.currDataPrepare.zinr +
+              ";" +
+              moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+              "}";
+            //this.check();
+            //if (this.paymentStatus) {
+            //console.log(this.paymentStatus);
             router.push({
               name: "SuccessCheckIn",
               params: {
@@ -1397,7 +1431,7 @@ export default {
               },
             });
           }
-        })();         
+        })();
       }
       // this.currDataPrepare = this.id[this.counter];
       // this.counter += 1;
@@ -1405,14 +1439,14 @@ export default {
     },
     handleYes() {
       const mori =
-          "{" +
-          this.currDataPrepare.zinr +
-          ";" +
-          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "}";
-        //this.check();
-        //if (this.paymentStatus) {
-        //console.log(this.paymentStatus);
+        "{" +
+        this.currDataPrepare.zinr +
+        ";" +
+        moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+        "}";
+      //this.check();
+      //if (this.paymentStatus) {
+      //console.log(this.paymentStatus);
       router.push({
         name: "SuccessCheckIn",
         params: {
