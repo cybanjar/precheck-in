@@ -18,6 +18,23 @@
           <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
         </a-modal>
       </div> -->
+      <div v-show="informationModal">
+        <a-modal
+          :title="getLabels('information', `titleCase`)"
+          :visible="informationModal"
+          :closable="false"
+        >
+          <template slot="footer">
+            <a-button key="submit" type="primary" @click="handleYes"
+              >OK</a-button
+            >
+          </template>
+          <p>
+            Sorry, your room is not ready. Please proceed to the Reception for
+            further information.
+          </p>
+        </a-modal>
+      </div>
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -87,9 +104,6 @@
           </a-list-item>
         </a-list>
       </div>
-      <!-- <a-button class="mr-3" type="primary" size="large" @click="handleBack">{{
-        getLabels("back", `titleCase`)
-      }}</a-button> -->
       <a-button
         class="mr-3 float-right mb-3"
         type="primary"
@@ -105,6 +119,7 @@
 import router from "../router";
 import { Alert } from "ant-design-vue";
 import moment from "moment";
+
 export default {
   data() {
     return {
@@ -131,6 +146,7 @@ export default {
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });
     });
+
     this.guestData = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
@@ -156,6 +172,7 @@ export default {
     },
     handleClass(item, used) {
       let returnedClass = "";
+
       if (used == "card") {
         if (item["l-selected"] == true && item["ispopup"] == true) {
           returnedClass = "disabled";
@@ -240,6 +257,7 @@ export default {
           }
         }
       }
+
       // if (client["l-selected"] == false) {
       //   for (const i in this.guestData) {
       //     if (this.guestData[i]["i-counter"] == client["i-counter"]) {
@@ -266,6 +284,7 @@ export default {
       //     if (this.data[i]["i-counter"] != client["i-counter"]) {
       //       console.log(client["i-counter"], "aneh2");
       //       console.log(this.data[i]["i-counter"], "aneh2");
+
       //       this.data[i]["l-selected"] = false;
       //       console.log(this.data[i]["l-selected"], "datagagal");
       //       this.selectedData = [];
@@ -304,10 +323,6 @@ export default {
         //   notready: this.roomNotReady,
         // },
       });
-      // } else {
-      //   this.informationModal = true;
-      //   this.roomNotReady = true;
-      // }
     },
     formatDate(datum) {
       const dDate =
@@ -318,15 +333,19 @@ export default {
         String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
           ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
           : String(moment(datum, "YYYY-MM-DD").month() + 1);
+
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+
       return fixDate;
     },
     getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
+
       let fixLabel = "";
+
       if (label == undefined) {
         fixLabel = "";
       } else {
@@ -340,6 +359,7 @@ export default {
           fixLabel = label["program-label1"];
         }
       }
+
       return fixLabel;
     },
     setTitleCase(label) {
