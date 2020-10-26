@@ -428,7 +428,6 @@ export default {
       informationmodal: false,
       informationmodal1: false,
       // informationmodal2: false,
-      informationterm: "",
       message: "",
       labels: [],
       tempsetup: [],
@@ -468,6 +467,21 @@ export default {
       tempParamcitime: "",
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       location: "",
+      FilterPurposeofStay: [],
+      purpose: "",
+      countries: [],
+      province: [],
+      termENG: "",
+      termIDN: "",
+      money: "",
+      currency: "",
+      per: "",
+      scanid: "",
+      wifiAddress: "",
+      wifiPassword: "",
+      SkipDeposit: "",
+      minimumDeposit: "",
+      freeParking: "",
     };
   },
   created() {
@@ -559,6 +573,7 @@ export default {
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
+      //Start Request Set Up
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -569,30 +584,121 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      const jatah = [];
+      for (const i in this.tempsetup) {
+        if (this.tempsetup[i]["number1"] == 1) {
+          this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
+          this.FilterPurposeofStay.push(this.tempsetup[i]);
+          if (this.tempsetup[i].setupflag == true) {
+            this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
+          }
+        } else if (
+          this.tempsetup[i]["number1"] == 9 &&
+          this.tempsetup[i]["number2"] == 2
+        ) {
+          const country = {};
+          country["descr"] = this.tempsetup[i]["descr"]; //data country
+          country["setupvalue"] = this.tempsetup[i]["setupvalue"];
+          this.countries.push(country);
+        } else if (
+          this.tempsetup[i]["number1"] == 9 &&
+          this.tempsetup[i]["number2"] == 3
+        ) {
+          const land = {};
+          land["descr"] = this.tempsetup[i]["descr"]; //data province
+          land["setupvalue"] = this.tempsetup[i]["setupvalue"];
+          this.province.push(land);
+        }
+      }
+
+      const tempTermENG = this.tempsetup.filter((item, index) => {
+        // Term ENG
+        return item.number1 === 6 && item.number2 === 1;
+      });
+      this.termENG = tempTermENG[0]["setupvalue"];
+
+      const tempTermIDN = this.tempsetup.filter((item, index) => {
+        // Term IDN
+        return item.number1 === 6 && item.number2 === 2;
+      });
+      this.termIDN = tempTermIDN[0]["setupvalue"];
+
+      const tempCurrency = this.tempsetup.filter((item, index) => {
+        //  Currency
+        return item.number1 === 2 && item.setupflag == true;
+      });
+      this.money = tempCurrency["0"]["price"];
+      this.currency = tempCurrency["0"]["remarks"];
+      this.per = tempCurrency["0"]["setupvalue"].split("PER")[1];
+
+      const tempScandID = this.tempsetup.filter((item, index) => {
+        //  Scand ID
+        return item.number1 === 8 && item.number2 == 1;
+      });
+      this.scanid = tempScandID["0"]["setupflag"];
+
+      const tempwifiAddress = this.tempsetup.filter((item, index) => {
+        //  Wifi Address
+        return item.number1 === 8 && item.number2 == 8;
+      });
+      this.wifiAddress = tempwifiAddress["0"]["setupvalue"];
+
+      const tempwifiPassword = this.tempsetup.filter((item, index) => {
+        //  Wifi Password
+        return item.number1 === 8 && item.number2 == 8;
+      });
+      this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
+
+      const tempSkipDeposit = this.tempsetup.filter((item, index) => {
+        //  Skip Deposit
+        return item.number1 === 8 && item.number2 == 4;
+      });
+      this.SkipDeposit = tempSkipDeposit["0"]["setupvalue"];
+
+      const tempMinDeposit = this.tempsetup.filter((item, index) => {
+        //  Minimum Deposit
+        return item.number1 === 8 && item.number2 == 5;
+      });
+      this.minimumDeposit = tempMinDeposit["0"]["price"];
+
+      const tempfreeParking = this.tempsetup.filter((item, index) => {
+        //  Free Parking
+        return item.number1 === 8 && item.number2 == 5;
+      });
+      this.freeParking = this.tempsetup[i]["setupflag"];
+
       const tempBG = this.tempsetup.filter((item, index) => {
+                //  Background Color
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
+
       const tempFG = this.tempsetup.filter((item, index) => {
+                        //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
       const tempImage = this.tempsetup.filter((item, index) => {
+                        //  Image Hotel
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
       const tempHotelName = this.tempsetup.filter((item, index) => {
+                        //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
       const tempServer = this.tempsetup.filter((item, index) => {
+                        //  Server Time
         return (
           item.number1 === 9 &&
           item.number2 === 7 &&
           item.descr == "SERVER TIME"
         );
       });
+      //End Request Set Up
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
