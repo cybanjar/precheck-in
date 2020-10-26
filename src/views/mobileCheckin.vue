@@ -445,7 +445,6 @@ export default {
       member: "",
       loading: true,
       confirmLoading: false,
-      FG: "",
       hotelImage: "",
       hotelName: "",
       textOta: {
@@ -482,6 +481,9 @@ export default {
       SkipDeposit: "",
       minimumDeposit: "",
       freeParking: "",
+      BG: "",
+      FG: "",
+      setup: [],
     };
   },
   created() {
@@ -665,41 +667,66 @@ export default {
         //  Free Parking
         return item.number1 === 8 && item.number2 == 5;
       });
-      this.freeParking = this.tempsetup[i]["setupflag"];
+      this.freeParking = this.tempsetup["0"]["setupflag"];
 
       const tempBG = this.tempsetup.filter((item, index) => {
-                //  Background Color
+        //  Background Color
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      this.BG = tempBG[0]["setupvalue"];
 
       const tempFG = this.tempsetup.filter((item, index) => {
-                        //  Foreground Color
+        //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
       const tempImage = this.tempsetup.filter((item, index) => {
-                        //  Image Hotel
+        //  Image Hotel
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
       const tempHotelName = this.tempsetup.filter((item, index) => {
-                        //  Hotel Name
+        //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
       const tempServer = this.tempsetup.filter((item, index) => {
-                        //  Server Time
+        //  Server Time
         return (
           item.number1 === 9 &&
           item.number2 === 7 &&
           item.descr == "SERVER TIME"
         );
       });
-      //End Request Set Up
 
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
+
+      const obj = {};
+      obj["01"] = this.FilterPurposeofStay;
+      obj["02"] = this.purpose;
+      obj["03"] = this.countries;
+      obj["04"] = this.province;
+      obj["05"] = this.termENG;
+      obj["06"] = this.termIDN;
+      obj["07"] = this.money;
+      obj["08"] = this.currency;
+      obj["09"] = this.per;
+      obj["09"] = this.scanid;
+      obj["10"] = this.wifiAddress;
+      obj["11"] = this.wifiPassword;
+      obj["12"] = this.SkipDeposit;
+      obj["13"] = this.BG;
+      obj["14"] = this.FG;
+      obj["15"] = this.freeParking;
+      obj["16"] = this.hotelImage;
+      obj["17"] = this.hotelName;
+      obj["18"] = this.hotelEndpoint;
+      obj["19"] = this.server;
+      this.setup.push(obj);
+      console.log(this.setup);
+      //End Request Set Up
       const vServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"

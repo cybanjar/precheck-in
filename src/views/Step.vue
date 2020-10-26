@@ -738,131 +738,131 @@ export default {
     this.location = this.$route.params.location;
     //console.log(this.location);
     if (this.$route.params.foo != undefined) {
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "preCI/loadSetup", {
-            json: {
-              request: {
-                icase: 1,
-              },
-            },
-          })
-          .json();
-        this.tempsetup = parsed.response.pciSetup["pci-setup"];
-        const jatah = [];
-        for (const i in this.tempsetup) {
-          if (this.tempsetup[i]["number1"] == 4) {
-            jatah.push(this.tempsetup[i]);
-            for (const heaven in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[heaven].setupflag == true) {
-                this.information.backgroundColor = jatah[heaven]["setupvalue"];
-              }
-            }
-          } else if (this.tempsetup[i]["number1"] == 5) {
-            jatah.push(this.tempsetup[i]);
-            for (const hell in jatah) {
-              if (jatah[hell].setupflag == true) {
-                this.information.color = jatah[hell]["setupvalue"];
-              }
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 7 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.gambar = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.term = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.term1 = this.tempsetup[i]["setupvalue"];
-          } else if (this.tempsetup[i]["number1"] == 2) {
-            if (this.tempsetup[i].setupflag == true) {
-              this.money = this.tempsetup[i]["price"];
-              this.currency = this.tempsetup[i]["remarks"];
-              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.hour = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.scanid = !this.tempsetup[i]["setupflag"];
-            // console.log(this.scanid, "scandid");
-          } else if (this.tempsetup[i]["number1"] == 1) {
-            /*this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase()
-            );*/
-            this.FilterPurposeofStay.push(this.tempsetup[i]);
-            if (this.tempsetup[i].setupflag == true) {
-              this.purpose = this.tempsetup[i].setupvalue;
-            }
-          } else if (this.tempsetup[i]["number1"] == 3) {
-            if (this.tempsetup[i].number2 == 1) {
-              this.showBed = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 2) {
-              this.showSmoking = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 3) {
-              this.showFloor = this.tempsetup[i].setupflag;
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 99 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.hotelname = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 8
-          ) {
-            this.wifiAddress = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 9
-          ) {
-            this.wifiPassword = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 4
-          ) {
-            this.skipDeposit = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 5
-          ) {
-            this.minimumDeposit = this.tempsetup[i]["price"];
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            const bulbasur = {};
-            bulbasur["descr"] = this.tempsetup[i]["descr"];
-            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
-            this.countries.push(bulbasur);
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3 &&
-            this.tempsetup[i].descr != "SERVER TIME"
-          ) {
-            const air = {};
-            air["descr"] = this.tempsetup[i]["descr"];
-            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
-            this.region.push(air);
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 14
-          ) {
-            this.freeParking = this.tempsetup[i]["setupflag"];
-          }
-        }
+      // (async () => {
+      //   const parsed = await ky
+      //     .post(this.hotelEndpoint + "preCI/loadSetup", {
+      //       json: {
+      //         request: {
+      //           icase: 1,
+      //         },
+      //       },
+      //     })
+      //     .json();
+      //   this.tempsetup = parsed.response.pciSetup["pci-setup"];
+      //   const jatah = [];
+      //   for (const i in this.tempsetup) {
+      //     if (this.tempsetup[i]["number1"] == 4) {
+      //       jatah.push(this.tempsetup[i]);
+      //       for (const heaven in jatah) {
+      //         // console.log(jatah, "msk");
+      //         if (jatah[heaven].setupflag == true) {
+      //           this.information.backgroundColor = jatah[heaven]["setupvalue"];
+      //         }
+      //       }
+      //     } else if (this.tempsetup[i]["number1"] == 5) {
+      //       jatah.push(this.tempsetup[i]);
+      //       for (const hell in jatah) {
+      //         if (jatah[hell].setupflag == true) {
+      //           this.information.color = jatah[hell]["setupvalue"];
+      //         }
+      //       }
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 7 &&
+      //       this.tempsetup[i]["number2"] == 1
+      //     ) {
+      //       this.gambar = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 6 &&
+      //       this.tempsetup[i]["number2"] == 1
+      //     ) {
+      //       this.term = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 6 &&
+      //       this.tempsetup[i]["number2"] == 2
+      //     ) {
+      //       this.term1 = this.tempsetup[i]["setupvalue"];
+      //     } else if (this.tempsetup[i]["number1"] == 2) {
+      //       if (this.tempsetup[i].setupflag == true) {
+      //         this.money = this.tempsetup[i]["price"];
+      //         this.currency = this.tempsetup[i]["remarks"];
+      //         this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+      //       }
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 2
+      //     ) {
+      //       this.hour = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 1
+      //     ) {
+      //       this.scanid = !this.tempsetup[i]["setupflag"];
+      //       // console.log(this.scanid, "scandid");
+      //     } else if (this.tempsetup[i]["number1"] == 1) {
+      //       /*this.tempsetup[i].setupvalue = this.getLabels(
+      //         this.tempsetup[i].setupvalue.toLowerCase()
+      //       );*/
+      //       this.FilterPurposeofStay.push(this.tempsetup[i]);
+      //       if (this.tempsetup[i].setupflag == true) {
+      //         this.purpose = this.tempsetup[i].setupvalue;
+      //       }
+      //     } else if (this.tempsetup[i]["number1"] == 3) {
+      //       if (this.tempsetup[i].number2 == 1) {
+      //         this.showBed = this.tempsetup[i].setupflag;
+      //       } else if (this.tempsetup[i].number2 == 2) {
+      //         this.showSmoking = this.tempsetup[i].setupflag;
+      //       } else if (this.tempsetup[i].number2 == 3) {
+      //         this.showFloor = this.tempsetup[i].setupflag;
+      //       }
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 99 &&
+      //       this.tempsetup[i]["number2"] == 1
+      //     ) {
+      //       this.hotelname = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 8
+      //     ) {
+      //       this.wifiAddress = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 9
+      //     ) {
+      //       this.wifiPassword = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 4
+      //     ) {
+      //       this.skipDeposit = this.tempsetup[i]["setupvalue"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 5
+      //     ) {
+      //       this.minimumDeposit = this.tempsetup[i]["price"];
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 9 &&
+      //       this.tempsetup[i]["number2"] == 2
+      //     ) {
+      //       const bulbasur = {};
+      //       bulbasur["descr"] = this.tempsetup[i]["descr"];
+      //       bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
+      //       this.countries.push(bulbasur);
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 9 &&
+      //       this.tempsetup[i]["number2"] == 3 &&
+      //       this.tempsetup[i].descr != "SERVER TIME"
+      //     ) {
+      //       const air = {};
+      //       air["descr"] = this.tempsetup[i]["descr"];
+      //       air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+      //       this.region.push(air);
+      //     } else if (
+      //       this.tempsetup[i]["number1"] == 8 &&
+      //       this.tempsetup[i]["number2"] == 14
+      //     ) {
+      //       this.freeParking = this.tempsetup[i]["setupflag"];
+      //     }
+      //   }
         if (this.currData["0"].length > 1) {
           const nietos = [];
           const obj = {};
@@ -923,7 +923,6 @@ export default {
           this.y = true;
         }*/
         this.loading = false;
-      })();
     } else if (this.$route.params.id != undefined) {
       this.gambar = this.$route.params.id["setup"]["01"];
       this.information = this.$route.params.id["setup"]["02"];
