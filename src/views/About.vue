@@ -715,6 +715,12 @@ export default {
             }
           )
           .json();
+        // Handling null Response
+        if (parsed.response.messResult == null) {
+          //console.log('nope');
+        } else {
+          //console.log('yes');
+        }
         localStorage.removeItem("labels");
         localStorage.setItem(
           "labels",
@@ -796,6 +802,7 @@ export default {
           }
         );
         this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
+        //console.log(this.hotelParams);
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {

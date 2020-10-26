@@ -38,7 +38,7 @@
         </template>
         <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
       </a-modal>
-      <a-modal
+      <!-- <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal2"
         :closable="false"
@@ -52,7 +52,7 @@
           }}</a-button>
         </template>
         <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-      </a-modal>
+      </a-modal> -->
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 :class="FG">
@@ -427,7 +427,7 @@ export default {
       hour: "",
       informationmodal: false,
       informationmodal1: false,
-      informationmodal2: false,
+      // informationmodal2: false,
       informationterm: "",
       message: "",
       labels: [],
@@ -467,17 +467,23 @@ export default {
       tempParamcodate: "",
       tempParamcitime: "",
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      location: "",
     };
   },
   created() {
+    this.location = window.location.host;
     const tempParam = {};
     if (this.$route.params.hotelParameter != undefined) {
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
       this.tempParamcitime = this.$route.params.citime;
+
+      const encodedURI = encodeURIComponent(this.hotelParams);
+      this.location += `/mobilecheckin?${encodedURI}`;
     } else if (location.search.substring(1) != undefined) {
-      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
+      this.location += `/mobilecheckin?${location.search.substring(1)}`;
+      this.hotelParams = decodeURIComponent(location.search.substring(1));
     } else {
       location.search
         .split("&")
@@ -508,6 +514,7 @@ export default {
           }
         )
         .json();
+      //console.log(code);
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
@@ -518,10 +525,8 @@ export default {
       const tempLang = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 5;
       });
-
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
-
       this.langID = tempLang[0]["setupvalue"];
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = require(`../assets/booking-code.svg`);
@@ -534,7 +539,6 @@ export default {
         this.emailPhoto = require(`../assets/AlamatEmail.svg`);
         this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
-
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
@@ -574,17 +578,14 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-
       const tempImage = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
-
       const tempHotelName = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -600,7 +601,6 @@ export default {
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
-
       const systemDate = systemDateObj[0]["setupvalue"];
       const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
         2,
@@ -615,7 +615,6 @@ export default {
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-
       for (const i in this.tempsetup) {
         if (
           this.tempsetup[i]["number1"] == 8 &&
@@ -642,7 +641,6 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
-
         this.reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
@@ -722,7 +720,6 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
-
     errorMember() {
       this.$message.error(
         this.getLabels("input_member") +
@@ -851,6 +848,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -917,6 +915,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -986,6 +985,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -1045,13 +1045,14 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
+            router.replace({
               name: "Step",
               params: {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -1066,22 +1067,22 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    handleYes() {
-      this.informationmodal2 = false;
-      router.push({
-        name: "Step",
-        params: {
-          foo: this.reservation,
-          fighter: this.langID,
-          endpoint: this.hotelEndpoint,
-          hotelcode: this.hotelParams,
-          notready: this.roomNotReady,
-        },
-      });
-    },
-    handleNo() {
-      this.informationmodal2 = false;
-    },
+    //   handleYes() {
+    //     this.informationmodal2 = false;
+    //     router.push({
+    //       name: "Step",
+    //       params: {
+    //         foo: this.reservation,
+    //         fighter: this.langID,
+    //         endpoint: this.hotelEndpoint,
+    //         hotelcode: this.hotelParams,
+    //         notready: this.roomNotReady,
+    //       },
+    //     });
+    //   },
+    //   handleNo() {
+    //     this.informationmodal2 = false;
+    //   },
   },
   computed: {
     getLabels() {

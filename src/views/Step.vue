@@ -720,6 +720,7 @@ export default {
         statusNumber: "",
         statusMessage: "",
       },
+      location: "",
     };
   },
   watch: {
@@ -734,6 +735,8 @@ export default {
     this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.roomNotReady = this.$route.params.notready;
+    this.location = this.$route.params.location;
+    //console.log(this.location);
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -890,7 +893,7 @@ export default {
           obj["24"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          router.push({
+          router.replace({
             name: "ListCheckIn",
             params: { foo: nietos },
           });
@@ -972,7 +975,7 @@ export default {
       }*/
       this.loading = false;
     } else {
-      router.push("notfound");
+      router.replace(this.location);
     }
   },
   mounted() {
@@ -1096,7 +1099,6 @@ export default {
         "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
-
       const datas = {
         book: this.currDataPrepare.resnr,
         codate: this.formatDate(this.currDataPrepare.co),
@@ -1163,28 +1165,22 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0];
-
       /* Start Handling Images Compression */
       const reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onload = (event) => {
         // Creating Image Element
         const imgElement = document.createElement("img");
         imgElement.src = event.target.result;
-
         // Output to Web
         this.url = event.target.result;
-
         // Handling Image Element
         imgElement.onload = (e) => {
           // Creating Canvas and Scale Size
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
           const MAX_HEIGHT = 500;
-
           let scaleSize = 0;
-
           // Scale Size Based on Image Mode Portrait or Landscape
           if (imgElement.width >= imgElement.height) {
             // Landscape Images
@@ -1199,30 +1195,23 @@ export default {
           }
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
-
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
             ctx.fillStyle = "rgba(0,0,0,0.1)";
             ctx.fillText("COPY COPY COPY COPY COPY COPY COPY", 0, i * 100);
           }
-
           // Convert Canvas to DataURL
           const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
           this.url = srcEncoded;
-
           // Create Base64 Images
           const base64Canvas = ctx.canvas
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
-
           (async () => {
             this.imgb64 = base64Canvas;
-            console.log(this.currDataPrepare, "save");
-            console.log(this.imgb64, "save2");
             const uploadResult = await ky
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
@@ -1253,15 +1242,39 @@ export default {
       window.scrollTo(0, 0);
       this.current = 0;
     },
+    handleResCi(status) {
+      (async () => {
+        const parsed = await ky
+          .post(this.hotelEndpoint + "mobileCI/resCI", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare.resnr,
+                rsvlineNumber: this.currDataPrepare.reslinnr,
+                userInit: "01",
+                newRoomno: this.currDataPrepare.zinr,
+                purposeOfStay: this.form.getFieldValue("purpose"),
+                email: this.form.getFieldValue("email"),
+                guestPhnumber: this.form.getFieldValue("phone"),
+                guestNation: this.form.getFieldValue("nationality"),
+                guestCountry: this.form.getFieldValue("country"),
+                guestRegion: this.form.getFieldValue("region"),
+                base64image: this.imgb64,
+              },
+            },
+          })
+          .json();
+        const responses = parsed.response["resultMessage"].split(" - ");
+        this.responseStatus.statusNumber = responses[0];
+        this.responseStatus.statusMessage = responses[1];
+      })();
+    },
     save() {
       // if (this.counter == this.id.length) {
       //   console.log(this.currDataPrepare);
-      if (
-        this.currDataPrepare["room-status"] ==
-        "1 Room Already assign or Overlapping"
-      ) {
+      const rmStatus = this.currDataPrepare["room-status"].split(" ");
+      if (parseInt(rmStatus) == 1) {
         // Cek status kamar pertama kalo Overlapping
-        console.log("overlapping");
+        //console.log("overlapping");
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1285,12 +1298,7 @@ export default {
           const responses = parsed.response["resultMessage"].split(" - ");
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-
-          console.log(
-            this.responseStatus.statusNumber,
-            this.responseStatus.statusMessage
-          );
-
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
@@ -1299,13 +1307,9 @@ export default {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
           }
         })();
-      } else if (
-        this.currDataPrepare["room-status"] ==
-        "2 Room Status Not Ready To Checkin"
-      ) {
+      } else if (parseInt(rmStatus) == 2 || parseInt(rmStatus) == 3) {
         // Cek status kamar pertama kalo VD
-        console.log("VD");
-
+        //console.log("VD");
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1329,12 +1333,7 @@ export default {
           const responses = parsed.response["resultMessage"].split(" - ");
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-
-          console.log(
-            this.responseStatus.statusNumber,
-            this.responseStatus.statusMessage
-          );
-
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
@@ -1342,7 +1341,6 @@ export default {
           } else {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
             this.roomNotReady = true;
-
             const mori =
               "{" +
               this.currDataPrepare.zinr +
@@ -1369,8 +1367,7 @@ export default {
         })();
       } else {
         // Cek status kamar pertama kalo VC
-        console.log("VC");
-
+        //console.log("VC");
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1394,12 +1391,7 @@ export default {
           const responses = parsed.response["resultMessage"].split(" - ");
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-
-          console.log(
-            this.responseStatus.statusNumber,
-            this.responseStatus.statusMessage
-          );
-
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
@@ -1407,7 +1399,6 @@ export default {
           } else {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
             this.roomNotReady = true;
-
             const mori =
               "{" +
               this.currDataPrepare.zinr +
