@@ -16,7 +16,7 @@
 
       <a-modal
         :title="getLabels('information', `titleCase`)"
-        :visible="informationmodal"
+        :visible="infoMCIEarlyCheckin"
         :closable="false"
       >
         <template slot="footer">
@@ -28,7 +28,7 @@
       </a-modal>
       <a-modal
         :title="getLabels('information', `titleCase`)"
-        :visible="informationmodal1"
+        :visible="infoMCINotFound"
         :closable="false"
       >
         <template slot="footer">
@@ -38,9 +38,9 @@
         </template>
         <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
       </a-modal>
-      <!-- <a-modal
+      <a-modal
         :title="getLabels('information', `titleCase`)"
-        :visible="informationmodal2"
+        :visible="infoMCINotReady"
         :closable="false"
       >
         <template slot="footer">
@@ -52,8 +52,23 @@
           }}</a-button>
         </template>
         <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-      </a-modal> -->
+      </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
+        <div>
+          <q-btn-toggle
+            v-model="mcilang"
+            toggle-color="primary"
+            color="white"
+            text-color="black"
+            toggle-text-color="white"
+            style="margin-top: 30px; margin-bottom: -10px;"
+            @input="changeLang"
+            :options="[
+              {label: 'ENG', value: 'eng'},
+              {label: 'IDN', value: 'idn'}
+            ]"
+          />
+        </div>
         <a-col class="text-center" :span="4" :xs="24">
           <h1 :class="FG">
             <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
@@ -387,6 +402,7 @@ import {
   QTime,
   QDate,
   QBtn,
+  QBtnToggle,
   QPopupProxy,
   ClosePopup,
   QIcon,
@@ -398,6 +414,7 @@ Vue.use(Quasar, {
     QDate,
     QInput,
     QBtn,
+    QBtnToggle,
     QPopupProxy,
     QIcon,
   },
@@ -412,6 +429,7 @@ import CookieS from "vue-cookies";
 export default {
   data() {
     return {
+      mcilang: "eng",
       modalBookingCode: false,
       modalGuestName: false,
       modalEmailAddress: false,
@@ -425,9 +443,9 @@ export default {
       minDate: "2020/10/10",
       maxDate: "2020/10/10",
       hour: "",
-      informationmodal: false,
-      informationmodal1: false,
-      // informationmodal2: false,
+      infoMCIEarlyCheckin: false,
+      infoMCINotFound: false,
+      infoMCINotReady: false,
       informationterm: "",
       message: "",
       labels: [],
@@ -468,23 +486,34 @@ export default {
       tempParamcitime: "",
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       location: "",
+      programLabel: "",
+      earliestCiTime: "00:00",
+      earliestCiFlag: false,
     };
   },
-  created() {
-    this.location = window.location.host;
+  created() {  
+    /* Get Base URL */
+    this.location = window.location.host;  
+    /* tempParam Variable for Nicepay */
     const tempParam = {};
     if (this.$route.params.hotelParameter != undefined) {
+      /* Get Router Param From PCI */
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
-      this.tempParamcitime = this.$route.params.citime;
-
+      this.tempParamcitime = this.$route.params.citime;  
+      
+      /* EncodedURI For Full URL Redirecting save at this.location */
       const encodedURI = encodeURIComponent(this.hotelParams);
       this.location += `/mobilecheckin?${encodedURI}`;
-    } else if (location.search.substring(1) != undefined) {
+    } else if (location.search.substring(1) != undefined) {    
+      /* Save Full URL For Redirecting save at this.location */  
       this.location += `/mobilecheckin?${location.search.substring(1)}`;
+      /* DecodeURI for Getting Fixed Hotel Encrypted Parameter */
       this.hotelParams = decodeURIComponent(location.search.substring(1));
-    } else {
+      
+    } else {     
+      /* Nicepay Callback Redirect decodeURI */ 
       location.search
         .split("&")
         .toString()
@@ -494,13 +523,15 @@ export default {
           tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
             ? item.split("=")[1]
             : "No query strings available";
-        });
+        });      
     }
+    /* Get Client Today Date For Initializing Data */
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
+    /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
     (async () => {
       const code = await ky
         .post(
@@ -514,7 +545,14 @@ export default {
           }
         )
         .json();
-      //console.log(code);
+      
+      /* IF Null Response */
+      if(code.response['messResult'] == null){
+        router.replace({
+          name: "NotFound",
+        });
+      }
+      /* Assign Hotel Initial Setup */
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
@@ -528,6 +566,20 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
+      this.mcilang = this.langID.toLowerCase();
+      /* Check Used Language */      
+      switch(this.langID.toLowerCase()){
+        case 'eng':
+          this.programLabel = 'program-label1';
+          break;
+        case 'idn':
+          this.programLabel = 'program-label2';
+          break;
+        default:
+          this.programLabel = "eng";
+          break;
+      }
+      /* Get Icon According to the selected language */
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = require(`../assets/booking-code.svg`);
         this.namePhoto = require(`../assets/Name.svg`);
@@ -539,26 +591,28 @@ export default {
         this.emailPhoto = require(`../assets/AlamatEmail.svg`);
         this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
+      /* Async Get Label From Database */
       const parsed = await ky
         .post(
           "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
-                countryId1: this.langID,
-                countryId2: "",
-                inpVariable: " ",
+                countryId1: "ENG",
+                countryId2: "IDN",
+                inpVariable: " ",                
               },
             },
           }
         )
-        .json();
+        .json();      
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
         JSON.stringify(parsed.response.countryLabels["country-labels"])
       );
       this.labels = JSON.parse(localStorage.getItem("labels"));
+      /* Load All PCI Setup Based On Hotel Endpoint */
       const setup = await ky
         .post(this.hotelEndpoint + "preCI/loadSetup", {
           json: {
@@ -569,23 +623,28 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
+      // Background Color
       const tempBG = this.tempsetup.filter((item, index) => {
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      // Foreground Color
       const tempFG = this.tempsetup.filter((item, index) => {
         return item.number1 === 5 && item.setupflag === true;
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
+      // Hotel Image
       const tempImage = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
+      // Hotel Name
       const tempHotelName = this.tempsetup.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
+      // Server Time
       const tempServer = this.tempsetup.filter((item, index) => {
         return (
           item.number1 === 9 &&
@@ -594,43 +653,60 @@ export default {
         );
       });
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
-      const vServerClock = moment(
+      // Convert Server Time to Milisecond
+      const msServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"
       ).valueOf();
+      // Hotel System Date
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
+      // Handling Hotel System Date to Set At Calendar
       const systemDate = systemDateObj[0]["setupvalue"];
-      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
-        2,
-        "0"
-      );
-      const dMonth = String(
-        moment(systemDate, "DD/MM/YYYY").month() + 1
-      ).padStart(2, "0");
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(2,"0");
+      const dMonth = String(moment(systemDate, "DD/MM/YYYY").month() + 1).padStart(2, "0");
       const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
       const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
       this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
       this.minDate = `${dYear}/${dMonth}/${dDate}`;
       this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
       this.minCalendar = `${dYear}/${dMonth}`;
-      for (const i in this.tempsetup) {
-        if (
-          this.tempsetup[i]["number1"] == 8 &&
-          this.tempsetup[i]["number2"] == 2
-        ) {
-          this.checkin = this.tempsetup[i]["setupvalue"];
+      // Get Hotel Default Checkin Time
+      const checkinTime = this.tempsetup.filter((item, index) => {
+        return item.number1 === 8 && item.number2 === 2;
+      });
+      this.checkin = checkinTime[0]["setupvalue"];
+      // Convert Check-in Time to Milisecond
+      let msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
+      // Get Earliest Checkin Time
+      const earliestCI = this.tempsetup.filter((item, index) => {
+        return item.number1 === 8 && item.number2 === 11;
+      });
+      this.earliestCiTime = checkinTime[0]["setupvalue"];
+      this.earliestCiFlag = checkinTime[0]["setupflag"];
+      // Convert Earliest Check-in Time to Milisecond
+      const msEarliestCiTime = moment(this.earliestCiTime, "HH:mm").valueOf();
+      /** Compare Check-in Time with Server Time
+       *  If Erliest CI Flag is Active : Server Time < Earliest CI Time Then Show Pop Up Cannot MCI
+       *  If Server Time < Check-in Time Then Show Pop Up Cannot MCI
+       */
+      if(this.earliestCiFlag){
+        if(msServerClock < msEarliestCiTime){
+          this.infoMCIEarlyCheckin = true;
         }
       }
-      const vCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-      if (vServerClock < vCheckinClock) {
-        this.informationmodal = true;
+      else{
+        if (msServerClock < msCheckinClock) {
+          this.infoMCIEarlyCheckin = true;
+        }
       }
+      /* Nicepay Callback Handler */
       if (this.tempParambook != "") {
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
-        if ("14:00" < this.checkin) {
-          this.informationmodal = true;
+        msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
+        if (msServerClock < msCheckinClock) {
+          this.infoMCIEarlyCheckin = true;
         } else {
           this.bookingcode = this.tempParambook;
           this.date = this.tempParamcodate.replace(/%2F/g, "/");
@@ -644,7 +720,7 @@ export default {
         this.reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
-        router.push({
+        router.replace({
           name: "Step",
           params: {
             foo: this.reservation,
@@ -658,6 +734,26 @@ export default {
     this.loading = false;
   },
   methods: {
+    changeLang(value){
+      if(value == 'idn'){
+        this.programLabel = 'program-label2';
+        this.langID = 'IDN';
+        this.mcilang = 'idn';
+        this.boPhoto = require(`../assets/kodeBooking.svg`);
+        this.namePhoto = require(`../assets/Nama.svg`);
+        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
+        this.memberPhoto = require(`../assets/keanggotaan.svg`);      
+      }
+      else{
+        this.programLabel = 'program-label1';
+        this.langID = 'ENG';
+        this.mcilang = 'eng';
+        this.boPhoto = require(`../assets/booking-code.svg`);
+        this.namePhoto = require(`../assets/Name.svg`);
+        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.memberPhoto = require(`../assets/membership.svg`);
+      }
+    },
     onChange(date, dateString) {
       this.date = dateString;
     },
@@ -728,9 +824,9 @@ export default {
       );
     },
     goOTA() {
-      this.informationmodal = false;
-      this.informationmodal1 = false;
-      this.informationmodal2 = false;
+      this.infoMCIEarlyCheckin = false;
+      this.infoMCINotFound = false;
+      this.infoMCINotReady = false;
     },
     handleOk() {
       const reservation = [];
@@ -760,23 +856,23 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
-            this.informationmodal = true;
+            this.infoMCIEarlyCheckin = true;
           } else if (
-            this.message.substring(0, 2) == "1 " ||
+            this.message.substring(0, 2) == "01" ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal2 = true;
+            this.infoMCINotReady = true;
           } else if (
             this.message.substring(0, 2) == "88" ||
             this.message.substring(0, 2) == "5 " ||
             this.message.substring(0, 2) == "2 "
           ) {
-            this.informationmodal1 = true;
+            this.infoMCINotFound = true;
           } else {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.replace({
+            router.push({
               name: "Step",
               params: {
                 foo: reservation,
@@ -788,14 +884,18 @@ export default {
           }
         })();
       }
-    },
-    handleOkBO() {
-      this.confirmLoading = true;
-      const reservation = [];
+    },    
+    getCoDate(){
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      return coDate;
+    },
+    handleOkBO() {
+      this.confirmLoading = true;
+      const reservation = [];
+      const coDate = this.getCoDate();
       if (!this.bookingcode && !this.date) {
         this.error();
         this.confirmLoading = false;
@@ -821,22 +921,22 @@ export default {
                 },
               },
             })
-            .json();
-          console.log(data, "lol");
-          this.message = data["response"]["messResult"];
+            .json();          
+          this.message = data.response["messResult"];
+          const msgStatus = data.response["messResult"].split("-");    
           if (this.message.substring(0, 2) == "9 ") {
-            this.informationmodal = true;
+            this.infoMCIEarlyCheckin = true;
           } else if (
-            this.message.substring(0, 2) == "1 " ||
+            this.message.substring(0, 2) == "01" ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal2 = true;
+            this.infoMCINotReady = true;
           } else if (
             this.message.substring(0, 2) == "88" ||
             this.message.substring(0, 2) == "5 " ||
             this.message.substring(0, 2) == "2 "
           ) {
-            this.informationmodal1 = true;
+            this.infoMCINotFound = true;
           } else {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -892,18 +992,18 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
-            this.informationmodal = true;
+            this.infoMCIEarlyCheckin = true;
           } else if (
-            this.message.substring(0, 2) == "1 " ||
+            this.message.substring(0, 2) == "01" ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal2 = true;
+            this.infoMCINotReady = true;
           } else if (
             this.message.substring(0, 2) == "88" ||
             this.message.substring(0, 2) == "5 " ||
             this.message.substring(0, 2) == "2 "
           ) {
-            this.informationmodal1 = true;
+            this.infoMCINotFound = true;
           } else {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -962,18 +1062,18 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
-            this.informationmodal = true;
+            this.infoMCIEarlyCheckin = true;
           } else if (
-            this.message.substring(0, 2) == "1 " ||
+            this.message.substring(0, 2) == "01" ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal2 = true;
+            this.infoMCINotReady = true;
           } else if (
             this.message.substring(0, 2) == "88" ||
             this.message.substring(0, 2) == "5 " ||
             this.message.substring(0, 2) == "2 "
           ) {
-            this.informationmodal1 = true;
+            this.infoMCINotFound = true;
           } else {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -1029,18 +1129,18 @@ export default {
             .json();
           this.message = data["response"]["messResult"];
           if (this.message.substring(0, 2) == "9 ") {
-            this.informationmodal = true;
+            this.infoMCIEarlyCheckin = true;
           } else if (
-            this.message.substring(0, 2) == "1 " ||
+            this.message.substring(0, 2) == "01" ||
             this.message.substring(0, 2) == "02"
           ) {
-            this.informationmodal2 = true;
+            this.infoMCINotReady = true;
           } else if (
             this.message.substring(0, 2) == "88" ||
             this.message.substring(0, 2) == "5 " ||
             this.message.substring(0, 2) == "2 "
           ) {
-            this.informationmodal1 = true;
+            this.infoMCINotFound = true;
           } else {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -1067,26 +1167,29 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    //   handleYes() {
-    //     this.informationmodal2 = false;
-    //     router.push({
-    //       name: "Step",
-    //       params: {
-    //         foo: this.reservation,
-    //         fighter: this.langID,
-    //         endpoint: this.hotelEndpoint,
-    //         hotelcode: this.hotelParams,
-    //         notready: this.roomNotReady,
-    //       },
-    //     });
-    //   },
-    //   handleNo() {
-    //     this.informationmodal2 = false;
-    //   },
+    handleYes() {
+      // this.infoMCINotReady = false;
+      // router.push({
+      //   name: "Step",
+      //   params: {
+      //     foo: this.reservation,
+      //     fighter: this.langID,
+      //     endpoint: this.hotelEndpoint,
+      //     hotelcode: this.hotelParams,
+      //     notready: this.roomNotReady,
+      //   },
+      // });
+      console.log('handleYes');
+    },
+    handleNo() {
+      // this.infoMCINotReady = false;
+      console.log('handleNo');
+    },
   },
   computed: {
     getLabels() {
       let fixLabel = "";
+      
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
@@ -1095,19 +1198,19 @@ export default {
           fixLabel = "";
         } else {
           if (used === "titleCase") {
-            fixLabel = label["program-label1"].replace(/\w\S*/g, function (
+            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
               txt
             ) {
               return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             });
           } else if (used === "sentenceCase") {
             fixLabel =
-              label["program-label1"].charAt(0).toUpperCase() +
-              label["program-label1"].slice(1);
+              label[this.programLabel].charAt(0).toUpperCase() +
+              label[this.programLabel].slice(1);
           } else if (used === "upperCase") {
-            fixLabel = label["program-label1"].toUpperCase();
+            fixLabel = label[this.programLabel].toUpperCase();
           } else {
-            fixLabel = label["program-label1"];
+            fixLabel = label[this.programLabel];
           }
         }
         return fixLabel;
