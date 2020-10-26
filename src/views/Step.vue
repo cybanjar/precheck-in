@@ -147,7 +147,7 @@
             {{ getLabels("guest_detail", `titleCase`) }}
           </h2>
           <h2 v-show="current === 2">
-            {{ getLabels("scan_id", `titleCase`) }}
+            {{ getLabels("upload_id", `titleCase`) }}
           </h2>
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
