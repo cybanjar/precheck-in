@@ -446,7 +446,7 @@ export default {
       infoMCIEarlyCheckin: false,
       infoMCINotFound: false,
       infoMCINotReady: false,
-      informationterm: "",
+      // informationmodal2: false,
       message: "",
       labels: [],
       tempsetup: [],
@@ -464,7 +464,6 @@ export default {
       member: "",
       loading: true,
       confirmLoading: false,
-      FG: "",
       hotelImage: "",
       hotelName: "",
       textOta: {
@@ -489,6 +488,24 @@ export default {
       programLabel: "",
       earliestCiTime: "00:00",
       earliestCiFlag: false,
+      FilterPurposeofStay: [],
+      purpose: "",
+      countries: [],
+      province: [],
+      termENG: "",
+      termIDN: "",
+      money: "",
+      currency: "",
+      per: "",
+      scanid: "",
+      wifiAddress: "",
+      wifiPassword: "",
+      SkipDeposit: "",
+      minimumDeposit: "",
+      freeParking: "",
+      BG: "",
+      FG: "",
+      setup: [],
     };
   },
   created() {  
@@ -623,37 +640,149 @@ export default {
         })
         .json();
       this.tempsetup = setup.response.pciSetup["pci-setup"];
-      // Background Color
+      const jatah = [];
+      for (const i in this.tempsetup) {
+        if (this.tempsetup[i]["number1"] == 1) {
+          this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
+          this.FilterPurposeofStay.push(this.tempsetup[i]);
+          if (this.tempsetup[i].setupflag == true) {
+            this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
+          }
+        } else if (
+          this.tempsetup[i]["number1"] == 9 &&
+          this.tempsetup[i]["number2"] == 2
+        ) {
+          const country = {};
+          country["descr"] = this.tempsetup[i]["descr"]; //data country
+          country["setupvalue"] = this.tempsetup[i]["setupvalue"];
+          this.countries.push(country);
+        } else if (
+          this.tempsetup[i]["number1"] == 9 &&
+          this.tempsetup[i]["number2"] == 3
+        ) {
+          const land = {};
+          land["descr"] = this.tempsetup[i]["descr"]; //data province
+          land["setupvalue"] = this.tempsetup[i]["setupvalue"];
+          this.province.push(land);
+        }
+      }
+
+      const tempTermENG = this.tempsetup.filter((item, index) => {
+        // Term ENG
+        return item.number1 === 6 && item.number2 === 1;
+      });
+      this.termENG = tempTermENG[0]["setupvalue"];
+
+      const tempTermIDN = this.tempsetup.filter((item, index) => {
+        // Term IDN
+        return item.number1 === 6 && item.number2 === 2;
+      });
+      this.termIDN = tempTermIDN[0]["setupvalue"];
+
+      const tempCurrency = this.tempsetup.filter((item, index) => {
+        //  Currency
+        return item.number1 === 2 && item.setupflag == true;
+      });
+      this.money = tempCurrency["0"]["price"];
+      this.currency = tempCurrency["0"]["remarks"];
+      this.per = tempCurrency["0"]["setupvalue"].split("PER")[1];
+
+      const tempScandID = this.tempsetup.filter((item, index) => {
+        //  Scand ID
+        return item.number1 === 8 && item.number2 == 1;
+      });
+      this.scanid = tempScandID["0"]["setupflag"];
+
+      const tempwifiAddress = this.tempsetup.filter((item, index) => {
+        //  Wifi Address
+        return item.number1 === 8 && item.number2 == 8;
+      });
+      this.wifiAddress = tempwifiAddress["0"]["setupvalue"];
+
+      const tempwifiPassword = this.tempsetup.filter((item, index) => {
+        //  Wifi Password
+        return item.number1 === 8 && item.number2 == 8;
+      });
+      this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
+
+      const tempSkipDeposit = this.tempsetup.filter((item, index) => {
+        //  Skip Deposit
+        return item.number1 === 8 && item.number2 == 4;
+      });
+      this.SkipDeposit = tempSkipDeposit["0"]["setupvalue"];
+
+      const tempMinDeposit = this.tempsetup.filter((item, index) => {
+        //  Minimum Deposit
+        return item.number1 === 8 && item.number2 == 5;
+      });
+      this.minimumDeposit = tempMinDeposit["0"]["price"];
+
+      const tempfreeParking = this.tempsetup.filter((item, index) => {
+        //  Free Parking
+        return item.number1 === 8 && item.number2 == 5;
+      });
+      this.freeParking = this.tempsetup["0"]["setupflag"];
+
       const tempBG = this.tempsetup.filter((item, index) => {
+        //  Background Color
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
-      // Foreground Color
+      this.BG = tempBG[0]["setupvalue"];
+
       const tempFG = this.tempsetup.filter((item, index) => {
+        //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
       // Hotel Image
       const tempImage = this.tempsetup.filter((item, index) => {
+        //  Image Hotel
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
       // Hotel Name
       const tempHotelName = this.tempsetup.filter((item, index) => {
+        //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
       // Server Time
       const tempServer = this.tempsetup.filter((item, index) => {
+        //  Server Time
         return (
           item.number1 === 9 &&
           item.number2 === 7 &&
           item.descr == "SERVER TIME"
         );
       });
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
-      // Convert Server Time to Milisecond
+
+      const obj = {};
+      obj["01"] = this.FilterPurposeofStay;
+      obj["02"] = this.purpose;
+      obj["03"] = this.countries;
+      obj["04"] = this.province;
+      obj["05"] = this.termENG;
+      obj["06"] = this.termIDN;
+      obj["07"] = this.money;
+      obj["08"] = this.currency;
+      obj["09"] = this.per;
+      obj["09"] = this.scanid;
+      obj["10"] = this.wifiAddress;
+      obj["11"] = this.wifiPassword;
+      obj["12"] = this.SkipDeposit;
+      obj["13"] = this.BG;
+      obj["14"] = this.FG;
+      obj["15"] = this.freeParking;
+      obj["16"] = this.hotelImage;
+      obj["17"] = this.hotelName;
+      obj["18"] = this.hotelEndpoint;
+      obj["19"] = this.server;
+      this.setup.push(obj);
+      //End Request Set Up
       const msServerClock = moment(
         tempServer[0]["setupvalue"],
         "HH:mm"
