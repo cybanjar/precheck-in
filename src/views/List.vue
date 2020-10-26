@@ -53,8 +53,11 @@
                 {{ item["guest-fname"] }} {{ item["guest-lname"] }},
                 {{ item["guest-pname"] }}
               </h6>
-              <p v-if="item['guest-member-name'] != ''" class="pl-3">
-                {{ item["guest-member-name"] }}
+              <p v-if="item['room-sharer'] != ''" class="pl-3">
+                {{ item["room-sharer"] }}
+              </p>
+              <p v-else-if="item['accompaying-guest'] != ''" class="pl-3">
+                {{ item["accompaying-guest"] }}
               </p>
               <p v-else class="pl-3">
                 <br />

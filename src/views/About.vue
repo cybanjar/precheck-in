@@ -13,14 +13,24 @@
         <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
           <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
           <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
+            v-if="currDataPrepare['room-sharer'] !== ''"
             class="text-white font-weight-bold"
             :style="information"
           >
             {{ currDataPrepare["guest-fname"] }}
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
+            {{ currDataPrepare["room-sharer"] }}
+          </h6>
+          <h6
+            v-else-if="currDataPrepare['accompaying-guest'] != ''"
+            class="text-white font-weight-bold"
+            :style="information"
+          >
+            {{ currDataPrepare["guest-fname"] }}
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare["accompaying-guest"] }}
           </h6>
           <h6 v-else class="text-white font-weight-bold" :style="information">
             {{ currDataPrepare["guest-fname"] }}
@@ -50,13 +60,22 @@
         </div>
         <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
           <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
+            v-if="currDataPrepare['room-sharer'] !== ''"
             class="text-white font-weight-bold"
           >
             {{ currDataPrepare["guest-fname"] }}
             {{ currDataPrepare["guest-lname"] }},
             {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
+            {{ currDataPrepare["room-sharer"] }}
+          </h6>
+          <h6
+            v-else-if="currDataPrepare['accompaying-guest'] != ''"
+            class="text-white font-weight-bold"
+          >
+            {{ currDataPrepare["guest-fname"] }}
+            {{ currDataPrepare["guest-lname"] }},
+            {{ currDataPrepare["guest-pname"] }} |
+            {{ currDataPrepare["accompaying-guest"] }}
           </h6>
           <h6 v-else class="text-white font-weight-bold">
             {{ currDataPrepare["guest-fname"] }}
