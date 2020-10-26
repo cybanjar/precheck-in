@@ -25,14 +25,9 @@
           :closable="false"
         >
           <template slot="footer">
-            <a-button key="submit" type="primary" @click="handleYes"
-              >OK</a-button
-            >
+            <a-button key="submit" type="primary" @click="handleYes">OK</a-button>
           </template>
-          <p>
-            Sorry, your room is not ready. Please proceed to the Reception for
-            further information.
-          </p>
+          <p>Sorry, your room is not ready. Please proceed to the Reception for further information.</p>
         </a-modal>
       </div>
       <h5 class="text-black text-center font-weight-bold visible">
@@ -65,8 +60,13 @@
           :data-source="guestData"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-card :class="handleClass(item, 'card')" @click="select(item)">
-              <h2 :class="handleClass(item, 'h2')">
+            <a-card
+              :class="handleClass(item,'card')"
+              @click="select(item)"
+            >
+              <h2
+                :class="handleClass(item,'h2')"
+              >
                 {{ item["gast"].toUpperCase() }}
               </h2>
               <p class="pl-3">
@@ -119,7 +119,6 @@
 import router from "../router";
 import { Alert } from "ant-design-vue";
 import moment from "moment";
-
 export default {
   data() {
     return {
@@ -141,12 +140,10 @@ export default {
   },
   created() {
     const tempData = this.$route.params.foo[0];
-    /* Assign ispopup property for tempData */
-
-    tempData.forEach((item) => {
-      Object.assign(item, { ispopup: false });
-    });
-
+    /* Assign ispopup property for tempData */    
+    tempData.forEach(item => {
+      Object.assign(item, {ispopup: false});      
+    }); 
     this.guestData = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
@@ -170,55 +167,63 @@ export default {
         return 0;
       }
     },
-    handleClass(item, used) {
-      let returnedClass = "";
-
-      if (used == "card") {
-        if (item["l-selected"] == true && item["ispopup"] == true) {
-          returnedClass = "disabled";
-        } else if (item["l-selected"] == true && item["ispopup"] == false) {
-          returnedClass = "selected";
-        } else if (item["l-selected"] == false && item["ispopup"] == true) {
-          returnedClass = "disabled";
-        } else {
-          returnedClass = "notselected";
+    handleClass(item,used){
+      let returnedClass = '';
+      if(used == 'card'){
+        if(item['l-selected'] == true && item['ispopup'] == true){
+          returnedClass = 'disabled';
         }
-      } else if (used == "h2") {
-        if (item["l-selected"] == true && item["ispopup"] == true) {
-          returnedClass = "disabled pl-3 font-weight-bold";
-        } else if (item["l-selected"] == true && item["ispopup"] == false) {
-          returnedClass = "selected pl-3 font-weight-bold";
-        } else if (item["l-selected"] == false && item["ispopup"] == true) {
-          returnedClass = "disabled pl-3 font-weight-bold";
-        } else {
-          returnedClass = "notselected pl-3 font-weight-bold";
+        else if (item['l-selected'] == true && item['ispopup'] == false){
+          returnedClass = 'selected';
+        }
+        else if(item['l-selected'] == false && item['ispopup'] == true){
+          returnedClass = 'disabled';
+        }
+        else{
+          returnedClass = 'notselected';
         }
       }
+      else if(used == 'h2'){
+        if(item['l-selected'] == true && item['ispopup'] == true){
+          returnedClass = 'disabled pl-3 font-weight-bold';
+        }
+        else if (item['l-selected'] == true && item['ispopup'] == false){
+          returnedClass = 'selected pl-3 font-weight-bold';
+        }
+        else if(item['l-selected'] == false && item['ispopup'] == true){
+          returnedClass = 'disabled pl-3 font-weight-bold';
+        }
+        else{
+          returnedClass = 'notselected pl-3 font-weight-bold';
+        }
+      }      
       return returnedClass;
     },
-    select(client) {
-      /* Handle Client Data Modal */
-
-      const rmStatus = client["room-status"].split(" ");
-      if (parseInt(rmStatus) == 1) {
-        // RmStatus 1 Overlapping
+    select(client) {          
+      /* Handle Client Data Modal */      
+      const rmStatus = client["room-status"].split(" ");      
+      if(parseInt(rmStatus[0]) == 1){
+        // RmStatus 1 Overlapping        
         if (client["ispopup"] == false) {
-          this.informationModal = true;
+          this.informationModal = true;  
           for (const i in this.guestData) {
             if (this.guestData[i]["i-counter"] == client["i-counter"]) {
               this.guestData[i]["ispopup"] = true;
               this.guestData[i]["l-selected"] = false;
-            } else {
+            }
+            else{
               this.guestData[i]["l-selected"] = false;
             }
           }
-        } else {
+        }
+        else{
           // Do Nothing
         }
-      } else if (parseInt(rmStatus) > 1) {
+      }
+      else if(parseInt(rmStatus[0]) > 1){
         // RmStatus 2 (Not Ready to Checkin) && 3 (Type Selected Not Available)
         // Must Check License True = Selected || False = Disabled
-        if (this.license == true) {
+        if(this.license == true){
           this.selectedData = client;
           if (client["l-selected"] == false) {
             for (const i in this.guestData) {
@@ -228,23 +233,27 @@ export default {
                 this.guestData[i]["l-selected"] = false;
               }
             }
-          }
-        } else {
+          }          
+        }
+        else {                
           if (client["ispopup"] == false) {
             this.informationModal = true;
             for (const i in this.guestData) {
               if (this.guestData[i]["i-counter"] == client["i-counter"]) {
                 this.guestData[i]["ispopup"] = true;
                 this.guestData[i]["l-selected"] = false;
-              } else {
+              }
+              else{
                 this.guestData[i]["l-selected"] = false;
               }
             }
-          } else {
+          }
+          else{
             // Do Nothing
           }
-        }
-      } else {
+        }        
+      }
+      else{
         // Ready To Checkin
         this.selectedData = client;
         if (client["l-selected"] == false) {
@@ -257,7 +266,6 @@ export default {
           }
         }
       }
-
       // if (client["l-selected"] == false) {
       //   for (const i in this.guestData) {
       //     if (this.guestData[i]["i-counter"] == client["i-counter"]) {
@@ -267,7 +275,7 @@ export default {
       //     }
       //   }
       // }
-
+      
       // else {
       //   for (const i in this.data) {
       //     if (this.data[i]["i-counter"] == client["i-counter"]) {
@@ -284,7 +292,6 @@ export default {
       //     if (this.data[i]["i-counter"] != client["i-counter"]) {
       //       console.log(client["i-counter"], "aneh2");
       //       console.log(this.data[i]["i-counter"], "aneh2");
-
       //       this.data[i]["l-selected"] = false;
       //       console.log(this.data[i]["l-selected"], "datagagal");
       //       this.selectedData = [];
@@ -311,7 +318,7 @@ export default {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       //console.log(this.fairy);
-
+      
       router.replace({
         name: "Step",
         params: { id: this.fairy },
@@ -333,19 +340,15 @@ export default {
         String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
           ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
           : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
       return fixDate;
     },
     getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-
       let fixLabel = "";
-
       if (label == undefined) {
         fixLabel = "";
       } else {
@@ -359,7 +362,6 @@ export default {
           fixLabel = label["program-label1"];
         }
       }
-
       return fixLabel;
     },
     setTitleCase(label) {
@@ -383,7 +385,7 @@ export default {
     // handleNo() {
     //   this.informationModal = false;
     // },
-    handleYes() {
+    handleYes(){
       this.informationModal = false;
     },
   },
