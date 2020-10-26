@@ -776,7 +776,7 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
+            router.replace({
               name: "Step",
               params: {
                 foo: reservation,

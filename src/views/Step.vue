@@ -1351,7 +1351,7 @@ export default {
             //this.check();
             //if (this.paymentStatus) {
             //console.log(this.paymentStatus);
-            router.push({
+            router.replace({
               name: "SuccessCheckIn",
               params: {
                 jin: mori,
@@ -1409,7 +1409,7 @@ export default {
             //this.check();
             //if (this.paymentStatus) {
             //console.log(this.paymentStatus);
-            router.push({
+            router.replace({
               name: "SuccessCheckIn",
               params: {
                 jin: mori,
@@ -1439,7 +1439,7 @@ export default {
       //this.check();
       //if (this.paymentStatus) {
       //console.log(this.paymentStatus);
-      router.push({
+      router.replace({
         name: "SuccessCheckIn",
         params: {
           jin: mori,
