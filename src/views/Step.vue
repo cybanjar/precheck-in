@@ -1259,6 +1259,7 @@ export default {
                 guestCountry: this.form.getFieldValue("country"),
                 guestRegion: this.form.getFieldValue("region"),
                 base64image: this.imgb64,
+                // vehicleNumber: ''
               },
             },
           })

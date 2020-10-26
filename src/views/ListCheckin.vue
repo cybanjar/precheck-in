@@ -87,9 +87,9 @@
           </a-list-item>
         </a-list>
       </div>
-      <a-button class="mr-3" type="primary" size="large" @click="handleBack">{{
+      <!-- <a-button class="mr-3" type="primary" size="large" @click="handleBack">{{
         getLabels("back", `titleCase`)
-      }}</a-button>
+      }}</a-button> -->
       <a-button
         class="mr-3 float-right mb-3"
         type="primary"
