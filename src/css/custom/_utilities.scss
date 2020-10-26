@@ -198,6 +198,12 @@
   transition: all 0.3s;
 }
 
+.disabled {
+  background: $black;
+  color: white;
+  transition: all 0.3s;
+}
+
 .notselected {
   background: #f5f6f7;
   color: #262728;

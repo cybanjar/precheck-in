@@ -38,18 +38,21 @@
         </template>
         <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
       </a-modal>
-      <a-modal
+      <!-- <a-modal
         :title="getLabels('information', `titleCase`)"
         :visible="informationmodal2"
         :closable="false"
       >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{
-            getLabels("close", `titleCase`)
+          <a-button key="back" @click="handleNo">
+            {{ getLabels("no", `titleCase`) }}
+          </a-button>
+          <a-button key="submit" type="primary" @click="handleYes">{{
+            getLabels("yes", `titleCase`)
           }}</a-button>
         </template>
-        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
-      </a-modal>
+        <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
+      </a-modal> -->
       <a-row :gutter="[8, 32]" class="mb-3">
         <a-col class="text-center" :span="4" :xs="24">
           <h1 :class="FG">
@@ -138,11 +141,7 @@
           </a-modal>
         </a-col>
         <a-col :span="4" :xl="4" :xs="12">
-          <img
-            @click="showModalGuestName"
-            class="img-ota"
-            :src="namePhoto"
-          />
+          <img @click="showModalGuestName" class="img-ota" :src="namePhoto" />
           <a-modal
             v-model="modalGuestName"
             :title="getLabels('guest_name', `titleCase`)"
@@ -428,7 +427,7 @@ export default {
       hour: "",
       informationmodal: false,
       informationmodal1: false,
-      informationmodal2: false,
+      // informationmodal2: false,
       informationterm: "",
       message: "",
       labels: [],
@@ -462,21 +461,30 @@ export default {
         textAlign: "center",
       },
       hotelParams: "",
+      roomNotReady: false,
+      reservation: [],
       tempParambook: "",
       tempParamcodate: "",
       tempParamcitime: "",
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      location: "",
     };
   },
-  created() {
+  created() {  
+    this.location = window.location.host;  
     const tempParam = {};
     if (this.$route.params.hotelParameter != undefined) {
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
-      this.tempParamcitime = this.$route.params.citime;
-    } else if (location.search.substring(1) != undefined) {
-      this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
+      this.tempParamcitime = this.$route.params.citime;  
+      
+      const encodedURI = encodeURIComponent(this.hotelParams);
+      this.location += `/mobilecheckin?${encodedURI}`;
+    } else if (location.search.substring(1) != undefined) {      
+      this.location += `/mobilecheckin?${location.search.substring(1)}`;
+      this.hotelParams = decodeURIComponent(location.search.substring(1));
+      
     } else {      
       location.search
         .split("&")
@@ -487,7 +495,7 @@ export default {
           tempParam[item.split("=")[0]] = decodeURIComponent(item.split("=")[1])
             ? item.split("=")[1]
             : "No query strings available";
-        });
+        });      
     }
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
@@ -507,6 +515,7 @@ export default {
           }
         )
         .json();
+      //console.log(code);
       this.tempHotel = code.response.pciSetup["pci-setup"];
       const tempEndpoint = this.tempHotel.filter((item, index) => {
         return item.number1 === 99 && item.number2 === 2;
@@ -633,13 +642,13 @@ export default {
         this.bookingcode = tmpParam.book;
         this.date = tmpParam.codate;
         this.payment = tmpParam.payment;
-        reservation.push(
+        this.reservation.push(
           data["response"]["arrivalGuestlist"]["arrival-guestlist"]
         );
         router.push({
           name: "Step",
           params: {
-            foo: reservation,
+            foo: this.reservation,
             fighter: this.langID,
             endpoint: this.hotelEndpoint,
             hotelcode: this.hotelCode,
@@ -655,23 +664,23 @@ export default {
     },
     async showModalBookingCode() {
       this.modalBookingCode = true;
-      await this.$nextTick()
-        this.$refs.bookingcode.focus();
+      await this.$nextTick();
+      this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
       this.modalGuestName = true;
-      await this.$nextTick()
-        this.$refs.name.focus();
+      await this.$nextTick();
+      this.$refs.name.focus();
     },
     async showModalEmailAddress() {
       this.modalEmailAddress = true;
-      await this.$nextTick()
-        this.$refs.email.focus();
+      await this.$nextTick();
+      this.$refs.email.focus();
     },
     async showModalMembershipID() {
       this.modalMembershipID = true;
-      await this.$nextTick()
-        this.$refs.member.focus();
+      await this.$nextTick();
+      this.$refs.member.focus();
     },
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
@@ -839,6 +848,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -905,6 +915,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -974,6 +985,7 @@ export default {
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -1033,13 +1045,14 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            router.push({
+            router.replace({
               name: "Step",
               params: {
                 foo: reservation,
                 fighter: this.langID,
                 endpoint: this.hotelEndpoint,
                 hotelcode: this.hotelCode,
+                location: this.location,
               },
             });
           }
@@ -1054,6 +1067,22 @@ export default {
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
+    //   handleYes() {
+    //     this.informationmodal2 = false;
+    //     router.push({
+    //       name: "Step",
+    //       params: {
+    //         foo: this.reservation,
+    //         fighter: this.langID,
+    //         endpoint: this.hotelEndpoint,
+    //         hotelcode: this.hotelParams,
+    //         notready: this.roomNotReady,
+    //       },
+    //     });
+    //   },
+    //   handleNo() {
+    //     this.informationmodal2 = false;
+    //   },
   },
   computed: {
     getLabels() {

@@ -6,6 +6,40 @@
   </div>
   <div v-else>
     <div class="home">
+      <!-- Modal Response Room Status -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="handleYes"
+            >{{ getLabels("yes", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>Sorry, your room is not ready yet. But you can still continue to check-in. We will notify you by email and SMS when your room is ready.</p>
+        <p>Please re-confirm your phone number and email.</p>
+        <div>
+          <a-form layout="vertical" :form="formresubmit">
+            <a-form-item :label="getLabels('phone_number', `titleCase`)">
+              <a-input
+                v-decorator="['guest-phone', { initialValue:currDataPrepare['guest-phnumber'], rules: [{ required: true, message: 'Please input your phone number!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-input
+                v-decorator="['guest-email', { initialValue:currDataPrepare['guest-email'],rules: [{ required: true, message: 'Please input your email!' }] }]"
+              />
+            </a-form-item>
+          </a-form>
+        </div>
+      </a-modal>
+
       <!-- <div v-show="term"> -->
       <a-modal
         :title="getLabels('t_c', `titleCase`)"
@@ -338,6 +372,15 @@
                   </a-form-item>
                 </div>-->
               </a-col>
+              <div v-if="freeParking">
+                <a-col :span="5" :xl="5" :xs="24">
+                  <a-form-item
+                    :label="getLabels('vehicle_regident', `titleCase`)"
+                  >
+                    <a-input v-model="vRegident" />
+                  </a-form-item>
+                </a-col>
+              </div>
               <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
               <a-form-item label="City">
                 <a-select
@@ -460,6 +503,11 @@
           <div class="steps-action">
             <div class="row justify-between">
               <div class="col-6 col-xs-6">
+                <div v-if="current == 0">
+                  <a-button @click="handleBack">{{
+                    getLabels("back", `titleCase`)
+                  }}</a-button>
+                </div>
                 <div v-if="y">
                   <a-button v-if="current > 0" @click="prev">{{
                     getLabels("prev", `titleCase`)
@@ -495,10 +543,7 @@
                   type="primary"
                   block
                   :size="size"
-                  @click="
-                    save();
-                    scrollToTop();
-                  "
+                  @click="save"
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
@@ -595,6 +640,7 @@ export default {
       showPickupRequest: true,
       showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
+      formresubmit: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -644,6 +690,15 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
+      roomNotReady: false,
+      freeParking: false,
+      vRegident: "",
+      informationModal: false,
+      responseStatus: {
+        statusNumber: "",
+        statusMessage: "",
+      },
+      location: "",
     };
   },
   watch: {
@@ -657,7 +712,9 @@ export default {
     this.hotelEndpoint = this.$route.params.endpoint;
     this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    // console.log(this.$route.params.id, "nyamtuh");
+    this.roomNotReady = this.$route.params.notready;
+    this.location = this.$route.params.location;
+    //console.log(this.location);
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -777,6 +834,11 @@ export default {
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.region.push(air);
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 14
+          ) {
+            this.freeParking = this.tempsetup[i]["setupflag"];
           }
         }
         if (this.currData["0"].length > 1) {
@@ -805,11 +867,13 @@ export default {
           obj["20"] = this.region;
           obj["21"] = this.term1;
           obj["22"] = this.hotelcode;
+          obj["23"] = this.hotelEndpoint;
+          obj["24"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
-          router.push({
+          router.replace({
             name: "ListCheckIn",
-            params: { foo: nietos, fighter: this.langID },
+            params: { foo: nietos },
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
@@ -861,10 +925,13 @@ export default {
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
       this.hotelcode = this.$route.params.id["setup"]["22"];
+      this.hotelEndpoint = this.$route.params.id["setup"]["23"];
+      this.langID = this.$route.params.id["setup"]["24"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
+      this.hasUpload = this.currDataPrepare["image-flag"];
       if (this.langID == "ENG" || this.langID == "eng") {
         this.terms = this.term;
       } else {
@@ -886,7 +953,7 @@ export default {
       }*/
       this.loading = false;
     } else {
-      router.push("notfound");
+      router.replace(this.location);
     }
   },
   mounted() {
@@ -925,7 +992,7 @@ export default {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
             this.form.validateFields(["phone"]);
-          } else if(!this.form.getFieldValue(["email"][0]).match(mailformat)) {
+          } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
           }
         }
@@ -981,12 +1048,12 @@ export default {
       }
     },
     search() {
-        async function getIP(){
-          const response = await fetch('http://api.ipify.org/?format=json');
-          const data = await response.json();
-          return data.ip;
-        }
-        getIP().then(data => this.ipAddr = data);
+      async function getIP() {
+        const response = await fetch("http://api.ipify.org/?format=json");
+        const data = await response.json();
+        return data.ip;
+      }
+      getIP().then((data) => (this.ipAddr = data));
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
           this.minimumDeposit +
@@ -1010,7 +1077,6 @@ export default {
         "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
         this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
-
       const datas = {
         book: this.currDataPrepare.resnr,
         codate: this.formatDate(this.currDataPrepare.co),
@@ -1077,28 +1143,22 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0];
-
       /* Start Handling Images Compression */
       const reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onload = (event) => {
         // Creating Image Element
         const imgElement = document.createElement("img");
         imgElement.src = event.target.result;
-
         // Output to Web
         this.url = event.target.result;
-
         // Handling Image Element
         imgElement.onload = (e) => {
           // Creating Canvas and Scale Size
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
           const MAX_HEIGHT = 500;
-
           let scaleSize = 0;
-
           // Scale Size Based on Image Mode Portrait or Landscape
           if (imgElement.width >= imgElement.height) {
             // Landscape Images
@@ -1113,28 +1173,25 @@ export default {
           }
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
-
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
             ctx.fillStyle = "rgba(0,0,0,0.1)";
             ctx.fillText("COPY COPY COPY COPY COPY COPY COPY", 0, i * 100);
           }
-
           // Convert Canvas to DataURL
           const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
           this.url = srcEncoded;
-
           // Create Base64 Images
           const base64Canvas = ctx.canvas
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
-
           (async () => {
             this.imgb64 = base64Canvas;
+            //console.log(this.currDataPrepare, "save");
+            //console.log(this.imgb64, "save2");
             const uploadResult = await ky
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
@@ -1165,8 +1222,39 @@ export default {
       window.scrollTo(0, 0);
       this.current = 0;
     },
+    handleResCi(status){
+      (async () => {
+        const parsed = await ky
+          .post(this.hotelEndpoint + "mobileCI/resCI", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare.resnr,
+                rsvlineNumber: this.currDataPrepare.reslinnr,
+                userInit: "01",
+                newRoomno: this.currDataPrepare.zinr,
+                purposeOfStay: this.form.getFieldValue("purpose"),
+                email: this.form.getFieldValue("email"),
+                guestPhnumber: this.form.getFieldValue("phone"),
+                guestNation: this.form.getFieldValue("nationality"),
+                guestCountry: this.form.getFieldValue("country"),
+                guestRegion: this.form.getFieldValue("region"),
+                base64image: this.imgb64,
+              },
+            },
+          })
+          .json();
+        const responses = parsed.response["resultMessage"].split(" - ");
+        this.responseStatus.statusNumber = responses[0];
+        this.responseStatus.statusMessage = responses[1];
+      })();
+    },
     save() {
-      if (this.counter == this.id.length) {
+      // if (this.counter == this.id.length) {
+      //   console.log(this.currDataPrepare);
+      const rmStatus = this.currDataPrepare["room-status"].split(" ");
+      if (parseInt(rmStatus) == 1) {
+        // Cek status kamar pertama kalo Overlapping
+        //console.log("overlapping");
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1187,8 +1275,141 @@ export default {
               },
             })
             .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          if (this.responseStatus.statusNumber == "99") {
+            /* Handling Room Vacant Dirty */
+            this.informationModal = true;
+            this.roomNotReady = false;
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+          }
         })();
-        const mori =
+      } else if (parseInt(rmStatus) == 2 || parseInt(rmStatus) == 3) {
+        // Cek status kamar pertama kalo VD
+        //console.log("VD");
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
+                },
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          if (this.responseStatus.statusNumber == "99") {
+            /* Handling Room Vacant Dirty */
+            this.informationModal = true;
+            this.roomNotReady = false;
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+            this.roomNotReady = true;
+            const mori =
+                "{" +
+                this.currDataPrepare.zinr +
+                ";" +
+                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+                "}";
+              //this.check();
+              //if (this.paymentStatus) {
+              //console.log(this.paymentStatus);
+            router.push({
+              name: "SuccessCheckIn",
+              params: {
+                jin: mori,
+                jun: this.wifiAddress,
+                jen: this.wifiPassword,
+                jon: this.currDataPrepare["argt-str"],
+                jan: this.roomNotReady,
+                email: this.form.getFieldValue(["email"][0]),
+                phnum: this.form.getFieldValue(["phone"][0]),
+                param: this.hotelcode,
+              },
+            });
+          }
+        })();
+      } else {
+        // Cek status kamar pertama kalo VC
+        //console.log("VC");
+        (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare.resnr,
+                  rsvlineNumber: this.currDataPrepare.reslinnr,
+                  userInit: "01",
+                  newRoomno: this.currDataPrepare.zinr,
+                  purposeOfStay: this.form.getFieldValue("purpose"),
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  guestNation: this.form.getFieldValue("nationality"),
+                  guestCountry: this.form.getFieldValue("country"),
+                  guestRegion: this.form.getFieldValue("region"),
+                  base64image: this.imgb64,
+                },
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"].split(" - ");
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
+          if (this.responseStatus.statusNumber == "99") {
+            /* Handling Room Vacant Dirty */
+            this.informationModal = true;
+            this.roomNotReady = false;
+          } else {
+            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
+            this.roomNotReady = true;
+            const mori =
+                "{" +
+                this.currDataPrepare.zinr +
+                ";" +
+                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+                "}";
+              //this.check();
+              //if (this.paymentStatus) {
+              //console.log(this.paymentStatus);
+            router.push({
+              name: "SuccessCheckIn",
+              params: {
+                jin: mori,
+                jun: this.wifiAddress,
+                jen: this.wifiPassword,
+                jon: this.currDataPrepare["argt-str"],
+                jan: this.roomNotReady,
+                email: this.form.getFieldValue(["email"][0]),
+                phnum: this.form.getFieldValue(["phone"][0]),
+                param: this.hotelcode,
+              },
+            });
+          }
+        })();         
+      }
+      // this.currDataPrepare = this.id[this.counter];
+      // this.counter += 1;
+      // this.agree = false;
+    },
+    handleYes() {
+      const mori =
           "{" +
           this.currDataPrepare.zinr +
           ";" +
@@ -1197,22 +1418,19 @@ export default {
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-        router.push({
-          name: "SuccessCheckIn",
-          params: {
-            jin: mori,
-            jun: this.wifiAddress,
-            jen: this.wifiPassword,
-            jon: this.currDataPrepare["argt-str"],
-          },
-        });
-        //} else {
-        //this.paymentModal = true;
-        // }
-      }
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-      this.agree = false;
+      router.push({
+        name: "SuccessCheckIn",
+        params: {
+          jin: mori,
+          jun: this.wifiAddress,
+          jen: this.wifiPassword,
+          jon: this.currDataPrepare["argt-str"],
+          jan: this.roomNotReady,
+          email: this.formresubmit.getFieldValue(["guest-email"][0]),
+          phnum: this.formresubmit.getFieldValue(["guest-phone"][0]),
+          param: this.hotelcode,
+        },
+      });
     },
     back() {
       if (this.counter == this.id.length) {
@@ -1284,10 +1502,14 @@ export default {
       });
     },
     disagree() {
-      router.push({
+      window.open(
+        "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
+        "_self"
+      );
+      /*router.push({
         path: "mobilecheckin",
         query: { lang: this.langID, hotelcode: this.hotelcode },
-      });
+      });*/
       // router.push("mobilecheckin");
     },
     handleBlur() {
@@ -1340,6 +1562,12 @@ export default {
       return label.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
+    },
+    handleBack() {
+      window.open(
+        "http://localhost:8080/mobilecheckin?param=" + this.hotelcode,
+        "_self"
+      );
     },
   },
 };

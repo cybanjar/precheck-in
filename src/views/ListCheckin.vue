@@ -1,6 +1,35 @@
 <template>
   <div>
     <div class="home">
+      <!-- <div v-show="informationModal">
+        <a-modal
+          :title="getLabels('information', `titleCase`)"
+          :visible="informationModal"
+          :closable="false"
+        >
+          <template slot="footer">
+            <a-button key="back" @click="handleNo">
+              {{ getLabels("no", `titleCase`) }}
+            </a-button>
+            <a-button key="submit" type="primary" @click="handleYes">{{
+              getLabels("yes", `titleCase`)
+            }}</a-button>
+          </template>
+          <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
+        </a-modal>
+      </div> -->
+      <div v-show="informationModal">
+        <a-modal
+          :title="getLabels('information', `titleCase`)"
+          :visible="informationModal"
+          :closable="false"
+        >
+          <template slot="footer">
+            <a-button key="submit" type="primary" @click="handleYes">OK</a-button>
+          </template>
+          <p>Sorry, your room is not ready. Please proceed to the Reception for further information.</p>
+        </a-modal>
+      </div>
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -28,19 +57,15 @@
       <div class="ml-3 mt-3 mr-3">
         <a-list
           :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
-          :data-source="data"
+          :data-source="guestData"
         >
           <a-list-item slot="renderItem" slot-scope="item">
             <a-card
-              :class="item['l-selected'] == true ? 'selected' : 'notselected'"
+              :class="handleClass(item,'card')"
               @click="select(item)"
             >
               <h2
-                :class="
-                  item['l-selected'] == true
-                    ? 'selected pl-3 font-weight-bold'
-                    : 'notselected pl-3 font-weight-bold'
-                "
+                :class="handleClass(item,'h2')"
               >
                 {{ item["gast"].toUpperCase() }}
               </h2>
@@ -80,7 +105,7 @@
         </a-list>
       </div>
       <a-button
-        class="mr-3 float-right"
+        class="mr-3 float-right mb-3"
         type="primary"
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
@@ -94,7 +119,6 @@
 import router from "../router";
 import { Alert } from "ant-design-vue";
 import moment from "moment";
-
 export default {
   data() {
     return {
@@ -103,22 +127,32 @@ export default {
       hotelname: "",
       information: {},
       lemparsetup: [],
-      fairy: {},
+      fairy: [],
       labels: [],
       langID: "",
+      informationModal: false,
+      roomNotReady: false,
+      hotelEndpoint: "",
+      hotelCode: "",
+      guestData: [],
+      license: true,
     };
   },
   created() {
-    // console.log(this.$route.params.foo[0], "goks");
     const tempData = this.$route.params.foo[0];
-    // console.log(tempData.sort(this.sorting));
-    this.data = tempData;
+    /* Assign ispopup property for tempData */    
+    tempData.forEach(item => {
+      Object.assign(item, {ispopup: false});      
+    }); 
+    this.guestData = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
-    this.langID = this.$route.params.fighter;
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
+    this.langID = this.setup["24"];
+    this.hotelEndpoint = this.setup["23"];
+    this.hotelCode = this.setup["22"];
   },
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
@@ -133,17 +167,115 @@ export default {
         return 0;
       }
     },
-    select(client) {
-      this.selectedData = client;
-      if (client["l-selected"] == false) {
-        for (const i in this.data) {
-          if (this.data[i]["i-counter"] == client["i-counter"]) {
-            this.data[i]["l-selected"] = true;
-          } else {
-            this.data[i]["l-selected"] = false;
+    handleClass(item,used){
+      let returnedClass = '';
+      if(used == 'card'){
+        if(item['l-selected'] == true && item['ispopup'] == true){
+          returnedClass = 'disabled';
+        }
+        else if (item['l-selected'] == true && item['ispopup'] == false){
+          returnedClass = 'selected';
+        }
+        else if(item['l-selected'] == false && item['ispopup'] == true){
+          returnedClass = 'disabled';
+        }
+        else{
+          returnedClass = 'notselected';
+        }
+      }
+      else if(used == 'h2'){
+        if(item['l-selected'] == true && item['ispopup'] == true){
+          returnedClass = 'disabled pl-3 font-weight-bold';
+        }
+        else if (item['l-selected'] == true && item['ispopup'] == false){
+          returnedClass = 'selected pl-3 font-weight-bold';
+        }
+        else if(item['l-selected'] == false && item['ispopup'] == true){
+          returnedClass = 'disabled pl-3 font-weight-bold';
+        }
+        else{
+          returnedClass = 'notselected pl-3 font-weight-bold';
+        }
+      }      
+      return returnedClass;
+    },
+    select(client) {          
+      /* Handle Client Data Modal */      
+      const rmStatus = client["room-status"].split(" ");
+      if(parseInt(rmStatus) == 1){
+        // RmStatus 1 Overlapping        
+        if (client["ispopup"] == false) {
+          this.informationModal = true;  
+          for (const i in this.guestData) {
+            if (this.guestData[i]["i-counter"] == client["i-counter"]) {
+              this.guestData[i]["ispopup"] = true;
+              this.guestData[i]["l-selected"] = false;
+            }
+            else{
+              this.guestData[i]["l-selected"] = false;
+            }
+          }
+        }
+        else{
+          // Do Nothing
+        }
+      }
+      else if(parseInt(rmStatus) > 1){
+        // RmStatus 2 (Not Ready to Checkin) && 3 (Type Selected Not Available)
+        // Must Check License True = Selected || False = Disabled
+        if(this.license == true){
+          this.selectedData = client;
+          if (client["l-selected"] == false) {
+            for (const i in this.guestData) {
+              if (this.guestData[i]["i-counter"] == client["i-counter"]) {
+                this.guestData[i]["l-selected"] = true;
+              } else {
+                this.guestData[i]["l-selected"] = false;
+              }
+            }
+          }          
+        }
+        else {                
+          if (client["ispopup"] == false) {
+            this.informationModal = true;
+            for (const i in this.guestData) {
+              if (this.guestData[i]["i-counter"] == client["i-counter"]) {
+                this.guestData[i]["ispopup"] = true;
+                this.guestData[i]["l-selected"] = false;
+              }
+              else{
+                this.guestData[i]["l-selected"] = false;
+              }
+            }
+          }
+          else{
+            // Do Nothing
+          }
+        }        
+      }
+      else{
+        // Ready To Checkin
+        this.selectedData = client;
+        if (client["l-selected"] == false) {
+          for (const i in this.guestData) {
+            if (this.guestData[i]["i-counter"] == client["i-counter"]) {
+              this.guestData[i]["l-selected"] = true;
+            } else {
+              this.guestData[i]["l-selected"] = false;
+            }
           }
         }
       }
+      // if (client["l-selected"] == false) {
+      //   for (const i in this.guestData) {
+      //     if (this.guestData[i]["i-counter"] == client["i-counter"]) {
+      //       this.guestData[i]["l-selected"] = true;
+      //     } else {
+      //       this.guestData[i]["l-selected"] = false;
+      //     }
+      //   }
+      // }
+      
       // else {
       //   for (const i in this.data) {
       //     if (this.data[i]["i-counter"] == client["i-counter"]) {
@@ -160,7 +292,6 @@ export default {
       //     if (this.data[i]["i-counter"] != client["i-counter"]) {
       //       console.log(client["i-counter"], "aneh2");
       //       console.log(this.data[i]["i-counter"], "aneh2");
-
       //       this.data[i]["l-selected"] = false;
       //       console.log(this.data[i]["l-selected"], "datagagal");
       //       this.selectedData = [];
@@ -184,13 +315,20 @@ export default {
       // }
     },
     send() {
-      // console.log(this.selectedData['0']);
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
-      // console.log(this.fairy);
+      //console.log(this.fairy);
+      
       router.push({
         name: "Step",
-        params: { id: this.fairy, fighter: this.langID },
+        params: { id: this.fairy },
+        // params: {
+        //   foo: this.fairy,
+        //   fighter: this.langID,
+        //   endpoint: this.hotelEndpoint,
+        //   hotelcode: this.hotelCode,
+        //   notready: this.roomNotReady,
+        // },
       });
     },
     formatDate(datum) {
@@ -202,20 +340,16 @@ export default {
         String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
           ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
           : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
       const dYear = moment(datum, "YYYY-MM-DD").year();
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
       return fixDate;
     },
     getLabels(nameKey, used) {
       const label = this.labels.find(
         (element) => element["program-variable"] == nameKey
       );
-
       let fixLabel = "";
-
-      if (label["program-label1"] == "undefined") {
+      if (label == undefined) {
         fixLabel = "";
       } else {
         if (used === "titleCase") {
@@ -228,13 +362,31 @@ export default {
           fixLabel = label["program-label1"];
         }
       }
-
       return fixLabel;
     },
     setTitleCase(label) {
       return label.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
+    },
+    // handleYes() {
+    //   this.informationModal = false;
+    //   router.push({
+    //     name: "Step",
+    //     params: {
+    //       foo: this.fairy,
+    //       fighter: this.langID,
+    //       endpoint: this.hotelEndpoint,
+    //       hotelcode: this.hotelCode,
+    //       notready: this.roomNotReady,
+    //     },
+    //   });
+    // },
+    // handleNo() {
+    //   this.informationModal = false;
+    // },
+    handleYes(){
+      this.informationModal = false;
     },
   },
 };

@@ -683,19 +683,25 @@ export default {
       (async () => {
         const tempParam = location.search.substring(1);
         const parsed = await ky
-          .post(
-            "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
-            {
-              json: {
-                request: {
-                  encryptedText: tempParam
-                    .replace(/%2F/g, "/")
-                    .replace(/%20/g, "+"),
-                },
+        .post(
+          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
+          {
+            json: {
+              request: {
+                encryptedText: tempParam
+                  .replace(/%2F/g, "/")
+                  .replace(/%20/g, "+"),
               },
-            }
-          )
-          .json();
+            },
+          }
+        ).json();
+        // Handling null Response
+        if(parsed.response.messResult == null){
+          //console.log('nope');
+        }
+        else{
+          //console.log('yes');
+        }
         localStorage.removeItem("labels");
         localStorage.setItem(
           "labels",
@@ -777,6 +783,7 @@ export default {
           }
         );
         this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
+        //console.log(this.hotelParams);      
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
@@ -886,7 +893,7 @@ export default {
       this.checkInTIme = this.$route.params.id["setup"]["20"];
       this.id = this.$route.params.id["data"];
       this.currDataPrepare = this.id[this.counter];
-      console.log(this.currDataPrepare, "else");
+      // console.log(this.currDataPrepare, "else");
       if (this.currDataPrepare["gcomment-desc"] == "GUEST ALREADY PCI") {
         const mori =
           "{" +
