@@ -729,14 +729,36 @@ export default {
     },
   },
   created() {
-    console.log(this.$route.params, "point");
-    this.currDataPrepare = this.$route.params.guestData;
-    this.langID = this.$route.params.setup['langID'];
-    this.hotelEndpoint = this.$route.params.endpoint;
-    this.hotelcode = this.$route.params.hotelcode;
+    // lemparan data
+    console.log(this.$route.params.id, "point");
+    this.currDataPrepare = this.$route.params.id.guestData;
+    this.precheckin = this.currDataPrepare["pre-checkin"];
+    this.hasUpload = this.currDataPrepare["image-flag"];
+    this.information.backgroundColor = this.$route.params.id.setup[
+      "BackgroundColor"
+    ];
+    this.information.color = this.$route.params.id.setup["FontColor"];
+    this.gambar = this.$route.params.id.setup["hotelImage"];
+    this.money = this.$route.params.id.setup["money"];
+    this.currency = this.$route.params.id.setup["currency"];
+    this.per = this.$route.params.id.setup["per"];
+    this.purpose = this.$route.params.id.setup["PurposeofStay"];
+    this.FilterPurposeofStay = this.$route.params.id.setup[
+      "FilterPurposeofStay"
+    ];
+    this.region = this.$route.params.id.setup[
+      "province"
+    ];
+    this.countries = this.$route.params.id.setup[
+      "countries"
+    ];
+    this.filteredRegion = this.region;
+    this.FilterCountry = this.countries;
+    this.langID = this.$route.params.id.setup["langID"];
+    this.hotelEndpoint = this.$route.params.id.setup["hotelEndpoint"];
+    this.hotelcode = this.$route.params.id.setup["hotelCode"];
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    this.roomNotReady = this.$route.params.notready;
-    this.location = this.$route.params.location;
+    this.location = this.$route.params.id.setup["location"];
     if (this.langID == "ENG" || this.langID == "eng") {
       this.terms = this.term;
     } else {
@@ -747,11 +769,7 @@ export default {
       this.y = true;
     }
     this.loading = false;
-    router.replace(this.location);
-  },
-  mounted() {
-    this.filteredRegion = this.region;
-    this.FilterCountry = this.countries;
+    // router.replace(this.location);
   },
   methods: {
     isNumber: function (evt) {

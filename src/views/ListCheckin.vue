@@ -110,7 +110,6 @@ export default {
       labels: [],
       langID: "",
       informationModal: false,
-      roomNotReady: false,
       hotelEndpoint: "",
       hotelCode: "",
       guestData: [],
