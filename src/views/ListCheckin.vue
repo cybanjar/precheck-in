@@ -1,23 +1,6 @@
 <template>
   <div>
     <div class="home">
-      <!-- <div v-show="informationModal">
-        <a-modal
-          :title="getLabels('information', `titleCase`)"
-          :visible="informationModal"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="back" @click="handleNo">
-              {{ getLabels("no", `titleCase`) }}
-            </a-button>
-            <a-button key="submit" type="primary" @click="handleYes">{{
-              getLabels("yes", `titleCase`)
-            }}</a-button>
-          </template>
-          <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-        </a-modal>
-      </div> -->
       <div v-show="informationModal">
         <a-modal
           :title="getLabels('information', `titleCase`)"
@@ -92,14 +75,6 @@
                 <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
               </p>
               <p class="pl-3">{{ item["argt-str"] }}</p>
-              <!-- <p
-                v-if="item['room-status'] != '0 Ready To Checkin'"
-                class="pl-3"
-              >
-                {{ getLabels("mci_error_not_ready") }} -->
-              <!--{{ item["room-status"].substr(2, item["room-status"].length) }}-->
-              <!-- </p>
-              <p v-else></p> -->
             </a-card>
           </a-list-item>
         </a-list>
@@ -131,7 +106,7 @@ export default {
         borderRadius: "4px",
       },
       lemparsetup: [],
-      fairy: [],
+      data: [],
       labels: [],
       langID: "",
       informationModal: false,
@@ -140,6 +115,7 @@ export default {
       hotelCode: "",
       guestData: [],
       license: false,
+      location: "",
     };
   },
   created() {
@@ -154,6 +130,7 @@ export default {
     this.setup = this.$route.params.setting[0];
     this.lemparsetup = this.$route.params.setting[0];
     this.gambar = this.setup["hotelImage"];
+    this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
     this.information.backgroundColor = this.setup["BackgroundColor"];
     this.information.color = this.setup["FontColor"];
@@ -261,69 +238,14 @@ export default {
           }
         }
       }
-      // if (client["l-selected"] == false) {
-      //   for (const i in this.guestData) {
-      //     if (this.guestData[i]["i-counter"] == client["i-counter"]) {
-      //       this.guestData[i]["l-selected"] = true;
-      //     } else {
-      //       this.guestData[i]["l-selected"] = false;
-      //     }
-      //   }
-      // }
-
-      // else {
-      //   for (const i in this.data) {
-      //     if (this.data[i]["i-counter"] == client["i-counter"]) {
-      //       this.data[i]["l-selected"] = false;
-      //     }
-      //   }
-      // }
-      // console.log(client["l-selected"], "awal");
-      // if (client["l-selected"] == false) {
-      //   console.log(client["l-selected"], "kedua");
-      //   for (const i in this.data) {
-      //     console.log(client["l-selected"], "ketiga");
-      //     console.log(client["i-counter"], "aneh");
-      //     if (this.data[i]["i-counter"] != client["i-counter"]) {
-      //       console.log(client["i-counter"], "aneh2");
-      //       console.log(this.data[i]["i-counter"], "aneh2");
-      //       this.data[i]["l-selected"] = false;
-      //       console.log(this.data[i]["l-selected"], "datagagal");
-      //       this.selectedData = [];
-      //       console.log("msk1");
-      //     } else {
-      //       this.data[i]["l-selected"] = true;
-      //       console.log(this.data[i]["l-selected"], "databener");
-      //       this.selectedData.push(client);
-      //       console.log("msk2");
-      //       console.log(client, "client");
-      //     }
-      //   }
-      // } else {
-      //   for (const i in this.data) {
-      //     // if (this.data[i]["i-counter"] == client["i-counter"]) {
-      //     this.data[i]["l-selected"] = false;
-      //     this.selectedData = [];
-      //     console.log("msk3");
-      //     // }
-      //   }
-      // }
     },
     send() {
-      this.fairy["data"] = this.selectedData;
-      this.fairy["setup"] = this.lemparsetup;
-      //console.log(this.fairy);
+      this.data["guestData"] = this.selectedData;
+      this.data["setup"] = this.lemparsetup;
 
       router.replace({
         name: "Step",
-        params: { id: this.fairy },
-        // params: {
-        //   foo: this.fairy,
-        //   fighter: this.langID,
-        //   endpoint: this.hotelEndpoint,
-        //   hotelcode: this.hotelCode,
-        //   notready: this.roomNotReady,
-        // },
+        params: { id: this.data },
       });
     },
     formatDate(datum) {
@@ -364,22 +286,6 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    // handleYes() {
-    //   this.informationModal = false;
-    //   router.push({
-    //     name: "Step",
-    //     params: {
-    //       foo: this.fairy,
-    //       fighter: this.langID,
-    //       endpoint: this.hotelEndpoint,
-    //       hotelcode: this.hotelCode,
-    //       notready: this.roomNotReady,
-    //     },
-    //   });
-    // },
-    // handleNo() {
-    //   this.informationModal = false;
-    // },
     handleYes() {
       this.informationModal = false;
     },

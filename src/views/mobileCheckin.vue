@@ -801,6 +801,7 @@ export default {
       obj["serverTime"] = this.server;
       obj["SystemDate"] = this.SystemDate;
       obj["LICENSE"] = this.LICENSE;
+      obj["location"] = this.location;
       this.setup.push(obj);
       console.log(this.setup, "test");
       //End Request Set Up
@@ -1086,7 +1087,6 @@ export default {
                   params: {
                     guestData: reservation,
                     setting: this.setup,
-                    location: this.location,
                   },
                 });
               } else {
