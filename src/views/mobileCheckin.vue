@@ -20,7 +20,7 @@
         :closable="false"
       >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{
+          <a-button key="submit" type="primary" @click="hideMCIModal">{{
             getLabels("close", `titleCase`)
           }}</a-button>
         </template>
@@ -32,7 +32,7 @@
         :closable="false"
       >
         <template slot="footer">
-          <a-button key="submit" type="primary" @click="goOTA">{{
+          <a-button key="submit" type="primary" @click="hideMCIModal">{{
             getLabels("close", `titleCase`)
           }}</a-button>
         </template>
@@ -97,7 +97,7 @@
               <a-button
                 key="submit"
                 type="primary"
-                @click="handleOkBO"
+                @click="handleFindRsv('bookingcode')"
                 :disabled="confirmLoading"
               >
                 {{ getLabels("search", `titleCase`) }}
@@ -172,7 +172,7 @@
               <a-button
                 key="submit"
                 type="primary"
-                @click="handleOkName"
+                @click="handleFindRsv('guestname')"
                 :disabled="confirmLoading"
               >
                 {{ getLabels("search", `titleCase`) }}
@@ -251,7 +251,7 @@
               <a-button
                 key="submit"
                 type="primary"
-                @click="handleOkEmail"
+                @click="handleFindRsv('email')"
                 :disabled="confirmLoading"
               >
                 {{ getLabels("search", `titleCase`) }}
@@ -330,7 +330,7 @@
               <a-button
                 key="submit"
                 type="primary"
-                @click="handleOkMember"
+                @click="handleFindRsv('membership')"
                 :disabled="confirmLoading"
               >
                 {{ getLabels("search", `titleCase`) }}
@@ -736,19 +736,19 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-      // Hotel Image
+      
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
         return item.number1 === 7 && item.number2 === 3;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
-      // Hotel Name
+      
       const tempHotelName = this.tempsetup.filter((item, index) => {
         //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
       });
       this.hotelName = tempHotelName[0]["setupvalue"];
-      // Server Time
+      
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -839,7 +839,7 @@ export default {
         } else {
           this.bookingcode = this.tempParambook;
           this.date = this.tempParamcodate.replace(/%2F/g, "/");
-          this.handleOk();
+          this.handleFindRsv('nicepay');
         }
       } else if (tempParam.resultCd == "0000") {
         const tmpParam = CookieS.get("data");
@@ -864,6 +864,7 @@ export default {
   },
   methods: {
     changeLang(value){
+      // Method for changing MCI Language
       if(value == 'idn'){
         this.programLabel = 'program-label2';
         this.langID = 'IDN';
@@ -883,29 +884,31 @@ export default {
         this.memberPhoto = require(`../assets/membership.svg`);
       }
     },
-    onChange(date, dateString) {
-      this.date = dateString;
-    },
     async showModalBookingCode() {
+      // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.modalBookingCode = true;
       await this.$nextTick();
       this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
+      // Method for Set Guest Name Input Form to Focus When Activate Modal Guest Name
       this.modalGuestName = true;
       await this.$nextTick();
       this.$refs.name.focus();
     },
     async showModalEmailAddress() {
+      // Method for Set Email Address Input Form to Focus When Activate Modal Email Address
       this.modalEmailAddress = true;
       await this.$nextTick();
       this.$refs.email.focus();
     },
     async showModalMembershipID() {
+      // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
       this.modalMembershipID = true;
       await this.$nextTick();
       this.$refs.member.focus();
     },
+    /* Handling Error Message */
     errorbo() {
       this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
     },
@@ -916,7 +919,17 @@ export default {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     erroremailNotTrue() {
-      this.$message.error("hint example@gmail.com");
+      switch(this.langID.toLowerCase()){
+        case 'eng':
+          this.$message.error("Please enter valid email address");
+          break;
+        case 'idn':
+          this.$message.error("Harap masukkan alamat email yang benar");
+          break;
+        default:
+          this.$message.error("Please enter valid email address");
+          break;
+      }
     },
     errormember() {
       this.$message.error(this.getLabels("input_member", `sentenceCase`));
@@ -952,68 +965,19 @@ export default {
           this.getLabels("input_codate", `sentenceCase`)
       );
     },
-    goOTA() {
+    /* End Of Handling Error Message */
+    hideMCIModal() {
+      // Method for Hiding All MCI Modal
       this.infoMCIEarlyCheckin = false;
       this.infoMCINotFound = false;
       this.infoMCINotReady = false;
     },
-    handleOk() {
-      const reservation = [];
-      const coDate = this.date;
-      if (!this.bookingcode && !this.date) {
-        this.error();
-      } else if (!this.bookingcode) {
-        this.errorbo();
-      } else if (!this.date) {
-        this.errorco();
-      } else {
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: this.bookingcode,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();
-          this.message = data["response"]["messResult"];
-          if (this.message.substring(0, 2) == "9 ") {
-            this.infoMCIEarlyCheckin = true;
-          } else if (
-            this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "02"
-          ) {
-            this.infoMCINotReady = true;
-          } else if (
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 "
-          ) {
-            this.infoMCINotFound = true;
-          } else {
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-              },
-            });
-          }
-        })();
-      }
-    },    
+    hideMCISearchModal(){
+      this.modalBookingCode = false;
+      this.modalGuestName = false;
+      this.modalEmailAddress = false;
+      this.modalMembershipID = false;
+    },
     getCoDate(){
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
@@ -1021,19 +985,47 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return coDate;
     },
-    handleOkBO() {
+    handleFindRsv(mode){
+      /* Turn On Loading */
       this.confirmLoading = true;
+
+      /* Variable Assignment */
       const reservation = [];
-      const coDate = this.getCoDate();
+      let coDate = undefined;
+      let searchVar = undefined;
+      switch(mode){
+        case "nicepay":
+          searchVar = this.bookingcode;
+          coDate = this.date;
+          break;
+        case "bookingcode":
+          searchVar = this.bookingcode;
+          coDate = this.getCoDate();
+          break;
+        case "guestname":
+          searchVar = this.name;
+          coDate = this.getCoDate();
+          break;
+        case "email":
+          searchVar = this.email;
+          coDate = this.getCoDate();
+          break;
+        case "membership":
+          searchVar = this.member;
+          coDate = this.getCoDate();
+          break;
+        default:
+          searchVar = this.bookingcode;
+          coDate = this.getCoDate();
+          break;
+      }      
+
       if (!this.bookingcode && !this.date) {
         this.error();
-        this.confirmLoading = false;
       } else if (!this.bookingcode) {
         this.errorbo();
-        this.confirmLoading = false;
       } else if (!this.date) {
         this.errorco();
-        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -1041,255 +1033,78 @@ export default {
               json: {
                 request: {
                   coDate: coDate,
-                  bookCode: this.bookingcode,
+                  bookCode: searchVar,
                   chName: " ",
-                  earlyCI: "false",
+                  earlyCI: this.earliestCiFlag,
                   maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();          
-          this.message = data.response["messResult"];
-          const msgStatus = data.response["messResult"].split("-");    
-          if (this.message.substring(0, 2) == "9 ") {
-            this.infoMCIEarlyCheckin = true;
-          } else if (
-            this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "02"
-          ) {
-            this.infoMCINotReady = true;
-          } else if (
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 "
-          ) {
-            this.infoMCINotFound = true;
-          } else {
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-                location: this.location,
-              },
-            });
-          }
-        })();
-        this.modalBookingCode = false;
-        this.confirmLoading = false;
-      }
-    },
-    handleOkName() {
-      this.confirmLoading = true;
-      const reservation = [];
-      const dDate = moment(this.date, "DD/MM/YYYY").date();
-      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
-      const dYear = moment(this.date, "DD/MM/YYYY").year();
-      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
-      if (!this.name && !this.date) {
-        this.errorName();
-        this.confirmLoading = false;
-      } else if (!this.name) {
-        this.errorname();
-        this.confirmLoading = false;
-      } else if (!this.date) {
-        this.errorco();
-        this.confirmLoading = false;
-      } else {
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: this.name,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
+                  citime: this.checkin,
                   groupFlag: "false",
                 },
               },
             })
             .json();
-          this.message = data["response"]["messResult"];
-          if (this.message.substring(0, 2) == "9 ") {
-            this.infoMCIEarlyCheckin = true;
-          } else if (
-            this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "02"
-          ) {
-            this.infoMCINotReady = true;
-          } else if (
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 "
-          ) {
-            this.infoMCINotFound = true;
-          } else {
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-                location: this.location,
-              },
-            });
-          }
+            this.message = data.response["messResult"];
+            const messResult = this.message.split("-");  
+
+            switch(parseInt(messResult[0])){
+              case 0:
+                // Reservation is Found
+                const totalGuest = data.response.arrivalGuestlist["arrival-guestlist"].length;
+                
+                if(totalGuest > 1){
+                  /* Handling Multiple Guest to ListCheckin.vue */
+                  reservation.push(
+                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                  );
+                  router.replace({
+                    name: "Step",
+                    params: {
+                      foo: reservation,
+                      fighter: this.langID,
+                      endpoint: this.hotelEndpoint,
+                      hotelcode: this.hotelCode,
+                      location: this.location,
+                    },
+                  });
+                } else {
+                  /* Handling Single Guest to Step.vue */
+                  reservation.push(
+                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                  );
+                  router.replace({
+                    name: "Step",
+                    params: {
+                      foo: reservation,
+                      fighter: this.langID,
+                      endpoint: this.hotelEndpoint,
+                      hotelcode: this.hotelCode,
+                      location: this.location,
+                    },
+                  });
+                }
+                break;
+              case 1:
+              case 2:
+                // Reservation's Not Found
+                this.infoMCINotReady = true;
+                break;
+              case 5:
+              case 88:
+                this.infoMCINotFound = true;
+                break;
+              case 9:
+                this.infoMCIEarlyCheckin = true;
+                break;              
+              default:
+                console.log('Other',messResult[0],messResult[1]);
+                // Reservation's Not Found
+                break;
+            }
+            this.confirmLoading = false;
+            this.hideMCISearchModal();
         })();
-        this.modalGuestName = false;
-        this.confirmLoading = false;
       }
-    },
-    handleOkEmail() {
-      this.confirmLoading = true;
-      const reservation = [];
-      const dDate = moment(this.date, "DD/MM/YYYY").date();
-      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
-      const dYear = moment(this.date, "DD/MM/YYYY").year();
-      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
-      if (!this.email && !this.date) {
-        this.errorMail();
-        this.confirmLoading = false;
-      } else if (!this.email) {
-        this.erroremail();
-        this.confirmLoading = false;
-      } else if (!this.reg.test(this.email)) {
-        this.erroremailNotTrue();
-        this.confirmLoading = false;
-      } else if (!this.date) {
-        this.errorco();
-        this.confirmLoading = false;
-      } else {
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: this.email,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();
-          this.message = data["response"]["messResult"];
-          if (this.message.substring(0, 2) == "9 ") {
-            this.infoMCIEarlyCheckin = true;
-          } else if (
-            this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "02"
-          ) {
-            this.infoMCINotReady = true;
-          } else if (
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 "
-          ) {
-            this.infoMCINotFound = true;
-          } else {
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            router.push({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-                location: this.location,
-              },
-            });
-          }
-        })();
-        this.modalEmailAddress = false;
-        this.confirmLoading = false;
-      }
-    },
-    handleOkMember() {
-      this.confirmLoading = true;
-      const reservation = [];
-      const dDate = moment(this.date, "DD/MM/YYYY").date();
-      const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
-      const dYear = moment(this.date, "DD/MM/YYYY").year();
-      const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
-      if (!this.member && !this.date) {
-        this.errorMember();
-        this.confirmLoading = false;
-      } else if (!this.member) {
-        this.errormember();
-        this.confirmLoading = false;
-      } else if (!this.date) {
-        this.errorco();
-        this.confirmLoading = false;
-      } else {
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: this.member,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: "14:00",
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();
-          this.message = data["response"]["messResult"];
-          if (this.message.substring(0, 2) == "9 ") {
-            this.infoMCIEarlyCheckin = true;
-          } else if (
-            this.message.substring(0, 2) == "01" ||
-            this.message.substring(0, 2) == "02"
-          ) {
-            this.infoMCINotReady = true;
-          } else if (
-            this.message.substring(0, 2) == "88" ||
-            this.message.substring(0, 2) == "5 " ||
-            this.message.substring(0, 2) == "2 "
-          ) {
-            this.infoMCINotFound = true;
-          } else {
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            router.replace({
-              name: "Step",
-              params: {
-                foo: reservation,
-                fighter: this.langID,
-                endpoint: this.hotelEndpoint,
-                hotelcode: this.hotelCode,
-                location: this.location,
-              },
-            });
-          }
-        })();
-        this.modalMembershipID = false;
-        this.confirmLoading = false;
-      }
-    },
+    },   
     handleCancel() {
       this.modalBookingCode = false;
       this.modalGuestName = false;
