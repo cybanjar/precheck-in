@@ -894,8 +894,7 @@ export default {
         token.toString() +
         "&userIP=" +
         this.ipAddr +
-        "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
-        this.langID +
+        `&cartData={}&callBackUrl=${this.location}`+
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
         book: this.currDataPrepare.resnr,
