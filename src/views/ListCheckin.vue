@@ -25,9 +25,14 @@
           :closable="false"
         >
           <template slot="footer">
-            <a-button key="submit" type="primary" @click="handleYes">OK</a-button>
+            <a-button key="submit" type="primary" @click="handleYes"
+              >OK</a-button
+            >
           </template>
-          <p>Sorry, your room is not ready. Please proceed to the Reception for further information.</p>
+          <p>
+            Sorry, your room is not ready. Please proceed to the Reception for
+            further information.
+          </p>
         </a-modal>
       </div>
       <h5 class="text-black text-center font-weight-bold visible">
@@ -60,13 +65,8 @@
           :data-source="guestData"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-card
-              :class="handleClass(item,'card')"
-              @click="select(item)"
-            >
-              <h2
-                :class="handleClass(item,'h2')"
-              >
+            <a-card :class="handleClass(item, 'card')" @click="select(item)">
+              <h2 :class="handleClass(item, 'h2')">
                 {{ item["gast"].toUpperCase() }}
               </h2>
               <p class="pl-3">
@@ -125,7 +125,11 @@ export default {
       selectedData: [],
       gambar: "",
       hotelname: "",
-      information: {},
+      information: {
+        backgroundColor: "$green",
+        color: "$white",
+        borderRadius: "4px",
+      },
       lemparsetup: [],
       fairy: [],
       labels: [],
@@ -135,24 +139,28 @@ export default {
       hotelEndpoint: "",
       hotelCode: "",
       guestData: [],
-      license: true,
+      license: false,
     };
   },
   created() {
-    const tempData = this.$route.params.foo[0];
-    /* Assign ispopup property for tempData */    
-    tempData.forEach(item => {
-      Object.assign(item, {ispopup: false});      
-    }); 
+    console.log(this.$route.params, "nyampe bro");
+    const tempData = this.$route.params.guestData[0];
+    /* Assign ispopup property for tempData */
+
+    tempData.forEach((item) => {
+      Object.assign(item, { ispopup: false });
+    });
     this.guestData = tempData;
-    this.setup = this.$route.params.foo[1];
-    this.lemparsetup = this.$route.params.foo[1];
-    this.gambar = this.setup["01"];
-    this.information = this.setup["02"];
-    this.hotelname = this.setup["13"];
-    this.langID = this.setup["24"];
-    this.hotelEndpoint = this.setup["23"];
-    this.hotelCode = this.setup["22"];
+    this.setup = this.$route.params.setting[0];
+    this.lemparsetup = this.$route.params.setting[0];
+    this.gambar = this.setup["hotelImage"];
+    this.license = this.setup["LICENSE"];
+    this.information.backgroundColor = this.setup["BackgroundColor"];
+    this.information.color = this.setup["FontColor"];
+    this.hotelname = this.setup["hotelName"];
+    this.langID = this.setup["langID"];
+    this.hotelEndpoint = this.setup["hotelEndpoint"];
+    this.hotelCode = this.setup["hotelCode"];
   },
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
@@ -167,63 +175,54 @@ export default {
         return 0;
       }
     },
-    handleClass(item,used){
-      let returnedClass = '';
-      if(used == 'card'){
-        if(item['l-selected'] == true && item['ispopup'] == true){
-          returnedClass = 'disabled';
+    handleClass(item, used) {
+      let returnedClass = "";
+      if (used == "card") {
+        if (item["l-selected"] == true && item["ispopup"] == true) {
+          returnedClass = "disabled";
+        } else if (item["l-selected"] == true && item["ispopup"] == false) {
+          returnedClass = "selected";
+        } else if (item["l-selected"] == false && item["ispopup"] == true) {
+          returnedClass = "disabled";
+        } else {
+          returnedClass = "notselected";
         }
-        else if (item['l-selected'] == true && item['ispopup'] == false){
-          returnedClass = 'selected';
-        }
-        else if(item['l-selected'] == false && item['ispopup'] == true){
-          returnedClass = 'disabled';
-        }
-        else{
-          returnedClass = 'notselected';
+      } else if (used == "h2") {
+        if (item["l-selected"] == true && item["ispopup"] == true) {
+          returnedClass = "disabled pl-3 font-weight-bold";
+        } else if (item["l-selected"] == true && item["ispopup"] == false) {
+          returnedClass = "selected pl-3 font-weight-bold";
+        } else if (item["l-selected"] == false && item["ispopup"] == true) {
+          returnedClass = "disabled pl-3 font-weight-bold";
+        } else {
+          returnedClass = "notselected pl-3 font-weight-bold";
         }
       }
-      else if(used == 'h2'){
-        if(item['l-selected'] == true && item['ispopup'] == true){
-          returnedClass = 'disabled pl-3 font-weight-bold';
-        }
-        else if (item['l-selected'] == true && item['ispopup'] == false){
-          returnedClass = 'selected pl-3 font-weight-bold';
-        }
-        else if(item['l-selected'] == false && item['ispopup'] == true){
-          returnedClass = 'disabled pl-3 font-weight-bold';
-        }
-        else{
-          returnedClass = 'notselected pl-3 font-weight-bold';
-        }
-      }      
       return returnedClass;
     },
-    select(client) {          
-      /* Handle Client Data Modal */      
-      const rmStatus = client["room-status"].split(" ");      
-      if(parseInt(rmStatus[0]) == 1){
-        // RmStatus 1 Overlapping        
+    select(client) {
+      /* Handle Client Data Modal */
+
+      const rmStatus = client["room-status"].split(" ");
+      if (parseInt(rmStatus[0]) == 1) {
+        // RmStatus 1 Overlapping
         if (client["ispopup"] == false) {
-          this.informationModal = true;  
+          this.informationModal = true;
           for (const i in this.guestData) {
             if (this.guestData[i]["i-counter"] == client["i-counter"]) {
               this.guestData[i]["ispopup"] = true;
               this.guestData[i]["l-selected"] = false;
-            }
-            else{
+            } else {
               this.guestData[i]["l-selected"] = false;
             }
           }
-        }
-        else{
+        } else {
           // Do Nothing
         }
-      }
-      else if(parseInt(rmStatus[0]) > 1){
+      } else if (parseInt(rmStatus[0]) > 1) {
         // RmStatus 2 (Not Ready to Checkin) && 3 (Type Selected Not Available)
         // Must Check License True = Selected || False = Disabled
-        if(this.license == true){
+        if (this.license == true) {
           this.selectedData = client;
           if (client["l-selected"] == false) {
             for (const i in this.guestData) {
@@ -233,27 +232,23 @@ export default {
                 this.guestData[i]["l-selected"] = false;
               }
             }
-          }          
-        }
-        else {                
+          }
+        } else {
           if (client["ispopup"] == false) {
             this.informationModal = true;
             for (const i in this.guestData) {
               if (this.guestData[i]["i-counter"] == client["i-counter"]) {
                 this.guestData[i]["ispopup"] = true;
                 this.guestData[i]["l-selected"] = false;
-              }
-              else{
+              } else {
                 this.guestData[i]["l-selected"] = false;
               }
             }
-          }
-          else{
+          } else {
             // Do Nothing
           }
-        }        
-      }
-      else{
+        }
+      } else {
         // Ready To Checkin
         this.selectedData = client;
         if (client["l-selected"] == false) {
@@ -275,7 +270,7 @@ export default {
       //     }
       //   }
       // }
-      
+
       // else {
       //   for (const i in this.data) {
       //     if (this.data[i]["i-counter"] == client["i-counter"]) {
@@ -318,7 +313,7 @@ export default {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
       //console.log(this.fairy);
-      
+
       router.replace({
         name: "Step",
         params: { id: this.fairy },
@@ -385,7 +380,7 @@ export default {
     // handleNo() {
     //   this.informationModal = false;
     // },
-    handleYes(){
+    handleYes() {
       this.informationModal = false;
     },
   },
