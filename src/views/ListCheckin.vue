@@ -239,12 +239,12 @@ export default {
       }
     },
     send() {
-      this.data["guestData"] = this.selectedData;
-      this.data["setup"] = this.lemparsetup;
-
       router.replace({
         name: "Step",
-        params: { id: this.data },
+        params: {
+          guestData: this.selectedData,
+          setting: this.lemparsetup,
+        },
       });
     },
     formatDate(datum) {

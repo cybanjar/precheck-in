@@ -730,36 +730,38 @@ export default {
   },
   created() {
     // lemparan data
-    console.log(this.$route.params.id, "point");
+    console.log(this.$route.params, "point");
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
-    this.currDataPrepare = this.$route.params.id.guestData;
+    this.currDataPrepare = this.$route.params.guestData;
     this.precheckin = this.currDataPrepare["pre-checkin"];
     this.hasUpload = this.currDataPrepare["image-flag"];
     this.country = this.currDataPrepare["guest-country"];
 
-    this.term = this.$route.params.id.setup["termENG"];
-    this.term1 = this.$route.params.id.setup["termIDN"];
+    this.term = this.$route.params.setting["termENG"];
+    this.term1 = this.$route.params.setting["termIDN"];
 
-    this.information.backgroundColor = this.$route.params.id.setup[
+    this.information.backgroundColor = this.$route.params.setting[
       "BackgroundColor"
     ];
-    this.information.color = this.$route.params.id.setup["FontColor"];
-    this.gambar = this.$route.params.id.setup["hotelImage"];
-    this.minimumDeposit = this.$route.params.id.setup["money"];
-    this.currency = this.$route.params.id.setup["currency"];
-    this.per = this.$route.params.id.setup["per"];
-    this.purpose = this.$route.params.id.setup["PurposeofStay"];
-    this.FilterPurposeofStay = this.$route.params.id.setup[
+    this.information.color = this.$route.params.setting["FontColor"];
+    this.gambar = this.$route.params.setting["hotelImage"];
+    this.minimumDeposit = this.$route.params.setting["money"];
+    this.currency = this.$route.params.setting["currency"];
+    this.per = this.$route.params.setting["per"];
+    this.purpose = this.$route.params.setting["PurposeofStay"];
+    this.FilterPurposeofStay = this.$route.params.setting[
       "FilterPurposeofStay"
     ];
-    this.region = this.$route.params.id.setup["province"];
-    this.countries = this.$route.params.id.setup["countries"];
+    this.region = this.$route.params.setting["province"];
+    this.countries = this.$route.params.setting["countries"];
+    this.wifiAddress = this.$route.params.setting["wifiAddress"];
+    this.wifiPassword = this.$route.params.setting["wifiPassword"];
 
-    this.langID = this.$route.params.id.setup["langID"];
-    this.hotelEndpoint = this.$route.params.id.setup["hotelEndpoint"];
-    this.hotelcode = this.$route.params.id.setup["hotelCode"];
-    this.location = this.$route.params.id.setup["location"];
+    this.langID = this.$route.params.setting["langID"];
+    this.hotelEndpoint = this.$route.params.setting["hotelEndpoint"];
+    this.hotelcode = this.$route.params.setting["hotelCode"];
+    this.location = this.$route.params.setting["location"];
     this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
     if (this.langID == "ENG" || this.langID == "eng") {
