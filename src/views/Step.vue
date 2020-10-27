@@ -6,40 +6,6 @@
   </div>
   <div v-else>
     <div class="home">
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="informationModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-            >{{ getLabels("yes", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>Sorry, your room is not ready yet. But you can still continue to check-in. We will notify you by email and SMS when your room is ready.</p>
-        <p>Please re-confirm your phone number and email.</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="getLabels('phone_number', `titleCase`)">
-              <a-input
-                v-decorator="['guest-phone', { initialValue:currDataPrepare['guest-phnumber'], rules: [{ required: true, message: 'Please input your phone number!' }] }]"
-              />
-            </a-form-item>
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
-                v-decorator="['guest-email', { initialValue:currDataPrepare['guest-email'],rules: [{ required: true, message: 'Please input your email!' }] }]"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
-
       <!-- <div v-show="term"> -->
       <a-modal
         :title="getLabels('t_c', `titleCase`)"
@@ -374,9 +340,7 @@
               </a-col>
               <div v-if="freeParking">
                 <a-col :span="5" :xl="5" :xs="24">
-                  <a-form-item
-                    :label="getLabels('vehicle_regident', `titleCase`)"
-                  >
+                  <a-form-item :label="getLabels('vehicle_regident', `titleCase`)">
                     <a-input v-model="vRegident" />
                   </a-form-item>
                 </a-col>
@@ -468,12 +432,18 @@
                 </a-modal>-->
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
-                <a-button
-                  class="font-weight-bold mt-3 mr-3"
-                  type="primary"
-                  @click="search()"
-                  >{{ getLabels("pay", `titleCase`) }}</a-button
-                >
+                <div v-if="paid">
+                  <p>{{getLabels("deposit_payment_success", `sentenceCase`)}}</p>
+                </div>
+                <div v-else>
+                  <a-button
+                    class="font-weight-bold mt-3 mr-3"
+                    type="primary"
+                    :disabled="paid"
+                    @click="search()"
+                    >{{ getLabels("pay", `titleCase`) }}</a-button
+                  >
+                </div>
                 <!-- <img
                   class="rounded float-right"
                   src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
@@ -493,7 +463,7 @@
             <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
               <a-col :span="12" :xl="12" :xs="24">
                 <p>
-                  <a-checkbox v-model="pay">
+                  <a-checkbox v-model="pay" :disabled="paid">
                     {{ getLabels("term_cash_basis", `titleCase`) }}
                   </a-checkbox>
                 </p>
@@ -543,10 +513,13 @@
                   type="primary"
                   block
                   :size="size"
-                  @click="save"
+                  @click="
+                    save();
+                    scrollToTop();
+                  "
                   v-if="current == steps.length - 1"
                   html-type="submit"
-                  :disabled="!pay"
+                  :disabled="!(pay || paid)"
                   >{{ getLabels("ci_now", `titleCase`) }}</a-button
                 >
               </a-form-item>
@@ -640,7 +613,6 @@ export default {
       showPickupRequest: true,
       showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
-      formresubmit: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -689,15 +661,10 @@ export default {
       hasUpload: false,
       hotelEndpoint: "",
       hotelcode: "",
-      ipAddr: "",
       roomNotReady: false,
       freeParking: false,
       vRegident: "",
-      informationModal: false,
-      responseStatus: {
-        statusNumber: "",
-        statusMessage: "",
-      },
+      paid: false,
     };
   },
   watch: {
@@ -712,6 +679,8 @@ export default {
     this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.roomNotReady = this.$route.params.notready;
+    this.paid = this.$route.params.paid;
+
     if (this.$route.params.foo != undefined) {
       (async () => {
         const parsed = await ky
@@ -831,10 +800,7 @@ export default {
             air["descr"] = this.tempsetup[i]["descr"];
             air["setupvalue"] = this.tempsetup[i]["setupvalue"];
             this.region.push(air);
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 14
-          ) {
+          } else if (this.tempsetup[i]["number1"] == 8 && this.tempsetup[i]["number2"] == 14) {
             this.freeParking = this.tempsetup[i]["setupflag"];
           }
         }
@@ -864,13 +830,11 @@ export default {
           obj["20"] = this.region;
           obj["21"] = this.term1;
           obj["22"] = this.hotelcode;
-          obj["23"] = this.hotelEndpoint;
-          obj["24"] = this.langID;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({
             name: "ListCheckIn",
-            params: { foo: nietos },
+            params: { foo: nietos, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelcode },
           });
         } else {
           this.currDataPrepare = this.currData["0"]["0"];
@@ -892,6 +856,11 @@ export default {
             this.current = 2;
             this.y = true;
           }
+        };
+        if (this.paid) {
+          this.current = 3;
+          this.y = true;
+          this.termcondition = false;
         }
         /*if (this.hasUpload == "0 image id already exist") {
           this.current = 3;
@@ -922,13 +891,10 @@ export default {
       this.region = this.$route.params.id["setup"]["20"];
       this.term1 = this.$route.params.id["setup"]["21"];
       this.hotelcode = this.$route.params.id["setup"]["22"];
-      this.hotelEndpoint = this.$route.params.id["setup"]["23"];
-      this.langID = this.$route.params.id["setup"]["24"];
       this.currDataPrepare = this.$route.params.id["data"];
       this.precheckin = this.currDataPrepare["pre-checkin"];
       this.country = this.currDataPrepare["guest-country"];
       this.email = this.currDataPrepare["guest-email"];
-      this.hasUpload = this.currDataPrepare["image-flag"];
       if (this.langID == "ENG" || this.langID == "eng") {
         this.terms = this.term;
       } else {
@@ -989,7 +955,7 @@ export default {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
             this.form.validateFields(["phone"]);
-          } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
+          } else if(!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
           }
         }
@@ -1045,47 +1011,64 @@ export default {
       }
     },
     search() {
-      async function getIP() {
-        const response = await fetch("http://api.ipify.org/?format=json");
+      const datas = {
+        0: {
+          gast: this.currDataPrepare["gast"],
+          ci: this.currDataPrepare.ci,
+          co: this.currDataPrepare.co,
+          resnr: this.currDataPrepare.resnr,
+          reslinnr: this.currDataPrepare.reslinnr,
+          zinr: this.currDataPrepare.zinr,
+          "guest-email": this.form.getFieldValue("email"),
+          "guest-phnumber": this.form.getFieldValue("phone"),
+          purposeofstay: this.form.getFieldValue("purpose"),
+          "guest-nation": this.form.getFieldValue("nationality"),
+          "guest-country": this.form.getFieldValue("country"),
+          "guest-region": this.form.getFieldValue("region"),
+          "pre-checkin": this.currDataPrepare["pre-checkin"],
+          "image-flag": "0 image id already exist",
+          vreg: this.vRegident,
+          hotelcode: this.hotelcode,
+        }
+      };
+      CookieS.set("data", datas);
+
+      async function getIP(){
+        const response = await fetch('http://api.ipify.org/?format=json');
         const data = await response.json();
         return data.ip;
       }
-      getIP().then((data) => (this.ipAddr = data));
-      const token = CryptoJS.SHA256(
-        "IONPAYTESTTRX2020090700000002" +
-          this.minimumDeposit +
-          "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
-      );
-      const params =
-        "timeStamp=" +
-        moment().format("YYYYMMDDHHmmss") +
-        "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
-        this.minimumDeposit +
-        "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-        this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
-        "&billingPhone=" +
-        this.form.getFieldValue(["phone"][0]) +
-        "&billingEmail=" +
-        this.form.getFieldValue(["email"][0]) +
-        "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
-        token.toString() +
-        "&userIP=" +
-        this.ipAddr +
-        "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
-        this.langID +
-        "&instmntType=1&instmntMon=1&reccurOpt=0";
+      getIP().then((ip) => {
+        const token = CryptoJS.SHA256(
+          "IONPAYTESTTRX2020090700000002" +
+            this.minimumDeposit +
+            "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
+        );
 
-      const datas = {
-        book: this.currDataPrepare.resnr,
-        codate: this.formatDate(this.currDataPrepare.co),
-        payment: "success",
-      };
-      CookieS.set("data", datas);
-      fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(
-          "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
-        )}`
-      )
+        const params =
+          "timeStamp=" +
+          moment().format("YYYYMMDDHHmmss") +
+          "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
+          this.minimumDeposit +
+          "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
+          this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
+          "&billingPhone=" +
+          this.form.getFieldValue(["phone"][0]) +
+          "&billingEmail=" +
+          this.form.getFieldValue(["email"][0]) +
+          "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
+          token.toString() +
+          "&userIP=" +
+          ip +
+          "&cartData={}&callBackUrl=http://localhost:8080/mobilecheckin?param=" +
+          this.hotelcode +
+          "&instmntType=1&instmntMon=1&reccurOpt=0";
+
+        fetch(
+          `https://api.allorigins.win/get?url=${encodeURIComponent(
+            "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
+          )}`
+        )
         .then((response) => {
           if (response.ok) return response.json();
           throw new Error("Network response was not ok.");
@@ -1097,7 +1080,6 @@ export default {
           );
           this.resReg = JSON.parse(resp);
           if (this.resReg.data["resultCd"] == "0000") {
-            // console.log(this.resReg);
             const urlInq =
               "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
               this.resReg.data["tXid"] +
@@ -1107,6 +1089,7 @@ export default {
             // console.log("error payment");
           }
         });
+      });
     },
     check() {
       const token = CryptoJS.SHA256(
@@ -1197,10 +1180,8 @@ export default {
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
 
-          (async () => {
+          /*(async () => {
             this.imgb64 = base64Canvas;
-            console.log(this.currDataPrepare, "save");
-            console.log(this.imgb64, "save2");
             const uploadResult = await ky
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
@@ -1217,7 +1198,7 @@ export default {
             if (uploadResult.response.resultMessage != "") {
               // console.log(uploadResult.response.resultMessage);
             }
-          })();
+          })();*/
         };
       };
     },
@@ -1232,11 +1213,7 @@ export default {
       this.current = 0;
     },
     save() {
-      // if (this.counter == this.id.length) {
-      //   console.log(this.currDataPrepare);
-      if (this.currDataPrepare["room-status"] == "1 Room Already assign or Overlapping") {
-        // Cek status kamar pertama kalo Overlapping
-        console.log("overlapping");
+      if (this.counter == this.id.length) {
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1257,154 +1234,8 @@ export default {
               },
             })
             .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-          }
         })();
-      } else if (
-        this.currDataPrepare["room-status"] ==
-        "2 Room Status Not Ready To Checkin"
-      ) {
-        // Cek status kamar pertama kalo VD
-        console.log("VD");
-
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-            this.roomNotReady = true;
-
-            const mori =
-                "{" +
-                this.currDataPrepare.zinr +
-                ";" +
-                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-                "}";
-              //this.check();
-              //if (this.paymentStatus) {
-              //console.log(this.paymentStatus);
-            router.push({
-              name: "SuccessCheckIn",
-              params: {
-                jin: mori,
-                jun: this.wifiAddress,
-                jen: this.wifiPassword,
-                jon: this.currDataPrepare["argt-str"],
-                jan: this.roomNotReady,
-                email: this.form.getFieldValue(["email"][0]),
-                phnum: this.form.getFieldValue(["phone"][0]),
-                param: this.hotelcode,
-              },
-            });
-          }
-        })();
-      } else {
-        // Cek status kamar pertama kalo VC
-        console.log("VC");
-
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-
-          console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-            this.roomNotReady = true;
-
-            const mori =
-                "{" +
-                this.currDataPrepare.zinr +
-                ";" +
-                moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-                "}";
-              //this.check();
-              //if (this.paymentStatus) {
-              //console.log(this.paymentStatus);
-            router.push({
-              name: "SuccessCheckIn",
-              params: {
-                jin: mori,
-                jun: this.wifiAddress,
-                jen: this.wifiPassword,
-                jon: this.currDataPrepare["argt-str"],
-                jan: this.roomNotReady,
-                email: this.form.getFieldValue(["email"][0]),
-                phnum: this.form.getFieldValue(["phone"][0]),
-                param: this.hotelcode,
-              },
-            });
-          }
-        })();         
-      }
-      // this.currDataPrepare = this.id[this.counter];
-      // this.counter += 1;
-      // this.agree = false;
-    },
-    handleYes() {
-      const mori =
+        const mori =
           "{" +
           this.currDataPrepare.zinr +
           ";" +
@@ -1413,19 +1244,26 @@ export default {
         //this.check();
         //if (this.paymentStatus) {
         //console.log(this.paymentStatus);
-      router.push({
-        name: "SuccessCheckIn",
-        params: {
-          jin: mori,
-          jun: this.wifiAddress,
-          jen: this.wifiPassword,
-          jon: this.currDataPrepare["argt-str"],
-          jan: this.roomNotReady,
-          email: this.formresubmit.getFieldValue(["guest-email"][0]),
-          phnum: this.formresubmit.getFieldValue(["guest-phone"][0]),
-          param: this.hotelcode,
-        },
-      });
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            jin: mori,
+            jun: this.wifiAddress,
+            jen: this.wifiPassword,
+            jon: this.currDataPrepare["argt-str"],
+            jan: this.roomNotReady,
+            email: this.form.getFieldValue(["email"][0]),
+            phnum: this.form.getFieldValue(["phone"][0]),
+            param: this.hotelcode,
+          },
+        });
+        //} else {
+        //this.paymentModal = true;
+        // }
+      }
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+      this.agree = false;
     },
     back() {
       if (this.counter == this.id.length) {
@@ -1497,10 +1335,7 @@ export default {
       });
     },
     disagree() {
-      window.open(
-        "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
-        "_self"
-      );
+      window.open("http://vhp-online.com/mobilecheckin?param=" + this.hotelcode, "_self")
       /*router.push({
         path: "mobilecheckin",
         query: { lang: this.langID, hotelcode: this.hotelcode },
@@ -1558,11 +1393,8 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    handleBack() {
-      window.open(
-        "http://localhost:8080/mobilecheckin?param=" + this.hotelcode,
-        "_self"
-      );
+    handleBack(){
+      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelcode, "_self");
     },
   },
 };

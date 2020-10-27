@@ -1,23 +1,26 @@
 <template>
   <div>
     <div class="home">
-      <!-- <div v-show="informationModal">
-        <a-modal
-          :title="getLabels('information', `titleCase`)"
-          :visible="informationModal"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="back" @click="handleNo">
-              {{ getLabels("no", `titleCase`) }}
-            </a-button>
-            <a-button key="submit" type="primary" @click="handleYes">{{
-              getLabels("yes", `titleCase`)
-            }}</a-button>
-          </template>
-          <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
-        </a-modal>
-      </div> -->
+      <div v-show="informationModal">
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="informationModal"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="back" @click="handleNo">
+            {{ getLabels("no", `titleCase`) }}
+          </a-button>
+          <a-button
+            key="submit"
+            type="primary"
+            @click="handleYes"
+            >{{ getLabels("yes", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_not_ready", "sentenceCase") }}</p>
+      </a-modal>
+      </div>
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -96,9 +99,13 @@
           </a-list-item>
         </a-list>
       </div>
-      <a-button class="mr-3" type="primary" size="large" @click="handleBack">{{
-        getLabels("back", `titleCase`)
-      }}</a-button>
+      <a-button
+        class="mr-3"
+        type="primary"
+        size="large"
+        @click="handleBack"
+        >{{ getLabels("back", `titleCase`) }}</a-button
+      >
       <a-button
         class="mr-3 float-right"
         type="primary"
@@ -126,7 +133,7 @@ export default {
       fairy: [],
       labels: [],
       langID: "",
-      // informationModal: false,
+      informationModal: false,
       roomNotReady: false,
       hotelEndpoint: "",
       hotelCode: "",
@@ -139,12 +146,12 @@ export default {
     this.data = tempData;
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
+    this.langID = this.$route.params.fighter;
     this.gambar = this.setup["01"];
     this.information = this.setup["02"];
     this.hotelname = this.setup["13"];
-    this.langID = this.setup["24"];
-    this.hotelEndpoint = this.setup["23"];
-    this.hotelCode = this.setup["22"];
+    this.hotelEndpoint = this.$route.params.endpoint;
+    this.hotelCode = this.$route.params.hotelcode;
   },
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
@@ -212,24 +219,18 @@ export default {
     send() {
       this.fairy["data"] = this.selectedData;
       this.fairy["setup"] = this.lemparsetup;
-      // if (this.fairy["data"]["room-status"] == "0 Ready To Checkin") {
-      //   this.informationModal = false;
-      //   this.roomNotReady = false;
-      router.push({
-        name: "Step",
-        params: { id: this.fairy },
-        // params: {
-        //   foo: this.fairy,
-        //   fighter: this.langID,
-        //   endpoint: this.hotelEndpoint,
-        //   hotelcode: this.hotelCode,
-        //   notready: this.roomNotReady,
-        // },
-      });
-      // } else {
-      //   this.informationModal = true;
-      //   this.roomNotReady = true;
-      // }
+      // this.fairy.push(this.selectedData);
+      if (this.selectedData["room-status"] == "0 Ready To Checkin") {
+        this.informationModal = false;
+        this.roomNotReady = false;
+        router.push({
+          name: "Step",
+          params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+        });
+      } else {
+        this.informationModal = true;
+        this.roomNotReady = true;
+      }
     },
     formatDate(datum) {
       const dDate =
@@ -274,27 +275,18 @@ export default {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
       });
     },
-    // handleYes() {
-    //   this.informationModal = false;
-    //   router.push({
-    //     name: "Step",
-    //     params: {
-    //       foo: this.fairy,
-    //       fighter: this.langID,
-    //       endpoint: this.hotelEndpoint,
-    //       hotelcode: this.hotelCode,
-    //       notready: this.roomNotReady,
-    //     },
-    //   });
-    // },
-    // handleNo() {
-    //   this.informationModal = false;
-    // },
-    handleBack() {
-      window.open(
-        "http://localhost:8080/mobilecheckin?" + this.hotelCode,
-        "_self"
-      );
+    handleYes() {
+      this.informationModal = false;
+      router.push({
+        name: "Step",
+        params: { foo: this.fairy, fighter: this.langID, endpoint: this.hotelEndpoint, hotelcode: this.hotelCode, notready: this.roomNotReady },
+      });
+    },
+    handleNo() {
+      this.informationModal = false;
+    },
+    handleBack(){
+      window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelCode, "_self");
     },
   },
 };
