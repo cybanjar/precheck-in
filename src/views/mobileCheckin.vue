@@ -739,7 +739,7 @@ export default {
       
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
-        return item.number1 === 7 && item.number2 === 3;
+        return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
       
