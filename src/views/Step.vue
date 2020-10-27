@@ -731,39 +731,46 @@ export default {
   created() {
     // lemparan data
     console.log(this.$route.params.id, "point");
+    this.labels = JSON.parse(localStorage.getItem("labels"));
+
     this.currDataPrepare = this.$route.params.id.guestData;
     this.precheckin = this.currDataPrepare["pre-checkin"];
     this.hasUpload = this.currDataPrepare["image-flag"];
+    this.country = this.currDataPrepare["guest-country"];
+
+    this.term = this.$route.params.id.setup["termENG"];
+    this.term1 = this.$route.params.id.setup["termIDN"];
+
     this.information.backgroundColor = this.$route.params.id.setup[
       "BackgroundColor"
     ];
     this.information.color = this.$route.params.id.setup["FontColor"];
     this.gambar = this.$route.params.id.setup["hotelImage"];
-    this.money = this.$route.params.id.setup["money"];
+    this.minimumDeposit = this.$route.params.id.setup["money"];
     this.currency = this.$route.params.id.setup["currency"];
     this.per = this.$route.params.id.setup["per"];
     this.purpose = this.$route.params.id.setup["PurposeofStay"];
     this.FilterPurposeofStay = this.$route.params.id.setup[
       "FilterPurposeofStay"
     ];
-    this.region = this.$route.params.id.setup[
-      "province"
-    ];
-    this.countries = this.$route.params.id.setup[
-      "countries"
-    ];
-    this.filteredRegion = this.region;
-    this.FilterCountry = this.countries;
+    this.region = this.$route.params.id.setup["province"];
+    this.countries = this.$route.params.id.setup["countries"];
+
     this.langID = this.$route.params.id.setup["langID"];
     this.hotelEndpoint = this.$route.params.id.setup["hotelEndpoint"];
     this.hotelcode = this.$route.params.id.setup["hotelCode"];
-    this.labels = JSON.parse(localStorage.getItem("labels"));
     this.location = this.$route.params.id.setup["location"];
+    this.filteredRegion = this.region;
+    this.FilterCountry = this.countries;
     if (this.langID == "ENG" || this.langID == "eng") {
       this.terms = this.term;
     } else {
       this.terms = this.term1;
     }
+    console.log(this.terms, "design");
+    console.log(this.term1, "design2");
+    console.log(this.term, "design3");
+    this.termcondition = true;
     if (this.precheckin == true) {
       this.current = 2;
       this.y = true;
