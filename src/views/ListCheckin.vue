@@ -115,6 +115,7 @@ export default {
       guestData: [],
       license: false,
       location: "",
+      programLabel: "",
     };
   },
   created() {
@@ -135,6 +136,17 @@ export default {
     this.information.color = this.setup["FontColor"];
     this.hotelname = this.setup["hotelName"];
     this.langID = this.setup["langID"];
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        break;
+      default:
+        this.programLabel = "program-label1";
+        break;
+    }
     this.hotelEndpoint = this.setup["hotelEndpoint"];
     this.hotelCode = this.setup["hotelCode"];
   },
@@ -260,33 +272,39 @@ export default {
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
       return fixDate;
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-      let fixLabel = "";
-      if (label == undefined) {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
-    },
     handleYes() {
       this.informationModal = false;
+    },
+  },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label[this.programLabel].charAt(0).toUpperCase() +
+              label[this.programLabel].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label[this.programLabel].toUpperCase();
+          } else {
+            fixLabel = label[this.programLabel];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };
