@@ -62,7 +62,6 @@
         </div>
       </a-modal>
 
-      <!-- <div v-show="term"> -->
       <a-modal
         :title="getLabels('t_c', `titleCase`)"
         :visible="termcondition"
@@ -82,18 +81,8 @@
           >
         </template>
         <p>{{ terms }}</p>
-        <!--<p v-if="langID == 'ENG'">{{term1}}</p>
-        <p v-else>{{term}}</p>-->
       </a-modal>
-      <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
-        <template slot="footer">
-          <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
-        </template>
-        <p>{{informationterm}}</p>
-      </a-modal>-->
-      <!-- </div> -->
-      <!-- test -->
-      <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
+
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -158,8 +147,6 @@
           </p>
         </div>
       </div>
-      <!-- precheckin: {{precheckin}}
-      scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">
@@ -240,12 +227,6 @@
                       { initialValue: purpose, rules: [{ required: true }] },
                     ]"
                   >
-                    <!--<a-select-option
-                      v-for="item in FilterPurposeofStay"
-                      :key="item"
-                      :value="item.setupvalue"
-                      >{{ item.setupvalue }}</a-select-option
-                    >-->
                     <a-select-option
                       v-for="item in FilterPurposeofStay"
                       :key="item"
@@ -258,19 +239,6 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <!-- <a-row class gutter="16">
-              <a-col>
-                <p
-                  class="font-weight-bold"
-                  v-show="showSmoking || showFloor || showBed"
-                >Room Preferences</p>
-                <ul>
-                  <li>Non Smoking</li>
-                  <li>Lower Floor</li>
-                  <li>One Big Bed</li>
-                </ul>
-              </a-col>
-            </a-row>-->
           </div>
           <div class="steps-content" v-show="current === 1">
             <a-row class :gutter="[16, 8]">
@@ -293,37 +261,8 @@
                       >{{ item.setupvalue }}</a-select-option
                     >
                   </a-select>
-                  <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
-                  <!-- </a-select> -->
                 </a-form-item>
               </a-col>
-              <!-- <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Choose of Document ID">
-                <a-select default-value="E-KTP">
-                  <a-select-option value="id_card">E-KTP</a-select-option>
-                  <a-select-option value="passport">Passport</a-select-option>
-                  <a-select-option value="driving_license">Driving License</a-select-option>
-                  <a-select-option value="kitas">KITAS</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="ID Number">
-                <a-input placeholder="Please input " />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Expiry Date">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Date of Birth">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-              </a-col>-->
             </a-row>
             <a-row class :gutter="[16, 8]">
               <a-col :span="5" :xl="5" :xs="24">
@@ -380,19 +319,6 @@
                     </a-select>
                   </a-form-item>
                 </div>
-                <!--<div v-else>
-                  <a-form-item :label="getLabels('state', `titleCase`)">
-                    <a-input
-                      v-decorator="[
-                        'State',
-                        {
-                          initialValue: State,
-                          rules: [{ message: 'Please input your State' }],
-                        },
-                      ]"
-                    />
-                  </a-form-item>
-                </div>-->
               </a-col>
               <div v-if="freeParking">
                 <a-col :span="5" :xl="5" :xs="24">
@@ -403,39 +329,6 @@
                   </a-form-item>
                 </a-col>
               </div>
-              <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
-              <a-form-item label="City">
-                <a-select
-                  show-search
-                  v-model="city"
-                  v-decorator="[
-                    'city',
-                    { initialValue: city, rules: [{ required: true }] },]"
-                >
-                  <a-select-option
-                    v-for="(item, key) in filteredCities"
-                    :key="key"
-                    :value="filteredCities[key].city_name"
-                  >{{ filteredCities[key].city_name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24" v-else>
-              <a-form-item label="City">
-                <a-input
-                  initial-value="Willy Wanta"
-                  v-decorator="[
-                  'username',
-                  { rules: [{ required: true, message: '' }] },
-                ]"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="12">
-              <a-form-item label="Postal Code">
-                <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
-              </a-form-item>
-              </a-col>-->
             </a-row>
           </div>
           <div class="steps-content" v-show="current === 2">
@@ -482,12 +375,6 @@
                     </strong>
                   </h2>
                 </a-form-item>
-                <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
-                  <template slot="footer">
-                    <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
-                  </template>
-                  <p>{{getLabels('payment_error')}}</p>
-                </a-modal>-->
               </a-col>
               <a-col :span="10" :xl="10" :xs="12">
                 <a-button
@@ -496,11 +383,6 @@
                   @click="search()"
                   >{{ getLabels("pay", `titleCase`) }}</a-button
                 >
-                <!-- <img
-                  class="rounded float-right"
-                  src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
-                  style="height:50px;width:50px; opacity: .65;"
-                />-->
               </a-col>
             </a-row>
             <a-row :gutter="[16, 8]" v-else>
@@ -546,16 +428,6 @@
             </div>
           </div>
 
-          <!-- <a-button
-              v-if="current == steps.length - 1"
-              type="primary"
-              @click="$message.success('Processing complete!')"
-            >Done</a-button>-->
-          <!-- <a-row :gutter="[16,8]">
-            <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
-            </a-col>
-          </a-row>-->
           <a-row class :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item>
@@ -582,8 +454,6 @@
 
 <script>
 import router from "../router";
-// import data from "../components/json/indonesia";
-// import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -644,11 +514,9 @@ export default {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
       },
-      nilai: 2,
       setRegion: "Bali",
       cek: "",
       cities: "",
-      // filteredCity: [],
       filteredRegion: [],
       nationality: "Indonesia",
       dataID: [],
@@ -894,7 +762,7 @@ export default {
         token.toString() +
         "&userIP=" +
         this.ipAddr +
-        `&cartData={}&callBackUrl=${this.location}`+
+        `&cartData={}&callBackUrl=${this.location}` +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
         book: this.currDataPrepare.resnr,
@@ -1067,8 +935,6 @@ export default {
       })();
     },
     save() {
-      // if (this.counter == this.id.length) {
-      //   console.log(this.currDataPrepare);
       const rmStatus = this.currDataPrepare["room-status"].split(" ");
       if (parseInt(rmStatus) == 1) {
         // Cek status kamar pertama kalo Overlapping
@@ -1222,9 +1088,6 @@ export default {
           }
         })();
       }
-      // this.currDataPrepare = this.id[this.counter];
-      // this.counter += 1;
-      // this.agree = false;
     },
     handleYes() {
       const mori =
@@ -1257,42 +1120,6 @@ export default {
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
     },
-    onID(checkedValues) {
-      this.dataID = checkedValues;
-    },
-    berubah(e) {
-      this.nilai = e.target.value;
-    },
-    masukinFoto(foto) {
-      this.gambar = foto.target.value;
-    },
-    masukinUang(uang) {
-      this.money = uang.target.value;
-    },
-    showModal() {
-      this.visible = true;
-    },
-    imageModal() {
-      this.keluar = true;
-    },
-    munculModal() {
-      this.muncul = true;
-    },
-    guestModal() {
-      this.guest = true;
-    },
-    gantiHeaderClass(warna) {
-      this.information.backgroundColor = warna;
-    },
-    gantiFontClass(colours) {
-      this.information.color = colours;
-    },
-    customHeaderClass(color) {
-      this.information.backgroundColor = color.hex;
-    },
-    customFontClass(colour) {
-      this.information.color = colour.hex;
-    },
     handleOk(e) {
       this.ModalText = "The modal will be closed after two seconds";
       this.confirmLoading = true;
@@ -1305,42 +1132,11 @@ export default {
         this.confirmLoading = false;
       }, 300);
     },
-    handleCancel(e) {
-      this.visible = false;
-      this.muncul = false;
-    },
-    onChange(date, dateString) {
-      data = 0;
-    },
     moment,
-    handleChange(e) {
-      this.checkNick = e.target.checked;
-      this.$nextTick(() => {
-        this.form.validateFields(["nickname"], { force: true });
-      });
-    },
     disagree() {
       window.open(
         "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
         "_self"
-      );
-      /*router.push({
-        path: "mobilecheckin",
-        query: { lang: this.langID, hotelcode: this.hotelcode },
-      });*/
-      // router.push("mobilecheckin");
-    },
-    handleBlur() {
-      // console.log("blur");
-    },
-    handleFocus() {
-      // console.log("focus");
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
       );
     },
     formatDate(datum) {
