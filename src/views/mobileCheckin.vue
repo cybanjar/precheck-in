@@ -719,7 +719,7 @@ export default {
 
       const tempwifiPassword = this.tempsetup.filter((item, index) => {
         //  Wifi Password
-        return item.number1 === 8 && item.number2 == 8;
+        return item.number1 === 8 && item.number2 == 9;
       });
       this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
 

@@ -1014,7 +1014,7 @@ export default {
           } else {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
             this.roomNotReady = true;
-            const mori =
+            const QRCodeData =
               "{" +
               this.currDataPrepare.zinr +
               ";" +
@@ -1023,17 +1023,21 @@ export default {
             //this.check();
             //if (this.paymentStatus) {
             //console.log(this.paymentStatus);
+            const data = {};
+            data["QRCodeData"] = QRCodeData;
+            data["wifiAddress"] = this.wifiAddress;
+            data["wifiPassword"] = this.wifiPassword;
+            data["arrangement"] = this.currDataPrepare["argt-str"];
+            data["roomNotReady"] = this.roomNotReady;
+            data["hotelcode"] = this.hotelcode;
+            data["langID"] = this.langID;
+            data["location"] = this.location;
+            data["email"] = this.form.getFieldValue(["email"][0]);
+            data["phone"] = this.form.getFieldValue(["phone"][0]);
             router.replace({
               name: "SuccessCheckIn",
               params: {
-                jin: mori,
-                jun: this.wifiAddress,
-                jen: this.wifiPassword,
-                jon: this.currDataPrepare["argt-str"],
-                jan: this.roomNotReady,
-                email: this.form.getFieldValue(["email"][0]),
-                phnum: this.form.getFieldValue(["phone"][0]),
-                param: this.hotelcode,
+                Data: data,
               },
             });
           }
@@ -1072,7 +1076,7 @@ export default {
           } else {
             /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
             this.roomNotReady = true;
-            const mori =
+            const QRCodeData =
               "{" +
               this.currDataPrepare.zinr +
               ";" +
@@ -1081,17 +1085,21 @@ export default {
             //this.check();
             //if (this.paymentStatus) {
             //console.log(this.paymentStatus);
+            const data = {};
+            data["QRCodeData"] = QRCodeData;
+            data["wifiAddress"] = this.wifiAddress;
+            data["wifiPassword"] = this.wifiPassword;
+            data["arrangement"] = this.currDataPrepare["argt-str"];
+            data["roomNotReady"] = this.roomNotReady;
+            data["hotelcode"] = this.hotelcode;
+            data["langID"] = this.langID;
+            data["location"] = this.location;
+            data["email"] = this.form.getFieldValue(["email"][0]);
+            data["phone"] = this.form.getFieldValue(["phone"][0]);
             router.replace({
               name: "SuccessCheckIn",
               params: {
-                jin: mori,
-                jun: this.wifiAddress,
-                jen: this.wifiPassword,
-                jon: this.currDataPrepare["argt-str"],
-                jan: this.roomNotReady,
-                email: this.form.getFieldValue(["email"][0]),
-                phnum: this.form.getFieldValue(["phone"][0]),
-                param: this.hotelcode,
+                Data: data,
               },
             });
           }
@@ -1099,7 +1107,7 @@ export default {
       }
     },
     handleYes() {
-      const mori =
+      const QRCodeData =
         "{" +
         this.currDataPrepare.zinr +
         ";" +
@@ -1108,17 +1116,21 @@ export default {
       //this.check();
       //if (this.paymentStatus) {
       //console.log(this.paymentStatus);
+      const data = {};
+      data["QRCodeData"] = QRCodeData;
+      data["wifiAddress"] = this.wifiAddress;
+      data["wifiPassword"] = this.wifiPassword;
+      data["arrangement"] = this.currDataPrepare["argt-str"];
+      data["roomNotReady"] = this.roomNotReady;
+      data["hotelcode"] = this.hotelcode;
+      data["langID"] = this.langID;
+      data["location"] = this.location;
+      data["email"] = this.form.getFieldValue(["email"][0]);
+      data["phone"] = this.form.getFieldValue(["phone"][0]);
       router.replace({
         name: "SuccessCheckIn",
         params: {
-          jin: mori,
-          jun: this.wifiAddress,
-          jen: this.wifiPassword,
-          jon: this.currDataPrepare["argt-str"],
-          jan: this.roomNotReady,
-          email: this.formresubmit.getFieldValue(["guest-email"][0]),
-          phnum: this.formresubmit.getFieldValue(["guest-phone"][0]),
-          param: this.hotelcode,
+          Data: data,
         },
       });
     },

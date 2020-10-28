@@ -61,22 +61,35 @@ export default {
       roomNotReady: false,
       email: "",
       phone: "",
-      param: "",
+      langID: "",
+      location: "",
     };
   },
   mounted() {
-    this.data = this.$route.params.jin;
+    console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.langID = this.$route.params.Data.langID;
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        break;
+      default:
+        this.programLabel = "program-label1";
+        break;
+    }
+    this.data = this.$route.params.Data.QRCodeData;
+    this.location = this.$route.params.Data.location;
     const success = btoa(this.data);
-    //console.log(this.$route.params.jin, success, "nyampe");
     this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.$route.params.jun;
-    this.wifiPassword = this.$route.params.jen;
-    this.arrangement = this.$route.params.jon;
-    this.roomNotReady = this.$route.params.jan;
-    this.email = this.$route.params.email;
-    this.phone = this.$route.params.phnum;
-    this.param = this.$route.params.param;
+    this.wifiAddress = this.$route.params.Data.wifiAddress;
+    this.wifiPassword = this.$route.params.Data.wifiPassword;
+    this.arrangement = this.$route.params.Data.arrangement;
+    this.roomNotReady = this.$route.params.Data.roomNotReady;
+    this.email = this.$route.params.Data.email;
+    this.phone = this.$route.params.Data.phone;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
@@ -106,31 +119,6 @@ export default {
     // })();
   },
   methods: {
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-      let fixLabel = "";
-      if (label == undefined) {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
-    },
     formatDate(datum) {
       const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
       const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
@@ -142,10 +130,38 @@ export default {
       return fixDate;
     },
     goBack() {
-      window.open(
-        "http://vhp-online.com/mobilecheckin?param=" + this.param,
-        "_self"
-      );
+      window.open(this.location, "_self");
+    },
+  },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label[this.programLabel].charAt(0).toUpperCase() +
+              label[this.programLabel].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label[this.programLabel].toUpperCase();
+          } else {
+            fixLabel = label[this.programLabel];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };
