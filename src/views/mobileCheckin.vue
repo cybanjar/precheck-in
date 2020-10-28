@@ -609,8 +609,8 @@ export default {
       /* Get Icon According to the selected language */
       if (this.langID == "eng" || this.langID == "ENG") {
         this.boPhoto = require(`../assets/booking-code.svg`);
-        this.namePhoto = require(`../assets/Name.svg`);
-        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.namePhoto = require(`../assets/name.svg`);
+        this.emailPhoto = require(`../assets/emailAddress.svg`);
         this.memberPhoto = require(`../assets/membership.svg`);
       } else {
         this.boPhoto = require(`../assets/kodeBooking.svg`);
@@ -932,8 +932,8 @@ export default {
         this.programLabel = 'program-label1';
         this.langID = 'ENG';
         this.boPhoto = require(`../assets/booking-code.svg`);
-        this.namePhoto = require(`../assets/Name.svg`);
-        this.emailPhoto = require(`../assets/EmailAddress.svg`);
+        this.namePhoto = require(`../assets/name.svg`);
+        this.emailPhoto = require(`../assets/emailAddress.svg`);
         this.memberPhoto = require(`../assets/membership.svg`);
       }
     },
