@@ -497,7 +497,7 @@
                         onclick="console.log('Klik di label')"
                         >Click to Upload
                       </label>
-                      <a-form-item>
+                      <a-form-item label="url">
                         <input
                           onclick="console.log('Klik di input')"
                           accept="image/*"
@@ -505,6 +505,7 @@
                           name="file"
                           class="custom-input"
                           id="file"
+                          label="ok"
                           @change="onFileChange"
                           v-decorator="[
                             'url',
