@@ -228,7 +228,7 @@
                   >
                     <a-select-option
                       v-for="item in FilterPurposeofStay"
-                    :key="item.setupvalue"
+                      :key="item.setupvalue"
                       :value="item.setupvalue"
                       >{{
                         getLabels(item.setupvalue.toLowerCase(), `titleCase`)
@@ -363,12 +363,7 @@
                   <h2>
                     <strong>
                       {{ this.currDataPrepare["currency-usage"] }}
-                      {{
-                        `${minimumDeposit}`.replace(
-                          /\B(?=(\d{3})+(?!\d))/g,
-                          ","
-                        )
-                      }}
+                      {{ `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
                     </strong>
                   </h2>
                 </a-form-item>
@@ -587,6 +582,9 @@ export default {
       },
       location: "",
       programLabel: "",
+      Deposit: "300000",
+      maximumDeposit: "",
+      OverNightDeposit: "",
     };
   },
   watch: {
@@ -603,6 +601,7 @@ export default {
     this.precheckin = this.currDataPrepare["pre-checkin"];
     this.hasUpload = this.currDataPrepare["image-flag"];
     this.country = this.currDataPrepare["guest-country"];
+    this.currency = this.currDataPrepare["currency-usage"];
 
     this.term = this.$route.params.setting["termENG"];
     this.term1 = this.$route.params.setting["termIDN"];
@@ -612,8 +611,9 @@ export default {
     ];
     this.information.color = this.$route.params.setting["FontColor"];
     this.gambar = this.$route.params.setting["hotelImage"];
-    this.minimumDeposit = this.$route.params.setting["money"];
-    this.currency = this.$route.params.setting["currency"];
+    this.minimumDeposit = this.$route.params.setting["minimumDeposit"];
+    this.maximumDeposit = this.$route.params.setting["maximumDeposit"];
+    this.OverNightDeposit = this.$route.params.setting["OverNightDeposit"];
     this.per = this.$route.params.setting["per"];
     this.purpose = this.$route.params.setting["PurposeofStay"];
     this.FilterPurposeofStay = this.$route.params.setting[
@@ -753,14 +753,14 @@ export default {
       getIP().then((data) => (this.ipAddr = data));
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
-          this.minimumDeposit +
+          this.Deposit +
           "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
       );
       const params =
         "timeStamp=" +
         moment().format("YYYYMMDDHHmmss") +
         "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
-        this.minimumDeposit +
+        this.Deposit +
         "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
         this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
         "&billingPhone=" +
