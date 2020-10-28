@@ -95,28 +95,10 @@ export default {
       success,
       { errorCorrectionLevel: "H" },
       { width: "76", height: "76" }
-      // function (error) {
-      // if (error) console.error(error);
-      // console.log("success!");
-      // }
     );
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
-    // (async () => {
-    //   const parsed = await ky
-    //     .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/storeQRCode", {
-    //       json: {
-    //         request: {
-    //           base64image: this.url,
-    //           resno: this.taejin,
-    //         },
-    //       },
-    //     })
-    //     .json();
-    //   console.log(parsed);
-    // })();
   },
   methods: {
     formatDate(datum) {
