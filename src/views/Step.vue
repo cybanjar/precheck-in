@@ -421,11 +421,54 @@
                 :done="current + 1 > 2"
               >
                 <div class="steps-content" v-show="current === 2">
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="getLabels('upload_id', `titleCase`)">
+                  <a-row
+                    type="flex"
+                    justify="center"
+                    class="text-center"
+                    :gutter="[16, 8]"
+                  >
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <h5>Prepare your Passport for photo verification</h5>
+
+                      <a-card :bordered="false" style="width: 240px;">
+                        <img
+                          slot="cover"
+                          alt="upload"
+                          src="../assets/icon_upload_passport.png"
+                        />
+                      </a-card>
+
+                      <!-- <a-form-item>
+                        <a-upload
+                          accept="image/*"
+                          type="file"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                          name="logo"
+                          list-type="picture"
+                        >
+                          <a-button class="ant-btn-custom1" type="primary">
+                            <a-icon type="camera" /> Click to upload
+                          </a-button>
+                        </a-upload>
+                      </a-form-item> -->
+
+                      <!-- <a-form-item :label="getLabels('upload_id', `titleCase`)">
                         <input
-                          class
                           accept="image/*"
                           type="file"
                           @change="onFileChange"
@@ -446,8 +489,68 @@
                           ]"
                         />
                       </a-form-item>
+                      <img class="preview" v-if="url" :src="url" /> -->
 
+                      <label
+                        for="file"
+                        class="custom-file-upload"
+                        onclick="console.log('Klik di label')"
+                        >Click to Upload
+                      </label>
+                      <a-form-item>
+                        <input
+                          onclick="console.log('Klik di input')"
+                          accept="image/*"
+                          type="file"
+                          name="file"
+                          class="custom-input"
+                          id="file"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
                       <img class="preview" v-if="url" :src="url" />
+
+                      <!-- <a-form-item>
+                        <input
+                          accept="image/*"
+                          type="file"
+                          name="file"
+                          id="file"
+                          class="inputfile"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
+                      <label for="file" class="red">Upload</label> -->
                     </a-col>
                   </a-row>
                 </div>
@@ -740,6 +843,9 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
+      headers: {
+        authorization: "authorization-text",
+      },
     };
   },
   watch: {
@@ -1391,6 +1497,16 @@ export default {
     },
     handleFocus() {
       // console.log("focus");
+    },
+    handleChangeUpload(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        this.$message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        this.$message.error(`${info.file.name} file upload failed.`);
+      }
     },
     filterOption(input, option) {
       return (

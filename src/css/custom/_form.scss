@@ -1,9 +1,11 @@
 .ant-form {
   color: rgba(0, 0, 0, 0.85);
 }
+
 .ant-col .ant-form-item-label {
   font-weight: bold !important;
 }
+
 .ant-form-item label {
   font-weight: bold !important;
 }
@@ -19,11 +21,64 @@
 .ant-select-selection {
   height: 40px !important;
 }
+
 .ant-select-selection__rendered {
   height: 40px !important;
   line-height: 40px !important;
 }
+
 .ant-select-selection-selected-value {
   height: 40px !important;
   line-height: 40px !important;
+}
+
+.ant-btn-custom1 {
+  padding: 6px 50px;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  // position: absolute;
+  z-index: -1;
+}
+
+.inputfile+label {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  background-color: $primary;
+  padding: 15px 70px;
+  border-radius: 8px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+  background-color: $primary;
+}
+
+.red {
+  background-color: lightcoral;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  border: none;
+  background-color: $primary;
+  color: $white;
+  display: inline-block;
+  padding: 10px 50px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.custom-input {
+  display: none !important;
 }
