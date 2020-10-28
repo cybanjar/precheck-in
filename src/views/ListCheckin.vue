@@ -122,7 +122,6 @@ export default {
     console.log(this.$route.params, "nyampe bro");
     const tempData = this.$route.params.guestData[0];
     /* Assign ispopup property for tempData */
-
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });
     });
@@ -190,7 +189,6 @@ export default {
     },
     select(client) {
       /* Handle Client Data Modal */
-
       const rmStatus = client["room-status"].split(" ");
       if (parseInt(rmStatus[0]) == 1) {
         // RmStatus 1 Overlapping
@@ -279,7 +277,6 @@ export default {
   computed: {
     getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
