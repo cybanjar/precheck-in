@@ -212,7 +212,6 @@
                     ]"
                     outlined
                     dense
-                    v-model="phone"
                     mask="##############"
                   ></q-input>
                 </a-form-item>
@@ -229,7 +228,7 @@
                   >
                     <a-select-option
                       v-for="item in FilterPurposeofStay"
-                      :key="item"
+                    :key="item.setupvalue"
                       :value="item.setupvalue"
                       >{{
                         getLabels(item.setupvalue.toLowerCase(), `titleCase`)
@@ -252,7 +251,6 @@
                         rules: [{ required: true }],
                       },
                     ]"
-                    @change="Nationality"
                   >
                     <a-select-option
                       v-for="item in FilterCountry"
@@ -270,7 +268,7 @@
                   :label="getLabels('country_of_residence', `titleCase`)"
                 >
                   <a-select
-                    v-model="country"
+                    @change="handleChangeCountry"
                     v-decorator="[
                       'country',
                       {
@@ -293,7 +291,6 @@
                 <div v-if="country === 'INA' || country === 'ina'">
                   <a-form-item :label="getLabels('region', `titleCase`)">
                     <a-select
-                      @change="handleChangeRegion"
                       v-decorator="[
                         'region',
                         {
@@ -649,9 +646,6 @@ export default {
     } else {
       this.terms = this.term1;
     }
-    console.log(this.terms, "design");
-    console.log(this.term1, "design2");
-    console.log(this.term, "design3");
     this.termcondition = true;
     if (this.precheckin == true) {
       this.current = 2;
@@ -661,6 +655,9 @@ export default {
     // router.replace(this.location);
   },
   methods: {
+    handleChangeCountry(value) {
+      this.country = value;
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
@@ -1165,10 +1162,7 @@ export default {
       return fixDate;
     },
     handleBack() {
-      window.open(
-        "http://localhost:8080/mobilecheckin?param=" + this.hotelcode,
-        "_self"
-      );
+      window.open(this.location, "_self");
     },
   },
   computed: {
