@@ -522,6 +522,8 @@ export default {
       baseOccupancy: 80,
       todayOcc: 0,
       MCILocked: [],
+      OverNight: "",
+      maximumDeposit: "",
     };
   },
   created() {
@@ -733,6 +735,18 @@ export default {
       });
       this.minimumDeposit = tempMinDeposit["0"]["price"];
 
+      const tempMaxDeposit = this.tempsetup.filter((item, index) => {
+        //  Maximum Deposit
+        return item.number1 === 8 && item.number2 == 7;
+      });
+      this.maximumDeposit = tempMaxDeposit["0"]["price"];
+
+      const tempOverNightDeposit = this.tempsetup.filter((item, index) => {
+        //  DEPOSIT OVER ONE NIGHT
+        return item.number1 === 8 && item.number2 == 6;
+      });
+      this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
+
       const tempfreeParking = this.tempsetup.filter((item, index) => {
         //  Free Parking
         return item.number1 === 8 && item.number2 == 5;
@@ -803,6 +817,9 @@ export default {
       obj["province"] = this.province;
       obj["termENG"] = this.termENG;
       obj["termIDN"] = this.termIDN;
+      obj["minimumDeposit"] = this.minimumDeposit;
+      obj["maximumDeposit"] = this.maximumDeposit;
+      obj["OverNightDeposit"] = this.OverNightDeposit;
       obj["money"] = this.money;
       obj["currency"] = this.currency;
       obj["per"] = this.per;
