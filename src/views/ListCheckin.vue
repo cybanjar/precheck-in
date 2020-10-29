@@ -120,7 +120,7 @@ export default {
   },
   created() {
     console.log(this.$route.params, "nyampe bro");
-    const tempData = this.$route.params.guestData[0];
+    const tempData = this.$route.params.guestData;
     /* Assign ispopup property for tempData */
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });

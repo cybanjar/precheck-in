@@ -161,20 +161,28 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
-    goBack() {
-      if (parseInt(this.TotalData) != 0) {
-        router.push({
-          name: "MobileCheckin",
-          params: {
-            hotelParameter: this.hotelParams,
-            bookingcode: this.bookingcode,
-            coDate: this.coDate,
-            citime: this.ciTime,
-          },
-        });
-      } else {
+    goBack() {  
+      if(this.TotalData == undefined){
+        console.log('Window',this.location);
         window.open(this.location, "_self");
-      }
+      }    
+      else{
+        if (parseInt(this.TotalData) != 0) {
+          console.log('routerpush',this.TotalData);
+          router.push({
+            name: "MobileCheckin",
+            params: {
+              hotelParameter: this.hotelParams,
+              bookingcode: this.bookingcode,
+              coDate: this.coDate,
+              citime: this.ciTime,
+            },
+          });
+        } else {
+          console.log('Window',this.location);
+          window.open(this.location, "_self");
+        }
+      }      
     },
   },
   computed: {
