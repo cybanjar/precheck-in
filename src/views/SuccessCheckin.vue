@@ -91,7 +91,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$route.params, "nyampe");
+    // console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.langID = this.$route.params.Data.langID;
     this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
@@ -115,13 +115,13 @@ export default {
     }
     this.data = this.$route.params.Data.QRCodeData;
     this.location = this.$route.params.Data.location;
-    console.log(
-      this.location.slice(this.location.lastIndexOf("?") + 1),
-      "test"
-    );
+    // console.log(
+    //   this.location.slice(this.location.lastIndexOf("?") + 1),
+    //   "test"
+    // );
     const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
     this.hotelParams = decodeURIComponent(tempParam);
-    console.log(this.hotelParams);
+    // console.log(this.hotelParams);
     const success = btoa(this.data);
     this.roomNumber = this.data.substr(1, this.data.indexOf(";") - 1);
     this.wifiAddress = this.$route.params.Data.wifiAddress;
@@ -161,14 +161,13 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
-    goBack() {  
-      if(this.TotalData == undefined){
-        console.log('Window',this.location);
+    goBack() {
+      if (this.TotalData == undefined) {
+        // console.log('Window',this.location);
         window.open(this.location, "_self");
-      }    
-      else{
+      } else {
         if (parseInt(this.TotalData) != 0) {
-          console.log('routerpush',this.TotalData);
+          // console.log('routerpush',this.TotalData);
           router.push({
             name: "MobileCheckin",
             params: {
@@ -179,10 +178,10 @@ export default {
             },
           });
         } else {
-          console.log('Window',this.location);
+          // console.log('Window',this.location);
           window.open(this.location, "_self");
         }
-      }      
+      }
     },
   },
   computed: {

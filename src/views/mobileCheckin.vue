@@ -16,7 +16,7 @@
 
       <a-modal
         :title="getLabels('information', `titleCase`)"
-        :visible="infoMCIEarlyCheckin"         
+        :visible="infoMCIEarlyCheckin"
         :closable="false"
       >
         <template slot="footer">
@@ -60,7 +60,10 @@
             getLabels("ok", `titleCase`)
           }}</a-button>
         </template>
-        <p>Sorry, your room is not ready. Please proceed to the Frontdesk for further information.</p>
+        <p>
+          Sorry, your room is not ready. Please proceed to the Frontdesk for
+          further information.
+        </p>
       </a-modal>
       <a-row :gutter="[8, 32]" class="mb-3">
         <div>
@@ -73,8 +76,8 @@
             style="margin-top: 30px; margin-bottom: -10px;"
             @input="changeLang"
             :options="[
-              {label: 'English', value: 'ENG'},
-              {label: 'Bahasa', value: 'IDN'}
+              { label: 'English', value: 'ENG' },
+              { label: 'Bahasa', value: 'IDN' },
             ]"
           />
         </div>
@@ -518,8 +521,8 @@ export default {
       LICENSE: "",
       baseOccupancy: 80,
       todayOcc: 0,
-      MCILocked:[],
-      resCiParam:{
+      MCILocked: [],
+      resCiParam: {
         userInit: "",
         resrNumber: "",
         resLineNumber: "",
@@ -536,10 +539,10 @@ export default {
         guestRegion: "",
         vreg: "",
         current: "",
-      }
+      },
     };
   },
-  created() {  
+  created() {
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
     /* tempParam Variable for Nicepay */
@@ -550,33 +553,31 @@ export default {
       this.hotelParams = this.$route.params.hotelParameter;
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
-      this.tempParamcitime = this.$route.params.citime;  
-      
+      this.tempParamcitime = this.$route.params.citime;
+
       /* EncodedURI For Full URL Redirecting save at this.location */
       const encodedURI = encodeURIComponent(this.hotelParams);
       this.location += `/mobilecheckin?${encodedURI}`;
-    } else if (location.search.substring(1) != undefined) {    
+    } else if (location.search.substring(1) != undefined) {
       location.search
         .split("&")
         .toString()
         .substr(1)
         .split(",")
-        .forEach((item,index) => {        
-          
+        .forEach((item, index) => {
           let objProperty = "";
           let objValue = "";
-          if(index == 0){
+          if (index == 0) {
             // Handling Original URI
             objValue = decodeURIComponent(item);
-            Object.assign(tempParam, { hotelParams : objValue });
-          }  
-          else{
+            Object.assign(tempParam, { hotelParams: objValue });
+          } else {
             // Handling URI From Nicepay Callback
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
-            Object.assign(tempParam, { [objProperty] : objValue });
+            Object.assign(tempParam, { [objProperty]: objValue });
           }
-        }); 
+        });
       //console.log(tempParam);
       this.hotelParams = tempParam.hotelParams;
       const encodedURI = encodeURIComponent(this.hotelParams);
@@ -602,9 +603,9 @@ export default {
           }
         )
         .json();
-      
+
       /* IF Null Response */
-      if(code.response['messResult'] == null){
+      if (code.response["messResult"] == null) {
         router.replace({
           name: "404",
         });
@@ -623,13 +624,14 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      /* Check Used Language */      
-      switch(this.langID.toLowerCase()){
-        case 'eng':
-          this.programLabel = 'program-label1';
+      /* Check Used Language */
+
+      switch (this.langID.toLowerCase()) {
+        case "eng":
+          this.programLabel = "program-label1";
           break;
-        case 'idn':
-          this.programLabel = 'program-label2';
+        case "idn":
+          this.programLabel = "program-label2";
           break;
         default:
           this.programLabel = "program-label1";
@@ -656,12 +658,12 @@ export default {
               request: {
                 countryId1: "ENG",
                 countryId2: "IDN",
-                inpVariable: " ",                
+                inpVariable: " ",
               },
             },
           }
         )
-        .json();      
+        .json();
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
@@ -678,7 +680,7 @@ export default {
           },
         })
         .json();
-      this.tempsetup = setup.response.pciSetup["pci-setup"];      
+      this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
         if (this.tempsetup[i]["number1"] == 1) {
@@ -770,7 +772,7 @@ export default {
       const tempBG = this.tempsetup.filter((item, index) => {
         //  Background Color
         return item.number1 === 4 && item.setupflag === true;
-      });      
+      });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
       this.BG = tempBG[0]["setupvalue"];
       const tempFG = this.tempsetup.filter((item, index) => {
@@ -779,13 +781,13 @@ export default {
       });
       this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-      
+
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
         return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
-      
+
       const tempHotelName = this.tempsetup.filter((item, index) => {
         //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
@@ -806,7 +808,7 @@ export default {
         return item.number1 === 9 && item.number2 === 6;
       });
       this.todayOcc = tempTodayOcc[0]["price"];
-      
+
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -815,10 +817,10 @@ export default {
           item.descr == "SERVER TIME"
         );
       });
-      
+
       this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
       this.server = "15:00";
-      const msServerClock = moment(this.server,"HH:mm").valueOf();
+      const msServerClock = moment(this.server, "HH:mm").valueOf();
       const obj = {};
       obj["FilterPurposeofStay"] = this.FilterPurposeofStay;
       obj["PurposeofStay"] = this.purpose;
@@ -850,15 +852,20 @@ export default {
       obj["location"] = this.location;
       obj["defaultCI"] = this.defaultCI;
       this.setup.push(obj);
-      //End Request Set Up      
+      //End Request Set Up
       // Hotel System Date
       const systemDateObj = this.tempsetup.filter((item, index) => {
         return item.number1 === 9 && item.number2 === 4;
       });
       // Handling Hotel System Date to Set At Calendar
       const systemDate = systemDateObj[0]["setupvalue"];
-      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(2,"0");
-      const dMonth = String(moment(systemDate, "DD/MM/YYYY").month() + 1).padStart(2, "0");
+      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
+        2,
+        "0"
+      );
+      const dMonth = String(
+        moment(systemDate, "DD/MM/YYYY").month() + 1
+      ).padStart(2, "0");
       const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
       const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
       this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
@@ -880,36 +887,33 @@ export default {
       this.earliestCiFlag = earliestCI[0]["setupflag"];
       // Convert Earliest Check-in Time to Milisecond
       const msEarliestCiTime = moment(this.earliestCiTime, "HH:mm").valueOf();
-      
+
       /** Compare Check-in Time with Server Time
        *  If Erliest CI Flag is Active : Server Time < Earliest CI Time Then Show Pop Up Cannot MCI
        *  If Server Time < Check-in Time Then Show Pop Up Cannot MCI
        */
-      if(this.earliestCiFlag){
-        if(msServerClock < msEarliestCiTime){
+      if (this.earliestCiFlag) {
+        if (msServerClock < msEarliestCiTime) {
           this.infoMCIEarlyCheckin = true;
-        }
-        else{
+        } else {
           /* Occupancy Checking */
-          if(this.todayOcc > this.baseOccupancy){
+          if (this.todayOcc > this.baseOccupancy) {
             this.infoMCIFrontdesk = true;
-            this.MCILocked = [true,'infoMCIFrontdesk'];
-          }
-          else{
+            this.MCILocked = [true, "infoMCIFrontdesk"];
+          } else {
             /* Checking License */
-            if(!this.LICENSE){
+            if (!this.LICENSE) {
               this.infoMCIFrontdesk = true;
-              this.MCILocked = [true,'infoMCIFrontdesk'];
+              this.MCILocked = [true, "infoMCIFrontdesk"];
             }
           }
         }
-      }
-      else{
+      } else {
         if (msServerClock < msCheckinClock) {
           this.infoMCIEarlyCheckin = true;
         }
       }
-      
+
       if (this.tempParambook != "") {
         /* PCI Get Data */
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
@@ -919,11 +923,12 @@ export default {
         } else {
           this.bookingcode = this.tempParambook;
           this.date = this.tempParamcodate.replace(/%2F/g, "/");
-          this.handleFindRsv('pci');
+          this.handleFindRsv("pci");
         }
       } else if (tempParam.resultCd == "0000") {
-        /* Nicepay Callback Handler */                
-        if(CookieS.isKey("data")){
+        /* Nicepay Callback Handler */
+
+        if (CookieS.isKey("data")) {
           /* Get Cookies Reservation Data */
           const cookiesParam = CookieS.get("data");
           this.bookingcode = cookiesParam.resrNumber;
@@ -932,8 +937,8 @@ export default {
           this.resCiParam.userInit = cookiesParam.userInit;
           this.resCiParam.resrNumber = cookiesParam.resrNumber;
           this.resCiParam.resLineNumber = cookiesParam.resLineNumber;
-          this.resCiParam.preauth = tempParam.preauthToken; 
-          
+          this.resCiParam.preauth = tempParam.preauthToken;
+
           this.cookiesParams.guestEmail = cookiesParam.guestEmail;
           this.cookiesParams.guestPhnumber = cookiesParam.guestPhnumber;
           this.cookiesParams.purposeOfStay = cookiesParam.purposeOfStay;
@@ -945,31 +950,30 @@ export default {
 
           /* Save It To Database */
           this.handlePreauthToken();
-        }       
+        }
       }
     })();
     this.loading = false;
   },
   methods: {
-    changeLang(value){
+    changeLang(value) {
       // Method for changing MCI Language
-      if(value == 'IDN'){
-        this.programLabel = 'program-label2';
-        this.langID = 'IDN';
+      if (value == "IDN") {
+        this.programLabel = "program-label2";
+        this.langID = "IDN";
         this.boPhoto = require(`../assets/kodeBooking.svg`);
         this.namePhoto = require(`../assets/Nama.svg`);
         this.emailPhoto = require(`../assets/AlamatEmail.svg`);
-        this.memberPhoto = require(`../assets/keanggotaan.svg`);      
-        this.setup[0]['langID'] = this.langID;
-      }
-      else{
-        this.programLabel = 'program-label1';
-        this.langID = 'ENG';
+        this.memberPhoto = require(`../assets/keanggotaan.svg`);
+        this.setup[0]["langID"] = this.langID;
+      } else {
+        this.programLabel = "program-label1";
+        this.langID = "ENG";
         this.boPhoto = require(`../assets/booking-code.svg`);
         this.namePhoto = require(`../assets/Name.svg`);
         this.emailPhoto = require(`../assets/EmailAddress.svg`);
         this.memberPhoto = require(`../assets/membership.svg`);
-        this.setup[0]['langID'] = this.langID;
+        this.setup[0]["langID"] = this.langID;
       }
     },
     async showModalBookingCode() {
@@ -1007,11 +1011,11 @@ export default {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
     erroremailNotTrue() {
-      switch(this.langID.toLowerCase()){
-        case 'eng':
+      switch (this.langID.toLowerCase()) {
+        case "eng":
           this.$message.error("Please enter valid email address");
           break;
-        case 'idn':
+        case "idn":
           this.$message.error("Harap masukkan alamat email yang benar");
           break;
         default:
@@ -1061,23 +1065,23 @@ export default {
       this.infoMCINotReady = false;
       this.infoMCIFrontdesk = false;
     },
-    hideMCISearchModal(){
+    hideMCISearchModal() {
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
-    reloadPage(){
-      window.location=this.location;
+    reloadPage() {
+      window.location = this.location;
     },
-    getCoDate(){
+    getCoDate() {
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return coDate;
     },
-    handlePreauthToken(){
+    handlePreauthToken() {
       // Save PreauthToken To Database
       /**
        * Yang disimpan adalah
@@ -1085,18 +1089,18 @@ export default {
        * Async Await Save to Database, IF it's success/not then do Go To Reservation
        */
       const response = "success";
-      if(response == 'success'){
-        this.handleFindRsv('nicepay');
+      if (response == "success") {
+        this.handleFindRsv("nicepay");
       }
     },
-    handleFindRsv(mode){
+    handleFindRsv(mode) {
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
       const reservation = [];
       let coDate = undefined;
       let searchVar = undefined;
-      switch(mode){
+      switch (mode) {
         case "pci":
           searchVar = this.bookingcode;
           coDate = this.date;
@@ -1125,14 +1129,14 @@ export default {
           searchVar = this.bookingcode;
           coDate = this.getCoDate();
           break;
-      }      
+      }
       if (!this.bookingcode && !this.date) {
         this.error();
       } else if (!this.bookingcode) {
         this.errorbo();
       } else if (!this.date) {
         this.errorco();
-      } else {        
+      } else {
         (async () => {
           const data = await ky
             .post(this.hotelEndpoint + "mobileCI/findReservation", {
@@ -1149,140 +1153,145 @@ export default {
               },
             })
             .json();
-            this.message = data.response["messResult"];
-            const messResult = this.message.split("-");
-            const messMessage = messResult[1].split(",");
-            
-            switch(messResult[0].trim()){
-              case "0":
-                // Reservation is Found
-                const totalGuest = data.response.arrivalGuestlist["arrival-guestlist"].length;
-                
-                if(totalGuest > 1){
-                  /* Handling Multiple Guest to ListCheckin.vue */
-                  reservation.push(
-                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+          this.message = data.response["messResult"];
+          const messResult = this.message.split("-");
+          const messMessage = messResult[1].split(",");
+
+          switch (messResult[0].trim()) {
+            case "0":
+              // Reservation is Found
+              const totalGuest =
+                data.response.arrivalGuestlist["arrival-guestlist"].length;
+
+              if (totalGuest > 1) {
+                /* Handling Multiple Guest to ListCheckin.vue */
+                reservation.push(
+                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                );
+
+                // Get Total Guest
+                const tempTotal = reservation[0].filter((item, index) => {
+                  return (
+                    item["room-status"] !==
+                    "1 Room Already assign or Overlapping"
                   );
+                });
+                Object.assign(this.setup, { TotalData: tempTotal.length });
 
-                  // Get Total Guest
-                  const tempTotal = reservation[0].filter((item, index) => {
-                    return item["room-status"] !== "1 Room Already assign or Overlapping";
+                if (mode == "nicepay") {
+                  let guest = reservation[0].filter((item, index) => {
+                    return item["reslinnr"] == this.resCiParam.resLineNumber;
                   });
-                  Object.assign(this.setup, { TotalData: tempTotal.length });
+                  guest = guest[0];
 
-                  if(mode == 'nicepay'){
-                    
-                    let guest = reservation[0].filter((item,index) => {
-                      return item["reslinnr"] == this.resCiParam.resLineNumber;
-                    });
-                    guest = guest[0];                    
+                  guest["guest-email"] = this.cookiesParams.guestEmail;
+                  guest["guest-phnumber"] = this.cookiesParams.guestPhnumber;
+                  guest["guest-nation"] = this.cookiesParams.guestNation;
+                  guest["guest-country"] = this.cookiesParams.guestCountry;
+                  guest["guest-region"] = this.cookiesParams.guestRegion;
+                  guest["purposeofstay"] = this.cookiesParams.purposeOfStay;
+                  guest["preAuth-flag"] = true; // Hapus jika sudah ada API ResCI utk simpan payment
+                  Object.assign(guest, { vreg: this.cookiesParams.vreg });
+                  Object.assign(guest, { current: "0" }); //this.cookiesParams.current
 
-                    guest['guest-email'] = this.cookiesParams.guestEmail;
-                    guest['guest-phnumber'] = this.cookiesParams.guestPhnumber;
-                    guest['guest-nation'] = this.cookiesParams.guestNation;
-                    guest['guest-country'] = this.cookiesParams.guestCountry;
-                    guest['guest-region'] = this.cookiesParams.guestRegion;
-                    guest['purposeofstay'] = this.cookiesParams.purposeOfStay;
-                    guest['preAuth-flag'] = true; // Hapus jika sudah ada API ResCI utk simpan payment
-                    Object.assign(guest, { vreg : this.cookiesParams.vreg });
-                    Object.assign(guest, { current : '0' }); //this.cookiesParams.current
-
-                    this.handleSingleGuest(guest);
-                  }
-                  else{
-                    router.push({
-                      name: "ListCheckIn",
-                      params: {
-                        guestData: reservation[0],
-                        setting: this.setup,
-                      },
-                    });
-                  }                                    
-                } else {
-                  const guest = data.response.arrivalGuestlist["arrival-guestlist"][0]; 
-                  if(mode == 'nicepay'){
-                    guest['guest-email'] = this.cookiesParams.guestEmail;
-                    guest['guest-phnumber'] = this.cookiesParams.guestPhnumber;
-                    guest['guest-nation'] = this.cookiesParams.guestNation;
-                    guest['guest-country'] = this.cookiesParams.guestCountry;
-                    guest['guest-region'] = this.cookiesParams.guestRegion;
-                    guest['purposeofstay'] = this.cookiesParams.purposeOfStay;
-                    guest['preAuth-flag'] = true; // Hapus jika sudah ada API ResCI utk simpan payment
-                    Object.assign(guest, { vreg : this.cookiesParams.vreg });
-                    Object.assign(guest, { current : '0' });
-                  }else{
-                    Object.assign(guest, { vreg : "" });
-                    Object.assign(guest, { current : "" });
-                  }
                   this.handleSingleGuest(guest);
+                } else {
+                  router.push({
+                    name: "ListCheckIn",
+                    params: {
+                      guestData: reservation[0],
+                      setting: this.setup,
+                    },
+                  });
                 }
-                break;
-              case "00":
-                // Room Is Not Ready
-                if(messMessage[0].trim() == 'Room Not Available or Occupied with other reservation'){
-                  this.infoMCINotReady = true;
+              } else {
+                const guest =
+                  data.response.arrivalGuestlist["arrival-guestlist"][0];
+                if (mode == "nicepay") {
+                  guest["guest-email"] = this.cookiesParams.guestEmail;
+                  guest["guest-phnumber"] = this.cookiesParams.guestPhnumber;
+                  guest["guest-nation"] = this.cookiesParams.guestNation;
+                  guest["guest-country"] = this.cookiesParams.guestCountry;
+                  guest["guest-region"] = this.cookiesParams.guestRegion;
+                  guest["purposeofstay"] = this.cookiesParams.purposeOfStay;
+                  guest["preAuth-flag"] = true; // Hapus jika sudah ada API ResCI utk simpan payment
+                  Object.assign(guest, { vreg: this.cookiesParams.vreg });
+                  Object.assign(guest, { current: "0" });
+                } else {
+                  Object.assign(guest, { vreg: "" });
+                  Object.assign(guest, { current: "" });
                 }
-                else if(messMessage[0].trim() == 'Room Status still not available'){
-                  this.infoMCINotReady = true;
-                }
-                else{
-                  this.infoMCINotReady = true;
-                }
-                break;
-              case "1":
-                // Reservation's Not Found
-                this.infoMCINotFound = true;
-                break;
-              case "2":
-                // Reservation Not Splitted Yet, CheckIn Not Possible in MCI, Please Go to Front-Desk
-                this.infoMCIFrontdesk = true;
-                break;
-              case "5":
-                // Group CheckIn Not Possible in MCI, Please Go to Front-Desk
-                this.infoMCIFrontdesk = true;
-                break;
-              case "9":
-                // Early Checkin
+                this.handleSingleGuest(guest);
+              }
+              break;
+            case "00":
+              // Room Is Not Ready
+              if (
+                messMessage[0].trim() ==
+                "Room Not Available or Occupied with other reservation"
+              ) {
+                this.infoMCINotReady = true;
+              } else if (
+                messMessage[0].trim() == "Room Status still not available"
+              ) {
+                this.infoMCINotReady = true;
+              } else {
+                this.infoMCINotReady = true;
+              }
+              break;
+            case "1":
+              // Reservation's Not Found
+              this.infoMCINotFound = true;
+              break;
+            case "2":
+              // Reservation Not Splitted Yet, CheckIn Not Possible in MCI, Please Go to Front-Desk
+              this.infoMCIFrontdesk = true;
+              break;
+            case "5":
+              // Group CheckIn Not Possible in MCI, Please Go to Front-Desk
+              this.infoMCIFrontdesk = true;
+              break;
+            case "9":
+              // Early Checkin
+              this.infoMCIEarlyCheckin = true;
+              break;
+            case "99":
+              // Checkin Time Format is Invalid && Early Checkin
+              if (messMessage[0].trim() == "CheckIn Time Format Is Invalid") {
                 this.infoMCIEarlyCheckin = true;
-                break;  
-              case "99":
-                // Checkin Time Format is Invalid && Early Checkin
-                if(messMessage[0].trim() == 'CheckIn Time Format Is Invalid'){
-                  this.infoMCIEarlyCheckin = true;
-                }
-                else if(messMessage[0].trim() == 'Early CheckIn Not Possible in MCI'){
-                  this.infoMCIEarlyCheckin = true;
-                }
-                else{
-                  this.infoMCIEarlyCheckin = true;
-                }
-                break;            
-              default:
-                //console.log('Other',messResult[0],messResult[1]);
-                // Reservation's Not Found
-                this.infoMCINotFound = true;
-                break;
-            }
-            this.confirmLoading = false;
-            this.hideMCISearchModal();
-            /* Reset Form */
-            this.bookingcode = "";
-            this.name = "";
-            this.email = "";
-            this.member = "";
+              } else if (
+                messMessage[0].trim() == "Early CheckIn Not Possible in MCI"
+              ) {
+                this.infoMCIEarlyCheckin = true;
+              } else {
+                this.infoMCIEarlyCheckin = true;
+              }
+              break;
+            default:
+              //console.log('Other',messResult[0],messResult[1]);
+              // Reservation's Not Found
+              this.infoMCINotFound = true;
+              break;
+          }
+          this.confirmLoading = false;
+          this.hideMCISearchModal();
+          /* Reset Form */
+          this.bookingcode = "";
+          this.name = "";
+          this.email = "";
+          this.member = "";
         })();
       }
-    },   
-    handleSingleGuest(guest){
-      console.log(guest);
-      const rmStatus = guest["room-status"].split(" ");      
-      if(parseInt(rmStatus[0]) == 1){
+    },
+    handleSingleGuest(guest) {
+      // console.log(guest);
+      const rmStatus = guest["room-status"].split(" ");
+      if (parseInt(rmStatus[0]) == 1) {
         // Overlapping
         this.infoMCIFrontdesk = true;
-      }
-      else if(parseInt(rmStatus[0]) > 1){
+      } else if (parseInt(rmStatus[0]) > 1) {
         // Cannot Assign Room Or Room Is Not Ready (VC / Expected Departure)
-        if(this.LICENSE){
+        if (this.LICENSE) {
           // IF Hotel Have SMS/Email License
           router.push({
             name: "Step",
@@ -1291,13 +1300,11 @@ export default {
               setting: this.setup[0],
             },
           });
-        }
-        else{
+        } else {
           // IF NOT
           this.infoMCIFrontdesk = true;
         }
-      }
-      else{
+      } else {
         // Ready to MCI Go to Step
         router.push({
           name: "Step",
@@ -1326,17 +1333,17 @@ export default {
       //     notready: this.roomNotReady,
       //   },
       // });
-      console.log('handleYes');
+      // console.log('handleYes');
     },
     handleNo() {
       // this.infoMCINotReady = false;
-      console.log('handleNo');
+      // console.log('handleNo');
     },
   },
   computed: {
     getLabels() {
       let fixLabel = "";
-      
+
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;

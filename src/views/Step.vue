@@ -368,8 +368,8 @@
                             v-decorator="[
                               'vRegident',
                               {
-                                initialValue: currDataPrepare['vreg']
-                              }
+                                initialValue: currDataPrepare['vreg'],
+                              },
                             ]"
                           />
                         </a-form-item>
@@ -416,11 +416,21 @@
                         />
                         <div style="margin-top: -50px;">
                           <h1>Prepare your Passport for photo verification</h1>
-                          <p>We need a photograph of your passport or alternatively you may upload the image file</p>
+                          <p>
+                            We need a photograph of your passport or
+                            alternatively you may upload the image file
+                          </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
                         <div style="margin-top: 40px;">
-                          <q-btn unelevated rounded @click="getFile" color="primary" label="Upload" style="width: 200px;"/>
+                          <q-btn
+                            unelevated
+                            rounded
+                            @click="getFile"
+                            color="primary"
+                            label="Upload"
+                            style="width: 200px;"
+                          />
                         </div>
                       </a-form-item>
                     </a-col>
@@ -452,7 +462,7 @@
                         </h2>
                       </a-form-item>
                     </a-col>
-                    <a-col :span="10" :xl="10" :xs="12">                      
+                    <a-col :span="10" :xl="10" :xs="12">
                       <div>
                         <a-button
                           class="font-weight-bold mt-3 mr-3"
@@ -461,11 +471,11 @@
                           @click="payDeposit()"
                           >{{ getLabels("pay", `titleCase`) }}</a-button
                         >
-                      </div>                      
+                      </div>
                     </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
-                    <a-col :span="12" :xl="12" :xs="12">                      
+                    <a-col :span="12" :xl="12" :xs="12">
                       <a-form-item :label="getLabels('deposit', `titleCase`)">
                         <h2>
                           <strong>{{
@@ -477,7 +487,11 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">{{getLabels("deposit_payment_success", `sentenceCase`)}}</p>
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels("deposit_payment_success", `sentenceCase`)
+                        }}
+                      </p>
                     </div>
                     <div v-else>
                       <p>
@@ -734,7 +748,7 @@ export default {
     this.maximumDeposit = this.$route.params.setting["maximumDeposit"];
     this.OverNightDeposit = this.$route.params.setting["OverNightDeposit"];
     this.TotalData = this.$route.params.setting["TotalData"];
-    this.paid = this.currDataPrepare['preAuth-flag'];
+    this.paid = this.currDataPrepare["preAuth-flag"];
     this.per = this.$route.params.setting["per"];
     this.purpose = this.$route.params.setting["PurposeofStay"];
     this.FilterPurposeofStay = this.$route.params.setting[
@@ -761,7 +775,7 @@ export default {
     this.location = this.$route.params.setting["location"];
     this.defaultCI = this.$route.params.setting["defaultCI"];
     this.filteredRegion = this.region;
-    this.FilterCountry = this.countries;    
+    this.FilterCountry = this.countries;
     if (this.langID == "ENG" || this.langID == "eng") {
       this.terms = this.term;
     } else {
@@ -769,17 +783,15 @@ export default {
     }
     this.termcondition = true;
     if (this.precheckin == true) {
-      if(this.currDataPrepare.current > 0){
-        this.current = this.currDataPrepare.current
-      }
-      else{
+      if (this.currDataPrepare.current > 0) {
+        this.current = this.currDataPrepare.current;
+      } else {
         this.current = 2;
-      }      
+      }
       this.y = true;
-    }
-    else{
-      if(this.currDataPrepare.current > 0){
-        this.current = this.currDataPrepare.current
+    } else {
+      if (this.currDataPrepare.current > 0) {
+        this.current = this.currDataPrepare.current;
       }
     }
     this.loading = false;
@@ -806,9 +818,9 @@ export default {
     }
   },
   methods: {
-    async getFile(){
-      await this.$nextTick();        
-        this.$refs.fileurl.click();    
+    async getFile() {
+      await this.$nextTick();
+      this.$refs.fileurl.click();
     },
     handleArrayDate(date) {
       const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
@@ -913,7 +925,7 @@ export default {
     payDeposit() {
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
-        const ipdata = await response.json();                
+        const ipdata = await response.json();
         return ipdata.ip;
       }
       getIP().then((dataip) => {
@@ -931,7 +943,9 @@ export default {
           "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
           this.Deposit +
           "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-          this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
+          this.currDataPrepare["gast"]
+            .replace(/ /g, "%20")
+            .replace(/,/g, "%2C") +
           "&billingPhone=" +
           this.form.getFieldValue(["phone"][0]) +
           "&billingEmail=" +
@@ -984,8 +998,8 @@ export default {
             } else {
               //console.log("error payment");
             }
-        });
-      });     
+          });
+      });
     },
     check() {
       const token = CryptoJS.SHA256(
@@ -1130,7 +1144,7 @@ export default {
       if (parseInt(rmStatus) == 1) {
         // Cek status kamar pertama kalo Overlapping
         //console.log("overlapping");
-        (async () => {          
+        (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
               json: {
@@ -1151,7 +1165,7 @@ export default {
             })
             .json();
           const responses = parsed.response["resultMessage"].split(" - ");
-          console.log('overlaping',parsed);
+          // console.log('overlaping',parsed);
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
           //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
@@ -1187,13 +1201,15 @@ export default {
             })
             .json();
           const responses = parsed.response["resultMessage"].split(" - ");
-          console.log('VD Not Assigned',parsed);
+          // console.log('VD Not Assigned',parsed);
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
           //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-          if (this.responseStatus.statusNumber == "99" ||
+          if (
+            this.responseStatus.statusNumber == "99" ||
             this.responseStatus.statusNumber == "6" ||
-            this.responseStatus.statusNumber == "7") {
+            this.responseStatus.statusNumber == "7"
+          ) {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
             this.roomNotReady = false;
@@ -1241,23 +1257,23 @@ export default {
         // Cek status kamar pertama kalo VC
         //console.log("VC");
         (async () => {
-          console.log(
-            {
-              rsvNumber: this.currDataPrepare.resnr,
-              rsvlineNumber: this.currDataPrepare.reslinnr,
-              userInit: "01",
-              newRoomno: this.currDataPrepare.zinr,
-              purposeOfStay: this.form.getFieldValue("purpose"),
-              email: this.form.getFieldValue("email"),
-              guestPhnumber: this.form.getFieldValue("phone"),
-              guestNation: this.form.getFieldValue("nationality"),
-              guestCountry: this.form.getFieldValue("country"),
-              guestRegion: this.form.getFieldValue("region"),
-              base64image: this.imgb64,
-            },
-            "inputan"
-          );
-          
+          // console.log(
+          //   {
+          //     rsvNumber: this.currDataPrepare.resnr,
+          //     rsvlineNumber: this.currDataPrepare.reslinnr,
+          //     userInit: "01",
+          //     newRoomno: this.currDataPrepare.zinr,
+          //     purposeOfStay: this.form.getFieldValue("purpose"),
+          //     email: this.form.getFieldValue("email"),
+          //     guestPhnumber: this.form.getFieldValue("phone"),
+          //     guestNation: this.form.getFieldValue("nationality"),
+          //     guestCountry: this.form.getFieldValue("country"),
+          //     guestRegion: this.form.getFieldValue("region"),
+          //     base64image: this.imgb64,
+          //   },
+          //   "inputan"
+          // );
+
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
               json: {
@@ -1278,7 +1294,7 @@ export default {
             })
             .json();
           const responses = parsed.response["resultMessage"].split(" - ");
-          console.log('VC',parsed);
+          // console.log('VC',parsed);
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
           //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);

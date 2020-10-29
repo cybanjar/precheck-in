@@ -119,7 +119,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params, "nyampe bro");
+    //console.log(this.$route.params, "nyampe bro");
     const tempData = this.$route.params.guestData;
     /* Assign ispopup property for tempData */
     tempData.forEach((item) => {
@@ -128,12 +128,12 @@ export default {
     const tempTotal = tempData.filter((item, index) => {
       return item["room-status"] !== "1 Room Already assign or Overlapping";
     });
-    console.log(tempTotal.length);
+    // console.log(tempTotal.length);
     this.guestData = tempData;
     this.setup = this.$route.params.setting[0];
     this.lemparsetup = this.$route.params.setting[0];
     Object.assign(this.lemparsetup, { TotalData: tempTotal.length });
-    console.log(this.lemparsetup, "masuk?");
+    // console.log(this.lemparsetup, "masuk?");
     this.gambar = this.setup["hotelImage"];
     this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
