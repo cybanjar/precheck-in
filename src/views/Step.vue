@@ -170,6 +170,7 @@
               contracted
               color="primary"
               animated
+              keep-alive
             >
               <q-step
                 :name="0"
@@ -682,6 +683,8 @@ export default {
       Deposit: "300000",
       maximumDeposit: "",
       OverNightDeposit: "",
+      TotalData: "",
+      defaultCI: "",
     };
   },
   watch: {
@@ -705,9 +708,11 @@ export default {
     ];
     this.information.color = this.$route.params.setting["FontColor"];
     this.gambar = this.$route.params.setting["hotelImage"];
+    this.hotelname = this.$route.params.setting["hotelName"];
     this.minimumDeposit = this.$route.params.setting["minimumDeposit"];
     this.maximumDeposit = this.$route.params.setting["maximumDeposit"];
     this.OverNightDeposit = this.$route.params.setting["OverNightDeposit"];
+    this.TotalData = this.$route.params.setting["TotalData"];
     this.per = this.$route.params.setting["per"];
     this.purpose = this.$route.params.setting["PurposeofStay"];
     this.FilterPurposeofStay = this.$route.params.setting[
@@ -732,6 +737,7 @@ export default {
     this.hotelEndpoint = this.$route.params.setting["hotelEndpoint"];
     this.hotelcode = this.$route.params.setting["hotelCode"];
     this.location = this.$route.params.setting["location"];
+    this.defaultCI = this.$route.params.setting["defaultCI"];
     this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
     if (this.langID == "ENG" || this.langID == "eng") {
@@ -868,6 +874,7 @@ export default {
       }
     },
     search() {
+      console.log("msk");
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
         const data = await response.json();
@@ -1069,9 +1076,23 @@ export default {
     },
     save() {
       const rmStatus = this.currDataPrepare["room-status"].split(" ");
+      console.log(parseInt(rmStatus));
       if (parseInt(rmStatus) == 1) {
         // Cek status kamar pertama kalo Overlapping
-        //console.log("overlapping");
+        console.log(
+          this.currDataPrepare.resnr,
+          this.currDataPrepare.reslinnr,
+          "01",
+          this.currDataPrepare.zinr,
+          this.form.getFieldValue("purpose"),
+          this.form.getFieldValue("email"),
+          this.form.getFieldValue("phone"),
+          this.form.getFieldValue("nationality"),
+          this.form.getFieldValue("country"),
+          this.form.getFieldValue("region"),
+          this.imgb64,
+          "overlapping1"
+        );
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1095,7 +1116,6 @@ export default {
           const responses = parsed.response["resultMessage"].split(" - ");
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
           if (this.responseStatus.statusNumber == "99") {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
@@ -1107,6 +1127,20 @@ export default {
       } else if (parseInt(rmStatus) == 2 || parseInt(rmStatus) == 3) {
         // Cek status kamar pertama kalo VD
         //console.log("VD");
+        console.log(
+          this.currDataPrepare.resnr,
+          this.currDataPrepare.reslinnr,
+          "01",
+          this.currDataPrepare.zinr,
+          this.form.getFieldValue("purpose"),
+          this.form.getFieldValue("email"),
+          this.form.getFieldValue("phone"),
+          this.form.getFieldValue("nationality"),
+          this.form.getFieldValue("country"),
+          this.form.getFieldValue("region"),
+          this.imgb64,
+          "overlapping2"
+        );
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1130,8 +1164,18 @@ export default {
           const responses = parsed.response["resultMessage"].split(" - ");
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-          if (this.responseStatus.statusNumber == "99") {
+          console.log(
+            this.responseStatus.statusNumber,
+            this.responseStatus.statusMessage
+          );
+          console.log(responses);
+          console.log(this.responseStatus.statusNumber, "cuk");
+
+          if (
+            this.responseStatus.statusNumber == "99" ||
+            this.responseStatus.statusNumber == "6" ||
+            this.responseStatus.statusNumber == "7"
+          ) {
             /* Handling Room Vacant Dirty */
             this.informationModal = true;
             this.roomNotReady = false;
@@ -1155,7 +1199,16 @@ export default {
             data["roomNotReady"] = this.roomNotReady;
             data["hotelcode"] = this.hotelcode;
             data["langID"] = this.langID;
+            data["hotelname"] = this.hotelname;
+            data["hotelImage"] = this.gambar;
+            data["BackgroundColor"] = this.information.backgroundColor;
+            data["FontColor"] = this.information.color;
             data["location"] = this.location;
+            data["TotalData"] = this.TotalData;
+            data["citime"] = this.currDataPrepare.ci;
+            data["coDate"] = this.currDataPrepare.co;
+            data["bookingcode"] = this.currDataPrepare.resnr;
+            data["defaultCI"] = this.defaultCI;
             data["email"] = this.form.getFieldValue(["email"][0]);
             data["phone"] = this.form.getFieldValue(["phone"][0]);
             router.replace({
@@ -1169,6 +1222,21 @@ export default {
       } else {
         // Cek status kamar pertama kalo VC
         //console.log("VC");
+
+        console.log(
+          this.currDataPrepare.resnr,
+          this.currDataPrepare.reslinnr,
+          "01",
+          this.currDataPrepare.zinr,
+          this.form.getFieldValue("purpose"),
+          this.form.getFieldValue("email"),
+          this.form.getFieldValue("phone"),
+          this.form.getFieldValue("nationality"),
+          this.form.getFieldValue("country"),
+          this.form.getFieldValue("region"),
+          this.imgb64,
+          "overlapping3"
+        );
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1217,7 +1285,16 @@ export default {
             data["roomNotReady"] = this.roomNotReady;
             data["hotelcode"] = this.hotelcode;
             data["langID"] = this.langID;
+            data["hotelname"] = this.hotelname;
+            data["hotelImage"] = this.gambar;
+            data["BackgroundColor"] = this.information.backgroundColor;
+            data["FontColor"] = this.information.color;
             data["location"] = this.location;
+            data["TotalData"] = this.TotalData;
+            data["citime"] = this.currDataPrepare.ci;
+            data["coDate"] = this.currDataPrepare.co;
+            data["bookingcode"] = this.currDataPrepare.resnr;
+            data["defaultCI"] = this.defaultCI;
             data["email"] = this.form.getFieldValue(["email"][0]);
             data["phone"] = this.form.getFieldValue(["phone"][0]);
             router.replace({
@@ -1248,7 +1325,16 @@ export default {
       data["roomNotReady"] = this.roomNotReady;
       data["hotelcode"] = this.hotelcode;
       data["langID"] = this.langID;
+      data["hotelname"] = this.hotelname;
+      data["hotelImage"] = this.gambar;
+      data["BackgroundColor"] = this.information.backgroundColor;
+      data["FontColor"] = this.information.color;
       data["location"] = this.location;
+      data["TotalData"] = this.TotalData;
+      data["citime"] = this.currDataPrepare.ci;
+      data["coDate"] = this.currDataPrepare.co;
+      data["bookingcode"] = this.currDataPrepare.resnr;
+      data["defaultCI"] = this.defaultCI;
       data["email"] = this.form.getFieldValue(["email"][0]);
       data["phone"] = this.form.getFieldValue(["phone"][0]);
       router.replace({
