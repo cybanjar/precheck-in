@@ -6,62 +6,7 @@
   </div>
   <div v-else>
     <div class="home">
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="informationModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-            >{{ getLabels("yes", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>
-          Sorry, your room is not ready yet. But you can still continue to
-          check-in. We will notify you by email and SMS when your room is ready.
-        </p>
-        <p>Please re-confirm your phone number and email.</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="getLabels('phone_number', `titleCase`)">
-              <a-input
-                v-decorator="[
-                  'guest-phone',
-                  {
-                    initialValue: currDataPrepare['guest-phnumber'],
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Please input your phone number!',
-                      },
-                    ],
-                  },
-                ]"
-              />
-            </a-form-item>
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
-                v-decorator="[
-                  'guest-email',
-                  {
-                    initialValue: currDataPrepare['guest-email'],
-                    rules: [
-                      { required: true, message: 'Please input your email!' },
-                    ],
-                  },
-                ]"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
-
+      <!-- <div v-show="term"> -->
       <a-modal
         :title="getLabels('t_c', `titleCase`)"
         :visible="termcondition"
@@ -81,8 +26,18 @@
           >
         </template>
         <p>{{ terms }}</p>
+        <!--<p v-if="langID == 'ENG'">{{term1}}</p>
+        <p v-else>{{term}}</p>-->
       </a-modal>
-
+      <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
+        <template slot="footer">
+          <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
+        </template>
+        <p>{{informationterm}}</p>
+      </a-modal>-->
+      <!-- </div> -->
+      <!-- test -->
+      <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -147,6 +102,8 @@
           </p>
         </div>
       </div>
+      <!-- precheckin: {{precheckin}}
+      scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="current === 0">
@@ -156,7 +113,7 @@
             {{ getLabels("guest_detail", `titleCase`) }}
           </h2>
           <h2 v-show="current === 2">
-            {{ getLabels("upload_id", `titleCase`) }}
+            {{ getLabels("scan_id", `titleCase`) }}
           </h2>
           <h2 v-show="current === 3">
             {{ getLabels("deposit_payment", `titleCase`) }}
@@ -230,6 +187,7 @@
                           ]"
                           outlined
                           dense
+                          v-model="phone"
                           mask="##############"
                         ></q-input>
                       </a-form-item>
@@ -249,9 +207,15 @@
                             },
                           ]"
                         >
+                          <!--<a-select-option
+                      v-for="item in FilterPurposeofStay"
+                      :key="item"
+                      :value="item.setupvalue"
+                      >{{ item.setupvalue }}</a-select-option
+                    >-->
                           <a-select-option
                             v-for="item in FilterPurposeofStay"
-                            :key="item.setupvalue"
+                            :key="item"
                             :value="item.setupvalue"
                             >{{
                               getLabels(
@@ -264,6 +228,19 @@
                       </a-form-item>
                     </a-col>
                   </a-row>
+                  <!-- <a-row class gutter="16">
+              <a-col>
+                <p
+                  class="font-weight-bold"
+                  v-show="showSmoking || showFloor || showBed"
+                >Room Preferences</p>
+                <ul>
+                  <li>Non Smoking</li>
+                  <li>Lower Floor</li>
+                  <li>One Big Bed</li>
+                </ul>
+              </a-col>
+            </a-row>-->
                 </div>
               </q-step>
 
@@ -288,6 +265,7 @@
                               rules: [{ required: true }],
                             },
                           ]"
+                          @change="Nationality"
                         >
                           <a-select-option
                             v-for="item in FilterCountry"
@@ -296,8 +274,37 @@
                             >{{ item.setupvalue }}</a-select-option
                           >
                         </a-select>
+                        <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
+                  <a-select-option value="America">America</a-select-option>
+                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
+                        <!-- </a-select> -->
                       </a-form-item>
                     </a-col>
+                    <!-- <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="Choose of Document ID">
+                <a-select default-value="E-KTP">
+                  <a-select-option value="id_card">E-KTP</a-select-option>
+                  <a-select-option value="passport">Passport</a-select-option>
+                  <a-select-option value="driving_license">Driving License</a-select-option>
+                  <a-select-option value="kitas">KITAS</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24">
+              <a-form-item label="ID Number">
+                <a-input placeholder="Please input " />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Expiry Date">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="24">
+              <a-form-item label="Date of Birth">
+                <a-date-picker @change="onChange" />
+              </a-form-item>
+              </a-col>-->
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
@@ -305,7 +312,7 @@
                         :label="getLabels('country_of_residence', `titleCase`)"
                       >
                         <a-select
-                          @change="handleChangeCountry"
+                          v-model="country"
                           v-decorator="[
                             'country',
                             {
@@ -328,6 +335,7 @@
                       <div v-if="country === 'INA' || country === 'ina'">
                         <a-form-item :label="getLabels('region', `titleCase`)">
                           <a-select
+                            @change="handleChangeRegion"
                             v-decorator="[
                               'region',
                               {
@@ -353,16 +361,53 @@
                           </a-select>
                         </a-form-item>
                       </div>
+                      <!--<div v-else>
+                  <a-form-item :label="getLabels('state', `titleCase`)">
+                    <a-input
+                      v-decorator="[
+                        'State',
+                        {
+                          initialValue: State,
+                          rules: [{ message: 'Please input your State' }],
+                        },
+                      ]"
+                    />
+                  </a-form-item>
+                </div>-->
                     </a-col>
-                    <div v-if="freeParking">
-                      <a-col :span="5" :xl="5" :xs="24">
-                        <a-form-item
-                          :label="getLabels('vehicle_regident', `titleCase`)"
-                        >
-                          <a-input v-model="vRegident" />
-                        </a-form-item>
-                      </a-col>
-                    </div>
+                    <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
+              <a-form-item label="City">
+                <a-select
+                  show-search
+                  v-model="city"
+                  v-decorator="[
+                    'city',
+                    { initialValue: city, rules: [{ required: true }] },]"
+                >
+                  <a-select-option
+                    v-for="(item, key) in filteredCities"
+                    :key="key"
+                    :value="filteredCities[key].city_name"
+                  >{{ filteredCities[key].city_name }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :xs="24" v-else>
+              <a-form-item label="City">
+                <a-input
+                  initial-value="Willy Wanta"
+                  v-decorator="[
+                  'username',
+                  { rules: [{ required: true, message: '' }] },
+                ]"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="3" :xl="3" :xs="12">
+              <a-form-item label="Postal Code">
+                <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
+              </a-form-item>
+              </a-col>-->
                   </a-row>
                 </div>
               </q-step>
@@ -376,11 +421,54 @@
                 :done="current + 1 > 2"
               >
                 <div class="steps-content" v-show="current === 2">
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="getLabels('upload_id', `titleCase`)">
+                  <a-row
+                    type="flex"
+                    justify="center"
+                    class="text-center"
+                    :gutter="[16, 8]"
+                  >
+                    <a-col :span="6" :xl="6" :xs="24">
+                      <h5>Prepare your Passport for photo verification</h5>
+
+                      <a-card :bordered="false" style="width: 240px;">
+                        <img
+                          slot="cover"
+                          alt="upload"
+                          src="../assets/icon_upload_passport.png"
+                        />
+                      </a-card>
+
+                      <!-- <a-form-item>
+                        <a-upload
+                          accept="image/*"
+                          type="file"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                          name="logo"
+                          list-type="picture"
+                        >
+                          <a-button class="ant-btn-custom1" type="primary">
+                            <a-icon type="camera" /> Click to upload
+                          </a-button>
+                        </a-upload>
+                      </a-form-item> -->
+
+                      <!-- <a-form-item :label="getLabels('upload_id', `titleCase`)">
                         <input
-                          class
                           accept="image/*"
                           type="file"
                           @change="onFileChange"
@@ -401,8 +489,69 @@
                           ]"
                         />
                       </a-form-item>
+                      <img class="preview" v-if="url" :src="url" /> -->
 
+                      <label
+                        for="file"
+                        class="custom-file-upload"
+                        onclick="console.log('Klik di label')"
+                        >Click to Upload
+                      </label>
+                      <a-form-item label="url">
+                        <input
+                          onclick="console.log('Klik di input')"
+                          accept="image/*"
+                          type="file"
+                          name="file"
+                          class="custom-input"
+                          id="file"
+                          label="ok"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
                       <img class="preview" v-if="url" :src="url" />
+
+                      <!-- <a-form-item>
+                        <input
+                          accept="image/*"
+                          type="file"
+                          name="file"
+                          id="file"
+                          class="inputfile"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                      </a-form-item>
+                      <label for="file" class="red">Upload</label> -->
                     </a-col>
                   </a-row>
                 </div>
@@ -424,11 +573,20 @@
                           <strong>
                             {{ this.currDataPrepare["currency-usage"] }}
                             {{
-                              `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              `${minimumDeposit}`.replace(
+                                /\B(?=(\d{3})+(?!\d))/g,
+                                ","
+                              )
                             }}
                           </strong>
                         </h2>
                       </a-form-item>
+                      <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
+                  <template slot="footer">
+                    <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
+                  </template>
+                  <p>{{getLabels('payment_error')}}</p>
+                </a-modal>-->
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <a-button
@@ -437,6 +595,11 @@
                         @click="search()"
                         >{{ getLabels("pay", `titleCase`) }}</a-button
                       >
+                      <!-- <img
+                  class="rounded float-right"
+                  src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
+                  style="height:50px;width:50px; opacity: .65;"
+                />-->
                     </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
@@ -493,14 +656,10 @@
               </template>
             </q-stepper>
           </div>
+
           <!-- <div class="steps-action">
             <div class="row justify-between">
               <div class="col-6 col-xs-6">
-                <div v-if="current == 0">
-                  <a-button @click="handleBack">{{
-                    getLabels("back", `titleCase`)
-                  }}</a-button>
-                </div>
                 <div v-if="y">
                   <a-button v-if="current > 0" @click="prev">{{
                     getLabels("prev", `titleCase`)
@@ -517,6 +676,16 @@
             </div>
           </div> -->
 
+          <!-- <a-button
+              v-if="current == steps.length - 1"
+              type="primary"
+              @click="$message.success('Processing complete!')"
+            >Done</a-button>-->
+          <!-- <a-row :gutter="[16,8]">
+            <a-col :span="12" :xl="12" :xs="24">
+              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
+            </a-col>
+          </a-row>-->
           <a-row class :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item>
@@ -526,7 +695,10 @@
                   type="primary"
                   block
                   :size="size"
-                  @click="save"
+                  @click="
+                    save();
+                    scrollToTop();
+                  "
                   v-if="current == steps.length - 1"
                   html-type="submit"
                   :disabled="!pay"
@@ -543,6 +715,8 @@
 
 <script>
 import router from "../router";
+// import data from "../components/json/indonesia";
+// import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -603,9 +777,11 @@ export default {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
       },
+      nilai: 2,
       setRegion: "Bali",
       cek: "",
       cities: "",
+      // filteredCity: [],
       filteredRegion: [],
       nationality: "Indonesia",
       dataID: [],
@@ -619,7 +795,6 @@ export default {
       showPickupRequest: true,
       showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
-      formresubmit: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -669,19 +844,9 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
-      roomNotReady: false,
-      freeParking: false,
-      vRegident: "",
-      informationModal: false,
-      responseStatus: {
-        statusNumber: "",
-        statusMessage: "",
+      headers: {
+        authorization: "authorization-text",
       },
-      location: "",
-      programLabel: "",
-      Deposit: "300000",
-      maximumDeposit: "",
-      OverNightDeposit: "",
     };
   },
   watch: {
@@ -690,97 +855,248 @@ export default {
     },
   },
   created() {
-    // lemparan data
-    console.log(this.$route.params, "point");
+    this.currData = this.$route.params.foo;
+    this.langID = this.$route.params.fighter;
+    this.hotelEndpoint = this.$route.params.endpoint;
+    this.hotelcode = this.$route.params.hotelcode;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    this.currDataPrepare = this.$route.params.guestData;
-    this.precheckin = this.currDataPrepare["pre-checkin"];
-    this.hasUpload = this.currDataPrepare["image-flag"];
-    this.country = this.currDataPrepare["guest-country"];
-    this.currency = this.currDataPrepare["currency-usage"];
-    this.term = this.$route.params.setting["termENG"];
-    this.term1 = this.$route.params.setting["termIDN"];
-    this.information.backgroundColor = this.$route.params.setting[
-      "BackgroundColor"
-    ];
-    this.information.color = this.$route.params.setting["FontColor"];
-    this.gambar = this.$route.params.setting["hotelImage"];
-    this.minimumDeposit = this.$route.params.setting["minimumDeposit"];
-    this.maximumDeposit = this.$route.params.setting["maximumDeposit"];
-    this.OverNightDeposit = this.$route.params.setting["OverNightDeposit"];
-    this.per = this.$route.params.setting["per"];
-    this.purpose = this.$route.params.setting["PurposeofStay"];
-    this.FilterPurposeofStay = this.$route.params.setting[
-      "FilterPurposeofStay"
-    ];
-    this.region = this.$route.params.setting["province"];
-    this.countries = this.$route.params.setting["countries"];
-    this.wifiAddress = this.$route.params.setting["wifiAddress"];
-    this.wifiPassword = this.$route.params.setting["wifiPassword"];
-    this.langID = this.$route.params.setting["langID"];
-    switch (this.langID.toLowerCase()) {
-      case "eng":
-        this.programLabel = "program-label1";
-        break;
-      case "idn":
-        this.programLabel = "program-label2";
-        break;
-      default:
-        this.programLabel = "program-label1";
-        break;
-    }
-    this.hotelEndpoint = this.$route.params.setting["hotelEndpoint"];
-    this.hotelcode = this.$route.params.setting["hotelCode"];
-    this.location = this.$route.params.setting["location"];
-    this.filteredRegion = this.region;
-    this.FilterCountry = this.countries;
-    if (this.langID == "ENG" || this.langID == "eng") {
-      this.terms = this.term;
-    } else {
-      this.terms = this.term1;
-    }
-    this.termcondition = true;
-    if (this.precheckin == true) {
-      this.current = 2;
-      this.y = true;
-    }
-    this.loading = false;
-    // router.replace(this.location);
-    /* Handling Deposit Other Value */
-    const ciDate = moment(this.handleArrayDate(this.currDataPrepare.ci));
-    const coDate = moment(this.handleArrayDate(this.currDataPrepare.co));
-    const night = coDate.diff(ciDate, "days");
-
-    if (night === 1) {
-      this.Deposit = this.minimumDeposit;
-    } else if (night > 1) {
-      if (this.OverNightDeposit <= 0) {
-        this.Deposit = this.minimumDeposit;
+    // console.log(this.$route.params.id, "nyamtuh");
+    if (this.$route.params.foo != undefined) {
+      (async () => {
+        const parsed = await ky
+          .post(this.hotelEndpoint + "preCI/loadSetup", {
+            json: {
+              request: {
+                icase: 1,
+              },
+            },
+          })
+          .json();
+        this.tempsetup = parsed.response.pciSetup["pci-setup"];
+        const jatah = [];
+        for (const i in this.tempsetup) {
+          if (this.tempsetup[i]["number1"] == 4) {
+            jatah.push(this.tempsetup[i]);
+            for (const heaven in jatah) {
+              // console.log(jatah, "msk");
+              if (jatah[heaven].setupflag == true) {
+                this.information.backgroundColor = jatah[heaven]["setupvalue"];
+              }
+            }
+          } else if (this.tempsetup[i]["number1"] == 5) {
+            jatah.push(this.tempsetup[i]);
+            for (const hell in jatah) {
+              if (jatah[hell].setupflag == true) {
+                this.information.color = jatah[hell]["setupvalue"];
+              }
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 7 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.gambar = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.term = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 6 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.term1 = this.tempsetup[i]["setupvalue"];
+          } else if (this.tempsetup[i]["number1"] == 2) {
+            if (this.tempsetup[i].setupflag == true) {
+              this.money = this.tempsetup[i]["price"];
+              this.currency = this.tempsetup[i]["remarks"];
+              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            this.hour = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.scanid = !this.tempsetup[i]["setupflag"];
+            // console.log(this.scanid, "scandid");
+          } else if (this.tempsetup[i]["number1"] == 1) {
+            /*this.tempsetup[i].setupvalue = this.getLabels(
+              this.tempsetup[i].setupvalue.toLowerCase()
+            );*/
+            this.FilterPurposeofStay.push(this.tempsetup[i]);
+            if (this.tempsetup[i].setupflag == true) {
+              this.purpose = this.tempsetup[i].setupvalue;
+            }
+          } else if (this.tempsetup[i]["number1"] == 3) {
+            if (this.tempsetup[i].number2 == 1) {
+              this.showBed = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 2) {
+              this.showSmoking = this.tempsetup[i].setupflag;
+            } else if (this.tempsetup[i].number2 == 3) {
+              this.showFloor = this.tempsetup[i].setupflag;
+            }
+          } else if (
+            this.tempsetup[i]["number1"] == 99 &&
+            this.tempsetup[i]["number2"] == 1
+          ) {
+            this.hotelname = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 8
+          ) {
+            this.wifiAddress = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 9
+          ) {
+            this.wifiPassword = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 4
+          ) {
+            this.skipDeposit = this.tempsetup[i]["setupvalue"];
+          } else if (
+            this.tempsetup[i]["number1"] == 8 &&
+            this.tempsetup[i]["number2"] == 5
+          ) {
+            this.minimumDeposit = this.tempsetup[i]["price"];
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 2
+          ) {
+            const bulbasur = {};
+            bulbasur["descr"] = this.tempsetup[i]["descr"];
+            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.countries.push(bulbasur);
+          } else if (
+            this.tempsetup[i]["number1"] == 9 &&
+            this.tempsetup[i]["number2"] == 3 &&
+            this.tempsetup[i].descr != "SERVER TIME"
+          ) {
+            const air = {};
+            air["descr"] = this.tempsetup[i]["descr"];
+            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
+            this.region.push(air);
+          }
+        }
+        if (this.currData["0"].length > 1) {
+          const nietos = [];
+          const obj = {};
+          this.dataGuest = this.currData["0"];
+          obj["01"] = this.gambar;
+          obj["02"] = this.information;
+          obj["03"] = this.money;
+          obj["04"] = this.currency;
+          obj["05"] = this.per;
+          obj["06"] = this.purpose;
+          obj["07"] = this.FilterPurposeofStay;
+          obj["08"] = this.showBed;
+          obj["09"] = this.showSmoking;
+          obj["10"] = this.showFloor;
+          obj["11"] = this.hour;
+          obj["12"] = this.term;
+          obj["13"] = this.hotelname;
+          obj["14"] = this.showPickupRequest;
+          obj["15"] = this.wifiAddress;
+          obj["16"] = this.wifiPassword;
+          obj["17"] = this.skipDeposit;
+          obj["18"] = this.minimumDeposit;
+          obj["19"] = this.countries;
+          obj["20"] = this.region;
+          obj["21"] = this.term1;
+          obj["22"] = this.hotelcode;
+          nietos.push(this.dataGuest);
+          nietos.push(obj);
+          router.push({
+            name: "ListCheckIn",
+            params: { foo: nietos, fighter: this.langID },
+          });
+        } else {
+          this.currDataPrepare = this.currData["0"]["0"];
+          this.precheckin = this.currDataPrepare["pre-checkin"];
+          this.hasUpload = this.currDataPrepare["image-flag"];
+          if (this.langID == "ENG" || this.langID == "eng") {
+            this.terms = this.term;
+          } else {
+            this.terms = this.term1;
+          }
+          this.country = this.currDataPrepare["guest-country"];
+        }
+        this.termcondition = true;
+        if (this.precheckin == true) {
+          if (this.hasUpload == "0 image id already exist") {
+            this.current = 3;
+            this.y = true;
+          } else {
+            this.current = 2;
+            this.y = true;
+          }
+        }
+        /*if (this.hasUpload == "0 image id already exist") {
+          this.current = 3;
+          this.y = true;
+        }*/
+        this.loading = false;
+      })();
+    } else if (this.$route.params.id != undefined) {
+      this.gambar = this.$route.params.id["setup"]["01"];
+      this.information = this.$route.params.id["setup"]["02"];
+      this.money = this.$route.params.id["setup"]["03"];
+      this.currency = this.$route.params.id["setup"]["04"];
+      this.per = this.$route.params.id["setup"]["05"];
+      this.purpose = this.$route.params.id["setup"]["06"];
+      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
+      this.showBed = this.$route.params.id["setup"]["08"];
+      this.showSmoking = this.$route.params.id["setup"]["09"];
+      this.showFloor = this.$route.params.id["setup"]["10"];
+      this.hour = this.$route.params.id["setup"]["11"];
+      this.term = this.$route.params.id["setup"]["12"];
+      this.hotelname = this.$route.params.id["setup"]["13"];
+      this.showPickupRequest = this.$route.params.id["setup"]["14"];
+      this.wifiAddress = this.$route.params.id["setup"]["15"];
+      this.wifiPassword = this.$route.params.id["setup"]["16"];
+      this.skipDeposit = this.$route.params.id["setup"]["17"];
+      this.minimumDeposit = this.$route.params.id["setup"]["18"];
+      this.countries = this.$route.params.id["setup"]["19"];
+      this.region = this.$route.params.id["setup"]["20"];
+      this.term1 = this.$route.params.id["setup"]["21"];
+      this.hotelcode = this.$route.params.id["setup"]["22"];
+      this.currDataPrepare = this.$route.params.id["data"];
+      this.precheckin = this.currDataPrepare["pre-checkin"];
+      this.country = this.currDataPrepare["guest-country"];
+      this.email = this.currDataPrepare["guest-email"];
+      if (this.langID == "ENG" || this.langID == "eng") {
+        this.terms = this.term;
       } else {
-        this.Deposit =
-          1 * this.minimumDeposit + (night - 1) * this.OverNightDeposit;
+        this.terms = this.term1;
       }
-    }
-    if (this.maximumDeposit > 0) {
-      if (this.Deposit > this.maximumDeposit) {
-        this.Deposit = this.maximumDeposit;
+      this.termcondition = true;
+      if (this.langID == "ENG" || this.langID == "eng") {
+        this.terms = this.term;
+      } else {
+        this.terms = this.term1;
       }
+      if (this.precheckin == true) {
+        this.current = 2;
+        this.y = true;
+      }
+      /*if (this.hasUpload == "0 image id already exist") {
+        this.current = 3;
+        this.y = true;
+      }*/
+      this.loading = false;
+    } else {
+      router.push("notfound");
     }
   },
+  mounted() {
+    this.filteredRegion = this.region;
+    this.FilterCountry = this.countries;
+  },
   methods: {
-    handleArrayDate(date) {
-      const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
-      const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
-        2,
-        "0"
-      );
-      const dYear = String(moment(date, "YYYY-MM-DD").year());
-      const dateArray = [dYear, dMonth, dDate];
-      return dateArray;
-    },
-    handleChangeCountry(value) {
-      this.country = value;
-    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
@@ -876,14 +1192,14 @@ export default {
       getIP().then((data) => (this.ipAddr = data));
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX2020090700000002" +
-          this.Deposit +
+          this.minimumDeposit +
           "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
       );
       const params =
         "timeStamp=" +
         moment().format("YYYYMMDDHHmmss") +
         "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
-        this.Deposit +
+        this.minimumDeposit +
         "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
         this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
         "&billingPhone=" +
@@ -894,13 +1210,14 @@ export default {
         token.toString() +
         "&userIP=" +
         this.ipAddr +
-        `&cartData={}&callBackUrl=${this.location}` +
+        "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
+        this.langID +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
+
       const datas = {
+        book: this.currDataPrepare.resnr,
         codate: this.formatDate(this.currDataPrepare.co),
-        userInit: "01",
-        resrNumber: this.currDataPrepare.resnr,
-        resLineNumber: this.currDataPrepare.reslinnr,
+        payment: "success",
       };
       CookieS.set("data", datas);
       fetch(
@@ -963,22 +1280,28 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0];
+
       /* Start Handling Images Compression */
       const reader = new FileReader();
       reader.readAsDataURL(file);
+
       reader.onload = (event) => {
         // Creating Image Element
         const imgElement = document.createElement("img");
         imgElement.src = event.target.result;
+
         // Output to Web
         this.url = event.target.result;
+
         // Handling Image Element
         imgElement.onload = (e) => {
           // Creating Canvas and Scale Size
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
           const MAX_HEIGHT = 500;
+
           let scaleSize = 0;
+
           // Scale Size Based on Image Mode Portrait or Landscape
           if (imgElement.width >= imgElement.height) {
             // Landscape Images
@@ -993,21 +1316,26 @@ export default {
           }
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
+
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
             ctx.fillStyle = "rgba(0,0,0,0.1)";
             ctx.fillText("COPY COPY COPY COPY COPY COPY COPY", 0, i * 100);
           }
+
           // Convert Canvas to DataURL
           const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
           this.url = srcEncoded;
+
           // Create Base64 Images
           const base64Canvas = ctx.canvas
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
+
           (async () => {
             this.imgb64 = base64Canvas;
             const uploadResult = await ky
@@ -1040,38 +1368,8 @@ export default {
       window.scrollTo(0, 0);
       this.current = 0;
     },
-    handleResCi(status) {
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "mobileCI/resCI", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare.resnr,
-                rsvlineNumber: this.currDataPrepare.reslinnr,
-                userInit: "01",
-                newRoomno: this.currDataPrepare.zinr,
-                purposeOfStay: this.form.getFieldValue("purpose"),
-                email: this.form.getFieldValue("email"),
-                guestPhnumber: this.form.getFieldValue("phone"),
-                guestNation: this.form.getFieldValue("nationality"),
-                guestCountry: this.form.getFieldValue("country"),
-                guestRegion: this.form.getFieldValue("region"),
-                base64image: this.imgb64,
-                // vehicleNumber: ''
-              },
-            },
-          })
-          .json();
-        const responses = parsed.response["resultMessage"].split(" - ");
-        this.responseStatus.statusNumber = responses[0];
-        this.responseStatus.statusMessage = responses[1];
-      })();
-    },
     save() {
-      const rmStatus = this.currDataPrepare["room-status"].split(" ");
-      if (parseInt(rmStatus) == 1) {
-        // Cek status kamar pertama kalo Overlapping
-        //console.log("overlapping");
+      if (this.counter == this.id.length) {
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1092,171 +1390,32 @@ export default {
               },
             })
             .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-          }
         })();
-      } else if (parseInt(rmStatus) == 2 || parseInt(rmStatus) == 3) {
-        // Cek status kamar pertama kalo VD
-        //console.log("VD");
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-            this.roomNotReady = true;
-            const QRCodeData =
-              "{" +
-              this.currDataPrepare.zinr +
-              ";" +
-              moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-              "}";
-            //this.check();
-            //if (this.paymentStatus) {
-            //console.log(this.paymentStatus);
-            const data = {};
-            data["QRCodeData"] = QRCodeData;
-            data["wifiAddress"] = this.wifiAddress;
-            data["wifiPassword"] = this.wifiPassword;
-            data["arrangement"] = this.currDataPrepare["argt-str"];
-            data["roomNotReady"] = this.roomNotReady;
-            data["hotelcode"] = this.hotelcode;
-            data["langID"] = this.langID;
-            data["location"] = this.location;
-            data["email"] = this.form.getFieldValue(["email"][0]);
-            data["phone"] = this.form.getFieldValue(["phone"][0]);
-            router.replace({
-              name: "SuccessCheckIn",
-              params: {
-                Data: data,
-              },
-            });
-          }
-        })();
-      } else {
-        // Cek status kamar pertama kalo VC
-        //console.log("VC");
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"].split(" - ");
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-          //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-          if (this.responseStatus.statusNumber == "99") {
-            /* Handling Room Vacant Dirty */
-            this.informationModal = true;
-            this.roomNotReady = false;
-          } else {
-            /* Handling Room Selain Vacant Dirty & Maybe Vacant Cleaned */
-            this.roomNotReady = true;
-            const QRCodeData =
-              "{" +
-              this.currDataPrepare.zinr +
-              ";" +
-              moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-              "}";
-            //this.check();
-            //if (this.paymentStatus) {
-            //console.log(this.paymentStatus);
-            const data = {};
-            data["QRCodeData"] = QRCodeData;
-            data["wifiAddress"] = this.wifiAddress;
-            data["wifiPassword"] = this.wifiPassword;
-            data["arrangement"] = this.currDataPrepare["argt-str"];
-            data["roomNotReady"] = this.roomNotReady;
-            data["hotelcode"] = this.hotelcode;
-            data["langID"] = this.langID;
-            data["location"] = this.location;
-            data["email"] = this.form.getFieldValue(["email"][0]);
-            data["phone"] = this.form.getFieldValue(["phone"][0]);
-            router.replace({
-              name: "SuccessCheckIn",
-              params: {
-                Data: data,
-              },
-            });
-          }
-        })();
+        const mori =
+          "{" +
+          this.currDataPrepare.zinr +
+          ";" +
+          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+          "}";
+        //this.check();
+        //if (this.paymentStatus) {
+        //console.log(this.paymentStatus);
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            jin: mori,
+            jun: this.wifiAddress,
+            jen: this.wifiPassword,
+            jon: this.currDataPrepare["argt-str"],
+          },
+        });
+        //} else {
+        //this.paymentModal = true;
+        // }
       }
-    },
-    handleYes() {
-      const QRCodeData =
-        "{" +
-        this.currDataPrepare.zinr +
-        ";" +
-        moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-        "}";
-      //this.check();
-      //if (this.paymentStatus) {
-      //console.log(this.paymentStatus);
-      const data = {};
-      data["QRCodeData"] = QRCodeData;
-      data["wifiAddress"] = this.wifiAddress;
-      data["wifiPassword"] = this.wifiPassword;
-      data["arrangement"] = this.currDataPrepare["argt-str"];
-      data["roomNotReady"] = this.roomNotReady;
-      data["hotelcode"] = this.hotelcode;
-      data["langID"] = this.langID;
-      data["location"] = this.location;
-      data["email"] = this.form.getFieldValue(["email"][0]);
-      data["phone"] = this.form.getFieldValue(["phone"][0]);
-      router.replace({
-        name: "SuccessCheckIn",
-        params: {
-          Data: data,
-        },
-      });
+      this.currDataPrepare = this.id[this.counter];
+      this.counter += 1;
+      this.agree = false;
     },
     back() {
       if (this.counter == this.id.length) {
@@ -1264,6 +1423,42 @@ export default {
       }
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
+    },
+    onID(checkedValues) {
+      this.dataID = checkedValues;
+    },
+    berubah(e) {
+      this.nilai = e.target.value;
+    },
+    masukinFoto(foto) {
+      this.gambar = foto.target.value;
+    },
+    masukinUang(uang) {
+      this.money = uang.target.value;
+    },
+    showModal() {
+      this.visible = true;
+    },
+    imageModal() {
+      this.keluar = true;
+    },
+    munculModal() {
+      this.muncul = true;
+    },
+    guestModal() {
+      this.guest = true;
+    },
+    gantiHeaderClass(warna) {
+      this.information.backgroundColor = warna;
+    },
+    gantiFontClass(colours) {
+      this.information.color = colours;
+    },
+    customHeaderClass(color) {
+      this.information.backgroundColor = color.hex;
+    },
+    customFontClass(colour) {
+      this.information.color = colour.hex;
     },
     handleOk(e) {
       this.ModalText = "The modal will be closed after two seconds";
@@ -1277,11 +1472,48 @@ export default {
         this.confirmLoading = false;
       }, 300);
     },
+    handleCancel(e) {
+      this.visible = false;
+      this.muncul = false;
+    },
+    onChange(date, dateString) {
+      data = 0;
+    },
     moment,
+    handleChange(e) {
+      this.checkNick = e.target.checked;
+      this.$nextTick(() => {
+        this.form.validateFields(["nickname"], { force: true });
+      });
+    },
     disagree() {
-      window.open(
-        "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
-        "_self"
+      router.push({
+        path: "mobilecheckin",
+        query: { lang: this.langID, hotelcode: this.hotelcode },
+      });
+      // router.push("mobilecheckin");
+    },
+    handleBlur() {
+      // console.log("blur");
+    },
+    handleFocus() {
+      // console.log("focus");
+    },
+    handleChangeUpload(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        this.$message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        this.$message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
       );
     },
     formatDate(datum) {
@@ -1297,38 +1529,30 @@ export default {
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
       return fixDate;
     },
-    handleBack() {
-      window.open(this.location, "_self");
-    },
-  },
-  computed: {
-    getLabels() {
+    getLabels(nameKey, used) {
+      const label = this.labels.find(
+        (element) => element["program-variable"] == nameKey
+      );
       let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
+      if (label["program-label1"] == "undefined") {
+        fixLabel = "";
+      } else {
+        if (used === "titleCase") {
+          fixLabel = this.setTitleCase(label["program-label1"]);
+        } else if (used === "sentenceCase") {
+          fixLabel =
+            label["program-label1"].charAt(0).toUpperCase() +
+            label["program-label1"].slice(1);
         } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
-          }
+          fixLabel = label["program-label1"];
         }
-        return fixLabel;
-      };
+      }
+      return fixLabel;
+    },
+    setTitleCase(label) {
+      return label.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
     },
   },
 };
