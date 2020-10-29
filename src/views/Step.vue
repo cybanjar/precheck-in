@@ -596,16 +596,13 @@ export default {
     // lemparan data
     console.log(this.$route.params, "point");
     this.labels = JSON.parse(localStorage.getItem("labels"));
-
     this.currDataPrepare = this.$route.params.guestData;
     this.precheckin = this.currDataPrepare["pre-checkin"];
     this.hasUpload = this.currDataPrepare["image-flag"];
     this.country = this.currDataPrepare["guest-country"];
     this.currency = this.currDataPrepare["currency-usage"];
-
     this.term = this.$route.params.setting["termENG"];
     this.term1 = this.$route.params.setting["termIDN"];
-
     this.information.backgroundColor = this.$route.params.setting[
       "BackgroundColor"
     ];
@@ -623,7 +620,6 @@ export default {
     this.countries = this.$route.params.setting["countries"];
     this.wifiAddress = this.$route.params.setting["wifiAddress"];
     this.wifiPassword = this.$route.params.setting["wifiPassword"];
-
     this.langID = this.$route.params.setting["langID"];
     switch (this.langID.toLowerCase()) {
       case "eng":
@@ -653,8 +649,37 @@ export default {
     }
     this.loading = false;
     // router.replace(this.location);
+    /* Handling Deposit Other Value */
+    const ciDate = moment(this.handleArrayDate(this.currDataPrepare.ci));
+    const coDate = moment(this.handleArrayDate(this.currDataPrepare.co));
+    const night  = coDate.diff(ciDate, 'days');
+     
+    if(night === 1){
+      this.Deposit = this.minimumDeposit;
+    }
+    else if(night > 1){
+      if(this.OverNightDeposit <= 0){
+        this.Deposit = this.minimumDeposit;
+      }
+      else{
+        this.Deposit = (1 * this.minimumDeposit) + ((night - 1) * this.OverNightDeposit);
+      }
+    }
+    if(this.maximumDeposit > 0){
+      if(this.Deposit > this.maximumDeposit){
+        this.Deposit = this.maximumDeposit;
+      }
+    }
+    
   },
   methods: {
+    handleArrayDate(date){
+      const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2,"0");
+      const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(2,"0");
+      const dYear = String(moment(date, "YYYY-MM-DD").year());
+      const dateArray = [dYear,dMonth,dDate];
+      return dateArray;
+    },
     handleChangeCountry(value) {
       this.country = value;
     },
@@ -774,9 +799,10 @@ export default {
         `&cartData={}&callBackUrl=${this.location}` +
         "&instmntType=1&instmntMon=1&reccurOpt=0";
       const datas = {
-        book: this.currDataPrepare.resnr,
         codate: this.formatDate(this.currDataPrepare.co),
-        payment: "success",
+        userInit: "01",
+        resrNumber: this.currDataPrepare.resnr,
+        resLineNumber: this.currDataPrepare.reslinnr,
       };
       CookieS.set("data", datas);
       fetch(
@@ -1180,7 +1206,6 @@ export default {
   computed: {
     getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;

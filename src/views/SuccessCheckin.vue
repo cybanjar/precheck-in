@@ -118,7 +118,6 @@ export default {
   computed: {
     getLabels() {
       let fixLabel = "";
-
       return (nameKey, used) => {
         const label = this.labels.find((el) => {
           return el["program-variable"] == nameKey;
