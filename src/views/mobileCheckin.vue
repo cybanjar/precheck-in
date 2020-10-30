@@ -1011,6 +1011,9 @@ export default {
     erroremail() {
       this.$message.error(this.getLabels("input_email", `sentenceCase`));
     },
+    errormembership() {
+      this.$message.error(this.getLabels("input_membership", `sentenceCase`));
+    },
     erroremailNotTrue() {
       switch (this.langID.toLowerCase()) {
         case "eng":
@@ -1024,39 +1027,8 @@ export default {
           break;
       }
     },
-    errormember() {
-      this.$message.error(this.getLabels("input_member", `sentenceCase`));
-    },
     errorco() {
       this.$message.error(this.getLabels("input_codate", `sentenceCase`));
-    },
-    error() {
-      this.$message.error(
-        this.getLabels("input_bookcode") +
-          ", " +
-          this.getLabels("input_codate", `sentenceCase`)
-      );
-    },
-    errorName() {
-      this.$message.error(
-        this.getLabels("guest_name") +
-          ", " +
-          this.getLabels("input_codate", `sentenceCase`)
-      );
-    },
-    errorMail() {
-      this.$message.error(
-        this.getLabels("input_email") +
-          ", " +
-          this.getLabels("input_codate", `sentenceCase`)
-      );
-    },
-    errorMember() {
-      this.$message.error(
-        this.getLabels("input_member") +
-          ", " +
-          this.getLabels("input_codate", `sentenceCase`)
-      );
     },
     /* End Of Handling Error Message */
     hideMCIModal() {
@@ -1095,6 +1067,7 @@ export default {
       }
     },
     handleFindRsv(mode) {
+      //console.log(mode);
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1131,12 +1104,30 @@ export default {
           coDate = this.getCoDate();
           break;
       }
-      if (!this.bookingcode && !this.date) {
-        this.error();
-      } else if (!this.bookingcode) {
+
+      if (!this.bookingcode && mode == 'bookingcode') {
         this.errorbo();
-      } else if (!this.date) {
+        this.confirmLoading = false;
+      }
+      else if((!this.name || this.name.length <= 0) && mode == 'guestname'){
+        this.errorname();
+        this.confirmLoading = false;
+      }
+      else if((!this.email || this.email.length <= 0) && mode == 'email'){
+        this.erroremail();
+        this.confirmLoading = false;
+      }
+      else if (!this.reg.test(this.email) && mode == 'email') {
+        this.erroremailNotTrue();
+        this.confirmLoading = false;
+      }
+      else if((!this.member || this.member.length <= 0) && mode == 'membership'){
+        this.errormembership();
+        this.confirmLoading = false;
+      }
+      else if (!this.date) {
         this.errorco();
+        this.confirmLoading = false;
       } else {
         (async () => {
           const data = await ky
@@ -1155,6 +1146,7 @@ export default {
             })
             .json();
           this.message = data.response["messResult"];
+          //console.log(data,mode);
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
 
@@ -1177,7 +1169,7 @@ export default {
                     "1 Room Already assign or Overlapping"
                   );
                 });
-                Object.assign(this.setup, { TotalData: tempTotal.length });
+                Object.assign(this.setup[0], { TotalData: tempTotal.length });
 
                 if (mode == "nicepay") {
                   let guest = reservation[0].filter((item, index) => {
