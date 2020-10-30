@@ -1403,7 +1403,7 @@ export default {
     moment,
     disagree() {
       window.open(
-        "http://vhp-online.com/mobilecheckin?param=" + this.hotelcode,
+        this.location,
         "_self"
       );
     },
