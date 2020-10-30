@@ -624,8 +624,9 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      /* Check Used Language */
+      //console.log(this.hotelEndpoint,this.hotelCode,this.langID);
 
+      /* Check Used Language */
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.programLabel = "program-label1";

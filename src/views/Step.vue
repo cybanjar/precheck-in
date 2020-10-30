@@ -1136,7 +1136,7 @@ export default {
           .json();
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
-        this.responseStatus.statusMessage = responses[1];
+        this.responseStatus.statusMessage = responses[1];        
       })();
     },
     save() {
@@ -1374,12 +1374,51 @@ export default {
       data["defaultCI"] = this.defaultCI;
       data["email"] = this.form.getFieldValue(["email"][0]);
       data["phone"] = this.form.getFieldValue(["phone"][0]);
+
+      // Handling Interface WA atau SMS
+      (async () => {
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/createInterface", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare['resnr'],
+                  rsvlineNumber: this.currDataPrepare['reslinnr'],
+                  userInit: "MC",
+                  email: this.form.getFieldValue("email"),
+                  guestPhnumber: this.form.getFieldValue("phone"),
+                  hotelCode: `${this.hotelcode}|${this.langID}`,
+                  roomPreference: this.currDataPrepare['room-preference'],
+                  urlMCI: this.location,
+                },
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"];
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+          //console.log(responses);
+          
+          if(this.responseStatus.statusNumber == 0){
+            router.replace({
+              name: "SuccessCheckIn",
+              params: {
+                Data: data,
+              },
+            });
+          }
+          else{
+            // Handling Apabila Gagal Simpan ke Table Interface
+          }
+        })();
+
+      /*
       router.replace({
         name: "SuccessCheckIn",
         params: {
           Data: data,
         },
       });
+      */
     },
     back() {
       if (this.counter == this.id.length) {
