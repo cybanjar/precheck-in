@@ -795,7 +795,7 @@ export default {
       }
     }
     this.loading = false;
-    console.log('setting',this.$route.params.setting);
+    //console.log('setting',this.$route.params.setting);
     // router.replace(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare.ci));
