@@ -580,7 +580,7 @@ export default {
       this.FG = tempFG[0]["setupvalue"];
 
       const tempImage = this.tempsetup.filter((item, index) => {
-        return item.number1 === 7 && item.number2 === 3;
+        return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
 
