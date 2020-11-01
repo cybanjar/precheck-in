@@ -1369,7 +1369,7 @@ export default {
         data["email"] = this.currDataPrepare['guest-email'];
         data["phone"] = this.currDataPrepare['guest-phnumber'];
         // Handling Interface WA atau SMS
-        console.log(data);
+        //console.log(data);
         (async () => {
             const parsed = await ky
               .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -1390,7 +1390,7 @@ export default {
             const responses = parsed.response["resultMessage"];
             this.responseStatus.statusNumber = responses[0];
             this.responseStatus.statusMessage = responses[1];
-            console.log(responses);
+            //console.log(responses);
             
             if(this.responseStatus.statusNumber == 0){
               router.replace({
