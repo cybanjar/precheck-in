@@ -1245,7 +1245,11 @@ export default {
       //this.step = 0;
     },
     handleResCi() {
-      (async () => {
+      if(this.currDataPrepare['vreg'] == null){
+        this.currDataPrepare['vreg'] = "";
+      }
+
+      (async () => {        
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/resCI", {
             json: {
@@ -1269,12 +1273,11 @@ export default {
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        //console.log(this.responseStatus.statusNumber,this.responseStatus.statusMessage);
-        if (
-          this.responseStatus.statusNumber == "99" ||
-          this.responseStatus.statusNumber == "6" ||
-          this.responseStatus.statusNumber == "7"
-        ){
+        // this.responseStatus.statusNumber == "99" ||
+        // this.responseStatus.statusNumber == "6" ||
+        // this.responseStatus.statusNumber == "7"  
+        //console.log(parsed,parsed.response["checkedIn"]);
+        if (parsed.response["checkedIn"] == "false"){
           this.confirmMailModal = true;
           this.roomNotReady = false;
         }else{
