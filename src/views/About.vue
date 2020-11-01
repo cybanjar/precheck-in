@@ -94,54 +94,6 @@
         </div>
       </div>
 
-      <!-- <a-row
-        class="header-brandings"
-        :style="information"
-        type="flex"
-        justify="space-between"
-      >
-        <a-col class="pl-3 pt-3" :span="15" :md="15" :xs="24">
-          <h4 class="mb-3 text-white font-weight-bold" :style="information">
-            ONLINE CHECK-IN
-          </h4>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="main-guest-title text-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }} |
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6
-            v-else
-            class="main-guest-title text-white font-weight-bold"
-            :style="information"
-          >
-            {{ currDataPrepare["guest-lname"] }},
-            {{ currDataPrepare["guest-pname"] }}
-          </h6>
-          <p class="ant-card-meta-description text-white" :style="information">
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-            <br />
-            {{ getLabels("book_code", `titleCase`) }}:
-            <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-          </p>
-        </a-col>
-        <a-col class="container" :span="9" :md="9" :xs="24">
-          <img
-            class="img-hotel float-right image"
-            :src="gambar"
-            alt="Image Loading"
-          /> -->
-      <!-- <div class="overlay">
-            <div class="text">{{ hotelname }}</div>
-          </div> -->
-      <!-- </a-col> -->
-      <!-- </a-row> -->
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
           <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
@@ -183,14 +135,6 @@
                           format24h
                           @input="$refs.qDateProxy.hide()"
                         >
-                          <!--<div class="row items-center justify-end">
-                            <q-btn
-                              v-close-popup
-                              label="Close"
-                              color="primary"
-                              flat
-                            />
-                          </div>-->
                         </q-time>
                       </q-popup-proxy>
                     </q-icon>
@@ -207,12 +151,9 @@
               v-show="showPickupRequest"
             >
               <a-form-item :label="getLabels('request', `titleCase`)">
-                <a-checkbox
-                  :checked="showPrice"
-                  v-model="showPrice"
-                  @change="onChange"
-                  >{{ getLabels("pick_req", `titleCase`) }}</a-checkbox
-                >
+                <a-checkbox :checked="showPrice" v-model="showPrice">{{
+                  getLabels("pick_req", `titleCase`)
+                }}</a-checkbox>
               </a-form-item>
             </a-col>
             <a-col
@@ -258,6 +199,7 @@
             <a-col>
               <a-form-item :label="getLabels('room_pref', 'titleCase')">
                 <a-radio-group
+                  v-model="room"
                   name="radioGroup"
                   v-show="showSmoking"
                   @change="Room"
@@ -276,6 +218,7 @@
               </a-form-item>
               <a-form-item label>
                 <a-radio-group
+                  v-model="floor"
                   name="radioGroup"
                   v-show="showFloor"
                   @change="Floor"
@@ -293,7 +236,12 @@
                 </a-radio-group>
               </a-form-item>
               <a-form-item label>
-                <a-radio-group name="radioGroup" v-show="showBed" @change="Bed">
+                <a-radio-group
+                  name="radioGroup"
+                  v-model="bed"
+                  v-show="showBed"
+                  @change="Bed"
+                >
                   <a-radio value="OneBigBed">
                     <span class="font-weight-normal">
                       {{ getLabels("one_big_bed", `sentenceCase`) }}
@@ -403,7 +351,6 @@
             <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
               <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
                 <a-select
-                  @change="Kuy"
                   v-decorator="[
                     'purpose',
                     { initialValue: purpose, rules: [{ required: true }] },
@@ -641,7 +588,6 @@ export default {
       max: 100,
       agree: false,
       text: "",
-      kuy: "",
       money: 10,
       showSmoking: false,
       showBed: false,
@@ -693,8 +639,8 @@ export default {
       hotelParams: "",
       phone: "",
       State: "",
-      flight: "",
       checkInTIme: "",
+      tempHour: "",
     };
   },
   created() {
@@ -767,11 +713,11 @@ export default {
         this.currency = temRequest[0]["remarks"];
         const tempPer = temRequest[0]["setupvalue"].split("PER")[1];
         this.per = this.getLabels(tempPer.toLowerCase().trim(), `sentenceCase`);
-        const tempHour = this.tempsetup.filter((item, index) => {
+        this.tempHour = this.tempsetup.filter((item, index) => {
           return item.number1 === 8 && item.number2 === 2;
         });
-        this.hour = moment(tempHour[0]["setupvalue"], "HH:mm")._i;
-        this.checkInTIme = moment(tempHour[0]["setupvalue"], "HH:mm")._i;
+        this.hour = moment(this.tempHour[0]["setupvalue"], "HH:mm")._i;
+        this.checkInTIme = moment(this.tempHour[0]["setupvalue"], "HH:mm")._i;
         const tempBed = this.tempsetup.filter((item, index) => {
           return item.number1 === 3 && item.number2 === 1;
         });
@@ -974,10 +920,6 @@ export default {
       // console.log('Floor is Fired');
       this.floor = e.target.value;
     },
-    Kuy(value) {
-      // console.log('Kuy is Fired');
-      this.kuy = value;
-    },
     Nationality(value) {
       // console.log('Nationality is Fired');
       this.nationality = value;
@@ -1050,20 +992,19 @@ export default {
                 },
               })
               .json();
-            // console.log(parsed, "inputan3");
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+          console.log(parsed, "inputan3");
+          const tempMessResult = parsed.response.messResult.split(" ");
+          this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
           this.scrollToTop();
           this.save();
-          this.form.resetFields();
         }
       });
     },
     save() {
-      // console.log('save is Fired');
+      console.log("save is Fired");
       if (this.counter == this.id.length) {
-        const mori =
+        const Data =
           "{" +
           this.currDataPrepare["rsv-number"] +
           ";" +
@@ -1074,7 +1015,7 @@ export default {
         router.push({
           name: "Success",
           params: {
-            jin: mori,
+            jin: Data,
             jun: this.langID,
             jen: this.flagKiosk,
             mihawk: this.hotelParams,
@@ -1083,9 +1024,44 @@ export default {
         });
         // router.push("success");
       }
+      /* Use V-Decorator */
       this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
+      this.form.setFieldsValue({
+        email: this.currDataPrepare["guest-email"],
+      });
+      this.form.setFieldsValue({
+        phone: this.currDataPrepare["guest-phone"],
+      });
+      this.form.setFieldsValue({
+        nationality: this.currDataPrepare["guest-doc-nation"],
+      });
+      this.form.setFieldsValue({
+        country: this.currDataPrepare["guest-country"],
+      });
+      if (this.country.toLowerCase() == "ina") {
+        this.form.setFieldsValue({
+          region: this.currDataPrepare["guest-prov"],
+        });
+      }
+      this.form.setFieldsValue({
+        flight: "",
+      });
+      this.form.setFieldsValue({
+        purpose: this.$route.params.id["setup"]["06"],
+      });
+
+      /* Doesnt Use V-Decorator */
+      this.hour = this.$route.params.id["setup"]["11"];
+      this.showPrice = false;
+      this.room = "";
+      this.bed = "";
+      this.floor = "";
+      this.text = "";
       this.agree = false;
+      this.country = this.currDataPrepare["guest-country"]
+
+      /* Go To Next Guest */
+      this.counter += 1;
     },
     back() {
       // console.log('back is Fired');
