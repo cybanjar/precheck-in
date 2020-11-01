@@ -992,7 +992,8 @@ export default {
                 },
               })
               .json();
-          //console.log(parsed, "inputan3");
+
+          // console.log(parsed, "inputan3");
           const tempMessResult = parsed.response.messResult.split(" ");
           this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
@@ -1002,7 +1003,8 @@ export default {
       });
     },
     save() {
-      //console.log("save is Fired");
+
+      // console.log("save is Fired");
       if (this.counter == this.id.length) {
         const Data =
           "{" +
