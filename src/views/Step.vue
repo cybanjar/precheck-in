@@ -19,7 +19,7 @@
             type="primary"
             :loading="loading"
             @click="handleYes"
-            >{{ getLabels("yes", `titleCase`) }}</a-button
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
           >
         </template>
         <p>{{ getLabels('mci_success_not_ready', `sentenceCase`) }}</p>
@@ -49,9 +49,19 @@
                   {
                     initialValue: currDataPrepare['guest-email'],
                     rules: [
-                      { 
-                        required: true, 
-                        message: getLabels('required_email', `titleCase`) 
+                      {
+                        required: true,
+                        message: getLabels(
+                          'required_email',
+                          `sentenceCase`
+                        ),
+                      },
+                      {
+                        type: 'email',
+                        message: getLabels(
+                          'not_valid_email',
+                          `sentenceCase`
+                        ),
                       },
                     ],
                   },
@@ -79,6 +89,25 @@
           >
         </template>
         <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
+      </a-modal>
+
+      <!-- Modal For Interface -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="interfacingModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="hideAllModal"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_interface", `sentenceCase`) }}</p>
       </a-modal>
 
       <!-- Modal For Payment Error -->
@@ -769,6 +798,7 @@ export default {
       overlappingModal: false,
       paymenterrorModal: false,
       paymentLoading: false,
+      interfacingModal: false,
       currDataSetting: {},
     };
   },
@@ -1132,6 +1162,7 @@ export default {
       this.termcondition = false;
       this.overlappingModal = false;
       this.paymenterrorModal = false;
+      this.interfacingModal = false;
     },
     onFileChange(e) {
       const file = e.target.files[0];
@@ -1298,71 +1329,83 @@ export default {
         this.handleResCi();
       }
     },
-    handleYes() {
-      this.currDataPrepare['guest-email'] = this.form.getFieldValue(["guest-email"][0]);
-      this.currDataPrepare['guest-phnumber'] = this.form.getFieldValue(["guest-phnumber"][0]);
-            
-      const QRCodeData =
-        "{" +
-        this.currDataPrepare.zinr +
-        ";" +
-        moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-        "}";
-      const data = {};
-      data["QRCodeData"] = QRCodeData;
-      data["wifiAddress"] = this.wifiAddress;
-      data["wifiPassword"] = this.wifiPassword;
-      data["arrangement"] = this.currDataPrepare["argt-str"];
-      data["roomNotReady"] = this.roomNotReady;
-      data["hotelcode"] = this.hotelcode;
-      data["langID"] = this.langID;
-      data["hotelname"] = this.hotelname;
-      data["hotelImage"] = this.gambar;
-      data["BackgroundColor"] = this.information.backgroundColor;
-      data["FontColor"] = this.information.color;
-      data["location"] = this.location;
-      data["TotalData"] = this.TotalData;
-      data["citime"] = this.currDataPrepare['ci'];
-      data["coDate"] = this.currDataPrepare['co'];
-      data["bookingcode"] = this.currDataPrepare['resnr'];
-      data["defaultCI"] = this.defaultCI;
-      data["email"] = this.currDataPrepare['guest-email'];
-      data["phone"] = this.currDataPrepare['guest-phnumber'];
-      // Handling Interface WA atau SMS
-      (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/createInterface", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare['resnr'],
-                  rsvlineNumber: this.currDataPrepare['reslinnr'],
-                  userInit: "MC",
-                  email: this.currDataPrepare['guest-email'],
-                  guestPhnumber: this.currDataPrepare['guest-phnumber'],
-                  hotelCode: `${this.hotelcode}|${this.langID}`,
-                  roomPreference: this.currDataPrepare['room-preference'],
-                  urlMCI: this.location,
+    handleYes() {  
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;  
+      if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
+        this.formresubmit.validateFields(["guest-email"]);
+      } else if (this.formresubmit.getFieldValue(["guest-phone"][0]) == "") {
+        this.formresubmit.validateFields(["guest-phone"]);
+      } else if (!this.formresubmit.getFieldValue(["guest-email"][0]).match(mailformat)) {
+        this.formresubmit.validateFields(["guest-email"]);
+      }  
+      else{
+        this.currDataPrepare['guest-email'] = this.formresubmit.getFieldValue(["guest-email"][0]);
+        this.currDataPrepare['guest-phnumber'] = this.formresubmit.getFieldValue(["guest-phone"][0]);
+              
+        const QRCodeData =
+          "{" +
+          this.currDataPrepare.zinr +
+          ";" +
+          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+          "}";
+        const data = {};
+        data["QRCodeData"] = QRCodeData;
+        data["wifiAddress"] = this.wifiAddress;
+        data["wifiPassword"] = this.wifiPassword;
+        data["arrangement"] = this.currDataPrepare["argt-str"];
+        data["roomNotReady"] = this.roomNotReady;
+        data["hotelcode"] = this.hotelcode;
+        data["langID"] = this.langID;
+        data["hotelname"] = this.hotelname;
+        data["hotelImage"] = this.gambar;
+        data["BackgroundColor"] = this.information.backgroundColor;
+        data["FontColor"] = this.information.color;
+        data["location"] = this.location;
+        data["TotalData"] = this.TotalData;
+        data["citime"] = this.currDataPrepare['ci'];
+        data["coDate"] = this.currDataPrepare['co'];
+        data["bookingcode"] = this.currDataPrepare['resnr'];
+        data["defaultCI"] = this.defaultCI;
+        data["email"] = this.currDataPrepare['guest-email'];
+        data["phone"] = this.currDataPrepare['guest-phnumber'];
+        // Handling Interface WA atau SMS
+        console.log(data);
+        (async () => {
+            const parsed = await ky
+              .post(this.hotelEndpoint + "mobileCI/createInterface", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare['resnr'],
+                    rsvlineNumber: this.currDataPrepare['reslinnr'],
+                    userInit: "MC",
+                    email: this.currDataPrepare['guest-email'],
+                    guestPhnumber: this.currDataPrepare['guest-phnumber'],
+                    hotelCode: `${this.hotelcode}|${this.langID}`,
+                    roomPreference: this.currDataPrepare['room-preference'],
+                    urlMCI: this.location,
+                  },
                 },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"];
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-          //console.log(responses);
-          
-          if(this.responseStatus.statusNumber == 0){
-            router.replace({
-              name: "SuccessCheckIn",
-              params: {
-                Data: data,
-              },
-            });
-          }
-          else{
-            // Handling Apabila Gagal Simpan ke Table Interface
-          }
-        })();
+              })
+              .json();
+            const responses = parsed.response["resultMessage"];
+            this.responseStatus.statusNumber = responses[0];
+            this.responseStatus.statusMessage = responses[1];
+            console.log(responses);
+            
+            if(this.responseStatus.statusNumber == 0){
+              router.replace({
+                name: "SuccessCheckIn",
+                params: {
+                  Data: data,
+                },
+              });
+            }
+            else{
+              // Handling Apabila Gagal Simpan ke Table Interface
+              this.interfacingModal = true;
+            }
+          })();
+      }      
     },
     back() {
       if (this.counter == this.id.length) {

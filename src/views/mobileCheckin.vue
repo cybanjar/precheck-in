@@ -1173,6 +1173,7 @@ export default {
                   });
                 }
               } else {
+                Object.assign(this.setup[0], { TotalData: 1 });
                 const guest =
                   data.response.arrivalGuestlist["arrival-guestlist"][0];
                 if (mode == "nicepay") {

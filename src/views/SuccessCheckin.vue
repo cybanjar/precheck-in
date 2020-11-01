@@ -166,7 +166,7 @@ export default {
         // console.log('Window',this.location);
         window.open(this.location, "_self");
       } else {
-        if (parseInt(this.TotalData) != 0) {
+        if (parseInt(this.TotalData) > 1) {
           // console.log('routerpush',this.TotalData);
           router.push({
             name: "MobileCheckin",
