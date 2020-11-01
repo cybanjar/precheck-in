@@ -861,6 +861,18 @@ export default {
               if (this.reservation[0][0]["room-status"] == "0 Ready To Checkin") {
                 this.informationmodal2 = false;
                 this.roomNotReady = false;
+                if (CookieS.get("data")) {
+                router.push({
+                  name: "Step",
+                  params: {
+                    foo: this.reservation,
+                    fighter: this.langID,
+                    endpoint: this.hotelEndpoint,
+                    hotelcode: this.hotelParams,
+                    paid: true,
+                  },
+                });
+                } else {
                 router.push({
                   name: "Step",
                   params: {
@@ -871,6 +883,7 @@ export default {
                     paid: false,
                   },
                 });
+                }
               } else {
                 this.informationmodal2 = true;
                 this.roomNotReady = true;
