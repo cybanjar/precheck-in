@@ -40,7 +40,7 @@
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p> -->
-          <p :style="textOta">{{ getLabels("mci_success", `sentenceCase`) }}</p>
+          <p :style="textOta">{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
           <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
           <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p> -->
         </div>
