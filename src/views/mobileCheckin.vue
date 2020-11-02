@@ -5,15 +5,66 @@
     </a-spin>
   </div>
   <div v-else>
-    <div :style="ota">
-      <q-img class="" :src="hotelImage">
-        <div
-          class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-        >
-          {{ hotelName }}
-        </div>
-      </q-img>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="col-xs-4"></div>
+      <div class="text-center col-xs-4">
+        <img class="logo_hotel" src="../assets/logo_harris.png" />
+      </div>
+      <div class="col-xs-4">
+        <q-select
+          class="text-white float-right"
+          borderless
+          v-model="langID"
+          @input="changeLang"
+          :options="[
+            { label: 'English', value: 'ENG' },
+            { label: 'Bahasa', value: 'IDN' },
+          ]"
+        />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg">
+        <p class="text-white font-weight-bold">{{ hotelName }}</p>
+      </div>
+    </div>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="col-xs-12 text-center q-mb-md">
+        <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
+          Self Checkin
+        </h4>
+        <h5 :style="FG">
+          <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
+        </h5>
+        <p :style="textOta">
+          {{ getLabels("choose_option", `sentenceCase`) }}
+        </p>
+      </div>
+      <div class="col-3 col-xs-5 text-center">
+        <q-icon
+          @click="showModalBookingCode"
+          name="book_online"
+          class="icon-ota"
+        />
+        <p :style="FG">Booking Code</p>
+      </div>
+      <div class="col-3 col-xs-5 text-center">
+        <q-icon @click="showModalGuestName" name="people" class="icon-ota" />
+        <p :style="FG">Name</p>
+      </div>
+      <div class="col-3 col-xs-5 text-center">
+        <q-icon @click="showModalEmailAddress" name="email" class="icon-ota" />
+        <p :style="FG">Email Address</p>
+      </div>
+      <div class="col-3 col-xs-5 text-center">
+        <q-icon
+          @click="showModalMembershipID"
+          name="folder_special"
+          class="icon-ota"
+        />
+        <p :style="FG">Membership ID</p>
+      </div>
+    </div>
 
+    <div :style="ota">
       <!-- Modal Early Checkin -->
       <a-modal
         :title="getLabels('information', `titleCase`)"
@@ -474,7 +525,7 @@ export default {
       ota: {
         backgroundColor: "",
         width: "100%",
-        height: "100vh",
+        // height: "100vh",
         overflowX: "hidden",
         textAlign: "center",
       },
@@ -556,10 +607,10 @@ export default {
         .forEach((item, index) => {
           let objProperty = "";
           let objValue = "";
-          if (index == 0) {            
+          if (index == 0) {
             // Handling Original URI
             objValue = decodeURIComponent(item);
-            objValue = objValue.replace(' ','+');            
+            objValue = objValue.replace(" ", "+");
             Object.assign(tempParam, { hotelParams: objValue });
           } else {
             // Handling URI From Nicepay Callback
@@ -567,10 +618,10 @@ export default {
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(tempParam, { [objProperty]: objValue });
           }
-        });      
+        });
       this.hotelParams = tempParam.hotelParams;
       const encodedURI = encodeURIComponent(this.hotelParams);
-      this.location += `/mobilecheckin?${encodedURI}`;      
+      this.location += `/mobilecheckin?${encodedURI}`;
     }
     /* Get Client Today Date For Initializing Data */
     const today = new Date();
@@ -592,7 +643,8 @@ export default {
           }
         )
         .json();
-      /* IF Null Response */      
+      /* IF Null Response */
+
       if (code.response["messResult"] == null) {
         router.replace({
           name: "404",
@@ -930,8 +982,7 @@ export default {
           this.cookiesParams.step = cookiesParam.step;
           /* Save It To Database */
           this.handlePreauthToken();
-        }
-        else{
+        } else {
           //console.log(CookieS.get("data"));
         }
       }
@@ -1086,27 +1137,25 @@ export default {
           coDate = this.getCoDate();
           break;
       }
-      if (!this.bookingcode && mode == 'bookingcode') {
+      if (!this.bookingcode && mode == "bookingcode") {
         this.errorbo();
         this.confirmLoading = false;
-      }
-      else if((!this.name || this.name.length <= 0) && mode == 'guestname'){
+      } else if ((!this.name || this.name.length <= 0) && mode == "guestname") {
         this.errorname();
         this.confirmLoading = false;
-      }
-      else if((!this.email || this.email.length <= 0) && mode == 'email'){
+      } else if ((!this.email || this.email.length <= 0) && mode == "email") {
         this.erroremail();
         this.confirmLoading = false;
-      }
-      else if (!this.reg.test(this.email) && mode == 'email') {
+      } else if (!this.reg.test(this.email) && mode == "email") {
         this.erroremailNotTrue();
         this.confirmLoading = false;
-      }
-      else if((!this.member || this.member.length <= 0) && mode == 'membership'){
+      } else if (
+        (!this.member || this.member.length <= 0) &&
+        mode == "membership"
+      ) {
         this.errormembership();
         this.confirmLoading = false;
-      }
-      else if (!this.date) {
+      } else if (!this.date) {
         this.errorco();
         this.confirmLoading = false;
       } else {
