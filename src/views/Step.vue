@@ -440,7 +440,7 @@
                     class="font-weight-bold mt-3 mr-3"
                     type="primary"
                     :disabled="paid"
-                    @click="search()"
+                    @click="goPay()"
                     >{{ getLabels("pay", `titleCase`) }}</a-button
                   >
                 </div>
@@ -1395,6 +1395,37 @@ export default {
     },
     handleBack(){
       window.open("http://localhost:8080/mobilecheckin?param=" + this.hotelcode, "_self");
+    },
+    goPay(){
+      const datas = {
+        0: {
+          gast: this.currDataPrepare["gast"],
+          ci: this.currDataPrepare.ci,
+          co: this.currDataPrepare.co,
+          resnr: this.currDataPrepare.resnr,
+          reslinnr: this.currDataPrepare.reslinnr,
+          zinr: this.currDataPrepare.zinr,
+          "guest-member-name": this.currDataPrepare["guest-member-name"],
+          "guest-email": this.form.getFieldValue("email"),
+          "guest-phnumber": this.form.getFieldValue("phone"),
+          purposeofstay: this.form.getFieldValue("purpose"),
+          "guest-nation": this.form.getFieldValue("nationality"),
+          "guest-country": this.form.getFieldValue("country"),
+          "guest-region": this.form.getFieldValue("region"),
+          "pre-checkin": this.currDataPrepare["pre-checkin"],
+          "image-flag": "0 image id already exist",
+          vreg: this.vRegident,
+          hotelcode: this.hotelcode,
+          lang: this.langID,
+          gambar: this.gambar,
+          hotelname: this.hotelname,
+        }
+      };
+      CookieS.set("data", datas);
+
+      router.push({
+        path: "done",
+      });
     },
   },
 };

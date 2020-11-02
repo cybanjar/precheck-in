@@ -477,9 +477,8 @@ export default {
       this.tempParambook = this.$route.params.bookingcode;
       this.tempParamcodate = this.$route.params.coDate;
       this.tempParamcitime = this.$route.params.citime;
-    } /*else if (location.search.substring(1) != undefined) {
+    } else if (location.search.substring(1) != undefined) {
       this.hotelParams = location.search.substring(1).replace(/%3D/g, "=");
-    }*/ else {
       const tempParam = {};
       location.search
         .split("&")
@@ -491,8 +490,6 @@ export default {
             ? item.split("=")[1]
             : "No query strings available";
         });
-      this.hotelCode = tempParam["hotelcode"];
-      this.hotelParams = tempParam["param"].replace(/%2F/g, "/").replace(/%20/g, "+").replace(/%3D/g, "=");
 
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
