@@ -22,8 +22,8 @@
             >{{ getLabels("ok_message", `titleCase`) }}</a-button
           >
         </template>
-        <p>{{ getLabels('mci_success_not_ready', `sentenceCase`) }}</p>
-        <p>{{ getLabels('reconfirm_phonemail', `sentenceCase`) }}</p>
+        <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
+        <p>{{ getLabels("reconfirm_phonemail", `sentenceCase`) }}</p>
         <div>
           <a-form layout="vertical" :form="formresubmit">
             <a-form-item :label="getLabels('phone_number', `titleCase`)">
@@ -51,17 +51,11 @@
                     rules: [
                       {
                         required: true,
-                        message: getLabels(
-                          'required_email',
-                          `sentenceCase`
-                        ),
+                        message: getLabels('required_email', `sentenceCase`),
                       },
                       {
                         type: 'email',
-                        message: getLabels(
-                          'not_valid_email',
-                          `sentenceCase`
-                        ),
+                        message: getLabels('not_valid_email', `sentenceCase`),
                       },
                     ],
                   },
@@ -89,6 +83,25 @@
           >
         </template>
         <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
+      </a-modal>
+
+      <!-- Modal For Network Establish Error -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="preauthModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="resendPreauth"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_preauth", `sentenceCase`) }}</p>
       </a-modal>
 
       <!-- Modal For Interface -->
@@ -537,7 +550,7 @@
                           type="primary"
                           :disabled="paid || paymentLoading"
                           @click="payDeposit()"
-                          >
+                        >
                           {{ getLabels("pay", `titleCase`) }}
                           <q-spinner
                             v-if="paymentLoading"
@@ -545,8 +558,7 @@
                             color="primary"
                             size="12px"
                           />
-                          </a-button
-                        >                        
+                        </a-button>
                       </div>
                     </a-col>
                   </a-row>
@@ -569,6 +581,23 @@
                         }}
                       </p>
                     </div>
+                    <div v-else-if="paidNetworkError">
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels(
+                            "deposit_payment_network_error",
+                            `sentenceCase`
+                          )
+                        }}
+                      </p>
+                    </div>
+                    <div v-else-if="paidVerError">
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels("deposit_payment_ver_error", `sentenceCase`)
+                        }}
+                      </p>
+                    </div>
                     <div v-else>
                       <p>
                         <a-checkbox v-model="pay">
@@ -585,7 +614,7 @@
                   <div class="row justify-between">
                     <div class="col-6 col-xs-6">
                       <q-btn
-                        v-if="step > 1 && !precheckin"
+                        v-if="step > 1"
                         @click="prev"
                         outline
                         color="primary"
@@ -593,10 +622,7 @@
                         {{ getLabels("prev", `titleCase`) }}
                       </q-btn>
                     </div>
-                    <div
-                      v-if="step != steps.length"
-                      class="col-6 col-xs-6"
-                    >
+                    <div v-if="step != steps.length" class="col-6 col-xs-6">
                       <q-btn
                         @click="next"
                         color="primary"
@@ -712,8 +738,8 @@ export default {
       formTailLayout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
-      },      
-      cek: "",      
+      },
+      cek: "",
       dataID: [],
       max: 100,
       agree: false,
@@ -799,7 +825,13 @@ export default {
       paymenterrorModal: false,
       paymentLoading: false,
       interfacingModal: false,
+      preauthModal: false,
       currDataSetting: {},
+      stepUrl: "",
+      tempParam: {},
+      callbackParam: "",
+      paidNetworkError: false,
+      paidVerError: false,
     };
   },
   watch: {
@@ -808,22 +840,39 @@ export default {
     },
   },
   created() {
-    // lemparan data
-    //console.log(this.$route.params, "point");
-    
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    
-    if(this.currDataPrepare == null || this.currDataSetting == null){
-      if (CookieS.isKey("data")) {
-        /* Get Cookies Reservation Data */
-        const cookiesParam = CookieS.get("data");
-        //console.log(cookiesParam);
-        this.location = cookiesParam.location;
-        window.open(this.location, "_self");
+    this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+
+    if (this.currDataPrepare == null || this.currDataSetting == null) {
+      if (location.search.substring(1) != undefined) {
+        // For Handling Payment Callback
+        this.callbackParam = location.search.substring(1);
+        location.search
+          .split("&")
+          .toString()
+          .substr(1)
+          .split(",")
+          .forEach((item, index) => {
+            let objProperty = "";
+            let objValue = "";
+
+            // Handling URI From Nicepay Callback
+            objProperty = decodeURIComponent(item.split("=")[0]);
+            objValue = decodeURIComponent(item.split("=")[1]);
+            Object.assign(this.tempParam, { [objProperty]: objValue });
+          });
+      }
+
+      if (sessionStorage.getItem("guestData") != null) {
+        this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
+      }
+
+      if (sessionStorage.getItem("settings") != null) {
+        this.currDataSetting = JSON.parse(sessionStorage.getItem("settings"));
       }
     }
-    
+
     this.url = require(`../assets/PassportVerification.svg`);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.precheckin = this.currDataPrepare["pre-checkin"];
@@ -832,9 +881,7 @@ export default {
     this.currency = this.currDataPrepare["currency-usage"];
     this.term = this.currDataSetting["termENG"];
     this.term1 = this.currDataSetting["termIDN"];
-    this.information.backgroundColor = this.currDataSetting[
-      "BackgroundColor"
-    ];
+    this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
@@ -845,8 +892,11 @@ export default {
     this.paid = this.currDataPrepare["preAuth-flag"];
     this.per = this.currDataSetting["per"];
     this.FilterPurposeofStay = this.currDataSetting["FilterPurposeofStay"];
-    if(this.currDataPrepare['purposeofstay'] == ''){
-      this.currDataPrepare['purposeofstay'] = this.currDataSetting["PurposeofStay"];
+    this.freeParking = this.currDataSetting["freeParking"];
+    if (this.currDataPrepare["purposeofstay"] == "") {
+      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
+        "PurposeofStay"
+      ];
     }
     this.region = this.currDataSetting["province"];
     this.countries = this.currDataSetting["countries"];
@@ -874,39 +924,42 @@ export default {
       this.terms = this.term;
     } else {
       this.terms = this.term1;
-    }    
+    }
     /* Handle Stepper */
-    if(this.currDataPrepare['step'] == undefined || this.currDataPrepare['step'] == ""){ // If not define yet
-      if(this.currDataPrepare['image-flag'] == '0 image id already exist'){
-        this.currDataPrepare['step'] = 4;
+    if (
+      this.currDataPrepare["step"] == undefined ||
+      this.currDataPrepare["step"] == ""
+    ) {
+      // If not define yet
+      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
+        this.currDataPrepare["step"] = 4;
         this.termcondition = false;
-      }else{
-        if(this.precheckin){
-          this.currDataPrepare['step'] = 3;
+      } else {
+        if (this.precheckin) {
+          this.currDataPrepare["step"] = 3;
           this.termcondition = false;
-        }else{
-          this.currDataPrepare['step'] = 1;
-          this.termcondition = true;
-        }
-      }  
-      this.step = this.currDataPrepare['step'];
-    }else{
-      if(this.currDataPrepare['image-flag'] == '0 image id already exist'){
-        this.currDataPrepare['step'] = 4;
-        this.termcondition = false;
-      }else{
-        if(this.precheckin){
-          this.currDataPrepare['step'] = 3;
-          this.termcondition = false;
-        }
-        else{
-          this.currDataPrepare['step'] = 1;
+        } else {
+          this.currDataPrepare["step"] = 1;
           this.termcondition = true;
         }
       }
-      this.step = this.currDataPrepare['step'];
-    }    
-    
+      this.step = this.currDataPrepare["step"];
+    } else {
+      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
+        this.currDataPrepare["step"] = 4;
+        this.termcondition = false;
+      } else {
+        if (this.precheckin) {
+          this.currDataPrepare["step"] = 3;
+          this.termcondition = false;
+        } else {
+          this.currDataPrepare["step"] = 1;
+          this.termcondition = true;
+        }
+      }
+      this.step = this.currDataPrepare["step"];
+    }
+
     this.loading = false;
     //console.log('setting',this.currDataSetting);
     // router.replace(this.location);
@@ -928,9 +981,123 @@ export default {
       if (this.Deposit > this.maximumDeposit) {
         this.Deposit = this.maximumDeposit;
       }
-    }    
+    }
+
+    // Handling Callback Payment and Save to Database
+    if (this.tempParam.resultCd != null) {
+      (async () => {
+        const data = await ky
+          .post(this.hotelEndpoint + "mobileCI/resCI", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare["resnr"],
+                rsvlineNumber: this.currDataPrepare["reslinnr"],
+                userInit: "MC",
+                newRoomno: "",
+                purposeOfStay: "",
+                email: "",
+                guestPhnumber: "",
+                guestNation: "",
+                guestCountry: "",
+                guestRegion: "",
+                base64image: "",
+                vehicleNumber: "",
+                preAuthString: this.callbackParam,
+              },
+            },
+          })
+          .json();
+        const responses = data.response["resultMessage"].split(" - ");
+        if (parseInt(responses[0]) > 0) {
+          this.preauthModal = true;
+        } else {
+          if (this.tempParam.resultCd.substring(0, 1) == "1") {
+            /* Payment Gateway Network Error */
+            this.paidNetworkError = true;
+            this.paidVerError = false;
+          } else if (this.tempParam.resultCd.substring(0, 1) == "9") {
+            /* Payment Gateway Network Error */
+            this.paidNetworkError = false;
+            this.paidVerError = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+
+            console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        }
+      })();
+    }
   },
   methods: {
+    resendPreauth() {
+      this.preauthModal = false;
+      if (this.tempParam.resultCd != null) {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            if (this.tempParam.resultCd.substring(0, 1) == "1") {
+              /* Payment Gateway Network Error */
+              this.paidNetworkError = true;
+              this.paidVerError = false;
+            } else if (this.tempParam.resultCd.substring(0, 1) == "9") {
+              /* Payment Gateway Network Error */
+              this.paidNetworkError = true;
+              this.paidVerError = false;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+
+              // Session Storage Set
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
+          }
+        })();
+      }
+    },
     async getFile() {
       await this.$nextTick();
       this.$refs.fileurl.click();
@@ -962,7 +1129,7 @@ export default {
       }
     },
     next() {
-      switch(this.step){
+      switch (this.step) {
         case 1:
           const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
           if (this.form.getFieldValue(["email"][0]) == "") {
@@ -971,12 +1138,17 @@ export default {
             this.form.validateFields(["phone"]);
           } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
-          }
-          else{
+          } else {
             /* Re-Submit The Variable */
-            this.currDataPrepare['guest-email'] = this.form.getFieldValue(["email"][0]);
-            this.currDataPrepare['guest-phnumber'] = this.form.getFieldValue(["phone"][0]);
-            this.currDataPrepare['purposeofstay'] = this.form.getFieldValue(["purpose"][0]);
+            this.currDataPrepare["guest-email"] = this.form.getFieldValue(
+              ["email"][0]
+            );
+            this.currDataPrepare["guest-phnumber"] = this.form.getFieldValue(
+              ["phone"][0]
+            );
+            this.currDataPrepare["purposeofstay"] = this.form.getFieldValue(
+              ["purpose"][0]
+            );
             /* Go To Next Step */
             this.$refs.stepper.next();
           }
@@ -984,29 +1156,39 @@ export default {
         case 2:
           if (this.form.getFieldValue(["nationality"][0]) == "") {
             this.form.validateFields(["nationality"]);
-          }else if(this.form.getFieldValue(["country"][0]) == ""){
+          } else if (this.form.getFieldValue(["country"][0]) == "") {
             this.form.validateFields(["country"]);
-          }else if(this.form.getFieldValue(["country"][0]).toLowerCase() == 'ina' && this.form.getFieldValue(["region"][0]) == ""){
+          } else if (
+            this.form.getFieldValue(["country"][0]).toLowerCase() == "ina" &&
+            this.form.getFieldValue(["region"][0]) == ""
+          ) {
             this.form.validateFields(["region"]);
-          }else{
+          } else {
             /* Re-Submit The Variable */
-            this.currDataPrepare['guest-nation'] = this.form.getFieldValue(["nationality"][0]);
-            this.currDataPrepare['guest-country'] = this.form.getFieldValue(["country"][0]);
-            this.currDataPrepare['guest-region'] = this.form.getFieldValue(["region"][0]);
-            this.currDataPrepare['vreg'] = this.form.getFieldValue(["vRegident"][0]);
+            this.currDataPrepare["guest-nation"] = this.form.getFieldValue(
+              ["nationality"][0]
+            );
+            this.currDataPrepare["guest-country"] = this.form.getFieldValue(
+              ["country"][0]
+            );
+            this.currDataPrepare["guest-region"] = this.form.getFieldValue(
+              ["region"][0]
+            );
+            this.currDataPrepare["vreg"] = this.form.getFieldValue(
+              ["vRegident"][0]
+            );
             /* Go To Next Step */
-            if(this.hasUpload == "0 image id already exist"){
+            if (this.hasUpload == "0 image id already exist") {
               this.$refs.stepper.goTo(4);
-            }
-            else{
+            } else {
               this.$refs.stepper.next();
-            }            
-          }  
+            }
+          }
           break;
         case 3:
-          if (this.form.getFieldValue(["url"][0]) == "") {            
+          if (this.form.getFieldValue(["url"][0]) == "") {
             this.form.validateFields(["url"]);
-          }else{
+          } else {
             this.$refs.stepper.next();
           }
           break;
@@ -1014,36 +1196,38 @@ export default {
           break;
         default:
           break;
-      }      
+      }
     },
     prev() {
-      switch(this.step){
+      switch (this.step) {
         case 4:
           if (!this.precheckin) {
             /* Go To Next Step */
-            if(this.hasUpload == "0 image id already exist"){
+            if (this.hasUpload == "0 image id already exist") {
               this.$refs.stepper.goTo(2);
-            }
-            else{
+            } else {
               this.$refs.stepper.previous();
-            }  
-          }          
+            }
+          } else {
+            /* Go To Next Step */
+            if (this.hasUpload == "0 image id already exist") {
+              this.$refs.stepper.goTo(2);
+            } else {
+              this.$refs.stepper.previous();
+            }
+          }
           break;
         case 3:
-          if (!this.precheckin) {
-            this.$refs.stepper.previous();
-          }
+          this.$refs.stepper.previous();
           break;
         case 2:
-          if (!this.precheckin) {
-            this.$refs.stepper.previous();
-          }
+          this.$refs.stepper.previous();
           break;
         case 1:
           break;
         default:
           break;
-      }      
+      }
     },
     payDeposit() {
       this.paymentLoading = true;
@@ -1070,31 +1254,44 @@ export default {
             .replace(/ /g, "%20")
             .replace(/,/g, "%2C") +
           "&billingPhone=" +
-          this.currDataPrepare['guest-phnumber'] +
+          this.currDataPrepare["guest-phnumber"] +
           "&billingEmail=" +
-          this.currDataPrepare['guest-email'] +
+          this.currDataPrepare["guest-email"] +
           "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
           token.toString() +
           "&userIP=" +
           this.ipAddr +
-          `&cartData={}&callBackUrl=${this.location}` +
-          "&instmntType=1&instmntMon=1&reccurOpt=0";
-        const datas = {
-          codate: this.formatDate(this.currDataPrepare['co']),
-          userInit: "01",
-          resrNumber: this.currDataPrepare['resnr'],
-          resLineNumber: this.currDataPrepare['reslinnr'],
-          guestEmail: this.currDataPrepare['guest-email'],
-          guestPhnumber: this.currDataPrepare['guest-phnumber'],
-          purposeOfStay: this.currDataPrepare['purposeofstay'],
-          guestNation: this.currDataPrepare['guest-nation'],
-          guestCountry: this.currDataPrepare['guest-country'],
-          guestRegion: this.currDataPrepare['guest-region'],
-          step: this.step,
-          vreg: this.currDataPrepare['vreg'],
-          location: this.location,
-        };
-        CookieS.set("data", datas);        
+          `&cartData={}&callBackUrl=${this.stepUrl}` +
+          "&instmntType=1&instmntMon=1&reccurOpt=0&paymentExpTm=000100";
+        // const datas = {
+        //   codate: this.formatDate(this.currDataPrepare["co"]),
+        //   userInit: "01",
+        //   resrNumber: this.currDataPrepare["resnr"],
+        //   resLineNumber: this.currDataPrepare["reslinnr"],
+        //   guestEmail: this.currDataPrepare["guest-email"],
+        //   guestPhnumber: this.currDataPrepare["guest-phnumber"],
+        //   purposeOfStay: this.currDataPrepare["purposeofstay"],
+        //   guestNation: this.currDataPrepare["guest-nation"],
+        //   guestCountry: this.currDataPrepare["guest-country"],
+        //   guestRegion: this.currDataPrepare["guest-region"],
+        //   step: this.step,
+        //   vreg: this.currDataPrepare["vreg"],
+        //   location: this.location,
+        // };
+        // CookieS.set("data", datas);
+
+        // Session Storage Set
+        sessionStorage.removeItem("guestData");
+        sessionStorage.removeItem("settings");
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.currDataPrepare)
+        );
+        sessionStorage.setItem(
+          "settings",
+          JSON.stringify(this.currDataSetting)
+        );
+
         fetch(
           `https://api.allorigins.win/get?url=${encodeURIComponent(
             "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
@@ -1117,7 +1314,7 @@ export default {
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
-                "&optDisplayCB=1&optDisplayBL=0";              
+                "&optDisplayCB=1&optDisplayBL=0";
               window.open(urlInq, "_self");
             } else {
               this.paymentLoading = false;
@@ -1157,12 +1354,13 @@ export default {
     closeModal() {
       this.paymentModal = false;
     },
-    hideAllModal(){
+    hideAllModal() {
       this.confirmMailModal = false;
       this.termcondition = false;
       this.overlappingModal = false;
       this.paymenterrorModal = false;
       this.interfacingModal = false;
+      this.preauthModal = false;
     },
     onFileChange(e) {
       const file = e.target.files[0];
@@ -1194,10 +1392,26 @@ export default {
             canvas.height = MAX_HEIGHT;
             canvas.width = e.target.width * scaleSize;
           }
+
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+          // Convert to Grayscale
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const d = imgData.data;
+
+          for (let i = 0; i < d.length; i += 4) {
+            // get the medium of the 3 first values ( (r+g+b)/3 )
+            const med = (d[i] + d[i + 1] + d[i + 2]) / 3;
+            // set it to each value (r = g = b = med)
+            d[i] = d[i + 1] = d[i + 2] = med;
+            // we don't touch the alpha
+          }
+          // redraw the new computed image
+          ctx.putImageData(imgData, 0, 0);
+
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
@@ -1217,9 +1431,9 @@ export default {
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
                   request: {
-                    inpResnr: this.currDataPrepare['resnr'],
-                    inpReslinnr: this.currDataPrepare['reslinnr'],
-                    guestno: this.currDataPrepare['gastno'],
+                    inpResnr: this.currDataPrepare["resnr"],
+                    inpReslinnr: this.currDataPrepare["reslinnr"],
+                    guestno: this.currDataPrepare["gastno"],
                     imagedata: this.imgb64,
                     userinit: "01",
                   },
@@ -1231,6 +1445,7 @@ export default {
             }
           })();
           this.hasUpload = "0 image id already exist";
+          this.currDataPrepare["image-flag"] = this.hasUpload;
         };
       };
     },
@@ -1245,27 +1460,27 @@ export default {
       //this.step = 0;
     },
     handleResCi() {
-      if(this.currDataPrepare['vreg'] == null){
-        this.currDataPrepare['vreg'] = "";
+      if (this.currDataPrepare["vreg"] == null) {
+        this.currDataPrepare["vreg"] = "";
       }
 
-      (async () => {        
+      (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/resCI", {
             json: {
               request: {
-                rsvNumber: this.currDataPrepare['resnr'],
-                rsvlineNumber: this.currDataPrepare['reslinnr'],
+                rsvNumber: this.currDataPrepare["resnr"],
+                rsvlineNumber: this.currDataPrepare["reslinnr"],
                 userInit: "MC",
-                newRoomno: this.currDataPrepare['zinr'],
-                purposeOfStay: this.currDataPrepare['purposeofstay'],
-                email: this.currDataPrepare['guest-email'],
-                guestPhnumber: this.currDataPrepare['guest-phnumber'],
-                guestNation: this.currDataPrepare['guest-nation'],
-                guestCountry: this.currDataPrepare['guest-country'],
-                guestRegion: this.currDataPrepare['guest-region'],
-                vehicleNumber: this.currDataPrepare['vreg'],
-                base64image: this.imgb64,                
+                newRoomno: this.currDataPrepare["zinr"],
+                purposeOfStay: this.currDataPrepare["purposeofstay"],
+                email: this.currDataPrepare["guest-email"],
+                guestPhnumber: this.currDataPrepare["guest-phnumber"],
+                guestNation: this.currDataPrepare["guest-nation"],
+                guestCountry: this.currDataPrepare["guest-country"],
+                guestRegion: this.currDataPrepare["guest-region"],
+                vehicleNumber: this.currDataPrepare["vreg"],
+                base64image: this.imgb64,
               },
             },
           })
@@ -1275,19 +1490,19 @@ export default {
         this.responseStatus.statusMessage = responses[1];
         // this.responseStatus.statusNumber == "99" ||
         // this.responseStatus.statusNumber == "6" ||
-        // this.responseStatus.statusNumber == "7"  
+        // this.responseStatus.statusNumber == "7"
         //console.log(parsed,parsed.response["checkedIn"]);
-        if (parsed.response["checkedIn"] == "false"){
+        if (parsed.response["checkedIn"] == "false") {
           this.confirmMailModal = true;
           this.roomNotReady = false;
-        }else{
+        } else {
           this.roomNotReady = true;
           const QRCodeData =
             "{" +
             this.currDataPrepare.zinr +
             ";" +
             moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-            "}";          
+            "}";
           const data = {};
           data["QRCodeData"] = QRCodeData;
           data["wifiAddress"] = this.wifiAddress;
@@ -1302,12 +1517,12 @@ export default {
           data["FontColor"] = this.information.color;
           data["location"] = this.location;
           data["TotalData"] = this.TotalData;
-          data["citime"] = this.currDataPrepare['ci'];
-          data["coDate"] = this.currDataPrepare['co'];
-          data["bookingcode"] = this.currDataPrepare['resnr'];
+          data["citime"] = this.currDataPrepare["ci"];
+          data["coDate"] = this.currDataPrepare["co"];
+          data["bookingcode"] = this.currDataPrepare["resnr"];
           data["defaultCI"] = this.defaultCI;
-          data["email"] = this.currDataPrepare['guest-email'];
-          data["phone"] = this.currDataPrepare['guest-phnumber'];
+          data["email"] = this.currDataPrepare["guest-email"];
+          data["phone"] = this.currDataPrepare["guest-phnumber"];
           router.replace({
             name: "SuccessCheckIn",
             params: {
@@ -1319,32 +1534,35 @@ export default {
     },
     save() {
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
-      if(parseInt(rmStatus) == 1){
+      if (parseInt(rmStatus) == 1) {
         /* Overlapping */
         this.overlappingModal = true;
-      }
-      else if(parseInt(rmStatus) > 2){
+      } else if (parseInt(rmStatus) > 2) {
         /* Room is not ready */
         this.handleResCi();
-      }
-      else{
+      } else {
         /* Room is Ready to Check in */
         this.handleResCi();
       }
     },
-    handleYes() {  
-      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;  
+    handleYes() {
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
         this.formresubmit.validateFields(["guest-email"]);
       } else if (this.formresubmit.getFieldValue(["guest-phone"][0]) == "") {
         this.formresubmit.validateFields(["guest-phone"]);
-      } else if (!this.formresubmit.getFieldValue(["guest-email"][0]).match(mailformat)) {
+      } else if (
+        !this.formresubmit.getFieldValue(["guest-email"][0]).match(mailformat)
+      ) {
         this.formresubmit.validateFields(["guest-email"]);
-      }  
-      else{
-        this.currDataPrepare['guest-email'] = this.formresubmit.getFieldValue(["guest-email"][0]);
-        this.currDataPrepare['guest-phnumber'] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-              
+      } else {
+        this.currDataPrepare["guest-email"] = this.formresubmit.getFieldValue(
+          ["guest-email"][0]
+        );
+        this.currDataPrepare[
+          "guest-phnumber"
+        ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
+
         const QRCodeData =
           "{" +
           this.currDataPrepare.zinr +
@@ -1365,50 +1583,49 @@ export default {
         data["FontColor"] = this.information.color;
         data["location"] = this.location;
         data["TotalData"] = this.TotalData;
-        data["citime"] = this.currDataPrepare['ci'];
-        data["coDate"] = this.currDataPrepare['co'];
-        data["bookingcode"] = this.currDataPrepare['resnr'];
+        data["citime"] = this.currDataPrepare["ci"];
+        data["coDate"] = this.currDataPrepare["co"];
+        data["bookingcode"] = this.currDataPrepare["resnr"];
         data["defaultCI"] = this.defaultCI;
-        data["email"] = this.currDataPrepare['guest-email'];
-        data["phone"] = this.currDataPrepare['guest-phnumber'];
+        data["email"] = this.currDataPrepare["guest-email"];
+        data["phone"] = this.currDataPrepare["guest-phnumber"];
         // Handling Interface WA atau SMS
         //console.log(data);
         (async () => {
-            const parsed = await ky
-              .post(this.hotelEndpoint + "mobileCI/createInterface", {
-                json: {
-                  request: {
-                    rsvNumber: this.currDataPrepare['resnr'],
-                    rsvlineNumber: this.currDataPrepare['reslinnr'],
-                    userInit: "MC",
-                    email: this.currDataPrepare['guest-email'],
-                    guestPhnumber: this.currDataPrepare['guest-phnumber'],
-                    hotelCode: `${this.hotelcode}|${this.langID}`,
-                    roomPreference: this.currDataPrepare['room-preference'],
-                    urlMCI: this.location,
-                  },
+          const parsed = await ky
+            .post(this.hotelEndpoint + "mobileCI/createInterface", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  email: this.currDataPrepare["guest-email"],
+                  guestPhnumber: this.currDataPrepare["guest-phnumber"],
+                  hotelCode: `${this.hotelcode}|${this.langID}`,
+                  roomPreference: this.currDataPrepare["room-preference"],
+                  urlMCI: this.location,
                 },
-              })
-              .json();
-            const responses = parsed.response["resultMessage"];
-            this.responseStatus.statusNumber = responses[0];
-            this.responseStatus.statusMessage = responses[1];
-            //console.log(responses);
-            
-            if(this.responseStatus.statusNumber == 0){
-              router.replace({
-                name: "SuccessCheckIn",
-                params: {
-                  Data: data,
-                },
-              });
-            }
-            else{
-              // Handling Apabila Gagal Simpan ke Table Interface
-              this.interfacingModal = true;
-            }
-          })();
-      }      
+              },
+            })
+            .json();
+          const responses = parsed.response["resultMessage"];
+          this.responseStatus.statusNumber = responses[0];
+          this.responseStatus.statusMessage = responses[1];
+          //console.log(responses);
+
+          if (this.responseStatus.statusNumber == 0) {
+            router.replace({
+              name: "SuccessCheckIn",
+              params: {
+                Data: data,
+              },
+            });
+          } else {
+            // Handling Apabila Gagal Simpan ke Table Interface
+            this.interfacingModal = true;
+          }
+        })();
+      }
     },
     back() {
       if (this.counter == this.id.length) {
@@ -1431,10 +1648,7 @@ export default {
     },
     moment,
     disagree() {
-      window.open(
-        this.location,
-        "_self"
-      );
+      window.open(this.location, "_self");
     },
     formatDate(datum) {
       const dDate =

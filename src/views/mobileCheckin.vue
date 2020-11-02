@@ -556,10 +556,10 @@ export default {
         .forEach((item, index) => {
           let objProperty = "";
           let objValue = "";
-          if (index == 0) {            
+          if (index == 0) {
             // Handling Original URI
             objValue = decodeURIComponent(item);
-            objValue = objValue.replace(' ','+');            
+            objValue = objValue.replace(" ", "+");
             Object.assign(tempParam, { hotelParams: objValue });
           } else {
             // Handling URI From Nicepay Callback
@@ -567,10 +567,10 @@ export default {
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(tempParam, { [objProperty]: objValue });
           }
-        });      
+        });
       this.hotelParams = tempParam.hotelParams;
       const encodedURI = encodeURIComponent(this.hotelParams);
-      this.location += `/mobilecheckin?${encodedURI}`;      
+      this.location += `/mobilecheckin?${encodedURI}`;
     }
     /* Get Client Today Date For Initializing Data */
     const today = new Date();
@@ -581,18 +581,16 @@ export default {
     /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
     (async () => {
       const code = await ky
-        .post(
-          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/getUrl",
-          {
-            json: {
-              request: {
-                hotelCode: this.hotelParams,
-              },
+        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
+          json: {
+            request: {
+              hotelCode: this.hotelParams,
             },
-          }
-        )
+          },
+        })
         .json();
-      /* IF Null Response */      
+      /* IF Null Response */
+
       if (code.response["messResult"] == null) {
         router.replace({
           name: "404",
@@ -640,7 +638,7 @@ export default {
       /* Async Get Label From Database */
       const parsed = await ky
         .post(
-          "http://login.e1-vhp.com:8080/logserver/rest/loginServer/loadVariableLabel",
+          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
           {
             json: {
               request: {
@@ -907,33 +905,6 @@ export default {
           this.date = this.tempParamcodate.replace(/%2F/g, "/");
           this.handleFindRsv("pci");
         }
-      } else if (tempParam.resultCd == "0000") {
-        /* Nicepay Callback Handler */
-        if (CookieS.isKey("data")) {
-          /* Get Cookies Reservation Data */
-          const cookiesParam = CookieS.get("data");
-          //console.log(cookiesParam);
-          this.bookingcode = cookiesParam.resrNumber;
-          this.date = cookiesParam.codate;
-          /* Update ResCiParam */
-          this.resCiParam.userInit = cookiesParam.userInit;
-          this.resCiParam.resrNumber = cookiesParam.resrNumber;
-          this.resCiParam.resLineNumber = cookiesParam.resLineNumber;
-          this.resCiParam.preauth = tempParam.preauthToken;
-          this.cookiesParams.guestEmail = cookiesParam.guestEmail;
-          this.cookiesParams.guestPhnumber = cookiesParam.guestPhnumber;
-          this.cookiesParams.purposeOfStay = cookiesParam.purposeOfStay;
-          this.cookiesParams.guestNation = cookiesParam.guestNation;
-          this.cookiesParams.guestCountry = cookiesParam.guestCountry;
-          this.cookiesParams.guestRegion = cookiesParam.guestRegion;
-          this.cookiesParams.vreg = cookiesParam.vreg;
-          this.cookiesParams.step = cookiesParam.step;
-          /* Save It To Database */
-          this.handlePreauthToken();
-        }
-        else{
-          //console.log(CookieS.get("data"));
-        }
       }
     })();
     this.loading = false;
@@ -1036,18 +1007,6 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return coDate;
     },
-    handlePreauthToken() {
-      // Save PreauthToken To Database
-      /**
-       * Yang disimpan adalah
-       * userInit, resrNumber, resLineNumber, preauth
-       * Async Await Save to Database, IF it's success/not then do Go To Reservation
-       */
-      const response = "success";
-      if (response == "success") {
-        this.handleFindRsv("nicepay");
-      }
-    },
     handleFindRsv(mode) {
       //console.log(mode);
       /* Turn On Loading */
@@ -1086,27 +1045,25 @@ export default {
           coDate = this.getCoDate();
           break;
       }
-      if (!this.bookingcode && mode == 'bookingcode') {
+      if (!this.bookingcode && mode == "bookingcode") {
         this.errorbo();
         this.confirmLoading = false;
-      }
-      else if((!this.name || this.name.length <= 0) && mode == 'guestname'){
+      } else if ((!this.name || this.name.length <= 0) && mode == "guestname") {
         this.errorname();
         this.confirmLoading = false;
-      }
-      else if((!this.email || this.email.length <= 0) && mode == 'email'){
+      } else if ((!this.email || this.email.length <= 0) && mode == "email") {
         this.erroremail();
         this.confirmLoading = false;
-      }
-      else if (!this.reg.test(this.email) && mode == 'email') {
+      } else if (!this.reg.test(this.email) && mode == "email") {
         this.erroremailNotTrue();
         this.confirmLoading = false;
-      }
-      else if((!this.member || this.member.length <= 0) && mode == 'membership'){
+      } else if (
+        (!this.member || this.member.length <= 0) &&
+        mode == "membership"
+      ) {
         this.errormembership();
         this.confirmLoading = false;
-      }
-      else if (!this.date) {
+      } else if (!this.date) {
         this.errorco();
         this.confirmLoading = false;
       } else {

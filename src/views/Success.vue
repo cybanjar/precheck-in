@@ -51,7 +51,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$route.params,"nyampe");
+    console.log(this.$route.params, "nyampe");
     this.data = this.$route.params.Data;
     this.flagKiosk = this.$route.params.Param.flagKiosk;
     this.hotelParams = this.$route.params.Param.hotelParams;
