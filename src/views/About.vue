@@ -647,15 +647,18 @@ export default {
     if (this.$route.params.id == undefined) {
       (async () => {
         const tempParam = location.search.substring(1);
+        const tempParams = {};
+        let objValue = "";
+        objValue = decodeURIComponent(tempParam);
+        objValue = objValue.replace(" ", "+");
+        Object.assign(tempParams, { hotelParams: objValue });
         const parsed = await ky
           .post(
             "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
             {
               json: {
                 request: {
-                  encryptedText: tempParam
-                    .replace(/%2F/g, "/")
-                    .replace(/%20/g, "+"),
+                  encryptedText: tempParams.hotelParams,
                 },
               },
             }
@@ -809,7 +812,7 @@ export default {
         ) {
           this.currDataPrepare =
             parsed.response.arrivalGuest["arrival-guest"][0];
-          const mori =
+          const Data =
             "{" +
             this.currDataPrepare["rsv-number"] +
             ";" +
@@ -817,14 +820,18 @@ export default {
             "," +
             this.checkInTIme +
             "}";
+
+          const Param = {};
+          Param["langID"] = this.langID;
+          Param["flagKiosk"] = this.flagKiosk;
+          Param["hotelParams"] = this.hotelParams;
+          Param["hotelEndpoint"] = this.hotelEndpoint;
+
           router.push({
             name: "Success",
             params: {
-              jin: mori,
-              jun: this.langID,
-              jen: this.flagKiosk,
-              mihawk: this.hotelParams,
-              luffy: this.hotelEndpoint,
+              Data: Data,
+              Param: Param,
             },
           });
         } else {
@@ -860,7 +867,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
       // console.log(this.currDataPrepare, "else");
       if (this.currDataPrepare["gcomment-desc"] == "GUEST ALREADY PCI") {
-        const mori =
+        const Data =
           "{" +
           this.currDataPrepare["rsv-number"] +
           ";" +
@@ -868,14 +875,18 @@ export default {
           "," +
           this.checkInTIme +
           "}";
+
+        const Param = {};
+        Param["langID"] = this.langID;
+        Param["flagKiosk"] = this.flagKiosk;
+        Param["hotelParams"] = this.hotelParams;
+        Param["hotelEndpoint"] = this.hotelEndpoint;
+
         router.push({
           name: "Success",
           params: {
-            jin: mori,
-            jun: this.langID,
-            jen: this.flagKiosk,
-            mihawk: this.hotelParams,
-            luffy: this.hotelEndpoint,
+            Data: Data,
+            Param: Param,
           },
         });
       } else {
@@ -903,10 +914,6 @@ export default {
         this.visibleTerm = false;
         this.confirmLoadingTerm = false;
       }, 700);
-    },
-    handleCancelTerm(e) {
-      // console.log('handleCancelTerm is Fired');
-      this.visibleTerm = false;
     },
     Room(e) {
       // console.log('Room is Fired');
@@ -993,9 +1000,9 @@ export default {
               })
               .json();
 
-          // console.log(parsed, "inputan3");
-          const tempMessResult = parsed.response.messResult.split(" ");
-          this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+            // console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
           this.scrollToTop();
           this.save();
@@ -1003,7 +1010,6 @@ export default {
       });
     },
     save() {
-
       // console.log("save is Fired");
       if (this.counter == this.id.length) {
         const Data =
@@ -1014,14 +1020,18 @@ export default {
           "," +
           this.checkInTIme +
           "}";
+
+        const Param = {};
+        Param["langID"] = this.langID;
+        Param["flagKiosk"] = this.flagKiosk;
+        Param["hotelParams"] = this.hotelParams;
+        Param["hotelEndpoint"] = this.hotelEndpoint;
+
         router.push({
           name: "Success",
           params: {
-            jin: Data,
-            jun: this.langID,
-            jen: this.flagKiosk,
-            mihawk: this.hotelParams,
-            luffy: this.hotelEndpoint,
+            Data: Data,
+            Param: Param,
           },
         });
         // router.push("success");
@@ -1060,36 +1070,10 @@ export default {
       this.floor = "";
       this.text = "";
       this.agree = false;
-      this.country = this.currDataPrepare["guest-country"]
+      this.country = this.currDataPrepare["guest-country"];
 
       /* Go To Next Guest */
       this.counter += 1;
-    },
-    back() {
-      // console.log('back is Fired');
-      if (this.counter == this.id.length) {
-        return false;
-      }
-      this.counter -= 1;
-      this.currDataPrepare = this.id[this.counter];
-    },
-    onChange(e) {
-      // console.log('onChange is Fired');
-      this.showPrice = e.target.checked;
-    },
-    isNumber(evt) {
-      // console.log('isNumber is Fired');
-      evt = evt ? evt : window.event;
-      const charCode = evt.which ? evt.which : evt.keyCode;
-      if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        charCode !== 46
-      ) {
-        evt.preventDefault();
-      } else {
-        return true;
-      }
     },
   },
   computed: {

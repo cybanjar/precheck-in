@@ -130,9 +130,11 @@ export default {
   },
   methods: {
     send() {
-      for (const i in this.selectedData) {
-        if (this.selectedData[i]["gcomment-desc"] == "GUEST ALREADY PCI") {
-          this.selectedData.splice(i, 1);
+      if (this.selectedData.length > 1) {
+        for (const i in this.selectedData) {
+          if (this.selectedData[i]["gcomment-desc"] == "GUEST ALREADY PCI") {
+            this.selectedData.splice(i, 1);
+          }
         }
       }
       this.fairy["data"] = this.selectedData;
@@ -141,7 +143,6 @@ export default {
     },
     select(client) {
       if (client.isSelected == false) {
-        // console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i].key == client.key) {

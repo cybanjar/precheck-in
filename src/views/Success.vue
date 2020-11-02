@@ -3,15 +3,15 @@
     <canvas id="canvas" v-show="(!flagKiosk)"></canvas>
     <p>
       {{ getLabels("book_code", `titleCase`) }} :
-      <span class="font-weight-bold">{{ taejin }}</span>
+      <span class="font-weight-bold">{{ bookingCode }}</span>
     </p>
     <p>
       {{ getLabels("co_date", `titleCase`) }} :
-      <span class="font-weight-bold">{{ formatDate(iplyo) }}</span>
+      <span class="font-weight-bold">{{ formatDate(coDate) }}</span>
     </p>
     <p>
       {{ getLabels("ci_time", `titleCase`) }} :
-      <span class="font-weight-bold">{{ jegal }}</span>
+      <span class="font-weight-bold">{{ ciTime }}</span>
     </p>
     <p>
       <a-button type="primary" @click="checkin">{{
@@ -39,9 +39,9 @@ import router from "../router";
 export default {
   data() {
     return {
-      taejin: "", //Booking Code
-      iplyo: "", // Checkout Date
-      jegal: "", // Check-in Time
+      bookingCode: "", //Booking Code
+      coDate: "", // Checkout Date
+      ciTime: "", // Check-in Time
       url: "",
       labels: [],
       flagKiosk: false,
@@ -51,19 +51,20 @@ export default {
     };
   },
   mounted() {
-    this.data = this.$route.params.jin;
-    this.flagKiosk = this.$route.params.jen;
-    this.hotelParams = this.$route.params.mihawk;
-    this.hotelEndpoint = this.$route.params.luffy;
+    console.log(this.$route.params,"nyampe");
+    this.data = this.$route.params.Data;
+    this.flagKiosk = this.$route.params.Param.flagKiosk;
+    this.hotelParams = this.$route.params.Param.hotelParams;
+    this.hotelEndpoint = this.$route.params.Param.hotelEndpoint;
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);
-    this.taejin = this.data.substring(1, this.data.indexOf(";"));
-    this.iplyo = this.data.substring(
+    this.bookingCode = this.data.substring(1, this.data.indexOf(";"));
+    this.coDate = this.data.substring(
       this.data.lastIndexOf(";") + 1,
       this.data.lastIndexOf(",")
     );
-    this.jegal = this.data.substring(
+    this.ciTime = this.data.substring(
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
@@ -71,11 +72,11 @@ export default {
     //   "http://vhp-online.com/mobilecheckin?lang=" +
     //   this.$route.params.jun +
     //   "&book=" +
-    //   this.taejin +
+    //   this.bookingCode +
     //   "&codate=" +
-    //   this.iplyo +
+    //   this.coDate +
     //   "&citime=" +
-    //   this.jegal +
+    //   this.ciTime +
     //   "&hotelcode=" +
     //   this.hotelCode;
     QRCode.toCanvas(
@@ -99,7 +100,7 @@ export default {
           json: {
             request: {
               base64image: this.url,
-              resno: this.taejin,
+              resno: this.bookingCode,
             },
           },
         })
@@ -113,9 +114,9 @@ export default {
         name: "MobileCheckin",
         params: {
           hotelParameter: this.hotelParams,
-          bookingcode: this.taejin,
-          coDate: this.iplyo,
-          citime: this.jegal,
+          bookingcode: this.bookingCode,
+          coDate: this.coDate,
+          citime: this.ciTime,
         },
       });
     },
