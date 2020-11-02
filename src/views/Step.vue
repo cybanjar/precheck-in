@@ -6,7 +6,130 @@
   </div>
   <div v-else>
     <div class="home">
-      <!-- <div v-show="term"> -->
+      <!-- Modal Response Room Status -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="confirmMailModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="handleYes"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels('mci_success_not_ready', `sentenceCase`) }}</p>
+        <p>{{ getLabels('reconfirm_phonemail', `sentenceCase`) }}</p>
+        <div>
+          <a-form layout="vertical" :form="formresubmit">
+            <a-form-item :label="getLabels('phone_number', `titleCase`)">
+              <a-input
+                v-decorator="[
+                  'guest-phone',
+                  {
+                    initialValue: currDataPrepare['guest-phnumber'],
+                    rules: [
+                      {
+                        required: true,
+                        message: getLabels('required_phone', `titleCase`),
+                      },
+                    ],
+                  },
+                ]"
+              />
+            </a-form-item>
+            <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-input
+                v-decorator="[
+                  'guest-email',
+                  {
+                    initialValue: currDataPrepare['guest-email'],
+                    rules: [
+                      {
+                        required: true,
+                        message: getLabels(
+                          'required_email',
+                          `sentenceCase`
+                        ),
+                      },
+                      {
+                        type: 'email',
+                        message: getLabels(
+                          'not_valid_email',
+                          `sentenceCase`
+                        ),
+                      },
+                    ],
+                  },
+                ]"
+              />
+            </a-form-item>
+          </a-form>
+        </div>
+      </a-modal>
+
+      <!-- Modal For Overlapping -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="overlappingModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="hideAllModal"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
+      </a-modal>
+
+      <!-- Modal For Interface -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="interfacingModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="hideAllModal"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_interface", `sentenceCase`) }}</p>
+      </a-modal>
+
+      <!-- Modal For Payment Error -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="paymenterrorModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="hideAllModal"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_payment", `sentenceCase`) }}</p>
+      </a-modal>
+
+      <!-- Modal For Term And Condition -->
       <a-modal
         :title="getLabels('t_c', `titleCase`)"
         :visible="termcondition"
@@ -26,18 +149,8 @@
           >
         </template>
         <p>{{ terms }}</p>
-        <!--<p v-if="langID == 'ENG'">{{term1}}</p>
-        <p v-else>{{term}}</p>-->
       </a-modal>
-      <!-- <a-modal title="Information" :visible="informationmodal" :confirm-loading="confirmLoading">
-        <template slot="footer">
-          <a-button key="submit" type="primary" :loading="loading" @click="goOTA">Close</a-button>
-        </template>
-        <p>{{informationterm}}</p>
-      </a-modal>-->
-      <!-- </div> -->
-      <!-- test -->
-      <!-- <h3 class="text-center font-weight-bold visible">Grand Visual Hotel Jakarta</h3> -->
+
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -102,44 +215,45 @@
           </p>
         </div>
       </div>
-      <!-- precheckin: {{precheckin}}
-      scandID: {{scanid}}-->
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="current === 0">
+          <h2 v-show="step === 1">
             {{ getLabels("guest_detail", `titleCase`) }}
           </h2>
-          <h2 v-show="current === 1">
+          <h2 v-show="step === 2">
             {{ getLabels("guest_detail", `titleCase`) }}
           </h2>
-          <h2 v-show="current === 2">
-            {{ getLabels("scan_id", `titleCase`) }}
+          <h2 v-show="step === 3">
+            {{ getLabels("upload_id", `titleCase`) }}
           </h2>
-          <h2 v-show="current === 3">
+          <h2 v-show="step === 4">
             {{ getLabels("deposit_payment", `titleCase`) }}
           </h2>
           <div>
             <q-stepper
-              v-model="current"
+              v-model="step"
               flat
               bordered
               ref="stepper"
               contracted
               color="primary"
               animated
+              keep-alive
             >
               <q-step
-                :name="0"
-                title="Select campaign settings"
-                icon="people"
+                :name="1"
+                title="Input Guest Detail"
+                icon="person"
+                active-icon="person"
                 style="font-size: 3em;"
-                :done="current + 1 > 1"
+                :done="step > 1"
               >
-                <div class="steps-content" v-show="current === 0">
+                <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item :label="getLabels('email', `titleCase`)">
                         <a-input
+                          class="ant-input-h"
                           v-decorator="[
                             'email',
                             {
@@ -187,7 +301,6 @@
                           ]"
                           outlined
                           dense
-                          v-model="phone"
                           mask="##############"
                         ></q-input>
                       </a-form-item>
@@ -202,20 +315,14 @@
                           v-decorator="[
                             'purpose',
                             {
-                              initialValue: purpose,
+                              initialValue: currDataPrepare['purposeofstay'],
                               rules: [{ required: true }],
                             },
                           ]"
                         >
-                          <!--<a-select-option
-                      v-for="item in FilterPurposeofStay"
-                      :key="item"
-                      :value="item.setupvalue"
-                      >{{ item.setupvalue }}</a-select-option
-                    >-->
                           <a-select-option
                             v-for="item in FilterPurposeofStay"
-                            :key="item"
+                            :key="item.setupvalue"
                             :value="item.setupvalue"
                             >{{
                               getLabels(
@@ -228,30 +335,18 @@
                       </a-form-item>
                     </a-col>
                   </a-row>
-                  <!-- <a-row class gutter="16">
-              <a-col>
-                <p
-                  class="font-weight-bold"
-                  v-show="showSmoking || showFloor || showBed"
-                >Room Preferences</p>
-                <ul>
-                  <li>Non Smoking</li>
-                  <li>Lower Floor</li>
-                  <li>One Big Bed</li>
-                </ul>
-              </a-col>
-            </a-row>-->
                 </div>
               </q-step>
 
               <q-step
-                :name="1"
-                title="Select campaign settings"
-                icon="people"
+                :name="2"
+                title="Input Address"
+                icon="room"
+                active-icon="room"
                 style="font-size: 3em;"
-                :done="current + 1 > 1"
+                :done="step > 2"
               >
-                <div class="steps-content" v-show="current === 1">
+                <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item
@@ -265,7 +360,6 @@
                               rules: [{ required: true }],
                             },
                           ]"
-                          @change="Nationality"
                         >
                           <a-select-option
                             v-for="item in FilterCountry"
@@ -274,37 +368,8 @@
                             >{{ item.setupvalue }}</a-select-option
                           >
                         </a-select>
-                        <!-- <a-select-option value="Indonesia">Indonesia</a-select-option>
-                  <a-select-option value="America">America</a-select-option>
-                  <a-select-option value="ArabSaudi">Arab Saudi</a-select-option>-->
-                        <!-- </a-select> -->
                       </a-form-item>
                     </a-col>
-                    <!-- <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="Choose of Document ID">
-                <a-select default-value="E-KTP">
-                  <a-select-option value="id_card">E-KTP</a-select-option>
-                  <a-select-option value="passport">Passport</a-select-option>
-                  <a-select-option value="driving_license">Driving License</a-select-option>
-                  <a-select-option value="kitas">KITAS</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24">
-              <a-form-item label="ID Number">
-                <a-input placeholder="Please input " />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Expiry Date">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="24">
-              <a-form-item label="Date of Birth">
-                <a-date-picker @change="onChange" />
-              </a-form-item>
-              </a-col>-->
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
@@ -312,7 +377,7 @@
                         :label="getLabels('country_of_residence', `titleCase`)"
                       >
                         <a-select
-                          v-model="country"
+                          @change="handleChangeCountry"
                           v-decorator="[
                             'country',
                             {
@@ -335,7 +400,6 @@
                       <div v-if="country === 'INA' || country === 'ina'">
                         <a-form-item :label="getLabels('region', `titleCase`)">
                           <a-select
-                            @change="handleChangeRegion"
                             v-decorator="[
                               'region',
                               {
@@ -361,209 +425,96 @@
                           </a-select>
                         </a-form-item>
                       </div>
-                      <!--<div v-else>
-                  <a-form-item :label="getLabels('state', `titleCase`)">
-                    <a-input
-                      v-decorator="[
-                        'State',
-                        {
-                          initialValue: State,
-                          rules: [{ message: 'Please input your State' }],
-                        },
-                      ]"
-                    />
-                  </a-form-item>
-                </div>-->
                     </a-col>
-                    <!-- <a-col :span="5" :xl="5" :xs="24" v-if="country === 'indonesia'">
-              <a-form-item label="City">
-                <a-select
-                  show-search
-                  v-model="city"
-                  v-decorator="[
-                    'city',
-                    { initialValue: city, rules: [{ required: true }] },]"
-                >
-                  <a-select-option
-                    v-for="(item, key) in filteredCities"
-                    :key="key"
-                    :value="filteredCities[key].city_name"
-                  >{{ filteredCities[key].city_name }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :xs="24" v-else>
-              <a-form-item label="City">
-                <a-input
-                  initial-value="Willy Wanta"
-                  v-decorator="[
-                  'username',
-                  { rules: [{ required: true, message: '' }] },
-                ]"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="3" :xl="3" :xs="12">
-              <a-form-item label="Postal Code">
-                <a-input placeholder="Ex : 12750" @keydown="onKeydown" />
-              </a-form-item>
-              </a-col>-->
-                  </a-row>
-                </div>
-              </q-step>
-
-              <q-step
-                :name="2"
-                title="Create an ad group"
-                caption="Optional"
-                icon="room"
-                style="font-size: 3em;"
-                :done="current + 1 > 2"
-              >
-                <div class="steps-content" v-show="current === 2">
-                  <a-row
-                    type="flex"
-                    justify="center"
-                    class="text-center"
-                    :gutter="[16, 8]"
-                  >
-                    <a-col :span="6" :xl="6" :xs="24">
-                      <h5>Prepare your Passport for photo verification</h5>
-
-                      <a-card :bordered="false" style="width: 240px;">
-                        <img
-                          slot="cover"
-                          alt="upload"
-                          src="../assets/icon_upload_passport.png"
-                        />
-                      </a-card>
-
-                      <!-- <a-form-item>
-                        <a-upload
-                          accept="image/*"
-                          type="file"
-                          @change="onFileChange"
-                          v-decorator="[
-                            'url',
-                            {
-                              initialValue: '',
-                              rules: [
-                                {
-                                  required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
-                                },
-                              ],
-                            },
-                          ]"
-                          name="logo"
-                          list-type="picture"
+                    <div v-if="freeParking">
+                      <a-col :span="5" :xl="5" :xs="24">
+                        <a-form-item
+                          :label="getLabels('vehicle_regident', `titleCase`)"
                         >
-                          <a-button class="ant-btn-custom1" type="primary">
-                            <a-icon type="camera" /> Click to upload
-                          </a-button>
-                        </a-upload>
-                      </a-form-item> -->
-
-                      <!-- <a-form-item :label="getLabels('upload_id', `titleCase`)">
-                        <input
-                          accept="image/*"
-                          type="file"
-                          @change="onFileChange"
-                          v-decorator="[
-                            'url',
-                            {
-                              initialValue: '',
-                              rules: [
-                                {
-                                  required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
-                                },
-                              ],
-                            },
-                          ]"
-                        />
-                      </a-form-item>
-                      <img class="preview" v-if="url" :src="url" /> -->
-
-                      <label
-                        for="file"
-                        class="custom-file-upload"
-                        onclick="console.log('Klik di label')"
-                        >Click to Upload
-                      </label>
-                      <a-form-item label="url">
-                        <input
-                          onclick="console.log('Klik di input')"
-                          accept="image/*"
-                          type="file"
-                          name="file"
-                          class="custom-input"
-                          id="file"
-                          label="ok"
-                          @change="onFileChange"
-                          v-decorator="[
-                            'url',
-                            {
-                              initialValue: '',
-                              rules: [
-                                {
-                                  required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
-                                },
-                              ],
-                            },
-                          ]"
-                        />
-                      </a-form-item>
-                      <img class="preview" v-if="url" :src="url" />
-
-                      <!-- <a-form-item>
-                        <input
-                          accept="image/*"
-                          type="file"
-                          name="file"
-                          id="file"
-                          class="inputfile"
-                          @change="onFileChange"
-                          v-decorator="[
-                            'url',
-                            {
-                              initialValue: '',
-                              rules: [
-                                {
-                                  required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
-                                },
-                              ],
-                            },
-                          ]"
-                        />
-                      </a-form-item>
-                      <label for="file" class="red">Upload</label> -->
-                    </a-col>
+                          <a-input
+                            class="ant-input-h"
+                            v-decorator="[
+                              'vRegident',
+                              {
+                                initialValue: currDataPrepare['vreg'],
+                              },
+                            ]"
+                          />
+                        </a-form-item>
+                      </a-col>
+                    </div>
                   </a-row>
                 </div>
               </q-step>
 
               <q-step
                 :name="3"
-                title="Create an ad"
-                icon="account_balance_wallet"
+                title="Upload ID"
+                caption="Optional"
+                icon="portrait"
+                active-icon="portrait"
                 style="font-size: 3em;"
+                :done="step > 3"
               >
-                <div class="steps-content" v-show="current === 3">
+                <div class="steps-content">
+                  <a-row class :gutter="[16, 8]">
+                    <a-col class="text-center">
+                      <a-form-item>
+                        <input
+                          style="display: none;"
+                          ref="fileurl"
+                          accept="image/*"
+                          type="file"
+                          @change="onFileChange"
+                          v-decorator="[
+                            'url',
+                            {
+                              initialValue: '',
+                              rules: [
+                                {
+                                  required: true,
+                                  message: getLabels(
+                                    'required_id',
+                                    `sentenceCase`
+                                  ),
+                                },
+                              ],
+                            },
+                          ]"
+                        />
+                        <div style="margin-top: -50px;">
+                          <h1>Prepare your Passport for photo verification</h1>
+                          <p>
+                            We need a photograph of your passport or
+                            alternatively you may upload the image file
+                          </p>
+                        </div>
+                        <img class="preview" v-if="url" :src="url" />
+                        <div style="margin-top: 40px;">
+                          <q-btn
+                            unelevated
+                            rounded
+                            @click="getFile"
+                            color="primary"
+                            label="Upload"
+                            style="width: 200px;"
+                          />
+                        </div>
+                      </a-form-item>
+                    </a-col>
+                  </a-row>
+                </div>
+              </q-step>
+
+              <q-step
+                :name="4"
+                title="Deposit Payment"
+                icon="payment"
+                active-icon="payment"
+                style="font-size: 3em;"
+                :done="step > 4"
+              >
+                <div class="steps-content">
                   <a-row :gutter="[16, 8]" v-if="pay == false">
                     <a-col :span="12" :xl="12" :xs="12">
                       <a-form-item
@@ -573,33 +524,30 @@
                           <strong>
                             {{ this.currDataPrepare["currency-usage"] }}
                             {{
-                              `${minimumDeposit}`.replace(
-                                /\B(?=(\d{3})+(?!\d))/g,
-                                ","
-                              )
+                              `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                             }}
                           </strong>
                         </h2>
                       </a-form-item>
-                      <!--<a-modal :title="getLabels('information')" :visible="paymentModal" :confirm-loading="confirmLoading">
-                  <template slot="footer">
-                    <a-button key="submit" type="primary" @click="closeModal">{{getLabels('close')}}</a-button>
-                  </template>
-                  <p>{{getLabels('payment_error')}}</p>
-                </a-modal>-->
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
-                      <a-button
-                        class="font-weight-bold mt-3 mr-3"
-                        type="primary"
-                        @click="search()"
-                        >{{ getLabels("pay", `titleCase`) }}</a-button
-                      >
-                      <!-- <img
-                  class="rounded float-right"
-                  src="https://docs.nicepay.co.id/images/nicepay-ac8e989d.jpg"
-                  style="height:50px;width:50px; opacity: .65;"
-                />-->
+                      <div>
+                        <a-button
+                          class="font-weight-bold mt-3 mr-3"
+                          type="primary"
+                          :disabled="paid || paymentLoading"
+                          @click="payDeposit()"
+                          >
+                          {{ getLabels("pay", `titleCase`) }}
+                          <q-spinner
+                            v-if="paymentLoading"
+                            style="margin-left: 10px;"
+                            color="primary"
+                            size="12px"
+                          />
+                          </a-button
+                        >                        
+                      </div>
                     </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
@@ -614,13 +562,20 @@
                     </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
-                    <a-col :span="12" :xl="12" :xs="24">
+                    <div v-if="paid">
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels("deposit_payment_success", `sentenceCase`)
+                        }}
+                      </p>
+                    </div>
+                    <div v-else>
                       <p>
                         <a-checkbox v-model="pay">
                           {{ getLabels("term_cash_basis", `titleCase`) }}
                         </a-checkbox>
                       </p>
-                    </a-col>
+                    </div>
                   </a-row>
                 </div>
               </q-step>
@@ -628,9 +583,9 @@
               <template v-slot:navigation>
                 <q-stepper-navigation>
                   <div class="row justify-between">
-                    <div v-if="y" class="col-6 col-xs-6">
+                    <div class="col-6 col-xs-6">
                       <q-btn
-                        v-if="current > 0"
+                        v-if="step > 1 && !precheckin"
                         @click="prev"
                         outline
                         color="primary"
@@ -639,7 +594,7 @@
                       </q-btn>
                     </div>
                     <div
-                      v-if="current < steps.length - 1"
+                      v-if="step != steps.length"
                       class="col-6 col-xs-6"
                     >
                       <q-btn
@@ -648,8 +603,8 @@
                         unelevated
                         class="float-right"
                       >
-                        {{ getLabels("next", `titleCase`) }}</q-btn
-                      >
+                        {{ getLabels("next", `titleCase`) }}
+                      </q-btn>
                     </div>
                   </div>
                 </q-stepper-navigation>
@@ -657,53 +612,36 @@
             </q-stepper>
           </div>
 
-          <!-- <div class="steps-action">
-            <div class="row justify-between">
-              <div class="col-6 col-xs-6">
-                <div v-if="y">
-                  <a-button v-if="current > 0" @click="prev">{{
-                    getLabels("prev", `titleCase`)
-                  }}</a-button>
-                </div>
-              </div>
-              <div class="col-6 col-xs-6">
-                <div v-if="current < steps.length - 1">
-                  <a-button class="float-right" type="primary" @click="next">{{
-                    getLabels("next", `titleCase`)
-                  }}</a-button>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <a-button
-              v-if="current == steps.length - 1"
-              type="primary"
-              @click="$message.success('Processing complete!')"
-            >Done</a-button>-->
-          <!-- <a-row :gutter="[16,8]">
-            <a-col :span="12" :xl="12" :xs="24">
-              <a-checkbox v-model="agree">{{(value == 'terma' ? term1 : term2)}}</a-checkbox>
-            </a-col>
-          </a-row>-->
           <a-row class :gutter="[16, 8]">
             <a-col :span="4" :xl="4" :xs="24">
               <a-form-item>
-                <a-button
-                  :xl="12"
-                  class="font-weight-bold mt-3"
-                  type="primary"
-                  block
-                  :size="size"
-                  @click="
-                    save();
-                    scrollToTop();
-                  "
-                  v-if="current == steps.length - 1"
-                  html-type="submit"
-                  :disabled="!pay"
-                  >{{ getLabels("ci_now", `titleCase`) }}</a-button
-                >
+                <div v-if="!paid">
+                  <a-button
+                    :xl="12"
+                    class="font-weight-bold mt-3"
+                    type="primary"
+                    block
+                    :size="size"
+                    @click="save"
+                    v-if="step == 4"
+                    html-type="submit"
+                    :disabled="!pay"
+                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                  >
+                </div>
+                <div v-else>
+                  <a-button
+                    :xl="12"
+                    class="font-weight-bold mt-3"
+                    type="primary"
+                    block
+                    :size="size"
+                    @click="save"
+                    v-if="step == 4"
+                    html-type="submit"
+                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                  >
+                </div>
               </a-form-item>
             </a-col>
           </a-row>
@@ -715,8 +653,6 @@
 
 <script>
 import router from "../router";
-// import data from "../components/json/indonesia";
-// import countries from "../components/json/country";
 import Vue from "vue";
 import Antd, {
   Row,
@@ -744,7 +680,7 @@ export default {
       pay: false,
       scanid: false,
       informationterm: "",
-      current: 0,
+      step: 1,
       bookingcode: "",
       y: true,
       steps: [
@@ -776,14 +712,8 @@ export default {
       formTailLayout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 8, offset: 4 },
-      },
-      nilai: 2,
-      setRegion: "Bali",
-      cek: "",
-      cities: "",
-      // filteredCity: [],
-      filteredRegion: [],
-      nationality: "Indonesia",
+      },      
+      cek: "",      
       dataID: [],
       max: 100,
       agree: false,
@@ -795,6 +725,7 @@ export default {
       showPickupRequest: true,
       showPrice: false,
       form: this.$form.createForm(this, { name: "dynamic_rule" }),
+      formresubmit: this.$form.createForm(this, { name: "dynamic_rule" }),
       activeKey: ["1"],
       title: ["Mr", "Mrs"],
       expandIconPosition: "left",
@@ -804,6 +735,10 @@ export default {
       guest: false,
       keluar: false,
       currency: "Rp.",
+      setRegion: "",
+      cities: "",
+      filteredRegion: [],
+      nationality: "Indonesia",
       country: "indonesia",
       purpose: "leisure",
       loading: true,
@@ -844,9 +779,27 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
-      headers: {
-        authorization: "authorization-text",
+      roomNotReady: false,
+      freeParking: false,
+      vRegident: "",
+      confirmMailModal: false,
+      responseStatus: {
+        statusNumber: "",
+        statusMessage: "",
       },
+      location: "",
+      programLabel: "",
+      Deposit: "0",
+      maximumDeposit: "0",
+      OverNightDeposit: "0",
+      paid: "0",
+      TotalData: "",
+      defaultCI: "",
+      overlappingModal: false,
+      paymenterrorModal: false,
+      paymentLoading: false,
+      interfacingModal: false,
+      currDataSetting: {},
     };
   },
   watch: {
@@ -855,248 +808,146 @@ export default {
     },
   },
   created() {
-    this.currData = this.$route.params.foo;
-    this.langID = this.$route.params.fighter;
-    this.hotelEndpoint = this.$route.params.endpoint;
-    this.hotelcode = this.$route.params.hotelcode;
-    this.labels = JSON.parse(localStorage.getItem("labels"));
-    // console.log(this.$route.params.id, "nyamtuh");
-    if (this.$route.params.foo != undefined) {
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "preCI/loadSetup", {
-            json: {
-              request: {
-                icase: 1,
-              },
-            },
-          })
-          .json();
-        this.tempsetup = parsed.response.pciSetup["pci-setup"];
-        const jatah = [];
-        for (const i in this.tempsetup) {
-          if (this.tempsetup[i]["number1"] == 4) {
-            jatah.push(this.tempsetup[i]);
-            for (const heaven in jatah) {
-              // console.log(jatah, "msk");
-              if (jatah[heaven].setupflag == true) {
-                this.information.backgroundColor = jatah[heaven]["setupvalue"];
-              }
-            }
-          } else if (this.tempsetup[i]["number1"] == 5) {
-            jatah.push(this.tempsetup[i]);
-            for (const hell in jatah) {
-              if (jatah[hell].setupflag == true) {
-                this.information.color = jatah[hell]["setupvalue"];
-              }
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 7 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.gambar = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.term = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 6 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.term1 = this.tempsetup[i]["setupvalue"];
-          } else if (this.tempsetup[i]["number1"] == 2) {
-            if (this.tempsetup[i].setupflag == true) {
-              this.money = this.tempsetup[i]["price"];
-              this.currency = this.tempsetup[i]["remarks"];
-              this.per = this.tempsetup[i]["setupvalue"].split("PER")[1];
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            this.hour = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.scanid = !this.tempsetup[i]["setupflag"];
-            // console.log(this.scanid, "scandid");
-          } else if (this.tempsetup[i]["number1"] == 1) {
-            /*this.tempsetup[i].setupvalue = this.getLabels(
-              this.tempsetup[i].setupvalue.toLowerCase()
-            );*/
-            this.FilterPurposeofStay.push(this.tempsetup[i]);
-            if (this.tempsetup[i].setupflag == true) {
-              this.purpose = this.tempsetup[i].setupvalue;
-            }
-          } else if (this.tempsetup[i]["number1"] == 3) {
-            if (this.tempsetup[i].number2 == 1) {
-              this.showBed = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 2) {
-              this.showSmoking = this.tempsetup[i].setupflag;
-            } else if (this.tempsetup[i].number2 == 3) {
-              this.showFloor = this.tempsetup[i].setupflag;
-            }
-          } else if (
-            this.tempsetup[i]["number1"] == 99 &&
-            this.tempsetup[i]["number2"] == 1
-          ) {
-            this.hotelname = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 8
-          ) {
-            this.wifiAddress = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 9
-          ) {
-            this.wifiPassword = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 4
-          ) {
-            this.skipDeposit = this.tempsetup[i]["setupvalue"];
-          } else if (
-            this.tempsetup[i]["number1"] == 8 &&
-            this.tempsetup[i]["number2"] == 5
-          ) {
-            this.minimumDeposit = this.tempsetup[i]["price"];
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 2
-          ) {
-            const bulbasur = {};
-            bulbasur["descr"] = this.tempsetup[i]["descr"];
-            bulbasur["setupvalue"] = this.tempsetup[i]["setupvalue"];
-            this.countries.push(bulbasur);
-          } else if (
-            this.tempsetup[i]["number1"] == 9 &&
-            this.tempsetup[i]["number2"] == 3 &&
-            this.tempsetup[i].descr != "SERVER TIME"
-          ) {
-            const air = {};
-            air["descr"] = this.tempsetup[i]["descr"];
-            air["setupvalue"] = this.tempsetup[i]["setupvalue"];
-            this.region.push(air);
-          }
-        }
-        if (this.currData["0"].length > 1) {
-          const nietos = [];
-          const obj = {};
-          this.dataGuest = this.currData["0"];
-          obj["01"] = this.gambar;
-          obj["02"] = this.information;
-          obj["03"] = this.money;
-          obj["04"] = this.currency;
-          obj["05"] = this.per;
-          obj["06"] = this.purpose;
-          obj["07"] = this.FilterPurposeofStay;
-          obj["08"] = this.showBed;
-          obj["09"] = this.showSmoking;
-          obj["10"] = this.showFloor;
-          obj["11"] = this.hour;
-          obj["12"] = this.term;
-          obj["13"] = this.hotelname;
-          obj["14"] = this.showPickupRequest;
-          obj["15"] = this.wifiAddress;
-          obj["16"] = this.wifiPassword;
-          obj["17"] = this.skipDeposit;
-          obj["18"] = this.minimumDeposit;
-          obj["19"] = this.countries;
-          obj["20"] = this.region;
-          obj["21"] = this.term1;
-          obj["22"] = this.hotelcode;
-          nietos.push(this.dataGuest);
-          nietos.push(obj);
-          router.push({
-            name: "ListCheckIn",
-            params: { foo: nietos, fighter: this.langID },
-          });
-        } else {
-          this.currDataPrepare = this.currData["0"]["0"];
-          this.precheckin = this.currDataPrepare["pre-checkin"];
-          this.hasUpload = this.currDataPrepare["image-flag"];
-          if (this.langID == "ENG" || this.langID == "eng") {
-            this.terms = this.term;
-          } else {
-            this.terms = this.term1;
-          }
-          this.country = this.currDataPrepare["guest-country"];
-        }
-        this.termcondition = true;
-        if (this.precheckin == true) {
-          if (this.hasUpload == "0 image id already exist") {
-            this.current = 3;
-            this.y = true;
-          } else {
-            this.current = 2;
-            this.y = true;
-          }
-        }
-        /*if (this.hasUpload == "0 image id already exist") {
-          this.current = 3;
-          this.y = true;
-        }*/
-        this.loading = false;
-      })();
-    } else if (this.$route.params.id != undefined) {
-      this.gambar = this.$route.params.id["setup"]["01"];
-      this.information = this.$route.params.id["setup"]["02"];
-      this.money = this.$route.params.id["setup"]["03"];
-      this.currency = this.$route.params.id["setup"]["04"];
-      this.per = this.$route.params.id["setup"]["05"];
-      this.purpose = this.$route.params.id["setup"]["06"];
-      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
-      this.showBed = this.$route.params.id["setup"]["08"];
-      this.showSmoking = this.$route.params.id["setup"]["09"];
-      this.showFloor = this.$route.params.id["setup"]["10"];
-      this.hour = this.$route.params.id["setup"]["11"];
-      this.term = this.$route.params.id["setup"]["12"];
-      this.hotelname = this.$route.params.id["setup"]["13"];
-      this.showPickupRequest = this.$route.params.id["setup"]["14"];
-      this.wifiAddress = this.$route.params.id["setup"]["15"];
-      this.wifiPassword = this.$route.params.id["setup"]["16"];
-      this.skipDeposit = this.$route.params.id["setup"]["17"];
-      this.minimumDeposit = this.$route.params.id["setup"]["18"];
-      this.countries = this.$route.params.id["setup"]["19"];
-      this.region = this.$route.params.id["setup"]["20"];
-      this.term1 = this.$route.params.id["setup"]["21"];
-      this.hotelcode = this.$route.params.id["setup"]["22"];
-      this.currDataPrepare = this.$route.params.id["data"];
-      this.precheckin = this.currDataPrepare["pre-checkin"];
-      this.country = this.currDataPrepare["guest-country"];
-      this.email = this.currDataPrepare["guest-email"];
-      if (this.langID == "ENG" || this.langID == "eng") {
-        this.terms = this.term;
-      } else {
-        this.terms = this.term1;
+    // lemparan data
+    //console.log(this.$route.params, "point");
+    
+    this.currDataPrepare = this.$route.params.guestData;
+    this.currDataSetting = this.$route.params.setting;
+    
+    if(this.currDataPrepare == null || this.currDataSetting == null){
+      if (CookieS.isKey("data")) {
+        /* Get Cookies Reservation Data */
+        const cookiesParam = CookieS.get("data");
+        //console.log(cookiesParam);
+        this.location = cookiesParam.location;
+        window.open(this.location, "_self");
       }
-      this.termcondition = true;
-      if (this.langID == "ENG" || this.langID == "eng") {
-        this.terms = this.term;
-      } else {
-        this.terms = this.term1;
-      }
-      if (this.precheckin == true) {
-        this.current = 2;
-        this.y = true;
-      }
-      /*if (this.hasUpload == "0 image id already exist") {
-        this.current = 3;
-        this.y = true;
-      }*/
-      this.loading = false;
-    } else {
-      router.push("notfound");
     }
-  },
-  mounted() {
+    
+    this.url = require(`../assets/PassportVerification.svg`);
+    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.precheckin = this.currDataPrepare["pre-checkin"];
+    this.hasUpload = this.currDataPrepare["image-flag"];
+    this.country = this.currDataPrepare["guest-country"];
+    this.currency = this.currDataPrepare["currency-usage"];
+    this.term = this.currDataSetting["termENG"];
+    this.term1 = this.currDataSetting["termIDN"];
+    this.information.backgroundColor = this.currDataSetting[
+      "BackgroundColor"
+    ];
+    this.information.color = this.currDataSetting["FontColor"];
+    this.gambar = this.currDataSetting["hotelImage"];
+    this.hotelname = this.currDataSetting["hotelName"];
+    this.minimumDeposit = this.currDataSetting["minimumDeposit"];
+    this.maximumDeposit = this.currDataSetting["maximumDeposit"];
+    this.OverNightDeposit = this.currDataSetting["OverNightDeposit"];
+    this.TotalData = this.currDataSetting["TotalData"];
+    this.paid = this.currDataPrepare["preAuth-flag"];
+    this.per = this.currDataSetting["per"];
+    this.FilterPurposeofStay = this.currDataSetting["FilterPurposeofStay"];
+    if(this.currDataPrepare['purposeofstay'] == ''){
+      this.currDataPrepare['purposeofstay'] = this.currDataSetting["PurposeofStay"];
+    }
+    this.region = this.currDataSetting["province"];
+    this.countries = this.currDataSetting["countries"];
+    this.wifiAddress = this.currDataSetting["wifiAddress"];
+    this.wifiPassword = this.currDataSetting["wifiPassword"];
+    this.langID = this.currDataSetting["langID"];
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        break;
+      default:
+        this.programLabel = "program-label1";
+        break;
+    }
+    this.hotelEndpoint = this.currDataSetting["hotelEndpoint"];
+    this.hotelcode = this.currDataSetting["hotelCode"];
+    this.location = this.currDataSetting["location"];
+    this.defaultCI = this.currDataSetting["defaultCI"];
     this.filteredRegion = this.region;
     this.FilterCountry = this.countries;
+    if (this.langID == "ENG" || this.langID == "eng") {
+      this.terms = this.term;
+    } else {
+      this.terms = this.term1;
+    }    
+    /* Handle Stepper */
+    if(this.currDataPrepare['step'] == undefined || this.currDataPrepare['step'] == ""){ // If not define yet
+      if(this.currDataPrepare['image-flag'] == '0 image id already exist'){
+        this.currDataPrepare['step'] = 4;
+        this.termcondition = false;
+      }else{
+        if(this.precheckin){
+          this.currDataPrepare['step'] = 3;
+          this.termcondition = false;
+        }else{
+          this.currDataPrepare['step'] = 1;
+          this.termcondition = true;
+        }
+      }  
+      this.step = this.currDataPrepare['step'];
+    }else{
+      if(this.currDataPrepare['image-flag'] == '0 image id already exist'){
+        this.currDataPrepare['step'] = 4;
+        this.termcondition = false;
+      }else{
+        if(this.precheckin){
+          this.currDataPrepare['step'] = 3;
+          this.termcondition = false;
+        }
+        else{
+          this.currDataPrepare['step'] = 1;
+          this.termcondition = true;
+        }
+      }
+      this.step = this.currDataPrepare['step'];
+    }    
+    
+    this.loading = false;
+    //console.log('setting',this.currDataSetting);
+    // router.replace(this.location);
+    /* Handling Deposit Other Value */
+    const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
+    const coDate = moment(this.handleArrayDate(this.currDataPrepare["co"]));
+    const night = coDate.diff(ciDate, "days");
+    if (night === 1) {
+      this.Deposit = this.minimumDeposit;
+    } else if (night > 1) {
+      if (this.OverNightDeposit <= 0) {
+        this.Deposit = this.minimumDeposit;
+      } else {
+        this.Deposit =
+          1 * this.minimumDeposit + (night - 1) * this.OverNightDeposit;
+      }
+    }
+    if (this.maximumDeposit > 0) {
+      if (this.Deposit > this.maximumDeposit) {
+        this.Deposit = this.maximumDeposit;
+      }
+    }    
   },
   methods: {
+    async getFile() {
+      await this.$nextTick();
+      this.$refs.fileurl.click();
+    },
+    handleArrayDate(date) {
+      const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
+      const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(date, "YYYY-MM-DD").year());
+      const dateArray = [dYear, dMonth, dDate];
+      return dateArray;
+    },
+    handleChangeCountry(value) {
+      this.country = value;
+    },
     isNumber: function (evt) {
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
@@ -1111,19 +962,9 @@ export default {
       }
     },
     next() {
-      // console.log(this.hasUpload);
-      if (this.current == 0) {
-        const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (
-          this.form.getFieldValue(["email"][0]) &&
-          this.form.getFieldValue(["email"][0]).match(mailformat) &&
-          this.form.getFieldValue(["phone"][0])
-        ) {
-          this.current++;
-          if (this.precheckin == true) {
-            this.y = true;
-          }
-        } else {
+      switch(this.step){
+        case 1:
+          const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
           if (this.form.getFieldValue(["email"][0]) == "") {
             this.form.validateFields(["email"]);
           } else if (this.form.getFieldValue(["phone"][0]) == "") {
@@ -1131,121 +972,159 @@ export default {
           } else if (!this.form.getFieldValue(["email"][0]).match(mailformat)) {
             this.form.validateFields(["email"]);
           }
-        }
-      } else if (this.current == 1) {
-        if (
-          this.form.getFieldValue(["country"][0]) == "INA" ||
-          this.form.getFieldValue(["country"][0]) == "ina"
-        ) {
-          if (this.form.getFieldValue(["region"][0])) {
-            if (this.hasUpload == "0 image id already exist") {
-              this.current = 3;
-            } else {
-              this.current++;
-            }
-            if (this.precheckin == true) {
-              this.y = true;
-            }
-          } else {
+          else{
+            /* Re-Submit The Variable */
+            this.currDataPrepare['guest-email'] = this.form.getFieldValue(["email"][0]);
+            this.currDataPrepare['guest-phnumber'] = this.form.getFieldValue(["phone"][0]);
+            this.currDataPrepare['purposeofstay'] = this.form.getFieldValue(["purpose"][0]);
+            /* Go To Next Step */
+            this.$refs.stepper.next();
+          }
+          break;
+        case 2:
+          if (this.form.getFieldValue(["nationality"][0]) == "") {
+            this.form.validateFields(["nationality"]);
+          }else if(this.form.getFieldValue(["country"][0]) == ""){
+            this.form.validateFields(["country"]);
+          }else if(this.form.getFieldValue(["country"][0]).toLowerCase() == 'ina' && this.form.getFieldValue(["region"][0]) == ""){
             this.form.validateFields(["region"]);
+          }else{
+            /* Re-Submit The Variable */
+            this.currDataPrepare['guest-nation'] = this.form.getFieldValue(["nationality"][0]);
+            this.currDataPrepare['guest-country'] = this.form.getFieldValue(["country"][0]);
+            this.currDataPrepare['guest-region'] = this.form.getFieldValue(["region"][0]);
+            this.currDataPrepare['vreg'] = this.form.getFieldValue(["vRegident"][0]);
+            /* Go To Next Step */
+            if(this.hasUpload == "0 image id already exist"){
+              this.$refs.stepper.goTo(4);
+            }
+            else{
+              this.$refs.stepper.next();
+            }            
+          }  
+          break;
+        case 3:
+          if (this.form.getFieldValue(["url"][0]) == "") {            
+            this.form.validateFields(["url"]);
+          }else{
+            this.$refs.stepper.next();
           }
-        } else {
-          if (this.hasUpload == "0 image id already exist") {
-            this.current = 3;
-          } else {
-            this.current++;
-          }
-          if (this.precheckin == true) {
-            this.y = true;
-          }
-        }
-      } else if (this.current == 2) {
-        if (this.form.getFieldValue(["url"][0])) {
-          this.current++;
-          if (this.precheckin == true) {
-            this.y = true;
-          }
-        } else {
-          this.form.validateFields(["url"]);
-        }
-      }
-      // console.log(this.form.validateFields(["email"], { force: true }));
+          break;
+        case 4:
+          break;
+        default:
+          break;
+      }      
     },
     prev() {
-      if (this.precheckin == true) {
-        if (this.current == 3) {
-          this.y = false;
-        }
-      }
-      if (this.hasUpload && this.current == 3) {
-        this.current = 1;
-      } else {
-        this.current--;
-      }
+      switch(this.step){
+        case 4:
+          if (!this.precheckin) {
+            /* Go To Next Step */
+            if(this.hasUpload == "0 image id already exist"){
+              this.$refs.stepper.goTo(2);
+            }
+            else{
+              this.$refs.stepper.previous();
+            }  
+          }          
+          break;
+        case 3:
+          if (!this.precheckin) {
+            this.$refs.stepper.previous();
+          }
+          break;
+        case 2:
+          if (!this.precheckin) {
+            this.$refs.stepper.previous();
+          }
+          break;
+        case 1:
+          break;
+        default:
+          break;
+      }      
     },
-    search() {
+    payDeposit() {
+      this.paymentLoading = true;
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
-        const data = await response.json();
-        return data.ip;
+        const ipdata = await response.json();
+        return ipdata.ip;
       }
-      getIP().then((data) => (this.ipAddr = data));
-      const token = CryptoJS.SHA256(
-        "IONPAYTESTTRX2020090700000002" +
-          this.minimumDeposit +
-          "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
-      );
-      const params =
-        "timeStamp=" +
-        moment().format("YYYYMMDDHHmmss") +
-        "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
-        this.minimumDeposit +
-        "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
-        this.currDataPrepare["gast"].replace(/ /g, "%20").replace(/,/g, "%2C") +
-        "&billingPhone=" +
-        this.form.getFieldValue(["phone"][0]) +
-        "&billingEmail=" +
-        this.form.getFieldValue(["email"][0]) +
-        "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
-        token.toString() +
-        "&userIP=" +
-        this.ipAddr +
-        "&cartData={}&callBackUrl=http://vhp-online.com/mobilecheckin?hotelcode=vhpweb&lang=" +
-        this.langID +
-        "&instmntType=1&instmntMon=1&reccurOpt=0";
-
-      const datas = {
-        book: this.currDataPrepare.resnr,
-        codate: this.formatDate(this.currDataPrepare.co),
-        payment: "success",
-      };
-      CookieS.set("data", datas);
-      fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(
-          "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
-        )}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("Network response was not ok.");
-        })
-        .then((data) => {
-          const resp = data.contents.substr(
-            data.contents.indexOf("{"),
-            data.contents.length
-          );
-          this.resReg = JSON.parse(resp);
-          if (this.resReg.data["resultCd"] == "0000") {
-            // console.log(this.resReg);
-            const urlInq =
-              "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
-              this.resReg.data["tXid"] +
-              "&optDisplayCB=1&optDisplayBL=0";
-            window.open(urlInq, "_self");
-          } else {
-            // console.log("error payment");
-          }
-        });
+      getIP().then((dataip) => {
+        this.ipAddr = dataip;
+        //console.log(this.ipAddr);
+        const token = CryptoJS.SHA256(
+          "IONPAYTESTTRX2020090700000002" +
+            this.Deposit +
+            "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
+        );
+        const params =
+          "timeStamp=" +
+          moment().format("YYYYMMDDHHmmss") +
+          "&iMid=IONPAYTEST&payMethod=01&currency=IDR&amt=" +
+          this.Deposit +
+          "&referenceNo=TRX2020090700000002&goodsNm=Deposit&billingNm=" +
+          this.currDataPrepare["gast"]
+            .replace(/ /g, "%20")
+            .replace(/,/g, "%2C") +
+          "&billingPhone=" +
+          this.currDataPrepare['guest-phnumber'] +
+          "&billingEmail=" +
+          this.currDataPrepare['guest-email'] +
+          "&billingCity=Jakarta&billingState=JakSel&billingPostCd=16413&billingCountry=Indonesia&dbProcessUrl=dbproc&merchantToken=" +
+          token.toString() +
+          "&userIP=" +
+          this.ipAddr +
+          `&cartData={}&callBackUrl=${this.location}` +
+          "&instmntType=1&instmntMon=1&reccurOpt=0";
+        const datas = {
+          codate: this.formatDate(this.currDataPrepare['co']),
+          userInit: "01",
+          resrNumber: this.currDataPrepare['resnr'],
+          resLineNumber: this.currDataPrepare['reslinnr'],
+          guestEmail: this.currDataPrepare['guest-email'],
+          guestPhnumber: this.currDataPrepare['guest-phnumber'],
+          purposeOfStay: this.currDataPrepare['purposeofstay'],
+          guestNation: this.currDataPrepare['guest-nation'],
+          guestCountry: this.currDataPrepare['guest-country'],
+          guestRegion: this.currDataPrepare['guest-region'],
+          step: this.step,
+          vreg: this.currDataPrepare['vreg'],
+          location: this.location,
+        };
+        CookieS.set("data", datas);        
+        fetch(
+          `https://api.allorigins.win/get?url=${encodeURIComponent(
+            "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
+          )}`
+        )
+          .then((response) => {
+            if (response.ok) return response.json();
+            throw new Error("Network response was not ok.");
+          })
+          .then((data) => {
+            //console.log('after cors',data);
+            const resp = data.contents.substr(
+              data.contents.indexOf("{"),
+              data.contents.length
+            );
+            this.resReg = JSON.parse(resp);
+            //console.log(this.resReg);
+            if (this.resReg.data["resultCd"] == "0000") {
+              //console.log(this.resReg);
+              const urlInq =
+                "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
+                this.resReg.data["tXid"] +
+                "&optDisplayCB=1&optDisplayBL=0";              
+              window.open(urlInq, "_self");
+            } else {
+              this.paymentLoading = false;
+              this.paymenterrorModal = true; // Harus Di handle pop up modal
+            }
+          });
+      });
     },
     check() {
       const token = CryptoJS.SHA256(
@@ -1278,30 +1157,31 @@ export default {
     closeModal() {
       this.paymentModal = false;
     },
+    hideAllModal(){
+      this.confirmMailModal = false;
+      this.termcondition = false;
+      this.overlappingModal = false;
+      this.paymenterrorModal = false;
+      this.interfacingModal = false;
+    },
     onFileChange(e) {
       const file = e.target.files[0];
-
       /* Start Handling Images Compression */
       const reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onload = (event) => {
         // Creating Image Element
         const imgElement = document.createElement("img");
         imgElement.src = event.target.result;
-
         // Output to Web
-        this.url = event.target.result;
-
+        // this.url = event.target.result;
         // Handling Image Element
         imgElement.onload = (e) => {
           // Creating Canvas and Scale Size
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
           const MAX_HEIGHT = 500;
-
           let scaleSize = 0;
-
           // Scale Size Based on Image Mode Portrait or Landscape
           if (imgElement.width >= imgElement.height) {
             // Landscape Images
@@ -1316,35 +1196,30 @@ export default {
           }
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
-
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
             ctx.fillStyle = "rgba(0,0,0,0.1)";
             ctx.fillText("COPY COPY COPY COPY COPY COPY COPY", 0, i * 100);
           }
-
           // Convert Canvas to DataURL
           const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
           this.url = srcEncoded;
-
           // Create Base64 Images
           const base64Canvas = ctx.canvas
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
-
           (async () => {
             this.imgb64 = base64Canvas;
             const uploadResult = await ky
               .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
                 json: {
                   request: {
-                    inpResnr: this.currDataPrepare.resnr,
-                    inpReslinnr: this.currDataPrepare.reslinnr,
-                    guestno: this.currDataPrepare.gastno,
+                    inpResnr: this.currDataPrepare['resnr'],
+                    inpReslinnr: this.currDataPrepare['reslinnr'],
+                    guestno: this.currDataPrepare['gastno'],
                     imagedata: this.imgb64,
                     userinit: "01",
                   },
@@ -1355,6 +1230,7 @@ export default {
               // console.log(uploadResult.response.resultMessage);
             }
           })();
+          this.hasUpload = "0 image id already exist";
         };
       };
     },
@@ -1366,56 +1242,173 @@ export default {
     },
     scrollToTop() {
       window.scrollTo(0, 0);
-      this.current = 0;
+      //this.step = 0;
+    },
+    handleResCi() {
+      if(this.currDataPrepare['vreg'] == null){
+        this.currDataPrepare['vreg'] = "";
+      }
+
+      (async () => {        
+        const parsed = await ky
+          .post(this.hotelEndpoint + "mobileCI/resCI", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare['resnr'],
+                rsvlineNumber: this.currDataPrepare['reslinnr'],
+                userInit: "MC",
+                newRoomno: this.currDataPrepare['zinr'],
+                purposeOfStay: this.currDataPrepare['purposeofstay'],
+                email: this.currDataPrepare['guest-email'],
+                guestPhnumber: this.currDataPrepare['guest-phnumber'],
+                guestNation: this.currDataPrepare['guest-nation'],
+                guestCountry: this.currDataPrepare['guest-country'],
+                guestRegion: this.currDataPrepare['guest-region'],
+                vehicleNumber: this.currDataPrepare['vreg'],
+                base64image: this.imgb64,                
+              },
+            },
+          })
+          .json();
+        const responses = parsed.response["resultMessage"].split(" - ");
+        this.responseStatus.statusNumber = responses[0];
+        this.responseStatus.statusMessage = responses[1];
+        // this.responseStatus.statusNumber == "99" ||
+        // this.responseStatus.statusNumber == "6" ||
+        // this.responseStatus.statusNumber == "7"  
+        //console.log(parsed,parsed.response["checkedIn"]);
+        if (parsed.response["checkedIn"] == "false"){
+          this.confirmMailModal = true;
+          this.roomNotReady = false;
+        }else{
+          this.roomNotReady = true;
+          const QRCodeData =
+            "{" +
+            this.currDataPrepare.zinr +
+            ";" +
+            moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
+            "}";          
+          const data = {};
+          data["QRCodeData"] = QRCodeData;
+          data["wifiAddress"] = this.wifiAddress;
+          data["wifiPassword"] = this.wifiPassword;
+          data["arrangement"] = this.currDataPrepare["argt-str"];
+          data["roomNotReady"] = this.roomNotReady;
+          data["hotelcode"] = this.hotelcode;
+          data["langID"] = this.langID;
+          data["hotelname"] = this.hotelname;
+          data["hotelImage"] = this.gambar;
+          data["BackgroundColor"] = this.information.backgroundColor;
+          data["FontColor"] = this.information.color;
+          data["location"] = this.location;
+          data["TotalData"] = this.TotalData;
+          data["citime"] = this.currDataPrepare['ci'];
+          data["coDate"] = this.currDataPrepare['co'];
+          data["bookingcode"] = this.currDataPrepare['resnr'];
+          data["defaultCI"] = this.defaultCI;
+          data["email"] = this.currDataPrepare['guest-email'];
+          data["phone"] = this.currDataPrepare['guest-phnumber'];
+          router.replace({
+            name: "SuccessCheckIn",
+            params: {
+              Data: data,
+            },
+          });
+        }
+      })();
     },
     save() {
-      if (this.counter == this.id.length) {
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare.resnr,
-                  rsvlineNumber: this.currDataPrepare.reslinnr,
-                  userInit: "01",
-                  newRoomno: this.currDataPrepare.zinr,
-                  purposeOfStay: this.form.getFieldValue("purpose"),
-                  email: this.form.getFieldValue("email"),
-                  guestPhnumber: this.form.getFieldValue("phone"),
-                  guestNation: this.form.getFieldValue("nationality"),
-                  guestCountry: this.form.getFieldValue("country"),
-                  guestRegion: this.form.getFieldValue("region"),
-                  base64image: this.imgb64,
-                },
-              },
-            })
-            .json();
-        })();
-        const mori =
+      const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
+      if(parseInt(rmStatus) == 1){
+        /* Overlapping */
+        this.overlappingModal = true;
+      }
+      else if(parseInt(rmStatus) > 2){
+        /* Room is not ready */
+        this.handleResCi();
+      }
+      else{
+        /* Room is Ready to Check in */
+        this.handleResCi();
+      }
+    },
+    handleYes() {  
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;  
+      if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
+        this.formresubmit.validateFields(["guest-email"]);
+      } else if (this.formresubmit.getFieldValue(["guest-phone"][0]) == "") {
+        this.formresubmit.validateFields(["guest-phone"]);
+      } else if (!this.formresubmit.getFieldValue(["guest-email"][0]).match(mailformat)) {
+        this.formresubmit.validateFields(["guest-email"]);
+      }  
+      else{
+        this.currDataPrepare['guest-email'] = this.formresubmit.getFieldValue(["guest-email"][0]);
+        this.currDataPrepare['guest-phnumber'] = this.formresubmit.getFieldValue(["guest-phone"][0]);
+              
+        const QRCodeData =
           "{" +
           this.currDataPrepare.zinr +
           ";" +
           moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
           "}";
-        //this.check();
-        //if (this.paymentStatus) {
-        //console.log(this.paymentStatus);
-        router.push({
-          name: "SuccessCheckIn",
-          params: {
-            jin: mori,
-            jun: this.wifiAddress,
-            jen: this.wifiPassword,
-            jon: this.currDataPrepare["argt-str"],
-          },
-        });
-        //} else {
-        //this.paymentModal = true;
-        // }
-      }
-      this.currDataPrepare = this.id[this.counter];
-      this.counter += 1;
-      this.agree = false;
+        const data = {};
+        data["QRCodeData"] = QRCodeData;
+        data["wifiAddress"] = this.wifiAddress;
+        data["wifiPassword"] = this.wifiPassword;
+        data["arrangement"] = this.currDataPrepare["argt-str"];
+        data["roomNotReady"] = this.roomNotReady;
+        data["hotelcode"] = this.hotelcode;
+        data["langID"] = this.langID;
+        data["hotelname"] = this.hotelname;
+        data["hotelImage"] = this.gambar;
+        data["BackgroundColor"] = this.information.backgroundColor;
+        data["FontColor"] = this.information.color;
+        data["location"] = this.location;
+        data["TotalData"] = this.TotalData;
+        data["citime"] = this.currDataPrepare['ci'];
+        data["coDate"] = this.currDataPrepare['co'];
+        data["bookingcode"] = this.currDataPrepare['resnr'];
+        data["defaultCI"] = this.defaultCI;
+        data["email"] = this.currDataPrepare['guest-email'];
+        data["phone"] = this.currDataPrepare['guest-phnumber'];
+        // Handling Interface WA atau SMS
+        //console.log(data);
+        (async () => {
+            const parsed = await ky
+              .post(this.hotelEndpoint + "mobileCI/createInterface", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare['resnr'],
+                    rsvlineNumber: this.currDataPrepare['reslinnr'],
+                    userInit: "MC",
+                    email: this.currDataPrepare['guest-email'],
+                    guestPhnumber: this.currDataPrepare['guest-phnumber'],
+                    hotelCode: `${this.hotelcode}|${this.langID}`,
+                    roomPreference: this.currDataPrepare['room-preference'],
+                    urlMCI: this.location,
+                  },
+                },
+              })
+              .json();
+            const responses = parsed.response["resultMessage"];
+            this.responseStatus.statusNumber = responses[0];
+            this.responseStatus.statusMessage = responses[1];
+            //console.log(responses);
+            
+            if(this.responseStatus.statusNumber == 0){
+              router.replace({
+                name: "SuccessCheckIn",
+                params: {
+                  Data: data,
+                },
+              });
+            }
+            else{
+              // Handling Apabila Gagal Simpan ke Table Interface
+              this.interfacingModal = true;
+            }
+          })();
+      }      
     },
     back() {
       if (this.counter == this.id.length) {
@@ -1423,42 +1416,6 @@ export default {
       }
       this.counter -= 1;
       this.currDataPrepare = this.id[this.counter];
-    },
-    onID(checkedValues) {
-      this.dataID = checkedValues;
-    },
-    berubah(e) {
-      this.nilai = e.target.value;
-    },
-    masukinFoto(foto) {
-      this.gambar = foto.target.value;
-    },
-    masukinUang(uang) {
-      this.money = uang.target.value;
-    },
-    showModal() {
-      this.visible = true;
-    },
-    imageModal() {
-      this.keluar = true;
-    },
-    munculModal() {
-      this.muncul = true;
-    },
-    guestModal() {
-      this.guest = true;
-    },
-    gantiHeaderClass(warna) {
-      this.information.backgroundColor = warna;
-    },
-    gantiFontClass(colours) {
-      this.information.color = colours;
-    },
-    customHeaderClass(color) {
-      this.information.backgroundColor = color.hex;
-    },
-    customFontClass(colour) {
-      this.information.color = colour.hex;
     },
     handleOk(e) {
       this.ModalText = "The modal will be closed after two seconds";
@@ -1472,48 +1429,11 @@ export default {
         this.confirmLoading = false;
       }, 300);
     },
-    handleCancel(e) {
-      this.visible = false;
-      this.muncul = false;
-    },
-    onChange(date, dateString) {
-      data = 0;
-    },
     moment,
-    handleChange(e) {
-      this.checkNick = e.target.checked;
-      this.$nextTick(() => {
-        this.form.validateFields(["nickname"], { force: true });
-      });
-    },
     disagree() {
-      router.push({
-        path: "mobilecheckin",
-        query: { lang: this.langID, hotelcode: this.hotelcode },
-      });
-      // router.push("mobilecheckin");
-    },
-    handleBlur() {
-      // console.log("blur");
-    },
-    handleFocus() {
-      // console.log("focus");
-    },
-    handleChangeUpload(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        this.$message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        this.$message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
+      window.open(
+        this.location,
+        "_self"
       );
     },
     formatDate(datum) {
@@ -1529,30 +1449,38 @@ export default {
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
       return fixDate;
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-      let fixLabel = "";
-      if (label["program-label1"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
-      return fixLabel;
+    handleBack() {
+      window.open(this.location, "_self");
     },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+  },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label[this.programLabel].charAt(0).toUpperCase() +
+              label[this.programLabel].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label[this.programLabel].toUpperCase();
+          } else {
+            fixLabel = label[this.programLabel];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };

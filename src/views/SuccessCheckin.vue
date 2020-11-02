@@ -1,107 +1,146 @@
 <template>
-  <div class="text-center">
-    <canvas id="canvas"></canvas>
-    <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
-    <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
-    <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
-    <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
-
-    <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-    <div class="row justify-center q-mt-xl">
-      <div class="col-md-6 col-xs-11">
-        <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
+  <div :style="ota">
+    <q-img class="" :src="hotelImage">
+      <div class="absolute-bottom font-weight-bold text-subtitle2 text-center">
+        {{ hotelName }}
       </div>
-    </div>
+    </q-img>
+    <canvas v-show="roomNotReady" id="canvas"></canvas>
+    <div v-if="roomNotReady">
+      <p :style="textOta">
+        {{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}
+      </p>
+      <p :style="textOta">
+        {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
+      </p>
+      <p :style="textOta">
+        {{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}
+      </p>
+      <p :style="textOta">
+        {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
+      </p>
 
-    <a-button
-      type="primary"
-      href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
-      >{{ getLabels("done", `titleCase`) }}</a-button
-    >
+      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+      <div class="row justify-center q-mt-xl">
+        <div class="col-md-6 col-xs-11">
+          <p :style="textOta">{{ getLabels("mci_success", `sentenceCase`) }}</p>
+        </div>
+      </div>
+
+      <a-button @click="goBack">{{ getLabels("done", `titleCase`) }}</a-button>
+    </div>
+    <div v-else>
+      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+      <div class="row justify-center q-mt-xl">
+        <div class="col-md-6 col-xs-11">
+          <!-- <p>
+            {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
+          </p>
+          <p>
+            {{ getLabels("wifi_password", `sentenceCase`) }} :
+            {{ wifiPassword }}
+          </p> -->
+          <p :style="textOta">{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
+          <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
+          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p> -->
+        </div>
+      </div>
+
+      <a-button @click="goBack">{{ getLabels("done", `titleCase`) }}</a-button>
+    </div>
   </div>
 </template>
 
 <script>
 import QRCode from "qrcode";
 import ky from "ky";
-
+import moment from "moment";
+import router from "../router";
 export default {
   data() {
     return {
-      taejin: "",
+      roomNumber: "",
       url: "",
       wifiAddress: "",
       wifiPassword: "",
       arrangement: "",
       labels: [],
+      roomNotReady: false,
+      email: "",
+      phone: "",
+      langID: "",
+      location: "",
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      textOta: {
+        color: "",
+        opacity: "0.65",
+      },
+      hotelImage: "",
+      hotelName: "",
+      hotelParams: "",
+      coDate: "",
+      ciTime: "",
+      bookingcode: "",
+      TotalData: "",
     };
   },
   mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
-    this.data = this.$route.params.jin;
+    // console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.langID = this.$route.params.Data.langID;
+    this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
+    this.textOta.color = this.$route.params.Data.FontColor;
+    this.hotelImage = this.$route.params.Data.hotelImage;
+    this.hotelName = this.$route.params.Data.hotelname;
+    this.coDate = this.formatDateFind(this.$route.params.Data.coDate);
+    this.ciTime = this.$route.params.Data.defaultCI;
+    this.bookingcode = this.$route.params.Data.bookingcode;
+    this.TotalData = this.$route.params.Data.TotalData;
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        break;
+      default:
+        this.programLabel = "program-label1";
+        break;
+    }
+    this.data = this.$route.params.Data.QRCodeData;
+    this.location = this.$route.params.Data.location;
+    // console.log(
+    //   this.location.slice(this.location.lastIndexOf("?") + 1),
+    //   "test"
+    // );
+    const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
+    this.hotelParams = decodeURIComponent(tempParam);
+    // console.log(this.hotelParams);
     const success = btoa(this.data);
-    this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.$route.params.jun;
-    this.wifiPassword = this.$route.params.jen;
-    this.arrangement = this.$route.params.jon;
+    this.roomNumber = this.data.substr(1, this.data.indexOf(";") - 1);
+    this.wifiAddress = this.$route.params.Data.wifiAddress;
+    this.wifiPassword = this.$route.params.Data.wifiPassword;
+    this.arrangement = this.$route.params.Data.arrangement;
+    this.roomNotReady = this.$route.params.Data.roomNotReady;
+    this.email = this.$route.params.Data.email;
+    this.phone = this.$route.params.Data.phone;
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
       { errorCorrectionLevel: "H" },
       { width: "76", height: "76" }
-      // function (error) {
-      // if (error) console.error(error);
-      // console.log("success!");
-      // }
     );
-
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
-
-    // (async () => {
-    //   const parsed = await ky
-    //     .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/storeQRCode", {
-    //       json: {
-    //         request: {
-    //           base64image: this.url,
-    //           resno: this.taejin,
-    //         },
-    //       },
-    //     })
-    //     .json();
-    //   console.log(parsed);
-    // })();
   },
   methods: {
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
-      let fixLabel = "";
-      if (label == undefined) {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
-        }
-      }
-
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
-    },
     formatDate(datum) {
       const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
       const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
@@ -110,11 +149,69 @@ export default {
       );
       const dYear = String(moment(datum, "MM/DD/YYYY").year());
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
-
+      return fixDate;
+    },
+    formatDateFind(datum) {
+      const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(2, "0");
+      const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(datum, "YYYY-MM-DD").year());
+      const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
     goBack() {
-      route;
+      if (this.TotalData == undefined) {
+        // console.log('Window',this.location);
+        window.open(this.location, "_self");
+      } else {
+        if (parseInt(this.TotalData) > 1) {
+          // console.log('routerpush',this.TotalData);
+          router.push({
+            name: "MobileCheckin",
+            params: {
+              hotelParameter: this.hotelParams,
+              bookingcode: this.bookingcode,
+              coDate: this.coDate,
+              citime: this.ciTime,
+            },
+          });
+        } else {
+          // console.log('Window',this.location);
+          window.open(this.location, "_self");
+        }
+      }
+    },
+  },
+  computed: {
+    getLabels() {
+      let fixLabel = "";
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["program-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
+        } else {
+          if (used === "titleCase") {
+            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
+              txt
+            ) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label[this.programLabel].charAt(0).toUpperCase() +
+              label[this.programLabel].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label[this.programLabel].toUpperCase();
+          } else {
+            fixLabel = label[this.programLabel];
+          }
+        }
+        return fixLabel;
+      };
     },
   },
 };

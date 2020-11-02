@@ -198,6 +198,12 @@
   transition: all 0.3s;
 }
 
+.disabled {
+  background: $black;
+  color: white;
+  transition: all 0.3s;
+}
+
 .notselected {
   background: #f5f6f7;
   color: #262728;
@@ -219,4 +225,7 @@
   bottom: 0;
   right: 0;
   margin: 1rem;
+}
+.q-field--outlined.q-field--dense.q-field--readonly .q-field__control:before {
+  border: 1px solid #d9d9d9 !important;
 }
