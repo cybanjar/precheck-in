@@ -23,7 +23,7 @@
         />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="FG">{{ hotelName }}</p>
+        <p :style="textOta" class="font-weight-bold">{{ hotelName }}</p>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
@@ -496,6 +496,9 @@ export default {
       freeParking: "",
       BG: "",
       FG: "",
+       textOta: {
+        color: "",
+      },
       setup: [],
       SystemDate: "",
       LICENSE: "",
@@ -765,8 +768,8 @@ export default {
         //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
+      this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
-      console.log(this.FG);
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
         return item.number1 === 7 && item.number2 === 1;
