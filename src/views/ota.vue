@@ -38,14 +38,14 @@
           {{ getLabels("choose_option", `sentenceCase`) }}
         </p>
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-sm-3 col-xs-6 text-center">
         <q-icon
           @click="showModalBookingCode"
           name="book_online"
           :style="iconOta"
         />
-        
-        <p >Booking Code</p>
+
+        <p>Booking Code</p>
         <a-modal
           v-model="modalBookingCode"
           :title="getLabels('book_code', `titleCase`)"
@@ -118,9 +118,9 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-3 col-xs-5 text-center">
-        <q-icon @click="showModalGuestName" name="people" class="icon-ota" />
-        <p >Name</p>
+      <div class="col-sm-3 col-xs-6 text-center">
+        <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
+        <p>Name</p>
         <a-modal
           v-model="modalGuestName"
           :title="getLabels('guest_name', `titleCase`)"
@@ -192,9 +192,9 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-3 col-xs-5 text-center">
-        <q-icon @click="showModalEmailAddress" name="email" class="icon-ota" />
-        <p >Email Address</p>
+      <div class="col-sm-3 col-xs-6 text-center">
+        <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
+        <p>Email Address</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="getLabels('email', `titleCase`)"
@@ -266,13 +266,13 @@
           </a-spin></a-modal
         >
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-sm-3 col-xs-6 text-center">
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
-          class="icon-ota"
+          :style="iconOta"
         />
-        <p >Membership ID</p>
+        <p>Membership ID</p>
         <a-modal
           v-model="modalMembershipID"
           :title="getLabels('membership_id', `titleCase`)"
@@ -763,6 +763,7 @@ export default {
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      this.iconOta.backgroundColor = this.hexAToRGBA(tempBG[0]["setupvalue"]);
       this.iconOta.color = tempBG[0]["setupvalue"];
       this.BG = tempBG[0]["setupvalue"];
       const tempFG = this.tempsetup.filter((item, index) => {
@@ -940,6 +941,23 @@ export default {
     this.loading = false;
   },
   methods: {
+    hexAToRGBA(hex) {
+      console.log(hex);
+      let c;
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split("");
+        if (c.length == 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c = "0x" + c.join("");
+        return (
+          "rgba(" +
+          [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+          ",0.1)"
+        );
+      }
+      throw new Error("Bad Hex");
+    },
     changeLang(data) {
       // Method for changing MCI Language
       if (data.value == "IDN") {
