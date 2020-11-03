@@ -496,7 +496,7 @@ export default {
       freeParking: "",
       BG: "",
       FG: "",
-       textOta: {
+      textOta: {
         color: "",
       },
       setup: [],
