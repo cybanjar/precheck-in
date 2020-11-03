@@ -5,9 +5,7 @@
         <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="font-weight-bold">
-          {{ hotelName }}
-        </p>
+        <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">

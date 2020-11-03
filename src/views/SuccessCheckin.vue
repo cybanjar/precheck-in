@@ -5,33 +5,29 @@
         <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="font-weight-bold">
-          {{ hotelName }}
-        </p>
+        <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
         <canvas v-show="roomNotReady" id="canvas"></canvas>
         <div v-if="roomNotReady">
-          <p >
-            {{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}
-          </p>
-          <p >
+          <p>{{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}</p>
+          <p>
             {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
           </p>
-          <p >
+          <p>
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p>
-          <p >
+          <p>
             {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
           </p>
 
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p >
+              <p>
                 {{ getLabels("mci_success", `sentenceCase`) }}
               </p>
             </div>
@@ -52,7 +48,7 @@
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p> -->
-              <p >
+              <p>
                 {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
               </p>
               <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
