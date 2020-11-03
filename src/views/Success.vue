@@ -7,8 +7,7 @@
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="font-weight-bold">
-          <!-- {{ hotelName }} -->
-          GRAND VISUAL HOTEL
+          {{ hotelName }}
         </p>
       </div>
     </div>

@@ -1,54 +1,71 @@
 <template>
-  <div :style="ota">
-    <q-img class="" :src="hotelImage">
-      <div class="absolute-bottom font-weight-bold text-subtitle2 text-center">
-        {{ hotelName }}
+  <div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="col-xs-4"></div>
+      <div class="text-center col-xs-4">
+        <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
-    </q-img>
-    <canvas v-show="roomNotReady" id="canvas"></canvas>
-    <div v-if="roomNotReady">
-      <p :style="textOta">
-        {{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}
-      </p>
-      <p :style="textOta">
-        {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
-      </p>
-      <p :style="textOta">
-        {{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}
-      </p>
-      <p :style="textOta">
-        {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
-      </p>
-
-      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-      <div class="row justify-center q-mt-xl">
-        <div class="col-md-6 col-xs-11">
-          <p :style="textOta">{{ getLabels("mci_success", `sentenceCase`) }}</p>
-        </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="font-weight-bold">
+          {{ hotelName }}
+        </p>
       </div>
-
-      <a-button @click="goBack">{{ getLabels("done", `titleCase`) }}</a-button>
     </div>
-    <div v-else>
-      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-      <div class="row justify-center q-mt-xl">
-        <div class="col-md-6 col-xs-11">
-          <!-- <p>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="text-center">
+        <canvas v-show="roomNotReady" id="canvas"></canvas>
+        <div v-if="roomNotReady">
+          <p :style="textOta">
+            {{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}
+          </p>
+          <p :style="textOta">
+            {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
+          </p>
+          <p :style="textOta">
+            {{ getLabels("wifi_password", `sentenceCase`) }} :
+            {{ wifiPassword }}
+          </p>
+          <p :style="textOta">
+            {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
+          </p>
+
+          <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+          <div class="row justify-center q-mt-xl">
+            <div class="col-md-6 col-xs-11">
+              <p :style="textOta">
+                {{ getLabels("mci_success", `sentenceCase`) }}
+              </p>
+            </div>
+          </div>
+
+          <a-button @click="goBack">{{
+            getLabels("done", `titleCase`)
+          }}</a-button>
+        </div>
+        <div v-else>
+          <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+          <div class="row justify-center q-mt-xl">
+            <div class="col-md-6 col-xs-11">
+              <!-- <p>
             {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
           </p>
           <p>
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p> -->
-          <p :style="textOta">
-            {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
-          </p>
-          <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
+              <p :style="textOta">
+                {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
+              </p>
+              <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
           <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p> -->
+            </div>
+          </div>
+
+          <a-button @click="goBack">{{
+            getLabels("done", `titleCase`)
+          }}</a-button>
         </div>
       </div>
-
-      <a-button @click="goBack">{{ getLabels("done", `titleCase`) }}</a-button>
     </div>
   </div>
 </template>
