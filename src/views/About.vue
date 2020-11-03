@@ -259,7 +259,7 @@
           <a-row class="ml-3" :gutter="[16, 8]">
             <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
               <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea :rows="4" :maxLength="max" v-model="text" />
+                <a-textarea :rows="4" :max-length="max" v-model="text" />
               </a-form-item>
             </a-col>
             <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
@@ -993,9 +993,9 @@ export default {
               })
               .json();
 
-          // console.log(parsed, "inputan3");
-          const tempMessResult = parsed.response.messResult.split(" ");
-          this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+            // console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
           this.scrollToTop();
           this.save();
@@ -1003,7 +1003,6 @@ export default {
       });
     },
     save() {
-
       // console.log("save is Fired");
       if (this.counter == this.id.length) {
         const Data =
@@ -1060,7 +1059,7 @@ export default {
       this.floor = "";
       this.text = "";
       this.agree = false;
-      this.country = this.currDataPrepare["guest-country"]
+      this.country = this.currDataPrepare["guest-country"];
 
       /* Go To Next Guest */
       this.counter += 1;
