@@ -23,7 +23,7 @@
         />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p class="text-white font-weight-bold">{{ hotelName }}</p>
+        <p :style="FG">{{ hotelName }}</p>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
@@ -31,10 +31,10 @@
         <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
           Self Checkin
         </h4>
-        <h5 :style="FG">
+        <h5>
           <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
         </h5>
-        <p :style="textOta">
+        <p>
           {{ getLabels("choose_option", `sentenceCase`) }}
         </p>
       </div>
@@ -42,9 +42,10 @@
         <q-icon
           @click="showModalBookingCode"
           name="book_online"
-          class="icon-ota"
+          :style="iconOta"
         />
-        <p :style="FG">Booking Code</p>
+        
+        <p >Booking Code</p>
         <a-modal
           v-model="modalBookingCode"
           :title="getLabels('book_code', `titleCase`)"
@@ -119,7 +120,7 @@
       </div>
       <div class="col-3 col-xs-5 text-center">
         <q-icon @click="showModalGuestName" name="people" class="icon-ota" />
-        <p :style="FG">Name</p>
+        <p >Name</p>
         <a-modal
           v-model="modalGuestName"
           :title="getLabels('guest_name', `titleCase`)"
@@ -193,7 +194,7 @@
       </div>
       <div class="col-3 col-xs-5 text-center">
         <q-icon @click="showModalEmailAddress" name="email" class="icon-ota" />
-        <p :style="FG">Email Address</p>
+        <p >Email Address</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="getLabels('email', `titleCase`)"
@@ -271,7 +272,7 @@
           name="folder_special"
           class="icon-ota"
         />
-        <p :style="FG">Membership ID</p>
+        <p >Membership ID</p>
         <a-modal
           v-model="modalMembershipID"
           :title="getLabels('membership_id', `titleCase`)"
@@ -386,7 +387,6 @@
       </template>
       <p>{{ getLabels("mci_error_to_fo", "sentenceCase") }}</p>
     </a-modal>
-
   </div>
 </template>
 
@@ -461,10 +461,6 @@ export default {
       confirmLoading: false,
       hotelImage: "",
       hotelName: "",
-      textOta: {
-        color: "",
-        opacity: "0.65",
-      },
       ota: {
         backgroundColor: "",
         width: "100%",
@@ -523,6 +519,13 @@ export default {
         guestRegion: "",
         vreg: "",
         step: "",
+      },
+      iconOta: {
+        fontSize: "4em",
+        color: "#1890ff",
+        padding: "16px",
+        // background-color: rgba(24, 144, 255, 0.1),
+        borderRadius: "20px",
       },
     };
   },
@@ -762,8 +765,8 @@ export default {
         //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
-      this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
+      console.log(this.FG);
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
         return item.number1 === 7 && item.number2 === 1;

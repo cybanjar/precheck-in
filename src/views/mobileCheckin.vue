@@ -73,7 +73,7 @@
           />
         </div>
         <a-col class="text-center" :span="4" :xs="24">
-          <h1 :class="FG">
+          <h1>
             <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
           </h1>
           <p :style="textOta">
@@ -467,10 +467,6 @@ export default {
       confirmLoading: false,
       hotelImage: "",
       hotelName: "",
-      textOta: {
-        color: "",
-        opacity: "0.65",
-      },
       ota: {
         backgroundColor: "",
         width: "100%",
@@ -765,7 +761,6 @@ export default {
         //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
-      this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
