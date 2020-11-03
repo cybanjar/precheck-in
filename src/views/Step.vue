@@ -540,11 +540,19 @@
                               `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                             }}
                           </strong>
-                        </h2>                        
+                        </h2>
                       </a-form-item>
                       <div>
-                        <a-form-item label="Deposit Payment Response" style="margin-top: 10px;">
-                          <a-select v-model="errorCode" default-value="0000" style="width: 180px;" @change="handleChange">
+                        <a-form-item
+                          label="Deposit Payment Response"
+                          style="margin-top: 10px;"
+                        >
+                          <a-select
+                            v-model="errorCode"
+                            default-value="0000"
+                            style="width: 180px;"
+                            @change="handleChange"
+                          >
                             <a-select-option value="0000">
                               Success
                             </a-select-option>
@@ -577,8 +585,8 @@
                             size="12px"
                           />
                         </a-button>
-                      </div>                                            
-                    </a-col>                                        
+                      </div>
+                    </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
                     <a-col :span="12" :xl="12" :xs="12">
@@ -1034,7 +1042,8 @@ export default {
         if (parseInt(responses[0]) > 0) {
           this.preauthModal = true;
         } else {
-          if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
+          if (this.errorCode == "1004") {
+            //this.tempParam.resultCd.substring(0, 1)
             /* Payment Gateway Network Error */
             this.paidNetworkError = true;
             this.paidVerError = false;
@@ -1093,7 +1102,8 @@ export default {
           if (parseInt(responses[0]) > 0) {
             this.preauthModal = true;
           } else {
-            if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
+            if (this.errorCode == "1004") {
+              //this.tempParam.resultCd.substring(0, 1)
               /* Payment Gateway Network Error */
               this.paidNetworkError = true;
               this.paidVerError = false;
@@ -1318,10 +1328,7 @@ export default {
           "settings",
           JSON.stringify(this.currDataSetting)
         );
-        sessionStorage.setItem(
-          "errorCode",
-          JSON.stringify(this.errorCode)
-        );
+        sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
 
         fetch(
           `https://api.allorigins.win/get?url=${encodeURIComponent(
