@@ -10,15 +10,17 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
-      <div class="col-xs-4">
+      <div class="col-xs-4" style="padding-right: 10px;">
         <q-select
-          class="text-white float-right"
+          :style="textOta"
+          class="float-right"
           borderless
-          v-model="langID"
+          behavior="menu"
+          v-model="selectedLang"
           @input="changeLang"
           :options="[
-            { label: 'English', value: 'ENG' },
-            { label: 'Bahasa', value: 'IDN' },
+            { label: 'English', value: 'English' },
+            { label: 'Indonesia', value: 'Indonesia' },
           ]"
         />
       </div>
@@ -45,7 +47,7 @@
           :style="iconOta"
         />
 
-        <p>Booking Code</p>
+        <p>{{ getLabels("book_code", `titleCase`) }}</p>
         <a-modal
           v-model="modalBookingCode"
           :title="getLabels('book_code', `titleCase`)"
@@ -120,7 +122,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p>Name</p>
+        <p>{{ getLabels("icon_name", `titleCase`) }}</p>
         <a-modal
           v-model="modalGuestName"
           :title="getLabels('guest_name', `titleCase`)"
@@ -194,7 +196,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p>Email Address</p>
+        <p>{{ getLabels("email", `titleCase`) }}</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="getLabels('email', `titleCase`)"
@@ -272,7 +274,7 @@
           name="folder_special"
           :style="iconOta"
         />
-        <p>Membership ID</p>
+        <p>{{ getLabels("membership_id", `titleCase`) }}</p>
         <a-modal
           v-model="modalMembershipID"
           :title="getLabels('membership_id', `titleCase`)"
@@ -530,9 +532,11 @@ export default {
         backgroundColor: "rgba(24, 144, 255, 0.1)",
         borderRadius: "20px",
       },
+      selectedLang: "",
     };
   },
   created() {
+    this.$q.iconSet.arrow.dropdown = "language";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
     /* tempParam Variable for Nicepay */
@@ -615,25 +619,16 @@ export default {
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.programLabel = "program-label1";
+          this.selectedLang = "English";
           break;
         case "idn":
           this.programLabel = "program-label2";
+          this.selectedLang = "Indonesia";
           break;
         default:
           this.programLabel = "program-label1";
+          this.selectedLang = "English";
           break;
-      }
-      /* Get Icon According to the selected language */
-      if (this.langID == "eng" || this.langID == "ENG") {
-        this.boPhoto = require(`../assets/booking-code.svg`);
-        this.namePhoto = require(`../assets/Name.svg`);
-        this.emailPhoto = require(`../assets/EmailAddress.svg`);
-        this.memberPhoto = require(`../assets/membership.svg`);
-      } else {
-        this.boPhoto = require(`../assets/kodeBooking.svg`);
-        this.namePhoto = require(`../assets/Nama.svg`);
-        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
-        this.memberPhoto = require(`../assets/keanggotaan.svg`);
       }
       /* Async Get Label From Database */
       const parsed = await ky
@@ -929,24 +924,18 @@ export default {
       }
       throw new Error("Bad Hex");
     },
-    changeLang(value) {
+    changeLang(data) {
       // Method for changing MCI Language
-      if (value == "IDN") {
+      if (data.value == "Indonesia") {
         this.programLabel = "program-label2";
         this.langID = "IDN";
-        this.boPhoto = require(`../assets/kodeBooking.svg`);
-        this.namePhoto = require(`../assets/Nama.svg`);
-        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
-        this.memberPhoto = require(`../assets/keanggotaan.svg`);
         this.setup[0]["langID"] = this.langID;
+        this.selectedLang = "Indonesia";
       } else {
         this.programLabel = "program-label1";
         this.langID = "ENG";
-        this.boPhoto = require(`../assets/booking-code.svg`);
-        this.namePhoto = require(`../assets/Name.svg`);
-        this.emailPhoto = require(`../assets/EmailAddress.svg`);
-        this.memberPhoto = require(`../assets/membership.svg`);
         this.setup[0]["langID"] = this.langID;
+        this.selectedLang = "English";
       }
     },
     async showModalBookingCode() {
@@ -1299,7 +1288,7 @@ export default {
             fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
               txt
             ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
             });
           } else if (used === "sentenceCase") {
             fixLabel =
