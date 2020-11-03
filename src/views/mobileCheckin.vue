@@ -22,7 +22,7 @@
           ]"
         />
       </div>
-      <div class="col-xs-12 text-center q-mb-lg">
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p class="text-white font-weight-bold">{{ hotelName }}</p>
       </div>
     </div>
