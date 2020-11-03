@@ -767,6 +767,7 @@ export default {
         //  Foreground Color
         return item.number1 === 5 && item.setupflag === true;
       });
+      this.textOta.color = tempFG[0]["setupvalue"];
       this.FG = tempFG[0]["setupvalue"];
       const tempImage = this.tempsetup.filter((item, index) => {
         //  Image Hotel
