@@ -1,8 +1,7 @@
 <template>
   <div>
     <div :style="ota" class="row justify-between pt-2">
-      <div class="col-xs-4"></div>
-      <div class="text-center col-xs-4">
+      <div class="text-center col-xs-12">
         <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
@@ -15,24 +14,24 @@
       <div class="text-center">
         <canvas v-show="roomNotReady" id="canvas"></canvas>
         <div v-if="roomNotReady">
-          <p :style="textOta">
+          <p >
             {{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}
           </p>
-          <p :style="textOta">
+          <p >
             {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
           </p>
-          <p :style="textOta">
+          <p >
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p>
-          <p :style="textOta">
+          <p >
             {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
           </p>
 
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p :style="textOta">
+              <p >
                 {{ getLabels("mci_success", `sentenceCase`) }}
               </p>
             </div>
@@ -53,7 +52,7 @@
             {{ getLabels("wifi_password", `sentenceCase`) }} :
             {{ wifiPassword }}
           </p> -->
-              <p :style="textOta">
+              <p >
                 {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
               </p>
               <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
@@ -92,7 +91,7 @@ export default {
       ota: {
         backgroundColor: "",
         width: "100%",
-        height: "100vh",
+        // height: "100vh",
         overflowX: "hidden",
         textAlign: "center",
       },

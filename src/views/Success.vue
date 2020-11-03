@@ -1,8 +1,7 @@
 <template>
   <div>
     <div :style="ota" class="row justify-between pt-2">
-      <div class="col-xs-4"></div>
-      <div class="text-center col-xs-4">
+      <div class="text-center col-xs-12">
         <img class="logo_hotel" src="../assets/logo_harris.png" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
