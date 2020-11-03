@@ -862,6 +862,7 @@ export default {
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    this.errorCode = "0000";
 
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -1008,65 +1009,15 @@ export default {
 
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
-      (async () => {
-        const data = await ky
-          .post(this.hotelEndpoint + "mobileCI/resCI", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare["resnr"],
-                rsvlineNumber: this.currDataPrepare["reslinnr"],
-                userInit: "MC",
-                newRoomno: "",
-                purposeOfStay: "",
-                email: "",
-                guestPhnumber: "",
-                guestNation: "",
-                guestCountry: "",
-                guestRegion: "",
-                base64image: "",
-                vehicleNumber: "",
-                preAuthString: this.callbackParam,
-              },
-            },
-          })
-          .json();
-        const responses = data.response["resultMessage"].split(" - ");
-        if (parseInt(responses[0]) > 0) {
-          this.preauthModal = true;
-        } else {
-          if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
-            /* Payment Gateway Network Error */
-            this.paidNetworkError = true;
-            this.paidVerError = false;
-          } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-            /* Payment Gateway Network Error */
-            this.paidNetworkError = true;
-            this.paidVerError = false;
-          } else {
-            this.currDataPrepare["preAuth-flag"] = true;
-            this.paid = this.currDataPrepare["preAuth-flag"];
-            this.paidNetworkError = false;
-            this.paidVerError = false;
-
-            //console.log(this.currDataPrepare);
-            // Session Storage Set
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-          }
-        }
-      })();
-    }
-  },
-  methods: {
-    resendPreauth() {
-      this.preauthModal = false;
-      if (this.tempParam.resultCd != null) {
+      if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else {
         (async () => {
           const data = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1093,32 +1044,81 @@ export default {
           if (parseInt(responses[0]) > 0) {
             this.preauthModal = true;
           } else {
-            if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
-              /* Payment Gateway Network Error */
-              this.paidNetworkError = true;
-              this.paidVerError = false;
-            } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-              /* Payment Gateway Network Error */
-              this.paidNetworkError = true;
-              this.paidVerError = false;
-            } else {
-              this.currDataPrepare["preAuth-flag"] = true;
-              this.paid = this.currDataPrepare["preAuth-flag"];
-              this.paidNetworkError = false;
-              this.paidVerError = false;
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
 
-              // Session Storage Set
-              sessionStorage.setItem(
-                "guestData",
-                JSON.stringify(this.currDataPrepare)
-              );
-              sessionStorage.setItem(
-                "settings",
-                JSON.stringify(this.currDataSetting)
-              );
-            }
+            //console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
           }
-        })();
+        })();        
+      }      
+    }
+  },
+  methods: {
+    resendPreauth() {
+      this.preauthModal = false;
+      if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+
+            //console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();        
       }
     },
     async getFile() {
