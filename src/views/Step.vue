@@ -540,8 +540,26 @@
                               `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                             }}
                           </strong>
-                        </h2>
+                        </h2>                        
                       </a-form-item>
+                      <div>
+                        <a-form-item label="Deposit Payment Response" style="margin-top: 10px;">
+                          <a-select v-model="errorCode" default-value="0000" style="width: 180px;" @change="handleChange">
+                            <a-select-option value="0000">
+                              Success
+                            </a-select-option>
+                            <a-select-option value="1004">
+                              Connection timeout
+                            </a-select-option>
+                            <a-select-option value="9002">
+                              Server is busy
+                            </a-select-option>
+                            <a-select-option value="8021">
+                              Card authorization error
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                      </div>
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
@@ -559,8 +577,8 @@
                             size="12px"
                           />
                         </a-button>
-                      </div>
-                    </a-col>
+                      </div>                                            
+                    </a-col>                                        
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
                     <a-col :span="12" :xl="12" :xs="12">
@@ -832,6 +850,7 @@ export default {
       callbackParam: "",
       paidNetworkError: false,
       paidVerError: false,
+      errorCode: "",
     };
   },
   watch: {
@@ -870,6 +889,10 @@ export default {
 
       if (sessionStorage.getItem("settings") != null) {
         this.currDataSetting = JSON.parse(sessionStorage.getItem("settings"));
+      }
+
+      if (sessionStorage.getItem("errorCode") != null) {
+        this.errorCode = JSON.parse(sessionStorage.getItem("errorCode"));
       }
     }
 
@@ -1011,21 +1034,21 @@ export default {
         if (parseInt(responses[0]) > 0) {
           this.preauthModal = true;
         } else {
-          if (this.tempParam.resultCd.substring(0, 1) == "1") {
+          if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
             /* Payment Gateway Network Error */
             this.paidNetworkError = true;
             this.paidVerError = false;
-          } else if (this.tempParam.resultCd.substring(0, 1) == "9") {
+          } else if (this.errorCode == "9002" || this.errorCode == "8021") {
             /* Payment Gateway Network Error */
-            this.paidNetworkError = false;
-            this.paidVerError = true;
+            this.paidNetworkError = true;
+            this.paidVerError = false;
           } else {
             this.currDataPrepare["preAuth-flag"] = true;
             this.paid = this.currDataPrepare["preAuth-flag"];
             this.paidNetworkError = false;
             this.paidVerError = false;
 
-            console.log(this.currDataPrepare);
+            //console.log(this.currDataPrepare);
             // Session Storage Set
             sessionStorage.setItem(
               "guestData",
@@ -1070,11 +1093,11 @@ export default {
           if (parseInt(responses[0]) > 0) {
             this.preauthModal = true;
           } else {
-            if (this.tempParam.resultCd.substring(0, 1) == "1") {
+            if (this.errorCode == "1004") { //this.tempParam.resultCd.substring(0, 1)
               /* Payment Gateway Network Error */
               this.paidNetworkError = true;
               this.paidVerError = false;
-            } else if (this.tempParam.resultCd.substring(0, 1) == "9") {
+            } else if (this.errorCode == "9002" || this.errorCode == "8021") {
               /* Payment Gateway Network Error */
               this.paidNetworkError = true;
               this.paidVerError = false;
@@ -1111,6 +1134,9 @@ export default {
       const dYear = String(moment(date, "YYYY-MM-DD").year());
       const dateArray = [dYear, dMonth, dDate];
       return dateArray;
+    },
+    handleChange(value) {
+      this.errorCode = value;
     },
     handleChangeCountry(value) {
       this.country = value;
@@ -1283,6 +1309,7 @@ export default {
         // Session Storage Set
         sessionStorage.removeItem("guestData");
         sessionStorage.removeItem("settings");
+        sessionStorage.removeItem("errorCode");
         sessionStorage.setItem(
           "guestData",
           JSON.stringify(this.currDataPrepare)
@@ -1290,6 +1317,10 @@ export default {
         sessionStorage.setItem(
           "settings",
           JSON.stringify(this.currDataSetting)
+        );
+        sessionStorage.setItem(
+          "errorCode",
+          JSON.stringify(this.errorCode)
         );
 
         fetch(
