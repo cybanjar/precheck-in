@@ -97,7 +97,7 @@ export default {
       },
       textOta: {
         color: "",
-        opacity: "0.65",
+        // opacity: "0.65",
       },
       hotelImage: "",
       hotelName: "",
