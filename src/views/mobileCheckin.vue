@@ -38,7 +38,7 @@
           {{ getLabels("choose_option", `sentenceCase`) }}
         </p>
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-3 col-md-3 col-xs-5 text-center">
         <q-icon
           @click="showModalBookingCode"
           name="book_online"
@@ -46,15 +46,15 @@
         />
         <p :style="FG">Booking Code</p>
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-3 col-md-3 col-xs-5 text-center">
         <q-icon @click="showModalGuestName" name="people" class="icon-ota" />
         <p :style="FG">Name</p>
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-3 col-md-3 col-xs-5 text-center">
         <q-icon @click="showModalEmailAddress" name="email" class="icon-ota" />
         <p :style="FG">Email Address</p>
       </div>
-      <div class="col-3 col-xs-5 text-center">
+      <div class="col-3 col-md-3 col-xs-5 text-center">
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
