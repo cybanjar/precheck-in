@@ -387,24 +387,6 @@
       <p>{{ getLabels("mci_error_to_fo", "sentenceCase") }}</p>
     </a-modal>
 
-    {{ langID }}
-    <!-- <a-row :gutter="[8, 32]" class="mb-3">
-      <div>
-        <q-btn-toggle
-          v-model="langID"
-          toggle-color="primary"
-          color="white"
-          text-color="black"
-          toggle-text-color="white"
-          style="margin-top: 30px; margin-bottom: -10px;"
-          @input="changeLang"
-          :options="[
-            { label: 'English', value: 'ENG' },
-            { label: 'Bahasa', value: 'IDN' },
-          ]"
-        />
-      </div>
-    </a-row> -->
   </div>
 </template>
 
@@ -951,27 +933,16 @@ export default {
     this.loading = false;
   },
   methods: {
-    changeLang(value) {
-      console.log("jalan?");
+    changeLang(data) {
       // Method for changing MCI Language
-      if (value == "IDN") {
+      if (data.value == "IDN") {
         this.programLabel = "program-label2";
         this.langID = "IDN";
-        this.boPhoto = require(`../assets/kodeBooking.svg`);
-        this.namePhoto = require(`../assets/Nama.svg`);
-        this.emailPhoto = require(`../assets/AlamatEmail.svg`);
-        this.memberPhoto = require(`../assets/keanggotaan.svg`);
         this.setup[0]["langID"] = this.langID;
-        console.log("ini");
       } else {
         this.programLabel = "program-label1";
         this.langID = "ENG";
-        this.boPhoto = require(`../assets/booking-code.svg`);
-        this.namePhoto = require(`../assets/Name.svg`);
-        this.emailPhoto = require(`../assets/EmailAddress.svg`);
-        this.memberPhoto = require(`../assets/membership.svg`);
         this.setup[0]["langID"] = this.langID;
-        console.log("itu");
       }
     },
     async showModalBookingCode() {
