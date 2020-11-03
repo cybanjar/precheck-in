@@ -527,7 +527,7 @@ export default {
         fontSize: "4em",
         color: "#1890ff",
         padding: "16px",
-        // background-color: rgba(24, 144, 255, 0.1),
+        backgroundColor: "rgba(24, 144, 255, 0.1)",
         borderRadius: "20px",
       },
     };
@@ -763,6 +763,7 @@ export default {
         return item.number1 === 4 && item.setupflag === true;
       });
       this.ota.backgroundColor = tempBG[0]["setupvalue"];
+      this.iconOta.color = tempBG[0]["setupvalue"];
       this.BG = tempBG[0]["setupvalue"];
       const tempFG = this.tempsetup.filter((item, index) => {
         //  Foreground Color

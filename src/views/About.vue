@@ -826,6 +826,9 @@ export default {
           Param["flagKiosk"] = this.flagKiosk;
           Param["hotelParams"] = this.hotelParams;
           Param["hotelEndpoint"] = this.hotelEndpoint;
+          Param["hotelName"] = this.hotelname;
+          Param["Background"] = this.information.backgroundColor;
+          Param["Font"] = this.information.color;
 
           router.push({
             name: "Success",
@@ -881,6 +884,9 @@ export default {
         Param["flagKiosk"] = this.flagKiosk;
         Param["hotelParams"] = this.hotelParams;
         Param["hotelEndpoint"] = this.hotelEndpoint;
+        Param["hotelName"] = this.hotelname;
+        Param["Background"] = this.information.backgroundColor;
+        Param["Font"] = this.information.color;
 
         router.push({
           name: "Success",
@@ -1026,7 +1032,9 @@ export default {
         Param["flagKiosk"] = this.flagKiosk;
         Param["hotelParams"] = this.hotelParams;
         Param["hotelEndpoint"] = this.hotelEndpoint;
-
+        Param["hotelName"] = this.hotelname;
+        Param["Background"] = this.information.backgroundColor;
+        Param["Font"] = this.information.color;
         router.push({
           name: "Success",
           params: {
