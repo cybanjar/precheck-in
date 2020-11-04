@@ -1565,6 +1565,7 @@ export default {
             name: "SuccessCheckIn",
             params: {
               Data: data,
+              Setting: this.currDataSetting,
             },
           });
         }
@@ -1656,6 +1657,7 @@ export default {
               name: "SuccessCheckIn",
               params: {
                 Data: data,
+                Setting: this.currDataSetting,
               },
             });
           } else {

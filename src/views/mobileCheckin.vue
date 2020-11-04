@@ -8,7 +8,7 @@
     <div :style="ota" class="row justify-between pt-2">
       <div class="col-xs-4"></div>
       <div class="text-center col-xs-4">
-        <img class="logo_hotel" src="../assets/logo_harris.png" />
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
       <div class="col-xs-4" style="padding-right: 10px;">
         <q-select
@@ -533,6 +533,7 @@ export default {
         borderRadius: "20px",
       },
       selectedLang: "",
+      hotelLogo: "",
     };
   },
   created() {
@@ -595,6 +596,8 @@ export default {
         .json();
       /* IF Null Response */
 
+      console.log(code, "getUrl");
+
       if (code.response["messResult"] == null) {
         router.replace({
           name: "404",
@@ -645,6 +648,8 @@ export default {
           }
         )
         .json();
+      console.log(parsed, "label");
+
       localStorage.removeItem("labels");
       localStorage.setItem(
         "labels",
@@ -661,6 +666,8 @@ export default {
           },
         })
         .json();
+      console.log(setup, "setup");
+
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
@@ -769,6 +776,11 @@ export default {
         return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
+      const tempLogo = this.tempsetup.filter((item, index) => {
+        //  Logo Hotel
+        return item.number1 === 7 && item.number2 === 6;
+      });
+      this.hotelLogo = tempLogo[0]["setupvalue"];
       const tempHotelName = this.tempsetup.filter((item, index) => {
         //  Hotel Name
         return item.number1 === 99 && item.number2 === 1;
@@ -830,6 +842,7 @@ export default {
       obj["LICENSE"] = this.LICENSE;
       obj["location"] = this.location;
       obj["defaultCI"] = this.defaultCI;
+      obj["hotelLogo"] = this.hotelLogo;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date

@@ -2,15 +2,15 @@
   <div>
     <div :style="ota" class="row justify-between pt-2">
       <div class="text-center col-xs-12">
-        <img class="logo_hotel" src="../assets/logo_harris.png" />
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
-        <canvas id="canvas" v-show="(!flagKiosk)"></canvas>
+      <div class="text-center" style="margin-top: 10px">
+        <canvas id="canvas" v-show="flagKiosk"></canvas>
         <p>
           {{ getLabels("book_code", `titleCase`) }} :
           <span class="font-weight-bold">{{ bookingCode }}</span>
@@ -31,10 +31,10 @@
         <p>
           <br />
         </p>
-        <p v-show="(!flagKiosk)" class="p-mobile">
+        <p v-if="flagKiosk == false" class="p-mobile">
           {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
         </p>
-        <p v-show="(flagKiosk)" class="p-mobile">
+        <p v-else class="p-mobile">
           {{ getLabels("success_w_kiosk", `sentenceCase`) }}
         </p>
       </div>
@@ -71,6 +71,7 @@ export default {
       textOta: {
         color: "#FFFFFF",
       },
+      hotelLogo: "",
     };
   },
   mounted() {
@@ -81,6 +82,7 @@ export default {
     this.hotelName = this.$route.params.Param.hotelName;
     this.ota.backgroundColor = this.$route.params.Param.Background;
     this.textOta.color = this.$route.params.Param.Font;
+    this.hotelLogo = this.$route.params.Param.hotelLogo;
     this.labels = JSON.parse(localStorage.getItem("labels"));
 
     const success = btoa(this.data);

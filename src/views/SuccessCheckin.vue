@@ -105,7 +105,7 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.params, "nyampe");
+    console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.langID = this.$route.params.Data.langID;
     this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
@@ -177,23 +177,48 @@ export default {
     },
     goBack() {
       if (this.TotalData == undefined) {
-        // console.log('Window',this.location);
-        window.open(this.location, "_self");
+        console.log("Window", this.location);
+        // window.open(this.location, "_self");
       } else {
         if (parseInt(this.TotalData) > 1) {
-          // console.log('routerpush',this.TotalData);
-          router.push({
-            name: "MobileCheckin",
-            params: {
-              hotelParameter: this.hotelParams,
-              bookingcode: this.bookingcode,
-              coDate: this.coDate,
-              citime: this.ciTime,
-            },
-          });
+          console.log("routerpush", this.TotalData);
+          // (async () => {
+          //   const data = await ky
+          //     .post(this.hotelEndpoint + "mobileCI/findReservation", {
+          //       json: {
+          //         request: {
+          //           coDate: coDate,
+          //           bookCode: searchVar,
+          //           chName: " ",
+          //           earlyCI: this.earliestCiFlag,
+          //           maxRoom: "1",
+          //           citime: this.checkin,
+          //           groupFlag: "false",
+          //         },
+          //       },
+          //     })
+          //     .json();
+          //   router.push({
+          //     name: "ListCheckIn",
+          //     params: {
+          //       guestData: reservation[0],
+          //       setting: this.setup,
+          //     },
+          //   });
+          // })();
+
+          // router.push({
+          //   name: "MobileCheckin",
+          //   params: {
+          //     hotelParameter: this.hotelParams,
+          //     bookingcode: this.bookingcode,
+          //     coDate: this.coDate,
+          //     citime: this.ciTime,
+          //   },
+          // });
         } else {
-          // console.log('Window',this.location);
-          window.open(this.location, "_self");
+          console.log("Windows", this.location);
+          // window.open(this.location, "_self");
         }
       }
     },
