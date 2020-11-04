@@ -2,7 +2,7 @@
   <div>
     <div :style="ota" class="row justify-between pt-2">
       <div class="text-center col-xs-12">
-        <img class="logo_hotel" src="../assets/logo_harris.png" />
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
@@ -182,7 +182,7 @@ export default {
     goBack() {
       if (this.TotalData == undefined) {
         console.log("Window", this.location);
-        // window.open(this.location, "_self");
+        window.open(this.location, "_self");
       } else {
         if (parseInt(this.TotalData) > 1) {
           console.log("routerpush", this.TotalData);
@@ -222,7 +222,7 @@ export default {
           // });
         } else {
           console.log("Windows", this.location);
-          // window.open(this.location, "_self");
+          window.open(this.location, "_self");
         }
       }
     },
