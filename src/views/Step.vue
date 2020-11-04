@@ -1062,8 +1062,8 @@ export default {
               JSON.stringify(this.currDataSetting)
             );
           }
-        })();        
-      }      
+        })();
+      }
     }
   },
   methods: {
@@ -1121,8 +1121,8 @@ export default {
                 JSON.stringify(this.currDataSetting)
               );
             }
-          })();        
-        }      
+          })();
+        }
       }
     },
     async getFile() {
