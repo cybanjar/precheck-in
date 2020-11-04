@@ -102,11 +102,15 @@ export default {
       ciTime: "",
       bookingcode: "",
       TotalData: "",
+      hotelLogo: "",
+      setup: "",
     };
   },
   mounted() {
     console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.hotelLogo = this.$route.params.Setting.hotelLogo;
+    this.setup = this.$route.params.Setting;
     this.langID = this.$route.params.Data.langID;
     this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
     this.textOta.color = this.$route.params.Data.FontColor;
