@@ -1134,8 +1134,7 @@ export default {
                 },
               },
             })
-            .json();
-          console.log(data);
+            .json();          
           this.message = data.response["messResult"];          
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
@@ -1163,7 +1162,7 @@ export default {
                   name: "ListCheckIn",
                   params: {
                     guestData: reservation[0],
-                    setting: this.setup,
+                    setting: this.setup[0],
                   },
                 });
               } else {
