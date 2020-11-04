@@ -870,6 +870,7 @@ export default {
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    this.errorCode = "0000";
 
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -883,27 +884,22 @@ export default {
           .forEach((item, index) => {
             let objProperty = "";
             let objValue = "";
-
             // Handling URI From Nicepay Callback
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(this.tempParam, { [objProperty]: objValue });
           });
       }
-
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
       }
-
       if (sessionStorage.getItem("settings") != null) {
         this.currDataSetting = JSON.parse(sessionStorage.getItem("settings"));
       }
-
       if (sessionStorage.getItem("errorCode") != null) {
         this.errorCode = JSON.parse(sessionStorage.getItem("errorCode"));
       }
     }
-
     this.url = require(`../assets/PassportVerification.svg`);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.precheckin = this.currDataPrepare["pre-checkin"];
@@ -990,7 +986,6 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     }
-
     this.loading = false;
     //console.log('setting',this.currDataSetting);
     // router.replace(this.location);
@@ -1016,66 +1011,16 @@ export default {
 
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
-      (async () => {
-        const data = await ky
-          .post(this.hotelEndpoint + "mobileCI/resCI", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare["resnr"],
-                rsvlineNumber: this.currDataPrepare["reslinnr"],
-                userInit: "MC",
-                newRoomno: "",
-                purposeOfStay: "",
-                email: "",
-                guestPhnumber: "",
-                guestNation: "",
-                guestCountry: "",
-                guestRegion: "",
-                base64image: "",
-                vehicleNumber: "",
-                preAuthString: this.callbackParam,
-              },
-            },
-          })
-          .json();
-        const responses = data.response["resultMessage"].split(" - ");
-        if (parseInt(responses[0]) > 0) {
-          this.preauthModal = true;
-        } else {
-          if (this.errorCode == "1004") {
-            //this.tempParam.resultCd.substring(0, 1)
-            /* Payment Gateway Network Error */
-            this.paidNetworkError = true;
-            this.paidVerError = false;
-          } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-            /* Payment Gateway Network Error */
-            this.paidNetworkError = true;
-            this.paidVerError = false;
-          } else {
-            this.currDataPrepare["preAuth-flag"] = true;
-            this.paid = this.currDataPrepare["preAuth-flag"];
-            this.paidNetworkError = false;
-            this.paidVerError = false;
-
-            //console.log(this.currDataPrepare);
-            // Session Storage Set
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-          }
-        }
-      })();
-    }
-  },
-  methods: {
-    resendPreauth() {
-      this.preauthModal = false;
-      if (this.tempParam.resultCd != null) {
+      if (this.errorCode == "1004") {
+        //this.tempParam.resultCd.substring(0, 1)
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else {
         (async () => {
           const data = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1102,21 +1047,70 @@ export default {
           if (parseInt(responses[0]) > 0) {
             this.preauthModal = true;
           } else {
-            if (this.errorCode == "1004") {
-              //this.tempParam.resultCd.substring(0, 1)
-              /* Payment Gateway Network Error */
-              this.paidNetworkError = true;
-              this.paidVerError = false;
-            } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-              /* Payment Gateway Network Error */
-              this.paidNetworkError = true;
-              this.paidVerError = false;
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();        
+      }      
+    }
+  },
+  methods: {
+    resendPreauth() {
+      this.preauthModal = false;
+      if (this.tempParam.resultCd != null) {
+        if (this.errorCode == "1004") {
+          //this.tempParam.resultCd.substring(0, 1)
+          /* Payment Gateway Network Error */
+          this.paidNetworkError = true;
+          this.paidVerError = false;
+        } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+          /* Payment Gateway Network Error */
+          this.paidNetworkError = true;
+          this.paidVerError = false;
+        } else {
+          (async () => {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare["resnr"],
+                    rsvlineNumber: this.currDataPrepare["reslinnr"],
+                    userInit: "MC",
+                    newRoomno: "",
+                    purposeOfStay: "",
+                    email: "",
+                    guestPhnumber: "",
+                    guestNation: "",
+                    guestCountry: "",
+                    guestRegion: "",
+                    base64image: "",
+                    vehicleNumber: "",
+                    preAuthString: this.callbackParam,
+                  },
+                },
+              })
+              .json();
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
             } else {
               this.currDataPrepare["preAuth-flag"] = true;
               this.paid = this.currDataPrepare["preAuth-flag"];
               this.paidNetworkError = false;
               this.paidVerError = false;
-
+              // console.log(this.currDataPrepare);
               // Session Storage Set
               sessionStorage.setItem(
                 "guestData",
@@ -1127,8 +1121,8 @@ export default {
                 JSON.stringify(this.currDataSetting)
               );
             }
-          }
-        })();
+          })();        
+        }      
       }
     },
     async getFile() {
@@ -1315,7 +1309,6 @@ export default {
         //   location: this.location,
         // };
         // CookieS.set("data", datas);
-
         // Session Storage Set
         sessionStorage.removeItem("guestData");
         sessionStorage.removeItem("settings");
@@ -1329,7 +1322,6 @@ export default {
           JSON.stringify(this.currDataSetting)
         );
         sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
-
         fetch(
           `https://api.allorigins.win/get?url=${encodeURIComponent(
             "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
@@ -1430,16 +1422,13 @@ export default {
             canvas.height = MAX_HEIGHT;
             canvas.width = e.target.width * scaleSize;
           }
-
           // Create Canvas Context
           const ctx = canvas.getContext("2d");
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
           // Convert to Grayscale
           const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const d = imgData.data;
-
           for (let i = 0; i < d.length; i += 4) {
             // get the medium of the 3 first values ( (r+g+b)/3 )
             const med = (d[i] + d[i + 1] + d[i + 2]) / 3;
@@ -1449,7 +1438,6 @@ export default {
           }
           // redraw the new computed image
           ctx.putImageData(imgData, 0, 0);
-
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
@@ -1501,7 +1489,6 @@ export default {
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
-
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1601,7 +1588,6 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-
         const QRCodeData =
           "{" +
           this.currDataPrepare.zinr +
@@ -1651,7 +1637,6 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
           //console.log(responses);
-
           if (this.responseStatus.statusNumber == 0) {
             router.replace({
               name: "SuccessCheckIn",
