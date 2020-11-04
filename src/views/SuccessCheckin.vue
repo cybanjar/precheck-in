@@ -107,7 +107,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$route.params, "nyampe");
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.hotelLogo = this.$route.params.Setting.hotelLogo;
     this.setup = this.$route.params.Setting;
@@ -180,36 +179,37 @@ export default {
       return fixDate;
     },
     goBack() {
+      console.log(this.TotalData);
       if (this.TotalData == undefined) {
         console.log("Window", this.location);
         window.open(this.location, "_self");
       } else {
         if (parseInt(this.TotalData) > 1) {
           console.log("routerpush", this.TotalData);
-          // (async () => {
-          //   const data = await ky
-          //     .post(this.hotelEndpoint + "mobileCI/findReservation", {
-          //       json: {
-          //         request: {
-          //           coDate: coDate,
-          //           bookCode: searchVar,
-          //           chName: " ",
-          //           earlyCI: this.earliestCiFlag,
-          //           maxRoom: "1",
-          //           citime: this.checkin,
-          //           groupFlag: "false",
-          //         },
-          //       },
-          //     })
-          //     .json();
-          //   router.push({
-          //     name: "ListCheckIn",
-          //     params: {
-          //       guestData: reservation[0],
-          //       setting: this.setup,
-          //     },
-          //   });
-          // })();
+          (async () => {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/findReservation", {
+                json: {
+                  request: {
+                    coDate: coDate,
+                    bookCode: searchVar,
+                    chName: " ",
+                    earlyCI: this.earliestCiFlag,
+                    maxRoom: "1",
+                    citime: this.checkin,
+                    groupFlag: "false",
+                  },
+                },
+              })
+              .json();
+            router.push({
+              name: "ListCheckIn",
+              params: {
+                guestData: reservation[0],
+                setting: this.setup,
+              },
+            });
+          })();
 
           // router.push({
           //   name: "MobileCheckin",
