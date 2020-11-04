@@ -831,7 +831,7 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
-      roomNotReady: false,
+      roomReady: false,
       freeParking: false,
       vRegident: "",
       confirmMailModal: false,
@@ -1483,7 +1483,7 @@ export default {
       window.scrollTo(0, 0);
       //this.step = 0;
     },
-    checkValidation(caseType){
+    checkValidation(caseType) {
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/mobileCI/checkValidation", {
@@ -1496,10 +1496,10 @@ export default {
             },
           })
           .json();
-        switch(caseType){
+        switch (caseType) {
           case "1":
             break;
-          case "2":            
+          case "2":
             break;
           case "3":
             break;
@@ -1536,36 +1536,29 @@ export default {
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        if (this.responseStatus.statusNumber == "99" || 
-            this.responseStatus.statusNumber == "1" ||
-            this.responseStatus.statusNumber == "2" ||
-            this.responseStatus.statusNumber == "3" ||
-            this.responseStatus.statusNumber == "4" ||
-            this.responseStatus.statusNumber == "5"
-        ){
+        if (
+          this.responseStatus.statusNumber == "99" ||
+          this.responseStatus.statusNumber == "1" ||
+          this.responseStatus.statusNumber == "2" ||
+          this.responseStatus.statusNumber == "3" ||
+          this.responseStatus.statusNumber == "4" ||
+          this.responseStatus.statusNumber == "5"
+        ) {
           // Showing Modal Cannot MCI -> mci_error_not_avail
-        }
-        else if(
-            this.responseStatus.statusNumber == "6" ||
-            this.responseStatus.statusNumber == "7"
-        ){
+        } else if (
+          this.responseStatus.statusNumber == "6" ||
+          this.responseStatus.statusNumber == "7"
+        ) {
           this.confirmMailModal = true;
-          this.roomNotReady = false;
+          this.roomReady = false;
         } else {
           // MUST HANDLE checkValidation
-          this.roomNotReady = true;
-          const QRCodeData =
-            "{" +
-            this.currDataPrepare.zinr +
-            ";" +
-            moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-            "}";
+          this.roomReady = true;
           const data = {};
-          data["QRCodeData"] = QRCodeData;
           data["wifiAddress"] = this.wifiAddress;
           data["wifiPassword"] = this.wifiPassword;
           data["arrangement"] = this.currDataPrepare["argt-str"];
-          data["roomNotReady"] = this.roomNotReady;
+          data["roomReady"] = this.roomReady;
           data["hotelcode"] = this.hotelcode;
           data["langID"] = this.langID;
           data["hotelname"] = this.hotelname;
@@ -1577,6 +1570,8 @@ export default {
           data["citime"] = this.currDataPrepare["ci"];
           data["coDate"] = this.currDataPrepare["co"];
           data["bookingcode"] = this.currDataPrepare["resnr"];
+          data["reslinnr"] = this.currDataPrepare["reslinnr"];
+          data["RoomNumber"] = this.currDataPrepare['zinr'];
           data["defaultCI"] = this.defaultCI;
           data["email"] = this.currDataPrepare["guest-email"];
           data["phone"] = this.currDataPrepare["guest-phnumber"];
@@ -1618,18 +1613,11 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-        const QRCodeData =
-          "{" +
-          this.currDataPrepare.zinr +
-          ";" +
-          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "}";
         const data = {};
-        data["QRCodeData"] = QRCodeData;
         data["wifiAddress"] = this.wifiAddress;
         data["wifiPassword"] = this.wifiPassword;
         data["arrangement"] = this.currDataPrepare["argt-str"];
-        data["roomNotReady"] = this.roomNotReady;
+        data["roomReady"] = this.roomReady;
         data["hotelcode"] = this.hotelcode;
         data["langID"] = this.langID;
         data["hotelname"] = this.hotelname;
@@ -1641,6 +1629,8 @@ export default {
         data["citime"] = this.currDataPrepare["ci"];
         data["coDate"] = this.currDataPrepare["co"];
         data["bookingcode"] = this.currDataPrepare["resnr"];
+        data["reslinnr"] = this.currDataPrepare["reslinnr"];
+        data["RoomNumber"] = this.currDataPrepare['zinr'];
         data["defaultCI"] = this.defaultCI;
         data["email"] = this.currDataPrepare["guest-email"];
         data["phone"] = this.currDataPrepare["guest-phnumber"];

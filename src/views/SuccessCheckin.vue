@@ -10,8 +10,8 @@
     </div>
     <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
-        <canvas v-show="roomNotReady" id="canvas"></canvas>
-        <div v-if="roomNotReady">
+        <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
+        <div v-if="roomReady">
           <p>{{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}</p>
           <p>
             {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
@@ -27,7 +27,10 @@
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p>
+              <p v-if="QRshow">
+                {{ getLabels("mci_success_with_max_keycard", `sentenceCase`) }}
+              </p>
+              <p v-else>
                 {{ getLabels("mci_success", `sentenceCase`) }}
               </p>
             </div>
@@ -79,7 +82,7 @@ export default {
       wifiPassword: "",
       arrangement: "",
       labels: [],
-      roomNotReady: false,
+      roomReady: false,
       email: "",
       phone: "",
       langID: "",
@@ -104,11 +107,15 @@ export default {
       TotalData: "",
       hotelLogo: "",
       setup: "",
+      hotelEndpoint: "",
+      QRshow: "false",
     };
   },
   mounted() {
+    console.log(this.$route.params);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.hotelLogo = this.$route.params.Setting.hotelLogo;
+    this.hotelEndpoint = this.$route.params.Setting.hotelEndpoint;
     this.setup = this.$route.params.Setting;
     this.langID = this.$route.params.Data.langID;
     this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
@@ -119,6 +126,7 @@ export default {
     this.ciTime = this.$route.params.Data.defaultCI;
     this.bookingcode = this.$route.params.Data.bookingcode;
     this.TotalData = this.$route.params.Data.TotalData;
+    this.roomReady = this.$route.params.Data.roomReady;
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -130,21 +138,35 @@ export default {
         this.programLabel = "program-label1";
         break;
     }
-    this.data = this.$route.params.Data.QRCodeData;
+    (async () => {
+      const parsed = await ky
+        .post(this.hotelEndpoint + "mobileCI/checkValidation", {
+          json: {
+            request: {
+              rsvNumber: "28301",
+              rsvlineNumber: "2",
+              caseType: "3",
+            },
+          },
+        })
+        .json();
+      this.data = parsed.response.keyString;
+      if (parsed.response.keyMaked >= parsed.response.keyAvail) {
+        this.QRshow = false;
+      } else {
+        this.QRshow = true;
+      }
+    })();
+
     this.location = this.$route.params.Data.location;
-    // console.log(
-    //   this.location.slice(this.location.lastIndexOf("?") + 1),
-    //   "test"
-    // );
+
     const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
     this.hotelParams = decodeURIComponent(tempParam);
-    // console.log(this.hotelParams);
     const success = btoa(this.data);
-    this.roomNumber = this.data.substr(1, this.data.indexOf(";") - 1);
+    this.roomNumber = this.$route.params.Data.RoomNumber;
     this.wifiAddress = this.$route.params.Data.wifiAddress;
     this.wifiPassword = this.$route.params.Data.wifiPassword;
     this.arrangement = this.$route.params.Data.arrangement;
-    this.roomNotReady = this.$route.params.Data.roomNotReady;
     this.email = this.$route.params.Data.email;
     this.phone = this.$route.params.Data.phone;
     QRCode.toCanvas(
