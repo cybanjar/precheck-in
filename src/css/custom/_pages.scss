@@ -6,11 +6,15 @@
 //   overflow-x: hidden;
 // }
 
+body {
+  width: 100% !important;
+}
+
 .p-mobile {
   padding: 0 50px;
 }
 
-.self-checkin{
+.self-checkin {
   margin-top: -20px;
   border-radius: 20px 20px 0 0;
 }

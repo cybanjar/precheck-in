@@ -13,8 +13,7 @@
             >
           </template>
           <p>
-            Sorry, your room is not ready. Please proceed to the Reception for
-            further information.
+            {{ getLabels("mci_room_not_avail", "sentenceCase") }}
           </p>
         </a-modal>
       </div>
@@ -80,6 +79,13 @@
         </a-list>
       </div>
       <a-button
+        class="ml-3 float-left mb-3"
+        type="default"
+        size="large"
+        @click="back"
+        >{{ getLabels("back", `titleCase`) }}</a-button
+      >
+      <a-button
         class="mr-3 float-right mb-3"
         type="primary"
         size="large"
@@ -116,24 +122,39 @@ export default {
       license: false,
       location: "",
       programLabel: "",
+      successCheckin:[],
+      TotalData:"",
     };
   },
   created() {
     //console.log(this.$route.params, "nyampe bro");
-    const tempData = this.$route.params.guestData;
+    let tempData = undefined;
+    let setting = undefined;
+    if(this.$route.params.guestData == null || this.$route.params.setting == null){
+      if (sessionStorage.getItem("listData") != null) {
+        tempData = JSON.parse(sessionStorage.getItem("listData"));
+      }
+      if (sessionStorage.getItem("settings") != null) {
+        setting = JSON.parse(sessionStorage.getItem("settings"));
+      }
+    }
+    else{
+      tempData = this.$route.params.guestData;
+      setting = this.$route.params.setting;
+    }    
+    
     /* Assign ispopup property for tempData */
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });
     });
-    const tempTotal = tempData.filter((item, index) => {
-      return item["room-status"] !== "1 Room Already assign or Overlapping";
-    });
-    // console.log(tempTotal.length);
+    
     this.guestData = tempData;
-    this.setup = this.$route.params.setting[0];
-    this.lemparsetup = this.$route.params.setting[0];
-    Object.assign(this.lemparsetup, { TotalData: tempTotal.length });
-    // console.log(this.lemparsetup, "masuk?");
+    this.setup = setting;
+    if(this.setup.successCheckin != undefined){
+      this.successCheckin = this.setup.successCheckin;
+      this.setup.TotalData = this.setup.TotalData - this.setup.successCheckin.length;
+    }
+    
     this.gambar = this.setup["hotelImage"];
     this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
@@ -159,6 +180,9 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
+    back(){
+      window.open(this.setup.location, "_self");
+    },
     sorting(a, b) {
       if (a.resnr < b.resnr) {
         return -1;
@@ -255,13 +279,51 @@ export default {
       }
     },
     send() {
-      router.replace({
-        name: "Step",
-        params: {
-          guestData: this.selectedData,
-          setting: this.lemparsetup,
-        },
-      });
+      const findData = this.successCheckin.find(item => {
+        return item == this.selectedData['reslinnr'];
+      });      
+      if(findData == undefined){
+        this.successCheckin.push(this.selectedData['reslinnr']);
+      }      
+      Object.assign(this.setup, { successCheckin: this.successCheckin });  
+      
+      sessionStorage.setItem(
+        "listData",
+        JSON.stringify(this.guestData)
+      );
+      sessionStorage.setItem(
+        "settings",
+        JSON.stringify(this.setup)
+      );
+      const resstatus = this.selectedData['res-status'].split(" - ");
+      if(parseInt(resstatus[0]) == 1){
+        // Add RoomReady Variable
+        Object.assign(this.selectedData, { roomReady: true });
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      }
+      else{
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "Step",
+          params: {
+            guestData: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      }      
     },
     formatDate(datum) {
       const dDate =
