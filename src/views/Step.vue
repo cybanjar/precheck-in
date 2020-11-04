@@ -85,6 +85,25 @@
         <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
       </a-modal>
 
+      <!-- Modal For Network Establish Error -->
+      <a-modal
+        :title="getLabels('information', `titleCase`)"
+        :visible="preauthModal"
+        :confirm-loading="confirmLoading"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button
+            key="submit"
+            type="primary"
+            :loading="loading"
+            @click="resendPreauth"
+            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+          >
+        </template>
+        <p>{{ getLabels("mci_error_preauth", `sentenceCase`) }}</p>
+      </a-modal>
+
       <!-- Modal For Interface -->
       <a-modal
         :title="getLabels('information', `titleCase`)"
@@ -523,6 +542,32 @@
                           </strong>
                         </h2>
                       </a-form-item>
+                      <div>
+                        <a-form-item
+                          label="Deposit Payment Response"
+                          style="margin-top: 10px;"
+                        >
+                          <a-select
+                            v-model="errorCode"
+                            default-value="0000"
+                            style="width: 180px;"
+                            @change="handleChange"
+                          >
+                            <a-select-option value="0000">
+                              Success
+                            </a-select-option>
+                            <a-select-option value="1004">
+                              Connection timeout
+                            </a-select-option>
+                            <a-select-option value="9002">
+                              Server is busy
+                            </a-select-option>
+                            <a-select-option value="8021">
+                              Card authorization error
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                      </div>
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
@@ -562,6 +607,23 @@
                         }}
                       </p>
                     </div>
+                    <div v-else-if="paidNetworkError">
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels(
+                            "deposit_payment_network_error",
+                            `sentenceCase`
+                          )
+                        }}
+                      </p>
+                    </div>
+                    <div v-else-if="paidVerError">
+                      <p style="font-size: 16px; text-align: justify;">
+                        {{
+                          getLabels("deposit_payment_ver_error", `sentenceCase`)
+                        }}
+                      </p>
+                    </div>
                     <div v-else>
                       <p>
                         <a-checkbox v-model="pay">
@@ -578,7 +640,7 @@
                   <div class="row justify-between">
                     <div class="col-6 col-xs-6">
                       <q-btn
-                        v-if="step > 1 && !precheckin"
+                        v-if="step > 1"
                         @click="prev"
                         outline
                         color="primary"
@@ -789,7 +851,14 @@ export default {
       paymenterrorModal: false,
       paymentLoading: false,
       interfacingModal: false,
+      preauthModal: false,
       currDataSetting: {},
+      stepUrl: "",
+      tempParam: {},
+      callbackParam: "",
+      paidNetworkError: false,
+      paidVerError: false,
+      errorCode: "",
     };
   },
   watch: {
@@ -798,22 +867,39 @@ export default {
     },
   },
   created() {
-    // lemparan data
-    //console.log(this.$route.params, "point");
-
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
+    this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    this.errorCode = "0000";
 
     if (this.currDataPrepare == null || this.currDataSetting == null) {
-      if (CookieS.isKey("data")) {
-        /* Get Cookies Reservation Data */
-        const cookiesParam = CookieS.get("data");
-        //console.log(cookiesParam);
-        this.location = cookiesParam.location;
-        window.open(this.location, "_self");
+      if (location.search.substring(1) != undefined) {
+        // For Handling Payment Callback
+        this.callbackParam = location.search.substring(1);
+        location.search
+          .split("&")
+          .toString()
+          .substr(1)
+          .split(",")
+          .forEach((item, index) => {
+            let objProperty = "";
+            let objValue = "";
+            // Handling URI From Nicepay Callback
+            objProperty = decodeURIComponent(item.split("=")[0]);
+            objValue = decodeURIComponent(item.split("=")[1]);
+            Object.assign(this.tempParam, { [objProperty]: objValue });
+          });
+      }
+      if (sessionStorage.getItem("guestData") != null) {
+        this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
+      }
+      if (sessionStorage.getItem("settings") != null) {
+        this.currDataSetting = JSON.parse(sessionStorage.getItem("settings"));
+      }
+      if (sessionStorage.getItem("errorCode") != null) {
+        this.errorCode = JSON.parse(sessionStorage.getItem("errorCode"));
       }
     }
-
     this.url = require(`../assets/PassportVerification.svg`);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.precheckin = this.currDataPrepare["pre-checkin"];
@@ -833,6 +919,7 @@ export default {
     this.paid = this.currDataPrepare["preAuth-flag"];
     this.per = this.currDataSetting["per"];
     this.FilterPurposeofStay = this.currDataSetting["FilterPurposeofStay"];
+    this.freeParking = this.currDataSetting["freeParking"];
     if (this.currDataPrepare["purposeofstay"] == "") {
       this.currDataPrepare["purposeofstay"] = this.currDataSetting[
         "PurposeofStay"
@@ -899,7 +986,6 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     }
-
     this.loading = false;
     //console.log('setting',this.currDataSetting);
     // router.replace(this.location);
@@ -922,8 +1008,123 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
+
+    // Handling Callback Payment and Save to Database
+    if (this.tempParam.resultCd != null) {
+      if (this.errorCode == "1004") {
+        //this.tempParam.resultCd.substring(0, 1)
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else {
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();        
+      }      
+    }
   },
   methods: {
+    resendPreauth() {
+      this.preauthModal = false;
+      if (this.tempParam.resultCd != null) {
+        if (this.errorCode == "1004") {
+          //this.tempParam.resultCd.substring(0, 1)
+          /* Payment Gateway Network Error */
+          this.paidNetworkError = true;
+          this.paidVerError = false;
+        } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+          /* Payment Gateway Network Error */
+          this.paidNetworkError = true;
+          this.paidVerError = false;
+        } else {
+          (async () => {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare["resnr"],
+                    rsvlineNumber: this.currDataPrepare["reslinnr"],
+                    userInit: "MC",
+                    newRoomno: "",
+                    purposeOfStay: "",
+                    email: "",
+                    guestPhnumber: "",
+                    guestNation: "",
+                    guestCountry: "",
+                    guestRegion: "",
+                    base64image: "",
+                    vehicleNumber: "",
+                    preAuthString: this.callbackParam,
+                  },
+                },
+              })
+              .json();
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+              // console.log(this.currDataPrepare);
+              // Session Storage Set
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
+          })();        
+        }      
+      }
+    },
     async getFile() {
       await this.$nextTick();
       this.$refs.fileurl.click();
@@ -937,6 +1138,9 @@ export default {
       const dYear = String(moment(date, "YYYY-MM-DD").year());
       const dateArray = [dYear, dMonth, dDate];
       return dateArray;
+    },
+    handleChange(value) {
+      this.errorCode = value;
     },
     handleChangeCountry(value) {
       this.country = value;
@@ -1034,17 +1238,20 @@ export default {
             } else {
               this.$refs.stepper.previous();
             }
+          } else {
+            /* Go To Next Step */
+            if (this.hasUpload == "0 image id already exist") {
+              this.$refs.stepper.goTo(2);
+            } else {
+              this.$refs.stepper.previous();
+            }
           }
           break;
         case 3:
-          if (!this.precheckin) {
-            this.$refs.stepper.previous();
-          }
+          this.$refs.stepper.previous();
           break;
         case 2:
-          if (!this.precheckin) {
-            this.$refs.stepper.previous();
-          }
+          this.$refs.stepper.previous();
           break;
         case 1:
           break;
@@ -1084,24 +1291,37 @@ export default {
           token.toString() +
           "&userIP=" +
           this.ipAddr +
-          `&cartData={}&callBackUrl=${this.location}` +
-          "&instmntType=1&instmntMon=1&reccurOpt=0";
-        const datas = {
-          codate: this.formatDate(this.currDataPrepare["co"]),
-          userInit: "01",
-          resrNumber: this.currDataPrepare["resnr"],
-          resLineNumber: this.currDataPrepare["reslinnr"],
-          guestEmail: this.currDataPrepare["guest-email"],
-          guestPhnumber: this.currDataPrepare["guest-phnumber"],
-          purposeOfStay: this.currDataPrepare["purposeofstay"],
-          guestNation: this.currDataPrepare["guest-nation"],
-          guestCountry: this.currDataPrepare["guest-country"],
-          guestRegion: this.currDataPrepare["guest-region"],
-          step: this.step,
-          vreg: this.currDataPrepare["vreg"],
-          location: this.location,
-        };
-        CookieS.set("data", datas);
+          `&cartData={}&callBackUrl=${this.stepUrl}` +
+          "&instmntType=1&instmntMon=1&reccurOpt=0&paymentExpTm=000100";
+        // const datas = {
+        //   codate: this.formatDate(this.currDataPrepare["co"]),
+        //   userInit: "01",
+        //   resrNumber: this.currDataPrepare["resnr"],
+        //   resLineNumber: this.currDataPrepare["reslinnr"],
+        //   guestEmail: this.currDataPrepare["guest-email"],
+        //   guestPhnumber: this.currDataPrepare["guest-phnumber"],
+        //   purposeOfStay: this.currDataPrepare["purposeofstay"],
+        //   guestNation: this.currDataPrepare["guest-nation"],
+        //   guestCountry: this.currDataPrepare["guest-country"],
+        //   guestRegion: this.currDataPrepare["guest-region"],
+        //   step: this.step,
+        //   vreg: this.currDataPrepare["vreg"],
+        //   location: this.location,
+        // };
+        // CookieS.set("data", datas);
+        // Session Storage Set
+        sessionStorage.removeItem("guestData");
+        sessionStorage.removeItem("settings");
+        sessionStorage.removeItem("errorCode");
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.currDataPrepare)
+        );
+        sessionStorage.setItem(
+          "settings",
+          JSON.stringify(this.currDataSetting)
+        );
+        sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
         fetch(
           `https://api.allorigins.win/get?url=${encodeURIComponent(
             "https://dev.nicepay.co.id/nicepay/api/orderRegist.do?" + params
@@ -1170,6 +1390,7 @@ export default {
       this.overlappingModal = false;
       this.paymenterrorModal = false;
       this.interfacingModal = false;
+      this.preauthModal = false;
     },
     onFileChange(e) {
       const file = e.target.files[0];
@@ -1205,6 +1426,18 @@ export default {
           const ctx = canvas.getContext("2d");
           // Draw Images into Canvas and equal to Width and Height
           ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+          // Convert to Grayscale
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const d = imgData.data;
+          for (let i = 0; i < d.length; i += 4) {
+            // get the medium of the 3 first values ( (r+g+b)/3 )
+            const med = (d[i] + d[i + 1] + d[i + 2]) / 3;
+            // set it to each value (r = g = b = med)
+            d[i] = d[i + 1] = d[i + 2] = med;
+            // we don't touch the alpha
+          }
+          // redraw the new computed image
+          ctx.putImageData(imgData, 0, 0);
           //Draw watermark on canvas
           for (let i = 0; i < 10; i++) {
             ctx.font = "100px Georgia";
@@ -1238,6 +1471,7 @@ export default {
             }
           })();
           this.hasUpload = "0 image id already exist";
+          this.currDataPrepare["image-flag"] = this.hasUpload;
         };
       };
     },
@@ -1255,7 +1489,6 @@ export default {
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
-
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1354,7 +1587,6 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-
         const QRCodeData =
           "{" +
           this.currDataPrepare.zinr +
@@ -1404,7 +1636,6 @@ export default {
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
           //console.log(responses);
-
           if (this.responseStatus.statusNumber == 0) {
             router.replace({
               name: "SuccessCheckIn",
