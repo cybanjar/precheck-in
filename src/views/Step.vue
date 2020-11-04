@@ -871,7 +871,6 @@ export default {
     this.currDataSetting = this.$route.params.setting;
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.errorCode = "0000";
-
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
@@ -1008,7 +1007,6 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
-
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
       if (this.errorCode == "1004") {
@@ -1485,6 +1483,31 @@ export default {
       window.scrollTo(0, 0);
       //this.step = 0;
     },
+    checkValidation(caseType){
+      (async () => {
+        const parsed = await ky
+          .post(this.hotelEndpoint + "mobileCI/mobileCI/checkValidation", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare["resnr"],
+                rsvlineNumber: this.currDataPrepare["reslinnr"],
+                caseType: caseType,
+              },
+            },
+          })
+          .json();
+        switch(caseType){
+          case "1":
+            break;
+          case "2":            
+            break;
+          case "3":
+            break;
+          default:
+            break;
+        }
+      })();
+    },
     handleResCi() {
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
@@ -1513,14 +1536,23 @@ export default {
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        // this.responseStatus.statusNumber == "99" ||
-        // this.responseStatus.statusNumber == "6" ||
-        // this.responseStatus.statusNumber == "7"
-        //console.log(parsed,parsed.response["checkedIn"]);
-        if (parsed.response["checkedIn"] == "false") {
+        if (this.responseStatus.statusNumber == "99" || 
+            this.responseStatus.statusNumber == "1" ||
+            this.responseStatus.statusNumber == "2" ||
+            this.responseStatus.statusNumber == "3" ||
+            this.responseStatus.statusNumber == "4" ||
+            this.responseStatus.statusNumber == "5"
+        ){
+          // Showing Modal Cannot MCI -> mci_error_not_avail
+        }
+        else if(
+            this.responseStatus.statusNumber == "6" ||
+            this.responseStatus.statusNumber == "7"
+        ){
           this.confirmMailModal = true;
           this.roomNotReady = false;
         } else {
+          // MUST HANDLE checkValidation
           this.roomNotReady = true;
           const QRCodeData =
             "{" +
@@ -1563,15 +1595,13 @@ export default {
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
         this.overlappingModal = true;
-      } else if (parseInt(rmStatus) > 2) {
-        /* Room is not ready */
-        this.handleResCi();
       } else {
         /* Room is Ready to Check in */
-        this.handleResCi();
+        this.handleResCi(); //disederhanakan ke atas.
       }
     },
     handleYes() {
+      // MUST HANDLE checkValidation
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
         this.formresubmit.validateFields(["guest-email"]);

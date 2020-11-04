@@ -827,7 +827,6 @@ export default {
             "," +
             this.checkInTIme +
             "}";
-
           const Param = {};
           Param["langID"] = this.langID;
           Param["flagKiosk"] = this.flagKiosk;
@@ -837,7 +836,6 @@ export default {
           Param["Background"] = this.information.backgroundColor;
           Param["Font"] = this.information.color;
           Param["hotelLogo"] = this.hotelLogo;
-
           router.push({
             name: "Success",
             params: {
@@ -891,7 +889,6 @@ export default {
           "," +
           this.checkInTIme +
           "}";
-
         const Param = {};
         Param["langID"] = this.langID;
         Param["flagKiosk"] = this.flagKiosk;
@@ -901,7 +898,6 @@ export default {
         Param["Background"] = this.information.backgroundColor;
         Param["Font"] = this.information.color;
         Param["hotelLogo"] = this.hotelLogo;
-
         router.push({
           name: "Success",
           params: {
@@ -1019,7 +1015,6 @@ export default {
                 },
               })
               .json();
-
             // console.log(parsed, "inputan3");
             const tempMessResult = parsed.response.messResult.split(" ");
             this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
@@ -1040,7 +1035,6 @@ export default {
           "," +
           this.checkInTIme +
           "}";
-
         const Param = {};
         Param["langID"] = this.langID;
         Param["flagKiosk"] = this.flagKiosk;
@@ -1084,7 +1078,6 @@ export default {
       this.form.setFieldsValue({
         purpose: this.$route.params.id["setup"]["06"],
       });
-
       /* Doesnt Use V-Decorator */
       this.hour = this.$route.params.id["setup"]["11"];
       this.showPrice = false;
@@ -1094,7 +1087,6 @@ export default {
       this.text = "";
       this.agree = false;
       this.country = this.currDataPrepare["guest-country"];
-
       /* Go To Next Guest */
       this.counter += 1;
     },

@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center" style="margin-top: 10px;">
+      <div class="text-center" style="margin-top: 10px">
         <canvas id="canvas" v-show="flagKiosk"></canvas>
         <p>
           {{ getLabels("book_code", `titleCase`) }} :
@@ -47,7 +47,6 @@ import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
 import router from "../router";
-
 export default {
   data() {
     return {
@@ -84,7 +83,6 @@ export default {
     this.textOta.color = this.$route.params.Param.Font;
     this.hotelLogo = this.$route.params.Param.hotelLogo;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-
     const success = btoa(this.data);
     this.bookingCode = this.data.substring(1, this.data.indexOf(";"));
     this.coDate = this.data.substring(
@@ -115,12 +113,10 @@ export default {
       // console.log("success!");
       // }
     );
-
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
       // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
-
     (async () => {
       const parsed = await ky
         .post(this.hotelEndpoint + "preCI/storeQRCode", {
@@ -151,9 +147,7 @@ export default {
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
-
       let fixLabel = "";
-
       if (label == undefined) {
         fixLabel = "";
       } else {
@@ -167,7 +161,6 @@ export default {
           fixLabel = label["lang-value"];
         }
       }
-
       return fixLabel;
     },
     setTitleCase(label) {
@@ -183,7 +176,6 @@ export default {
       );
       const dYear = String(moment(datum, "MM/DD/YYYY").year());
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
-
       return fixDate;
     },
   },

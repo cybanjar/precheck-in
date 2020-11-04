@@ -210,7 +210,6 @@ export default {
               },
             });
           })();
-
           // router.push({
           //   name: "MobileCheckin",
           //   params: {
