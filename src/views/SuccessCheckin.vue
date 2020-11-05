@@ -108,7 +108,7 @@ export default {
   mounted() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
-    if(this.setup == null || this.guestData == null){
+    if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
       }
@@ -119,7 +119,7 @@ export default {
     // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
-    
+
     this.hotelLogo = this.setup.hotelLogo;
     this.hotelEndpoint = this.setup.hotelEndpoint;
     this.langID = this.setup.langID;
@@ -136,14 +136,14 @@ export default {
     this.wifiAddress = this.setup.wifiAddress;
     this.wifiPassword = this.setup.wifiPassword;
     // Get Parsing Guest Data
-    this.coDate = this.formatDateFind(this.guestData['co']);    
-    this.bookingcode = this.guestData['resnr'];  
-    this.reslinnr = this.guestData['reslinnr'];
-    this.roomReady = this.guestData['roomReady'];
-    this.roomNumber = this.guestData['zinr'];    
-    this.arrangement = this.guestData['argt-str'];
-    this.email = this.guestData['guest-email'];
-    this.phone = this.guestData['guest-phnumber'];
+    this.coDate = this.formatDateFind(this.guestData["co"]);
+    this.bookingcode = this.guestData["resnr"];
+    this.reslinnr = this.guestData["reslinnr"];
+    this.roomReady = this.guestData["roomReady"];
+    this.roomNumber = this.guestData["zinr"];
+    this.arrangement = this.guestData["argt-str"];
+    this.email = this.guestData["guest-email"];
+    this.phone = this.guestData["guest-phnumber"];
     // Selecting Language
     switch (this.langID.toLowerCase()) {
       case "eng":
@@ -176,9 +176,9 @@ export default {
         this.QRshow = true;
       }
     })();
-    
+
     // Generate QRCode
-    const success = btoa(this.data);    
+    const success = btoa(this.data);
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
@@ -231,15 +231,15 @@ export default {
                   },
                 },
               })
-              .json();            
-            this.message = data.response["messResult"];          
+              .json();
+            this.message = data.response["messResult"];
             const messResult = this.message.split("-");
             const messMessage = messResult[1].split(",");
             switch (messResult[0].trim()) {
               case "0":
                 // Reservation is Found
                 const reservation = [];
-                
+
                 /* Handling Multiple Guest to ListCheckin.vue */
                 reservation.push(
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -252,12 +252,12 @@ export default {
                   );
                 });
                 this.setup.TotalData = tempTotal.length;
-                
-                console.log('SuccessCheckin',{
+
+                console.log("SuccessCheckin", {
                   guestData: reservation[0],
                   setting: this.setup,
                 });
-                if(tempTotal.length > 1){
+                if (tempTotal.length > 1) {
                   router.push({
                     name: "ListCheckIn",
                     params: {
@@ -265,11 +265,11 @@ export default {
                       setting: this.setup,
                     },
                   });
-                }else{
+                } else {
                   window.open(this.location, "_self");
                 }
-                
-                break;  
+
+                break;
               default:
                 break;
             }

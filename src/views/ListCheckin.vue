@@ -122,39 +122,42 @@ export default {
       license: false,
       location: "",
       programLabel: "",
-      successCheckin:[],
-      TotalData:"",
+      successCheckin: [],
+      TotalData: "",
     };
   },
   created() {
     //console.log(this.$route.params, "nyampe bro");
     let tempData = undefined;
     let setting = undefined;
-    if(this.$route.params.guestData == null || this.$route.params.setting == null){
+    if (
+      this.$route.params.guestData == null ||
+      this.$route.params.setting == null
+    ) {
       if (sessionStorage.getItem("listData") != null) {
         tempData = JSON.parse(sessionStorage.getItem("listData"));
       }
       if (sessionStorage.getItem("settings") != null) {
         setting = JSON.parse(sessionStorage.getItem("settings"));
       }
-    }
-    else{
+    } else {
       tempData = this.$route.params.guestData;
       setting = this.$route.params.setting;
-    }    
-    
+    }
+
     /* Assign ispopup property for tempData */
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });
     });
-    
+
     this.guestData = tempData;
     this.setup = setting;
-    if(this.setup.successCheckin != undefined){
+    if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
-      this.setup.TotalData = this.setup.TotalData - this.setup.successCheckin.length;
+      this.setup.TotalData =
+        this.setup.TotalData - this.setup.successCheckin.length;
     }
-    
+
     this.gambar = this.setup["hotelImage"];
     this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
@@ -180,7 +183,7 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
-    back(){
+    back() {
       window.open(this.setup.location, "_self");
     },
     sorting(a, b) {
@@ -279,30 +282,21 @@ export default {
       }
     },
     send() {
-      const findData = this.successCheckin.find(item => {
-        return item == this.selectedData['reslinnr'];
-      });      
-      if(findData == undefined){
-        this.successCheckin.push(this.selectedData['reslinnr']);
-      }      
-      Object.assign(this.setup, { successCheckin: this.successCheckin });  
-      
-      sessionStorage.setItem(
-        "listData",
-        JSON.stringify(this.guestData)
-      );
-      sessionStorage.setItem(
-        "settings",
-        JSON.stringify(this.setup)
-      );
-      const resstatus = this.selectedData['res-status'].split(" - ");
-      if(parseInt(resstatus[0]) == 1){
+      const findData = this.successCheckin.find((item) => {
+        return item == this.selectedData["reslinnr"];
+      });
+      if (findData == undefined) {
+        this.successCheckin.push(this.selectedData["reslinnr"]);
+      }
+      Object.assign(this.setup, { successCheckin: this.successCheckin });
+
+      sessionStorage.setItem("listData", JSON.stringify(this.guestData));
+      sessionStorage.setItem("settings", JSON.stringify(this.setup));
+      const resstatus = this.selectedData["res-status"].split(" - ");
+      if (parseInt(resstatus[0]) == 1) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: true });
-        sessionStorage.setItem(
-          "guestData",
-          JSON.stringify(this.selectedData)
-        );
+        sessionStorage.setItem("guestData", JSON.stringify(this.selectedData));
         router.push({
           name: "SuccessCheckIn",
           params: {
@@ -310,12 +304,8 @@ export default {
             setting: this.setup,
           },
         });
-      }
-      else{
-        sessionStorage.setItem(
-          "guestData",
-          JSON.stringify(this.selectedData)
-        );
+      } else {
+        sessionStorage.setItem("guestData", JSON.stringify(this.selectedData));
         router.push({
           name: "Step",
           params: {
@@ -323,7 +313,7 @@ export default {
             setting: this.setup,
           },
         });
-      }      
+      }
     },
     formatDate(datum) {
       const dDate =

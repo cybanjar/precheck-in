@@ -866,12 +866,12 @@ export default {
       key;
     },
   },
-  created() {    
+  created() {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    console.log('GuestData',this.currDataPrepare);
-    
+    console.log("GuestData", this.currDataPrepare);
+
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -1485,8 +1485,8 @@ export default {
       window.scrollTo(0, 0);
       //this.step = 0;
     },
-    checkValidation(caseType){
-      console.log('checkValidation is triggered');
+    checkValidation(caseType) {
+      console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1498,18 +1498,19 @@ export default {
               },
             },
           })
-          .json();  
+          .json();
         console.log(parsed);
-        switch(caseType){
+        switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
             const responseStatus = {
               statusNumber: "",
               statusMessage: "",
-            }            
+            };
             responseStatus.statusNumber = responses[0];
             responseStatus.statusMessage = responses[1];
-            if(responseStatus.statusNumber == '1'){ //Reservation Already Check-In!
+            if (responseStatus.statusNumber == "1") {
+              //Reservation Already Check-In!
               // Go To Success Checkin
               Object.assign(this.currDataPrepare, { roomReady: true });
               // Session Storage Set
@@ -1528,11 +1529,12 @@ export default {
                   setting: this.currDataSetting,
                 },
               });
-            }else if(responseStatus.statusNumber == '0'){ //Reservation Not Check-In Yet!
+            } else if (responseStatus.statusNumber == "0") {
+              //Reservation Not Check-In Yet!
               this.handleResCi();
-            }            
+            }
             break;
-          case "2":            
+          case "2":
             break;
           case "3":
             break;
@@ -1569,19 +1571,19 @@ export default {
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        if (this.responseStatus.statusNumber == "99" || 
-            this.responseStatus.statusNumber == "1" ||
-            this.responseStatus.statusNumber == "2" ||
-            this.responseStatus.statusNumber == "3" ||
-            this.responseStatus.statusNumber == "4" ||
-            this.responseStatus.statusNumber == "5"
-        ){
+        if (
+          this.responseStatus.statusNumber == "99" ||
+          this.responseStatus.statusNumber == "1" ||
+          this.responseStatus.statusNumber == "2" ||
+          this.responseStatus.statusNumber == "3" ||
+          this.responseStatus.statusNumber == "4" ||
+          this.responseStatus.statusNumber == "5"
+        ) {
           // Showing Modal Cannot MCI -> mci_error_not_avail
-        }
-        else if(
-            this.responseStatus.statusNumber == "6" ||
-            this.responseStatus.statusNumber == "7"
-        ){
+        } else if (
+          this.responseStatus.statusNumber == "6" ||
+          this.responseStatus.statusNumber == "7"
+        ) {
           this.confirmMailModal = true;
           this.roomReady = false;
         } else {
@@ -1610,8 +1612,9 @@ export default {
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
         this.overlappingModal = true;
-      } else {        
-        /* Room is Ready to Check in */   
+      } else {
+        /* Room is Ready to Check in */
+
         this.checkValidation("1");
       }
     },
@@ -1632,7 +1635,7 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-                
+
         // Handling Interface WA atau SMS
         //console.log(data);
         (async () => {
