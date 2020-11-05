@@ -664,7 +664,7 @@ export default {
       this.id = this.$route.params.Data;
       console.log(this.id);
       console.log(this.id.length);
-      this.currDataPrepare = this.id['0'];
+      this.currDataPrepare = this.id["0"];
     }
     this.country = this.currDataPrepare["guest-country"];
     this.email = this.currDataPrepare["guest-email"];
@@ -768,9 +768,9 @@ export default {
                 },
               })
               .json();
-          // console.log(parsed, "inputan3");
-          const tempMessResult = parsed.response.messResult.split(" ");
-          this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
+            // console.log(parsed, "inputan3");
+            const tempMessResult = parsed.response.messResult.split(" ");
+            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
           this.scrollToTop();
           this.save();

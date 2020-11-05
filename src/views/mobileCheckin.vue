@@ -10,9 +10,8 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="padding-right: 10px;">
+      <div class="col-xs-4" style="margin-right: -15px;">
         <q-select
-          :style="textOta"
           class="float-right"
           borderless
           behavior="menu"
@@ -22,7 +21,22 @@
             { label: 'English', value: 'English' },
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
-        />
+        >
+          <template v-slot:selected-item="scope">
+            <q-chip
+              @remove="scope.removeAtIndex(scope.index)"
+              :tabindex="scope.tabindex"
+              :style="textOta"
+              class="q-ma-none"
+              style="margin-right: -20px;"
+            >
+              {{ scope.opt }}
+            </q-chip>
+          </template>
+          <template v-slot:append>
+            <q-icon name="language" :style="textOta" />
+          </template>
+        </q-select>
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
@@ -515,6 +529,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
+        backgroundColor: "transparent",
       },
       setup: [],
       SystemDate: "",
@@ -552,7 +567,7 @@ export default {
     };
   },
   created() {
-    this.$q.iconSet.arrow.dropdown = "language";
+    this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
     /* tempParam Variable for Nicepay */
