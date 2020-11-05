@@ -10,9 +10,8 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="padding-right: 10px;">
+      <div class="col-xs-4" style="margin-right:-15px;">
         <q-select
-          :style="textOta"
           class="float-right"
           borderless
           behavior="menu"
@@ -22,7 +21,20 @@
             { label: 'English', value: 'English' },
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
-        />
+        >
+        <template v-slot:selected-item="scope">
+          <q-chip
+            :style="textOta"
+            class="q-ma-none"
+            style="margin-right:-20px;"
+          >
+            {{ scope.opt }}
+          </q-chip>
+        </template>
+          <template v-slot:append>
+            <q-icon name="language" :style="textOta" />
+          </template>
+        </q-select>
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
@@ -515,6 +527,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
+        backgroundColor: 'transparent',
       },
       setup: [],
       SystemDate: "",
@@ -549,10 +562,14 @@ export default {
       },
       selectedLang: "",
       hotelLogo: "",
+      defaultCountry: "",
+      changeColor:{
+        color: "color: rgba(255, 255, 255, 0.8) !important;"
+      }
     };
   },
-  created() {
-    this.$q.iconSet.arrow.dropdown = "language";
+  created() {    
+    this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
     /* tempParam Variable for Nicepay */
@@ -807,8 +824,17 @@ export default {
       const tempTodayOcc = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 6;
-      });
+      });      
       this.todayOcc = tempTodayOcc[0]["price"];
+      const defCountry = this.tempsetup.filter((item, index) => {
+        //  LICENSE WA/SMS GATEWAY
+        return item.number1 === 9 && item.number2 === 1;
+      });
+      this.defaultCountry = defCountry[0]["setupvalue"];
+      if(this.defaultCountry.toLowerCase() == 'idn'){
+        this.defaultCountry = 'INA';
+      }      
+      
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -851,6 +877,7 @@ export default {
       obj["location"] = this.location;
       obj["defaultCI"] = this.defaultCI;
       obj["hotelLogo"] = this.hotelLogo;
+      obj["defaultCountry"] = this.defaultCountry;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date
@@ -1135,13 +1162,13 @@ export default {
               },
             })
             .json();
+          console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
           switch (messResult[0].trim()) {
             case "0":
               // Reservation is Found
-
               const totalGuest =
                 data.response.arrivalGuestlist["arrival-guestlist"].length;
               if (totalGuest > 1) {
@@ -1157,7 +1184,6 @@ export default {
                   );
                 });
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
-
                 router.push({
                   name: "ListCheckIn",
                   params: {
@@ -1282,3 +1308,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .q-field__native,
+  .q-field__prefix,
+  .q-field__suffix,
+  .q-field__input {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+  .q-field__marginal {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+</style>

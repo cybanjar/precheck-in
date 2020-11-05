@@ -43,6 +43,8 @@
         <div v-else>
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
+              <p>{{ getLabels("phone_number", `titleCase`) }} : {{ phone }}</p>
+              <p>{{ getLabels("email", `titleCase`) }} : {{ email }}</p>
               <p>
                 {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
               </p>
@@ -119,7 +121,6 @@ export default {
     // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
-
     this.hotelLogo = this.setup.hotelLogo;
     this.hotelEndpoint = this.setup.hotelEndpoint;
     this.langID = this.setup.langID;
@@ -176,7 +177,6 @@ export default {
         this.QRshow = true;
       }
     })();
-
     // Generate QRCode
     const success = btoa(this.data);
     QRCode.toCanvas(
@@ -239,7 +239,6 @@ export default {
               case "0":
                 // Reservation is Found
                 const reservation = [];
-
                 /* Handling Multiple Guest to ListCheckin.vue */
                 reservation.push(
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -252,7 +251,6 @@ export default {
                   );
                 });
                 this.setup.TotalData = tempTotal.length;
-
                 console.log("SuccessCheckin", {
                   guestData: reservation[0],
                   setting: this.setup,
@@ -268,7 +266,6 @@ export default {
                 } else {
                   window.open(this.location, "_self");
                 }
-
                 break;
               default:
                 break;
