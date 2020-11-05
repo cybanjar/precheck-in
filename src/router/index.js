@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/precheckin",
+    path: "/precheckinform",
     name: "Home",
     component: Home,
   },
@@ -54,7 +54,7 @@ const routes = [
     component: () => import("../views/ListCheckin"),
   },
   {
-    path: "/precheckinloading",
+    path: "/precheckin",
     name: "Done",
     component: () => import("../views/Done"),
   },
