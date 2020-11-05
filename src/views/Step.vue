@@ -21,8 +21,8 @@
             @click="handleYes"
           >
             {{ getLabels("ok_message", `upperCase`) }}
-            <q-spinner    
-              v-if="loadingConfirmEmail"          
+            <q-spinner
+              v-if="loadingConfirmEmail"
               style="margin-left: 10px;"
               color="white"
               size="12px"
@@ -583,7 +583,7 @@
                           class="font-weight-bold mt-3 mr-3"
                           type="primary"
                           :disabled="paid || paymentLoading"
-                          @click="payDeposit()"
+                          @click="checkPayment()"
                         >
                           {{ getLabels("pay", `titleCase`) }}
                           <q-spinner
@@ -937,7 +937,7 @@ export default {
     }
     this.region = this.currDataSetting["province"];
     this.countries = this.currDataSetting["countries"];
-    this.defaultCountry = this.currDataSetting['defaultCountry'];
+    this.defaultCountry = this.currDataSetting["defaultCountry"];
     this.wifiAddress = this.currDataSetting["wifiAddress"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
@@ -1111,24 +1111,24 @@ export default {
     }
   },
   methods: {
-    async autoScrollNation(){
-      await this.$nextTick();        
-        if(this.currDataPrepare['guest-nation'] == ""){
-          this.form.setFieldsValue({
-            nationality: this.defaultCountry,
-          });      
-          this.currDataPrepare['guest-nation'] = this.defaultCountry;  
-        }        
+    async autoScrollNation() {
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-nation"] == "") {
+        this.form.setFieldsValue({
+          nationality: this.defaultCountry,
+        });
+        this.currDataPrepare["guest-nation"] = this.defaultCountry;
+      }
     },
-    async autoScrollCountry(){
-      await this.$nextTick();        
-        if(this.currDataPrepare['guest-country'] == ""){
-          this.form.setFieldsValue({
-            country: this.defaultCountry,
-          });
-          this.country = this.defaultCountry;
-          this.currDataPrepare['guest-country'] = this.defaultCountry;
-        }        
+    async autoScrollCountry() {
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-country"] == "") {
+        this.form.setFieldsValue({
+          country: this.defaultCountry,
+        });
+        this.country = this.defaultCountry;
+        this.currDataPrepare["guest-country"] = this.defaultCountry;
+      }
     },
     resendPreauth() {
       this.preauthModal = false;
@@ -1598,6 +1598,12 @@ export default {
             }
             break;
           case "2":
+            const responsess = parsed.response["paymentFlag"].split(" - ");
+            if (parseInt(responsess[0]) == 0) {
+              this.payDeposit();
+            } else {
+              this.paid = true;
+            }
             break;
           case "3":
             break;
@@ -1786,6 +1792,9 @@ export default {
     handleBack() {
       window.open(this.location, "_self");
     },
+     checkPayment() {
+      this.checkValidation("2");
+    }
   },
   computed: {
     getLabels() {
