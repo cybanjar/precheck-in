@@ -2,7 +2,7 @@
   <div>
     <div :style="ota" class="row justify-between pt-2">
       <div class="text-center col-xs-12">
-        <img class="logo_hotel" src="../assets/logo_harris.png" />
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
@@ -10,8 +10,8 @@
     </div>
     <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
-        <canvas v-show="roomNotReady" id="canvas"></canvas>
-        <div v-if="roomNotReady">
+        <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
+        <div v-if="roomReady">
           <p>{{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}</p>
           <p>
             {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
@@ -27,7 +27,10 @@
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p>
+              <p v-if="!QRshow">
+                {{ getLabels("mci_success_with_max_keycard", `sentenceCase`) }}
+              </p>
+              <p v-else>
                 {{ getLabels("mci_success", `sentenceCase`) }}
               </p>
             </div>
@@ -38,21 +41,11 @@
           }}</a-button>
         </div>
         <div v-else>
-          <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <!-- <p>
-            {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
-          </p>
-          <p>
-            {{ getLabels("wifi_password", `sentenceCase`) }} :
-            {{ wifiPassword }}
-          </p> -->
               <p>
                 {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
               </p>
-              <!-- <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
-          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p> -->
             </div>
           </div>
 
@@ -79,7 +72,7 @@ export default {
       wifiPassword: "",
       arrangement: "",
       labels: [],
-      roomNotReady: false,
+      roomReady: false,
       email: "",
       phone: "",
       langID: "",
@@ -102,20 +95,56 @@ export default {
       ciTime: "",
       bookingcode: "",
       TotalData: "",
+      hotelLogo: "",
+      setup: "",
+      hotelEndpoint: "",
+      QRshow: "false",
+      reslinnr: "",
+      serverTime: "",
+      message: "",
+      guestData: {},
     };
   },
   mounted() {
-    // console.log(this.$route.params, "nyampe");
+    this.setup = this.$route.params.setting;
+    this.guestData = this.$route.params.Data;
+    if(this.setup == null || this.guestData == null){
+      if (sessionStorage.getItem("guestData") != null) {
+        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
+      }
+      if (sessionStorage.getItem("settings") != null) {
+        this.setup = JSON.parse(sessionStorage.getItem("settings"));
+      }
+    }
+    // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    this.langID = this.$route.params.Data.langID;
-    this.ota.backgroundColor = this.$route.params.Data.BackgroundColor;
-    this.textOta.color = this.$route.params.Data.FontColor;
-    this.hotelImage = this.$route.params.Data.hotelImage;
-    this.hotelName = this.$route.params.Data.hotelname;
-    this.coDate = this.formatDateFind(this.$route.params.Data.coDate);
-    this.ciTime = this.$route.params.Data.defaultCI;
-    this.bookingcode = this.$route.params.Data.bookingcode;
-    this.TotalData = this.$route.params.Data.TotalData;
+    // Get Parsing Web Setting
+    
+    this.hotelLogo = this.setup.hotelLogo;
+    this.hotelEndpoint = this.setup.hotelEndpoint;
+    this.langID = this.setup.langID;
+    this.ota.backgroundColor = this.setup.BackgroundColor;
+    this.textOta.color = this.setup.FontColor;
+    this.hotelImage = this.setup.hotelImage;
+    this.hotelName = this.setup.hotelname;
+    this.ciTime = this.setup.defaultCI;
+    this.TotalData = this.setup.TotalData;
+    this.location = this.setup.location;
+    this.serverTime = this.setup.serverTime;
+    const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
+    this.hotelParams = decodeURIComponent(tempParam);
+    this.wifiAddress = this.setup.wifiAddress;
+    this.wifiPassword = this.setup.wifiPassword;
+    // Get Parsing Guest Data
+    this.coDate = this.formatDateFind(this.guestData['co']);    
+    this.bookingcode = this.guestData['resnr'];  
+    this.reslinnr = this.guestData['reslinnr'];
+    this.roomReady = this.guestData['roomReady'];
+    this.roomNumber = this.guestData['zinr'];    
+    this.arrangement = this.guestData['argt-str'];
+    this.email = this.guestData['guest-email'];
+    this.phone = this.guestData['guest-phnumber'];
+    // Selecting Language
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -127,23 +156,29 @@ export default {
         this.programLabel = "program-label1";
         break;
     }
-    this.data = this.$route.params.Data.QRCodeData;
-    this.location = this.$route.params.Data.location;
-    // console.log(
-    //   this.location.slice(this.location.lastIndexOf("?") + 1),
-    //   "test"
-    // );
-    const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
-    this.hotelParams = decodeURIComponent(tempParam);
-    // console.log(this.hotelParams);
-    const success = btoa(this.data);
-    this.roomNumber = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.$route.params.Data.wifiAddress;
-    this.wifiPassword = this.$route.params.Data.wifiPassword;
-    this.arrangement = this.$route.params.Data.arrangement;
-    this.roomNotReady = this.$route.params.Data.roomNotReady;
-    this.email = this.$route.params.Data.email;
-    this.phone = this.$route.params.Data.phone;
+    // Check Validation of Keycard
+    (async () => {
+      const parsed = await ky
+        .post(this.hotelEndpoint + "mobileCI/checkValidation", {
+          json: {
+            request: {
+              rsvNumber: this.bookingcode,
+              rsvlineNumber: this.reslinnr,
+              caseType: "3", // 1 = check res status; 2 = check payment; 3 = check keycard
+            },
+          },
+        })
+        .json();
+      this.data = parsed.response.keyString;
+      if (parsed.response.keyMaked >= parsed.response.keyAvail) {
+        this.QRshow = false;
+      } else {
+        this.QRshow = true;
+      }
+    })();
+    
+    // Generate QRCode
+    const success = btoa(this.data);    
     QRCode.toCanvas(
       document.getElementById("canvas"),
       success,
@@ -176,23 +211,70 @@ export default {
       return fixDate;
     },
     goBack() {
+      console.log(this.TotalData);
       if (this.TotalData == undefined) {
-        // console.log('Window',this.location);
         window.open(this.location, "_self");
       } else {
         if (parseInt(this.TotalData) > 1) {
-          // console.log('routerpush',this.TotalData);
-          router.push({
-            name: "MobileCheckin",
-            params: {
-              hotelParameter: this.hotelParams,
-              bookingcode: this.bookingcode,
-              coDate: this.coDate,
-              citime: this.ciTime,
-            },
-          });
+          (async () => {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/findReservation", {
+                json: {
+                  request: {
+                    coDate: this.coDate,
+                    bookCode: this.bookingcode,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: this.serverTime,
+                    groupFlag: "false",
+                  },
+                },
+              })
+              .json();            
+            this.message = data.response["messResult"];          
+            const messResult = this.message.split("-");
+            const messMessage = messResult[1].split(",");
+            switch (messResult[0].trim()) {
+              case "0":
+                // Reservation is Found
+                const reservation = [];
+                
+                /* Handling Multiple Guest to ListCheckin.vue */
+                reservation.push(
+                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                );
+                // Get Total Guest
+                const tempTotal = reservation[0].filter((item, index) => {
+                  return (
+                    item["room-status"] !==
+                    "1 Room Already assign or Overlapping"
+                  );
+                });
+                this.setup.TotalData = tempTotal.length;
+                
+                console.log('SuccessCheckin',{
+                  guestData: reservation[0],
+                  setting: this.setup,
+                });
+                if(tempTotal.length > 1){
+                  router.push({
+                    name: "ListCheckIn",
+                    params: {
+                      guestData: reservation[0],
+                      setting: this.setup,
+                    },
+                  });
+                }else{
+                  window.open(this.location, "_self");
+                }
+                
+                break;  
+              default:
+                break;
+            }
+          })();
         } else {
-          // console.log('Window',this.location);
           window.open(this.location, "_self");
         }
       }

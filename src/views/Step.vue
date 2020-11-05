@@ -831,7 +831,7 @@ export default {
       hotelEndpoint: "",
       hotelcode: "",
       ipAddr: "",
-      roomNotReady: false,
+      roomReady: false,
       freeParking: false,
       vRegident: "",
       confirmMailModal: false,
@@ -866,12 +866,13 @@ export default {
       key;
     },
   },
-  created() {
+  created() {    
+    this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    console.log('GuestData',this.currDataPrepare);
+    
     this.errorCode = "0000";
-
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
@@ -988,7 +989,7 @@ export default {
     }
     this.loading = false;
     //console.log('setting',this.currDataSetting);
-    // router.replace(this.location);
+    // router.push(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
     const coDate = moment(this.handleArrayDate(this.currDataPrepare["co"]));
@@ -1008,7 +1009,6 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
-
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
       if (this.errorCode == "1004") {
@@ -1062,8 +1062,8 @@ export default {
               JSON.stringify(this.currDataSetting)
             );
           }
-        })();        
-      }      
+        })();
+      }
     }
   },
   methods: {
@@ -1121,8 +1121,8 @@ export default {
                 JSON.stringify(this.currDataSetting)
               );
             }
-          })();        
-        }      
+          })();
+        }
       }
     },
     async getFile() {
@@ -1485,6 +1485,62 @@ export default {
       window.scrollTo(0, 0);
       //this.step = 0;
     },
+    checkValidation(caseType){
+      console.log('checkValidation is triggered');
+      (async () => {
+        const parsed = await ky
+          .post(this.hotelEndpoint + "mobileCI/checkValidation", {
+            json: {
+              request: {
+                rsvNumber: this.currDataPrepare["resnr"],
+                rsvlineNumber: this.currDataPrepare["reslinnr"],
+                caseType: caseType,
+              },
+            },
+          })
+          .json();  
+        console.log(parsed);
+        switch(caseType){
+          case "1":
+            const responses = parsed.response["resStatus"].split(" - ");
+            const responseStatus = {
+              statusNumber: "",
+              statusMessage: "",
+            }            
+            responseStatus.statusNumber = responses[0];
+            responseStatus.statusMessage = responses[1];
+            if(responseStatus.statusNumber == '1'){ //Reservation Already Check-In!
+              // Go To Success Checkin
+              Object.assign(this.currDataPrepare, { roomReady: true });
+              // Session Storage Set
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+              router.push({
+                name: "SuccessCheckIn",
+                params: {
+                  Data: this.currDataPrepare,
+                  setting: this.currDataSetting,
+                },
+              });
+            }else if(responseStatus.statusNumber == '0'){ //Reservation Not Check-In Yet!
+              this.handleResCi();
+            }            
+            break;
+          case "2":            
+            break;
+          case "3":
+            break;
+          default:
+            break;
+        }
+      })();
+    },
     handleResCi() {
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
@@ -1513,45 +1569,37 @@ export default {
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        // this.responseStatus.statusNumber == "99" ||
-        // this.responseStatus.statusNumber == "6" ||
-        // this.responseStatus.statusNumber == "7"
-        //console.log(parsed,parsed.response["checkedIn"]);
-        if (parsed.response["checkedIn"] == "false") {
+        if (this.responseStatus.statusNumber == "99" || 
+            this.responseStatus.statusNumber == "1" ||
+            this.responseStatus.statusNumber == "2" ||
+            this.responseStatus.statusNumber == "3" ||
+            this.responseStatus.statusNumber == "4" ||
+            this.responseStatus.statusNumber == "5"
+        ){
+          // Showing Modal Cannot MCI -> mci_error_not_avail
+        }
+        else if(
+            this.responseStatus.statusNumber == "6" ||
+            this.responseStatus.statusNumber == "7"
+        ){
           this.confirmMailModal = true;
-          this.roomNotReady = false;
+          this.roomReady = false;
         } else {
-          this.roomNotReady = true;
-          const QRCodeData =
-            "{" +
-            this.currDataPrepare.zinr +
-            ";" +
-            moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-            "}";
-          const data = {};
-          data["QRCodeData"] = QRCodeData;
-          data["wifiAddress"] = this.wifiAddress;
-          data["wifiPassword"] = this.wifiPassword;
-          data["arrangement"] = this.currDataPrepare["argt-str"];
-          data["roomNotReady"] = this.roomNotReady;
-          data["hotelcode"] = this.hotelcode;
-          data["langID"] = this.langID;
-          data["hotelname"] = this.hotelname;
-          data["hotelImage"] = this.gambar;
-          data["BackgroundColor"] = this.information.backgroundColor;
-          data["FontColor"] = this.information.color;
-          data["location"] = this.location;
-          data["TotalData"] = this.TotalData;
-          data["citime"] = this.currDataPrepare["ci"];
-          data["coDate"] = this.currDataPrepare["co"];
-          data["bookingcode"] = this.currDataPrepare["resnr"];
-          data["defaultCI"] = this.defaultCI;
-          data["email"] = this.currDataPrepare["guest-email"];
-          data["phone"] = this.currDataPrepare["guest-phnumber"];
-          router.replace({
+          Object.assign(this.currDataPrepare, { roomReady: true });
+          // Session Storage Set
+          sessionStorage.setItem(
+            "guestData",
+            JSON.stringify(this.currDataPrepare)
+          );
+          sessionStorage.setItem(
+            "settings",
+            JSON.stringify(this.currDataSetting)
+          );
+          router.push({
             name: "SuccessCheckIn",
             params: {
-              Data: data,
+              Data: this.currDataPrepare,
+              setting: this.currDataSetting,
             },
           });
         }
@@ -1562,12 +1610,9 @@ export default {
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
         this.overlappingModal = true;
-      } else if (parseInt(rmStatus) > 2) {
-        /* Room is not ready */
-        this.handleResCi();
-      } else {
-        /* Room is Ready to Check in */
-        this.handleResCi();
+      } else {        
+        /* Room is Ready to Check in */   
+        this.checkValidation("1");
       }
     },
     handleYes() {
@@ -1587,32 +1632,7 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-        const QRCodeData =
-          "{" +
-          this.currDataPrepare.zinr +
-          ";" +
-          moment(this.currDataPrepare.co).format("MM/DD/YYYY") +
-          "}";
-        const data = {};
-        data["QRCodeData"] = QRCodeData;
-        data["wifiAddress"] = this.wifiAddress;
-        data["wifiPassword"] = this.wifiPassword;
-        data["arrangement"] = this.currDataPrepare["argt-str"];
-        data["roomNotReady"] = this.roomNotReady;
-        data["hotelcode"] = this.hotelcode;
-        data["langID"] = this.langID;
-        data["hotelname"] = this.hotelname;
-        data["hotelImage"] = this.gambar;
-        data["BackgroundColor"] = this.information.backgroundColor;
-        data["FontColor"] = this.information.color;
-        data["location"] = this.location;
-        data["TotalData"] = this.TotalData;
-        data["citime"] = this.currDataPrepare["ci"];
-        data["coDate"] = this.currDataPrepare["co"];
-        data["bookingcode"] = this.currDataPrepare["resnr"];
-        data["defaultCI"] = this.defaultCI;
-        data["email"] = this.currDataPrepare["guest-email"];
-        data["phone"] = this.currDataPrepare["guest-phnumber"];
+                
         // Handling Interface WA atau SMS
         //console.log(data);
         (async () => {
@@ -1637,10 +1657,21 @@ export default {
           this.responseStatus.statusMessage = responses[1];
           //console.log(responses);
           if (this.responseStatus.statusNumber == 0) {
-            router.replace({
+            Object.assign(this.currDataPrepare, { roomReady: false });
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+            router.push({
               name: "SuccessCheckIn",
               params: {
-                Data: data,
+                Data: this.currDataPrepare,
+                setting: this.currDataSetting,
               },
             });
           } else {

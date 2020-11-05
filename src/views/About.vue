@@ -641,6 +641,7 @@ export default {
       State: "",
       checkInTIme: "",
       tempHour: "",
+      hotelLogo: "",
     };
   },
   created() {
@@ -741,6 +742,11 @@ export default {
           return item.number1 === 8 && item.number2 === 10;
         });
         this.flagKiosk = tempKios[0]["setupflag"];
+        const tempLogo = this.tempsetup.filter((item, index) => {
+          //  Logo Hotel
+          return item.number1 === 7 && item.number2 === 6;
+        });
+        this.hotelLogo = tempLogo[0]["setupvalue"];
         const tempEndpoint = this.tempsetup.filter((item, index) => {
           return item.number1 === 99 && item.number2 === 2;
         });
@@ -783,26 +789,27 @@ export default {
           const nietos = [];
           const obj = {};
           this.dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-          obj["01"] = this.gambar;
-          obj["02"] = this.information;
-          obj["03"] = this.money;
-          obj["04"] = this.currency;
-          obj["05"] = this.per;
-          obj["06"] = this.purpose;
-          obj["07"] = this.FilterPurposeofStay;
-          obj["08"] = this.showBed;
-          obj["09"] = this.showSmoking;
-          obj["10"] = this.showFloor;
-          obj["11"] = this.hour;
-          obj["12"] = this.term;
-          obj["13"] = this.hotelname;
-          obj["14"] = this.showPickupRequest;
-          obj["15"] = this.countries;
-          obj["16"] = this.province;
-          obj["17"] = this.hotelEndpoint;
-          obj["18"] = this.hotelParams;
-          obj["19"] = this.langID;
-          obj["20"] = this.checkInTIme;
+          obj["gambar"] = this.gambar;
+          obj["information"] = this.information;
+          obj["money"] = this.money;
+          obj["currency"] = this.currency;
+          obj["per"] = this.per;
+          obj["purpose"] = this.purpose;
+          obj["FilterPurposeofStay"] = this.FilterPurposeofStay;
+          obj["showBed"] = this.showBed;
+          obj["showSmoking"] = this.showSmoking;
+          obj["showFloor"] = this.showFloor;
+          obj["hour"] = this.hour;
+          obj["term"] = this.term;
+          obj["hotelname"] = this.hotelname;
+          obj["showPickupRequest"] = this.showPickupRequest;
+          obj["countries"] = this.countries;
+          obj["province"] = this.province;
+          obj["hotelEndpoint"] = this.hotelEndpoint;
+          obj["hotelParams"] = this.hotelParams;
+          obj["langID"] = this.langID;
+          obj["checkInTIme"] = this.checkInTIme;
+          obj["hotelLogo"] = this.hotelLogo;
           nietos.push(this.dataGuest);
           nietos.push(obj);
           router.push({ name: "List", params: { foo: nietos } });
@@ -820,7 +827,6 @@ export default {
             "," +
             this.checkInTIme +
             "}";
-
           const Param = {};
           Param["langID"] = this.langID;
           Param["flagKiosk"] = this.flagKiosk;
@@ -829,7 +835,7 @@ export default {
           Param["hotelName"] = this.hotelname;
           Param["Background"] = this.information.backgroundColor;
           Param["Font"] = this.information.color;
-
+          Param["hotelLogo"] = this.hotelLogo;
           router.push({
             name: "Success",
             params: {
@@ -846,26 +852,31 @@ export default {
         }
       })();
     } else {
-      this.gambar = this.$route.params.id["setup"]["01"];
-      this.information = this.$route.params.id["setup"]["02"];
-      this.money = this.$route.params.id["setup"]["03"];
-      this.currency = this.$route.params.id["setup"]["04"];
-      this.per = this.$route.params.id["setup"]["05"];
-      this.purpose = this.$route.params.id["setup"]["06"];
-      this.FilterPurposeofStay = this.$route.params.id["setup"]["07"];
-      this.showBed = this.$route.params.id["setup"]["08"];
-      this.showSmoking = this.$route.params.id["setup"]["09"];
-      this.showFloor = this.$route.params.id["setup"]["10"];
-      this.hour = this.$route.params.id["setup"]["11"];
-      this.term = this.$route.params.id["setup"]["12"];
-      this.hotelname = this.$route.params.id["setup"]["13"];
-      this.showPickupRequest = this.$route.params.id["setup"]["14"];
-      this.countries = this.$route.params.id["setup"]["15"];
-      this.province = this.$route.params.id["setup"]["16"];
-      this.hotelEndpoint = this.$route.params.id["setup"]["17"];
-      this.hotelParams = this.$route.params.id["setup"]["18"];
-      this.langID = this.$route.params.id["setup"]["19"];
-      this.checkInTIme = this.$route.params.id["setup"]["20"];
+      this.gambar = this.$route.params.id["setup"]["gambar"];
+      this.information = this.$route.params.id["setup"]["information"];
+      this.money = this.$route.params.id["setup"]["money"];
+      this.currency = this.$route.params.id["setup"]["currency"];
+      this.per = this.$route.params.id["setup"]["per"];
+      this.purpose = this.$route.params.id["setup"]["purpose"];
+      this.FilterPurposeofStay = this.$route.params.id["setup"][
+        "FilterPurposeofStay"
+      ];
+      this.showBed = this.$route.params.id["setup"]["showBed"];
+      this.showSmoking = this.$route.params.id["setup"]["showSmoking"];
+      this.showFloor = this.$route.params.id["setup"]["showFloor"];
+      this.hour = this.$route.params.id["setup"]["hour"];
+      this.term = this.$route.params.id["setup"]["term"];
+      this.hotelname = this.$route.params.id["setup"]["hotelname"];
+      this.showPickupRequest = this.$route.params.id["setup"][
+        "showPickupRequest"
+      ];
+      this.countries = this.$route.params.id["setup"]["countries"];
+      this.province = this.$route.params.id["setup"]["province"];
+      this.hotelEndpoint = this.$route.params.id["setup"]["hotelEndpoint"];
+      this.hotelParams = this.$route.params.id["setup"]["hotelParams"];
+      this.langID = this.$route.params.id["setup"]["langID"];
+      this.checkInTIme = this.$route.params.id["setup"]["checkInTIme"];
+      this.hotelLogo = this.$route.params.id["setup"]["hotelLogo"];
       this.id = this.$route.params.id["data"];
       this.currDataPrepare = this.id[this.counter];
       // console.log(this.currDataPrepare, "else");
@@ -878,7 +889,6 @@ export default {
           "," +
           this.checkInTIme +
           "}";
-
         const Param = {};
         Param["langID"] = this.langID;
         Param["flagKiosk"] = this.flagKiosk;
@@ -887,7 +897,7 @@ export default {
         Param["hotelName"] = this.hotelname;
         Param["Background"] = this.information.backgroundColor;
         Param["Font"] = this.information.color;
-
+        Param["hotelLogo"] = this.hotelLogo;
         router.push({
           name: "Success",
           params: {
@@ -1005,7 +1015,6 @@ export default {
                 },
               })
               .json();
-
             // console.log(parsed, "inputan3");
             const tempMessResult = parsed.response.messResult.split(" ");
             this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
@@ -1026,7 +1035,6 @@ export default {
           "," +
           this.checkInTIme +
           "}";
-
         const Param = {};
         Param["langID"] = this.langID;
         Param["flagKiosk"] = this.flagKiosk;
@@ -1034,6 +1042,7 @@ export default {
         Param["hotelEndpoint"] = this.hotelEndpoint;
         Param["hotelName"] = this.hotelname;
         Param["Background"] = this.information.backgroundColor;
+        Param["hotelLogo"] = this.hotelLogo;
         Param["Font"] = this.information.color;
         router.push({
           name: "Success",
@@ -1069,7 +1078,6 @@ export default {
       this.form.setFieldsValue({
         purpose: this.$route.params.id["setup"]["06"],
       });
-
       /* Doesnt Use V-Decorator */
       this.hour = this.$route.params.id["setup"]["11"];
       this.showPrice = false;
@@ -1079,7 +1087,6 @@ export default {
       this.text = "";
       this.agree = false;
       this.country = this.currDataPrepare["guest-country"];
-
       /* Go To Next Guest */
       this.counter += 1;
     },
