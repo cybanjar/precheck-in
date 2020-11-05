@@ -103,19 +103,24 @@ export default {
       selectedData: [],
       gambar: "",
       hotelname: "",
-      information: {},
+      information: {
+        backgroundColor: "$green",
+        color: "$white",
+        borderRadius: "4px",
+      },
       lemparsetup: [],
-      fairy: {},
       labels: [],
     };
   },
   created() {
-    this.data = this.$route.params.foo[0];
-    this.setup = this.$route.params.foo[1];
-    this.lemparsetup = this.$route.params.foo[1];
-    this.gambar = this.setup["01"];
-    this.information = this.setup["02"];
-    this.hotelname = this.setup["13"];
+    console.log(this.$route.params);
+    this.data = this.$route.params.Data;
+    this.setup = this.$route.params.Param;
+    this.lemparsetup = this.$route.params.Param;
+    this.gambar = this.setup["gambar"];
+    this.information.backgroundColor = this.setup["Background"];
+    this.information.color = this.setup["Font"];
+    this.hotelname = this.setup["hotelname"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
@@ -137,9 +142,11 @@ export default {
           }
         }
       }
-      this.fairy["data"] = this.selectedData;
-      this.fairy["setup"] = this.lemparsetup;
-      router.push({ name: "Home", params: { id: this.fairy } });
+      const data = this.selectedData;
+      router.push({
+        name: "Home",
+        params: { Data: data, Param: this.lemparsetup },
+      });
     },
     select(client) {
       if (client.isSelected == false) {

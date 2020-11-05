@@ -27,11 +27,8 @@ export default {
       purpose: "",
       term: "",
       gambar: "",
-      information: {
-        backgroundColor: "$green",
-        color: "$white",
-        borderRadius: "4px",
-      },
+      backgroundColor: "$green",
+      color: "$white",
       tempsetup: [],
       per: "",
       hour: "",
@@ -99,14 +96,14 @@ export default {
       const bC = tempbC.filter((item, index) => {
         return item.setupflag === true;
       });
-      this.information.backgroundColor = bC[0].setupvalue;
+      this.backgroundColor = bC[0].setupvalue;
       const tempfC = this.tempsetup.filter((item, index) => {
         return item.number1 === 5;
       });
       const fC = tempfC.filter((item, index) => {
         return item.setupflag === true;
       });
-      this.information.color = fC[0].setupvalue;
+      this.color = fC[0].setupvalue;
       const tempGambar = this.tempsetup.filter((item, index) => {
         return item.number1 === 7 && item.number2 === 1;
       });
@@ -191,7 +188,8 @@ export default {
       }
       const obj = {};
       obj["gambar"] = this.gambar;
-      obj["information"] = this.information;
+      obj["Background"] = this.backgroundColor;
+      obj["Font"] = this.color;
       obj["money"] = this.money;
       obj["currency"] = this.currency;
       obj["per"] = this.per;
@@ -211,9 +209,18 @@ export default {
       obj["langID"] = this.langID;
       obj["checkInTIme"] = this.checkInTIme;
       obj["hotelLogo"] = this.hotelLogo;
+      obj["flagKiosk"] = this.flagKiosk;
       this.setting.push(obj);
       if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
         console.log("lebih dari 1");
+        const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+        router.push({
+          name: "List",
+          params: {
+            Data: dataGuest,
+            Param: this.setting[0],
+          },
+        });
       } else if (
         parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
         "GUEST ALREADY PCI"
@@ -232,7 +239,7 @@ export default {
           name: "Success",
           params: {
             Data: Data,
-            Param: this.setting,
+            Param: this.setting[0],
           },
         });
       } else {
