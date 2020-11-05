@@ -244,6 +244,14 @@ export default {
         });
       } else {
         console.log("akan pci");
+        const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+        router.push({
+          name: "Home",
+          params: {
+            Data: dataGuest,
+            Param: this.setting[0],
+          },
+        });
       }
     })();
   },

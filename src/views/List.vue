@@ -141,12 +141,36 @@ export default {
             this.selectedData.splice(i, 1);
           }
         }
+        const data = this.selectedData;
+        router.push({
+          name: "Home",
+          params: { Data: data, Param: this.lemparsetup },
+        });
+      } else {
+        if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+        }
       }
-      const data = this.selectedData;
-      router.push({
-        name: "Home",
-        params: { Data: data, Param: this.lemparsetup },
-      });
     },
     select(client) {
       if (client.isSelected == false) {
