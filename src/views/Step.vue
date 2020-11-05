@@ -575,7 +575,7 @@
                           class="font-weight-bold mt-3 mr-3"
                           type="primary"
                           :disabled="paid || paymentLoading"
-                          @click="payDeposit()"
+                          @click="checkPayment()"
                         >
                           {{ getLabels("pay", `titleCase`) }}
                           <q-spinner
@@ -870,7 +870,6 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    console.log("GuestData", this.currDataPrepare);
 
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
@@ -1018,8 +1017,8 @@ export default {
         this.paidVerError = false;
       } else if (this.errorCode == "9002" || this.errorCode == "8021") {
         /* Payment Gateway Network Error */
-        this.paidNetworkError = true;
-        this.paidVerError = false;
+        this.paidNetworkError = false;
+        this.paidVerError = true;
       } else {
         (async () => {
           const data = await ky
@@ -1070,12 +1069,12 @@ export default {
     resendPreauth() {
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
-        if (this.errorCode == "1004") {
+        if (this.errorCode == "8021") {
           //this.tempParam.resultCd.substring(0, 1)
           /* Payment Gateway Network Error */
-          this.paidNetworkError = true;
-          this.paidVerError = false;
-        } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+          this.paidNetworkError = false;
+          this.paidVerError = true;
+        } else if (this.errorCode == "9002" || this.errorCode == "1004") {
           /* Payment Gateway Network Error */
           this.paidNetworkError = true;
           this.paidVerError = false;
@@ -1268,7 +1267,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        //console.log(this.ipAddr);
+        // console.log(this.ipAddr);
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1338,7 +1337,7 @@ export default {
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            //console.log(this.resReg);
+            // console.log(this.resReg);
             if (this.resReg.data["resultCd"] == "0000") {
               //console.log(this.resReg);
               const urlInq =
@@ -1499,7 +1498,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed);
+        // console.log(parsed);
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -1535,6 +1534,12 @@ export default {
             }
             break;
           case "2":
+            const responsess = parsed.response["paymentFlag"].split(" - ");
+            if (parseInt(responsess[0]) == 0) {
+              this.payDeposit();
+            } else {
+              this.paid = true;
+            }
             break;
           case "3":
             break;
@@ -1723,6 +1728,9 @@ export default {
     handleBack() {
       window.open(this.location, "_self");
     },
+    checkPayment() {
+      this.checkValidation("2");
+    }
   },
   computed: {
     getLabels() {
