@@ -757,9 +757,9 @@ export default {
       this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
       const tempfreeParking = this.tempsetup.filter((item, index) => {
         //  Free Parking
-        return item.number1 === 8 && item.number2 == 5;
+        return item.number1 === 8 && item.number2 == 14;
       });
-      this.freeParking = this.tempsetup["0"]["setupflag"];
+      this.freeParking = tempfreeParking["0"]["setupflag"];
       const tempDEFAULTCHECKINTIME = this.tempsetup.filter((item, index) => {
         //  DEFAULT CHECKIN TIME
         return item.number1 === 8 && item.number2 == 2;
