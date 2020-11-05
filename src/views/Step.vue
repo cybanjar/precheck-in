@@ -175,15 +175,25 @@
         ONLINE CHECK-IN
       </h5>
       <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
+        <div class="q-ma-md col-md col-md-8 col-xs-12 invisibles">
           <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
             :style="information"
           >
-            {{ this.currDataPrepare["gast"] }}
+            {{ this.currDataPrepare["gast"] }} -
             {{ currDataPrepare["guest-member-name"] }}
+            <span
+              v-for="(item, index) in currDataPrepare['rmshare']"
+              :key="item"
+              style="font-weight: 500; font-size: 14px;"
+            >
+              {{ item }}
+              <span v-if="index != currDataPrepare['rmshare'].length - 1"
+                >|</span
+              >
+            </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold" :style="information">
             {{ this.currDataPrepare["gast"] }}
@@ -211,17 +221,34 @@
             </q-img>
           </q-card>
         </div>
-        <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
+        <div class="q-ma-md col-md col-md-8 col-xs-12 visible">
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
           >
-            {{ this.currDataPrepare["gast"] }}
+            {{ this.currDataPrepare["gast"] }} -
             {{ currDataPrepare["guest-member-name"] }}
+            <span
+              v-for="(item, index) in currDataPrepare['rmshare']"
+              :key="item"
+              style="font-weight: 500; font-size: 14px;"
+            >
+              {{ item }}
+              <span v-if="index != currDataPrepare['rmshare'].length - 1"
+                >|</span
+              >
+            </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold">
             {{ this.currDataPrepare["gast"] }},
           </h6>
+          <div
+            v-for="item in currDataPrepare['rmshare']"
+            :key="item"
+            style="margin-top: 20px;"
+          >
+            <p style="margin-top: -20px;">{{ item }}</p>
+          </div>
           <p class="ant-card-meta-description text-white">
             {{ getLabels("arrival", `titleCase`) }}:
             <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
@@ -1637,6 +1664,7 @@ export default {
             },
           })
           .json();
+        console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];

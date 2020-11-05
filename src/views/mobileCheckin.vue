@@ -1162,7 +1162,7 @@ export default {
               },
             })
             .json();
-          console.log(data);
+          //console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
@@ -1177,20 +1177,50 @@ export default {
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
                 );
                 // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
+                const rsvFix = reservation[0].filter((item, index) => {
+                  if (item["room-sharer"] === true) {
+                  } else {
+                    return item;
+                  }
+                });
+                const tempTotal = rsvFix.filter((item, index) => {
+                  if (
+                    item["room-status"] ==
                     "1 Room Already assign or Overlapping"
-                  );
+                  ) {
+                  } else {
+                    return item;
+                  }
                 });
+                const roomShare = reservation[0].filter((item, index) => {
+                  return item["room-sharer"] === true;
+                });
+
+                rsvFix.forEach((item, index) => {
+                  Object.assign(item, { rmshare: [] });
+
+                  roomShare.forEach((guest, index) => {
+                    if (item["zinr"] == guest["zinr"]) {
+                      item["rmshare"].push(guest["gast"]);
+                    }
+                  });
+                  //console.log(item);
+                });
+                //console.log(rsvFix);
+
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
-                router.push({
-                  name: "ListCheckIn",
-                  params: {
-                    guestData: reservation[0],
-                    setting: this.setup[0],
-                  },
-                });
+
+                if (tempTotal.length > 1) {
+                  router.push({
+                    name: "ListCheckIn",
+                    params: {
+                      guestData: rsvFix,
+                      setting: this.setup[0],
+                    },
+                  });
+                } else {
+                  this.handleSingleGuest(rsvFix[0]);
+                }
               } else {
                 Object.assign(this.setup[0], { TotalData: 1 });
                 const guest =
@@ -1308,15 +1338,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .q-field__native,
-  .q-field__prefix,
-  .q-field__suffix,
-  .q-field__input {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-  .q-field__marginal {
-    color: rgba(255, 255, 255, 0.8) !important;
-  }
-</style>
