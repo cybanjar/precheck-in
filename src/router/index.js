@@ -54,7 +54,7 @@ const routes = [
     component: () => import("../views/ListCheckin"),
   },
   {
-    path: "/done",
+    path: "/precheckinloading",
     name: "Done",
     component: () => import("../views/Done"),
   },
