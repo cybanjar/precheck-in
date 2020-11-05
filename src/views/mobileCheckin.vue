@@ -28,7 +28,13 @@
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
-    <div class="row justify-around bg-white self-checkin">
+    <div
+      class="row justify-around bg-white"
+      style="
+        margin-top: -20px !important;
+        border-radius: 20px 20px 0 0 !important;
+      "
+    >
       <div class="col-xs-12 text-center q-mb-md">
         <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
           Online Check-in
@@ -542,9 +548,9 @@ export default {
       },
       iconOta: {
         fontSize: "4em",
-        color: "#1890ff",
+        color: "#FFFFFF",
         padding: "16px",
-        backgroundColor: "rgba(24, 144, 255, 0.1)",
+        backgroundColor: "rgba(255, 255, 255, 0)",
         borderRadius: "20px",
       },
       selectedLang: "",
@@ -906,7 +912,7 @@ export default {
             }
           }
         }
-      } else {      
+      } else {
         if (msServerClock < msCheckinClock) {
           this.infoMCIEarlyCheckin = true;
         }
@@ -927,7 +933,7 @@ export default {
               /* Checking License */
               if (!this.LICENSE) {
                 this.infoMCINotAvail = true; // mci_not_avail
-              }else{
+              } else {
                 this.bookingcode = this.tempParambook;
                 this.date = this.tempParamcodate.replace(/%2F/g, "/");
                 this.handleFindRsv("pci");
@@ -937,7 +943,7 @@ export default {
         } else {
           if (msServerClock < msCheckinClock) {
             this.infoMCIEarlyCheckin = true;
-          }else{
+          } else {
             this.bookingcode = this.tempParambook;
             this.date = this.tempParamcodate.replace(/%2F/g, "/");
             this.handleFindRsv("pci");
@@ -981,7 +987,7 @@ export default {
     async showModalBookingCode() {
       // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.resetForm();
-      this.modalBookingCode = true;      
+      this.modalBookingCode = true;
       await this.$nextTick();
       this.$refs.bookingcode.focus();
     },
@@ -1134,14 +1140,14 @@ export default {
                 },
               },
             })
-            .json();          
-          this.message = data.response["messResult"];          
+            .json();
+          this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
           switch (messResult[0].trim()) {
             case "0":
               // Reservation is Found
-              
+
               const totalGuest =
                 data.response.arrivalGuestlist["arrival-guestlist"].length;
               if (totalGuest > 1) {
@@ -1157,7 +1163,7 @@ export default {
                   );
                 });
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
-                
+
                 router.push({
                   name: "ListCheckIn",
                   params: {
@@ -1167,17 +1173,18 @@ export default {
                 });
               } else {
                 Object.assign(this.setup[0], { TotalData: 1 });
-                const guest = data.response.arrivalGuestlist["arrival-guestlist"][0];
+                const guest =
+                  data.response.arrivalGuestlist["arrival-guestlist"][0];
                 Object.assign(guest, { vreg: "" });
                 Object.assign(guest, { step: "" });
                 // Handling Resstatus
-                if(guest['res-status'] == '1 - Guest Already Checkin'){
+                if (guest["res-status"] == "1 - Guest Already Checkin") {
                   // Langsung ke SuccessCheckin.vue
-                }else{
+                } else {
                   this.handleSingleGuest(guest);
-                }                
+                }
               }
-              break;  
+              break;
             case "01":
               this.infoMCIRoomNotAvail = true;
               break;
@@ -1204,7 +1211,7 @@ export default {
         })();
       }
     },
-    resetForm(){
+    resetForm() {
       this.bookingcode = "";
       this.name = "";
       this.email = "";
