@@ -113,9 +113,9 @@ export default {
     this.data = this.$route.params.foo[0];
     this.setup = this.$route.params.foo[1];
     this.lemparsetup = this.$route.params.foo[1];
-    this.gambar = this.setup["01"];
-    this.information = this.setup["02"];
-    this.hotelname = this.setup["13"];
+    this.gambar = this.setup["gambar"];
+    this.information = this.setup["information"];
+    this.hotelname = this.setup["hotelname"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
