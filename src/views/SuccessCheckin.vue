@@ -243,23 +243,57 @@ export default {
                 reservation.push(
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
                 );
+                // // Get Total Guest
+                // const tempTotal = reservation[0].filter((item, index) => {
+                //   return (
+                //     item["room-status"] !==
+                //     "1 Room Already assign or Overlapping"
+                //   );
+                // });
+                // this.setup.TotalData = tempTotal.length;
+                // console.log("SuccessCheckin", {
+                //   guestData: reservation[0],
+                //   setting: this.setup,
+                // });
                 // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
+                const rsvFix = reservation[0].filter((item, index) => {
+                  if (item["room-sharer"] === true) {
+                  } else {
+                    return item;
+                  }
+                });
+                const tempTotal = rsvFix.filter((item, index) => {
+                  if (
+                    item["room-status"] ==
                     "1 Room Already assign or Overlapping"
-                  );
+                  ) {
+                  } else {
+                    return item;
+                  }
                 });
+                const roomShare = reservation[0].filter((item, index) => {
+                  return item["room-sharer"] === true;
+                });
+
+                rsvFix.forEach((item, index) => {
+                  Object.assign(item, { rmshare: [] });
+
+                  roomShare.forEach((guest, index) => {
+                    if (item["zinr"] == guest["zinr"]) {
+                      item["rmshare"].push(guest["gast"]);
+                    }
+                  });
+                  //console.log(item);
+                });
+                //console.log(rsvFix);
+
                 this.setup.TotalData = tempTotal.length;
-                console.log("SuccessCheckin", {
-                  guestData: reservation[0],
-                  setting: this.setup,
-                });
+
                 if (tempTotal.length > 1) {
                   router.push({
                     name: "ListCheckIn",
                     params: {
-                      guestData: reservation[0],
+                      guestData: rsvFix,
                       setting: this.setup,
                     },
                   });
