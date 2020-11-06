@@ -598,8 +598,8 @@ export default {
         mciErrorNotFound: "",
         mciErrorNotAvail: "",
         mciRoomNotAvail: "",
-        licenseMembership: false,
       },
+      licenseMembership: false,
     };
   },
   created() {
@@ -1357,7 +1357,7 @@ export default {
               },
             })
             .json();
-          ////console.log(data);
+          console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
@@ -1413,6 +1413,7 @@ export default {
                   if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
                     // Langsung ke SuccessCheckin.vue
                     Object.assign(rsvFix[0], { roomReady: true });
+                    //console.log(rsvFix,rsvFix[0]);
                     router.push({
                       name: "SuccessCheckIn",
                       params: {
@@ -1447,7 +1448,7 @@ export default {
                     name: "SuccessCheckIn",
                     params: {
                       Data: guest,
-                      setting: this.setup,
+                      setting: this.setup[0],
                     },
                   });
                 } else if (guest["ifdata-sent"] == true) {
@@ -1456,7 +1457,7 @@ export default {
                     name: "SuccessCheckIn",
                     params: {
                       Data: guest,
-                      setting: this.setup,
+                      setting: this.setup[0],
                     },
                   });
                 } else {
