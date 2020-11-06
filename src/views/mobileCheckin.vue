@@ -282,9 +282,9 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon
-          @click="showModalMembershipID"
+          @click="setupflag == true ? showModalMembershipID : disabled"
           name="folder_special"
-          :style="iconOta"
+          :style="setupflag == true ? iconOta : iconDisabled"
         />
         <p>{{ getLabels("membership_id", `titleCase`) }}</p>
         <a-modal
@@ -560,12 +560,20 @@ export default {
         backgroundColor: "rgba(24, 144, 255, 0.1)",
         borderRadius: "20px",
       },
+      iconDisabled: {
+        fontSize: "4em",
+        color: "#808080",
+        padding: "16px",
+        backgroundColor: "rgba(103, 128, 159, 0.1)",
+        borderRadius: "20px",
+      },
       selectedLang: "",
       hotelLogo: "",
       defaultCountry: "",
       changeColor: {
         color: "color: rgba(255, 255, 255, 0.8) !important;",
       },
+      licenseMembership: false,
     };
   },
   created() {
@@ -830,7 +838,11 @@ export default {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 1;
       });
-      this.defaultCountry = defCountry[0]["setupvalue"];
+      const tempMembership = this.tempsetup.filter((item, index) => {
+        //  LICENSE WA/SMS GATEWAY
+        return item.number1 === 9 && item.number2 === 8;
+      });
+      this.licenseMembership = tempMembership[0]["setupflag"];
       if (this.defaultCountry.toLowerCase() == "idn") {
         this.defaultCountry = "INA";
       }
