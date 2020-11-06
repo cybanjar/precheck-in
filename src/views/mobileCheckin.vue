@@ -61,7 +61,7 @@
           :style="iconOta"
         />
 
-        <p class="mt-2">{{ weblabel.bookCode }}</p>
+        <p class="q-mt-sm">{{ weblabel.bookCode }}</p>
         <a-modal
           v-model="modalBookingCode"
           :title="weblabel.bookCode"
@@ -136,7 +136,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p class="mt-2">{{ weblabel.iconName }}</p>
+        <p class="q-mt-sm">{{ weblabel.iconName }}</p>
         <a-modal
           v-model="modalGuestName"
           :title="weblabel.guestName"
@@ -210,7 +210,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p class="mt-2">{{ weblabel.email }}</p>
+        <p class="q-mt-sm">{{ weblabel.email }}</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="weblabel.email"
@@ -288,7 +288,7 @@
           name="folder_special"
           :style="licenseMembership == true ? iconOta : iconDisabled"
         />
-        <p class="mt-2">{{ weblabel.membershipID }}</p>
+        <p class="q-mt-sm">{{ weblabel.membershipID }}</p>
         <a-modal
           v-model="modalMembershipID"
           :title="weblabel.membershipID"
