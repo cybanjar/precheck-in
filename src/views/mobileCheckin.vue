@@ -282,9 +282,9 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon
-          @click="setupflag == true ? showModalMembershipID : disabled"
+          @click="showModalMembershipID"
           name="folder_special"
-          :style="setupflag == true ? iconOta : iconDisabled"
+          :style="licenseMembership == true ? iconOta : iconDisabled"
         />
         <p>{{ getLabels("membership_id", `titleCase`) }}</p>
         <a-modal
@@ -1040,10 +1040,14 @@ export default {
     },
     async showModalMembershipID() {
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
-      this.resetForm();
-      this.modalMembershipID = true;
-      await this.$nextTick();
-      this.$refs.member.focus();
+      if (this.licenseMembership != true) {
+        this.modalMembershipID = false;
+      } else {
+        this.resetForm();
+        this.modalMembershipID = true;
+        await this.$nextTick();
+        this.$refs.member.focus();
+      }
     },
     /* Handling Error Message */
     errorbo() {
