@@ -625,7 +625,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params);
+    // console.log(this.$route.params);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.gambar = this.$route.params.Param["gambar"];
     this.information.backgroundColor = this.$route.params.Param["Background"];
@@ -653,17 +653,17 @@ export default {
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
     if (this.$route.params.Data.length > 1) {
-      console.log("masuk couy");
+      // console.log("masuk couy");
       this.id = this.$route.params.Data;
-      console.log(this.id);
-      console.log(this.id.length);
+      // console.log(this.id);
+      // console.log(this.id.length);
       this.currDataPrepare = this.id[this.counter];
-      console.log(this.currDataPrepare);
+      // console.log(this.currDataPrepare);
     } else {
-      console.log("masuk cuy");
+      // console.log("masuk cuy");
       this.id = this.$route.params.Data;
-      console.log(this.id);
-      console.log(this.id.length);
+      // console.log(this.id);
+      // console.log(this.id.length);
       this.currDataPrepare = this.id["0"];
     }
     this.country = this.currDataPrepare["guest-country"];
@@ -778,8 +778,8 @@ export default {
       });
     },
     save() {
-      console.log("save is Fired");
-      console.log(this.counter, this.id.length);
+      // console.log("save is Fired");
+      // console.log(this.counter, this.id.length);
       if (this.counter == this.id.length) {
         const Data =
           "{" +

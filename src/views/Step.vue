@@ -1820,9 +1820,9 @@ export default {
     handleBack() {
       window.open(this.location, "_self");
     },
-     checkPayment() {
+    checkPayment() {
       this.checkValidation("2");
-    }
+    },
   },
   computed: {
     getLabels() {

@@ -67,7 +67,7 @@ export default {
           }
         )
         .json();
-      console.log(parsed);
+      // console.log(parsed);
       // Handling null Response
       if (parsed.response.messResult == null) {
         //console.log('nope');
@@ -212,7 +212,7 @@ export default {
       obj["flagKiosk"] = this.flagKiosk;
       this.setting.push(obj);
       if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
-        console.log("lebih dari 1");
+        // console.log("lebih dari 1");
         const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
         router.push({
           name: "List",
@@ -225,7 +225,7 @@ export default {
         parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
         "GUEST ALREADY PCI"
       ) {
-        console.log("sudah pci");
+        // console.log("sudah pci");
         this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
         const Data =
           "{" +
@@ -243,7 +243,7 @@ export default {
           },
         });
       } else {
-        console.log("akan pci");
+        // console.log("akan pci");
         const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
         router.push({
           name: "Home",

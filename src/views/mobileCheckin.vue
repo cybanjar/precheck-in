@@ -10,7 +10,7 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right:-15px;">
+      <div class="col-xs-4" style="margin-right: -15px;">
         <q-select
           class="float-right"
           borderless
@@ -22,15 +22,15 @@
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
         >
-        <template v-slot:selected-item="scope">
-          <q-chip
-            :style="textOta"
-            class="q-ma-none"
-            style="margin-right:-20px;"
-          >
-            {{ scope.opt }}
-          </q-chip>
-        </template>
+          <template v-slot:selected-item="scope">
+            <q-chip
+              :style="textOta"
+              class="q-ma-none"
+              style="margin-right: -20px;"
+            >
+              {{ scope.opt }}
+            </q-chip>
+          </template>
           <template v-slot:append>
             <q-icon name="language" :style="textOta" />
           </template>
@@ -527,7 +527,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       },
       setup: [],
       SystemDate: "",
@@ -563,12 +563,12 @@ export default {
       selectedLang: "",
       hotelLogo: "",
       defaultCountry: "",
-      changeColor:{
-        color: "color: rgba(255, 255, 255, 0.8) !important;"
-      }
+      changeColor: {
+        color: "color: rgba(255, 255, 255, 0.8) !important;",
+      },
     };
   },
-  created() {    
+  created() {
     this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
@@ -824,17 +824,17 @@ export default {
       const tempTodayOcc = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 6;
-      });      
+      });
       this.todayOcc = tempTodayOcc[0]["price"];
       const defCountry = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 1;
       });
       this.defaultCountry = defCountry[0]["setupvalue"];
-      if(this.defaultCountry.toLowerCase() == 'idn'){
-        this.defaultCountry = 'INA';
-      }      
-      
+      if (this.defaultCountry.toLowerCase() == "idn") {
+        this.defaultCountry = "INA";
+      }
+
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
