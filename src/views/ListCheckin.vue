@@ -58,6 +58,11 @@
               </div>
               <p class="pl-3">
                 {{ getLabels("book_code", `titleCase`) }}: {{ item["resnr"] }}
+                <q-icon
+                  v-if="(item['res-status'] == '1 - Guest Already Checkin')"
+                  name="check_circle" color="green"
+                />
+                <q-icon v-if="(item['ifdata-sent'] == true)" name="email" color="red"/>
               </p>
               <p v-if="item.description != ''" class="pl-3">
                 {{ item.description }}

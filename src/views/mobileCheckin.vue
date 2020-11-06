@@ -282,11 +282,11 @@
           </a-spin></a-modal
         >
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div v-if="licenseMembership" class="col-sm-3 col-xs-6 text-center">
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
-          :style="licenseMembership == true ? iconOta : iconDisabled"
+          :style="iconOta"
         />
         <p class="mt-3">{{ weblabel.membershipID }}</p>
         <a-modal
@@ -360,6 +360,7 @@
           </a-spin>
         </a-modal>
       </div>
+      <div v-else class="col-sm-3 col-xs-6 text-center"></div>
     </div>
 
     <!-- Modal Early Checkin -->
@@ -1029,7 +1030,10 @@ export default {
         "sentenceCase"
       );
       this.weblabel.coDate = this.findLabel("co_date", "titleCase");
-      this.weblabel.inputCoDate = this.findLabel("input_codate", "sentenceCase");
+      this.weblabel.inputCoDate = this.findLabel(
+        "input_codate",
+        "sentenceCase"
+      );
       this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
       this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
       this.weblabel.inputGuestName = this.findLabel(
@@ -1062,7 +1066,7 @@ export default {
         "mci_room_not_avail",
         "sentenceCase"
       );
-    })();    
+    })();
   },
   methods: {
     resetLabel() {
@@ -1397,7 +1401,7 @@ export default {
                     if (item["zinr"] == guest["zinr"]) {
                       item["rmshare"].push(guest["gast"]);
                     }
-                  });                  
+                  });
                 });
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
                 if (tempTotal.length > 1) {
@@ -1409,7 +1413,7 @@ export default {
                     },
                   });
                 } else {
-                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {                    
+                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
                     // Langsung ke SuccessCheckin.vue
                     Object.assign(rsvFix[0], { roomReady: true });
                     router.push({
