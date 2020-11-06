@@ -14,9 +14,10 @@ body {
   padding: 0 50px;
 }
 
-.self-checkin {
-  margin-top: -20px !important;
+.self_checkin {
   border-radius: 20px 20px 0 0 !important;
+  margin-top: -20px !important;
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .mci-hotel {

@@ -28,13 +28,7 @@
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
-    <div
-      class="row justify-around bg-white"
-      style="
-        margin-top: -20px !important;
-        border-radius: 20px 20px 0 0 !important;
-      "
-    >
+    <div class="row justify-around bg-white self_checkin">
       <div class="col-xs-12 text-center q-mb-md">
         <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
           Online Check-in
