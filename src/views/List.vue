@@ -80,6 +80,7 @@
           </a-list-item>
         </a-list>
       </div>
+      {{ selectedData }}
       <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
       <a-button
         class="fixed-bottom-right mr-3 float-right"
@@ -115,7 +116,13 @@ export default {
   created() {
     this.data = this.$route.params.Data;
     this.setup = this.$route.params.Param;
-    this.lemparsetup = this.$route.params.Param;
+
+    if (this.data == null || this.setup == null) {
+      this.data = JSON.parse(sessionStorage.getItem("saveData"));
+      this.setup = JSON.parse(sessionStorage.getItem("saveSetting"));
+    }
+    this.lemparsetup = this.setup;
+
     this.gambar = this.setup["gambar"];
     this.information.backgroundColor = this.setup["Background"];
     this.information.color = this.setup["Font"];
@@ -129,6 +136,7 @@ export default {
     return this.data;
     // console.log(this.data, "berubah");
   },
+
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },

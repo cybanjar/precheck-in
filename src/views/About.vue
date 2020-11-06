@@ -626,6 +626,12 @@ export default {
   },
   created() {
     // console.log(this.$route.params);
+    if (sessionStorage.getItem("PCI") == "true") {
+      window.open(
+        JSON.parse(sessionStorage.getItem("saveSetting")).location,
+        "_self"
+      );
+    }
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.gambar = this.$route.params.Param["gambar"];
     this.information.backgroundColor = this.$route.params.Param["Background"];
