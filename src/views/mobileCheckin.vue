@@ -4,13 +4,13 @@
       <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
     </a-spin>
   </div>
-  <div v-else>
+  <div v-else v-cloak>
     <div :style="ota" class="row justify-between pt-2">
       <div class="col-xs-4"></div>
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right:-15px;">
+      <div class="col-xs-4" style="margin-right: -15px;">
         <q-select
           class="float-right"
           borderless
@@ -22,15 +22,15 @@
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
         >
-        <template v-slot:selected-item="scope">
-          <q-chip
-            :style="textOta"
-            class="q-ma-none"
-            style="margin-right:-20px;"
-          >
-            {{ scope.opt }}
-          </q-chip>
-        </template>
+          <template v-slot:selected-item="scope">
+            <q-chip
+              :style="textOta"
+              class="q-ma-none"
+              style="margin-right: -20px;"
+            >
+              {{ scope.opt }}
+            </q-chip>
+          </template>
           <template v-slot:append>
             <q-icon name="language" :style="textOta" />
           </template>
@@ -42,14 +42,16 @@
     </div>
     <div class="row justify-around bg-white self-checkin">
       <div class="col-xs-12 text-center q-mb-md">
-        <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
+        <h4
+          class="text-uppercase font-weight-bold q-mt-md q-mb-md mci-size titlecolor"
+        >
           Online Check-in
         </h4>
-        <h5>
-          <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
+        <h5 class="titlecolor">
+          <b>{{ weblabel.findRsv }}</b>
         </h5>
         <p>
-          {{ getLabels("choose_option", `sentenceCase`) }}
+          {{ weblabel.chooseOption }}
         </p>
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
@@ -59,10 +61,10 @@
           :style="iconOta"
         />
 
-        <p>{{ getLabels("book_code", `titleCase`) }}</p>
+        <p class="mt-2">{{ weblabel.bookCode }}</p>
         <a-modal
           v-model="modalBookingCode"
-          :title="getLabels('book_code', `titleCase`)"
+          :title="weblabel.bookCode"
           :closable="false"
         >
           <template slot="footer">
@@ -71,7 +73,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -79,19 +81,19 @@
               @click="handleFindRsv('bookingcode')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('book_code', `titleCase`)">
+            <a-form-item :label="weblabel.bookCode">
               <a-input
                 class="ant-input-h"
                 v-model="bookingcode"
                 ref="bookingcode"
-                :placeholder="getLabels('input_bookcode', `sentenceCase`)"
+                :placeholder="weblabel.inputBookcode"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -134,10 +136,10 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p>{{ getLabels("icon_name", `titleCase`) }}</p>
+        <p class="mt-2">{{ weblabel.iconName }}</p>
         <a-modal
           v-model="modalGuestName"
-          :title="getLabels('guest_name', `titleCase`)"
+          :title="weblabel.guestName"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -145,7 +147,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -153,19 +155,19 @@
               @click="handleFindRsv('guestname')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('guest_name', `titleCase`)">
+            <a-form-item :label="weblabel.guestName">
               <a-input
                 class="ant-input-h"
                 v-model="name"
                 ref="name"
-                :placeholder="getLabels('input_guest_name', `sentenceCase`)"
+                :placeholder="weblabel.inputGuestName"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -208,10 +210,10 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p>{{ getLabels("email", `titleCase`) }}</p>
+        <p class="mt-2">{{ weblabel.email }}</p>
         <a-modal
           v-model="modalEmailAddress"
-          :title="getLabels('email', `titleCase`)"
+          :title="weblabel.email"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -219,7 +221,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -227,19 +229,19 @@
               @click="handleFindRsv('email')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('email', `titleCase`)">
+            <a-form-item :label="weblabel.email">
               <a-input
                 class="ant-input-h"
                 v-model="email"
                 ref="email"
-                :placeholder="getLabels('input_email', `sentenceCase`)"
+                :placeholder="weblabel.inputEmail"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -284,12 +286,12 @@
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
-          :style="iconOta"
+          :style="licenseMembership == true ? iconOta : iconDisabled"
         />
-        <p>{{ getLabels("membership_id", `titleCase`) }}</p>
+        <p class="mt-2">{{ weblabel.membershipID }}</p>
         <a-modal
           v-model="modalMembershipID"
-          :title="getLabels('membership_id', `titleCase`)"
+          :title="weblabel.membershipID"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -297,7 +299,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -305,19 +307,19 @@
               @click="handleFindRsv('membership')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('membership_id', `titleCase`)">
+            <a-form-item :label="weblabel.membershipID">
               <a-input
                 v-model="member"
                 class="ant-input-h"
                 ref="member"
-                :placeholder="getLabels('input_membership', `sentenceCase`)"
+                :placeholder="weblabel.inputMembership"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -362,58 +364,58 @@
 
     <!-- Modal Early Checkin -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCIEarlyCheckin"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="reloadPage">{{
-          getLabels("close", `titleCase`)
+          weblabel.close
         }}</a-button>
       </template>
-      <p>{{ getLabels("early_checkin", `sentenceCase`) }}{{ checkin }}</p>
+      <p>{{ weblabel.earlyCheckin }}{{ checkin }}</p>
     </a-modal>
 
     <!-- Modal MCI Reservation Not Found -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCINotFound"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
+      <p>{{ weblabel.mciErrorNotFound }}</p>
     </a-modal>
 
     <!-- Modal MCI Self Check-In Service is not available yet. Please proceed to Front Desk. -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCINotAvail"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_error_not_avail", "sentenceCase") }}</p>
+      <p>{{ weblabel.mciErrorNotAvail }}</p>
     </a-modal>
 
     <!-- Modal MCI Sorry, your room is not ready yet. Please proceed to Front Desk. -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCIRoomNotAvail"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_room_not_avail", "sentenceCase") }}</p>
+      <p>{{ weblabel.mciRoomNotAvail }}</p>
     </a-modal>
   </div>
 </template>
@@ -527,7 +529,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       },
       setup: [],
       SystemDate: "",
@@ -560,15 +562,48 @@ export default {
         backgroundColor: "rgba(24, 144, 255, 0.1)",
         borderRadius: "20px",
       },
+      iconDisabled: {
+        fontSize: "4em",
+        color: "#606060",
+        padding: "16px",
+        backgroundColor: "rgba(96, 96, 96, 0.1)",
+        borderRadius: "20px",
+      },
       selectedLang: "",
       hotelLogo: "",
       defaultCountry: "",
-      changeColor:{
-        color: "color: rgba(255, 255, 255, 0.8) !important;"
-      }
+      changeColor: {
+        color: "color: rgba(255, 255, 255, 0.8) !important;",
+      },
+      weblabel: {
+        findRsv: "",
+        chooseOption: "",
+        bookCode: "",
+        cancel: "",
+        search: "",
+        inputBookcode: "",
+        coDate: "",
+        inputCoDate: "",
+        iconName: "",
+        guestName: "",
+        inputGuestName: "",
+        email: "",
+        inputEmail: "",
+        membershipID: "",
+        inputMembership: "",
+        information: "",
+        close: "",
+        earlyCheckin: "",
+        okMessage: "",
+        mciErrorNotFound: "",
+        mciErrorNotAvail: "",
+        mciRoomNotAvail: "",
+        licenseMembership: false,
+      },
     };
   },
-  created() {    
+  created() {
+    //console.log('Created is Triggered');
     this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
@@ -646,20 +681,23 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      //console.log(this.hotelEndpoint,this.hotelCode,this.langID);
+      ////console.log(this.hotelEndpoint,this.hotelCode,this.langID);
       /* Check Used Language */
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.programLabel = "program-label1";
           this.selectedLang = "English";
+          localStorage.setItem("locale", "EN");
           break;
         case "idn":
           this.programLabel = "program-label2";
           this.selectedLang = "Indonesia";
+          localStorage.setItem("locale", "ID");
           break;
         default:
           this.programLabel = "program-label1";
           this.selectedLang = "English";
+          localStorage.setItem("locale", "ENG");
           break;
       }
       /* Async Get Label From Database */
@@ -824,17 +862,22 @@ export default {
       const tempTodayOcc = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 6;
-      });      
+      });
       this.todayOcc = tempTodayOcc[0]["price"];
       const defCountry = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 1;
       });
       this.defaultCountry = defCountry[0]["setupvalue"];
-      if(this.defaultCountry.toLowerCase() == 'idn'){
-        this.defaultCountry = 'INA';
-      }      
-      
+      if (this.defaultCountry.toLowerCase() == "idn") {
+        this.defaultCountry = "INA";
+      }
+      const tempLicenseMember = this.tempsetup.filter((item, index) => {
+        //  LICENSE WA/SMS GATEWAY
+        return item.number1 === 9 && item.number2 === 8;
+      });
+      this.licenseMembership = tempLicenseMember[0]["setupflag"];
+
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -972,40 +1015,176 @@ export default {
         }
       }
     })();
-    this.loading = false;
+    /* Handling Locale */
+
+    /* Set Variable Label */
+    this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+    this.weblabel.chooseOption = this.findLabel(
+      "choose_option",
+      "sentenceCase"
+    );
+    this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+    this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+    this.weblabel.search = this.findLabel("search", "titleCase");
+    this.weblabel.inputBookcode = this.findLabel(
+      "input_bookcode",
+      "sentenceCase"
+    );
+    this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+    this.weblabel.inputCoDate = this.findLabel("input_codate", "sentenceCase");
+    this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.inputGuestName = this.findLabel(
+      "input_guest_name",
+      "sentenceCase"
+    );
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+    this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+    this.weblabel.inputMembership = this.findLabel(
+      "input_membership",
+      "sentenceCase"
+    );
+    this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.close = this.findLabel("close", "titleCase");
+    this.weblabel.earlyCheckin = this.findLabel(
+      "early_checkin",
+      "sentenceCase"
+    );
+    this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+    this.weblabel.mciErrorNotFound = this.findLabel(
+      "mci_error_not_found",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorNotAvail = this.findLabel(
+      "mci_error_not_avail",
+      "sentenceCase"
+    );
+    this.weblabel.mciRoomNotAvail = this.findLabel(
+      "mci_room_not_avail",
+      "sentenceCase"
+    );
   },
   methods: {
-    hexAToRGBA(hex) {
-      let c;
-      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split("");
-        if (c.length == 3) {
-          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    resetLabel() {
+      //console.log('resetLabel');
+      this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.chooseOption = this.findLabel(
+        "choose_option",
+        "sentenceCase"
+      );
+      this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+      this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+      this.weblabel.search = this.findLabel("search", "titleCase");
+      this.weblabel.inputBookcode = this.findLabel(
+        "input_bookcode",
+        "sentenceCase"
+      );
+      this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+      this.weblabel.inputCoDate = this.findLabel(
+        "input_codate",
+        "sentenceCase"
+      );
+      this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+      this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+      this.weblabel.inputGuestName = this.findLabel(
+        "input_guest_name",
+        "sentenceCase"
+      );
+      this.weblabel.email = this.findLabel("email", "titleCase");
+      this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+      this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+      this.weblabel.inputMembership = this.findLabel(
+        "input_membership",
+        "sentenceCase"
+      );
+      this.weblabel.information = this.findLabel("information", "titleCase");
+      this.weblabel.close = this.findLabel("close", "titleCase");
+      this.weblabel.earlyCheckin = this.findLabel(
+        "early_checkin",
+        "sentenceCase"
+      );
+      this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+      this.weblabel.mciErrorNotFound = this.findLabel(
+        "mci_error_not_found",
+        "sentenceCase"
+      );
+      this.weblabel.mciErrorNotAvail = this.findLabel(
+        "mci_error_not_avail",
+        "sentenceCase"
+      );
+      this.weblabel.mciRoomNotAvail = this.findLabel(
+        "mci_room_not_avail",
+        "sentenceCase"
+      );
+    },
+    findLabel(nameKey, used) {
+      ////console.log('findLabel');
+      ////console.log('findLabelExecuted',nameKey,used);
+      const labels = JSON.parse(localStorage.getItem("labels"));
+      ////console.log('findLabel is fired',nameKey);
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      ////console.log('label',label);
+      if (label === undefined) {
+        ////console.log(label,'undefined');
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
         }
-        c = "0x" + c.join("");
-        return (
-          "rgba(" +
-          [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
-          ",0.1)"
-        );
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
       }
-      throw new Error("Bad Hex");
+      ////console.log(locale,label,fixLabel);
+      return fixLabel;
     },
     changeLang(data) {
+      //console.log('changeLang');
       // Method for changing MCI Language
       if (data.value == "Indonesia") {
         this.programLabel = "program-label2";
         this.langID = "IDN";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "Indonesia";
+        localStorage.setItem("locale", "ID");
+        this.resetLabel();
       } else {
         this.programLabel = "program-label1";
         this.langID = "ENG";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "English";
+        localStorage.setItem("locale", "EN");
+        this.resetLabel();
       }
     },
     async showModalBookingCode() {
+      //console.log('showModalBookingCode');
       // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.resetForm();
       this.modalBookingCode = true;
@@ -1013,6 +1192,7 @@ export default {
       this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
+      //console.log('showModalGuestName');
       // Method for Set Guest Name Input Form to Focus When Activate Modal Guest Name
       this.resetForm();
       this.modalGuestName = true;
@@ -1020,6 +1200,7 @@ export default {
       this.$refs.name.focus();
     },
     async showModalEmailAddress() {
+      //console.log('showModalEmailAddress');
       // Method for Set Email Address Input Form to Focus When Activate Modal Email Address
       this.resetForm();
       this.modalEmailAddress = true;
@@ -1027,26 +1208,34 @@ export default {
       this.$refs.email.focus();
     },
     async showModalMembershipID() {
+      //console.log('showModalMembershipID');
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
-      this.resetForm();
-      this.modalMembershipID = true;
-      await this.$nextTick();
-      this.$refs.member.focus();
+      if(this.licenseMembership){
+        this.resetForm();
+        this.modalMembershipID = true;
+        await this.$nextTick();
+        this.$refs.member.focus();
+      }      
     },
     /* Handling Error Message */
     errorbo() {
-      this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
+      //console.log('errorbo');
+      this.$message.error(this.weblabel.inputBookcode);
     },
     errorname() {
-      this.$message.error(this.getLabels("input_guest_name", `sentenceCase`));
+      //console.log('errorname');
+      this.$message.error(this.weblabel.inputGuestName);
     },
     erroremail() {
-      this.$message.error(this.getLabels("input_email", `sentenceCase`));
+      //console.log('erroremail');
+      this.$message.error(this.weblabel.inputEmail);
     },
     errormembership() {
-      this.$message.error(this.getLabels("input_membership", `sentenceCase`));
+      //console.log('errormembership');
+      this.$message.error(this.weblabel.inputMembership);
     },
     erroremailNotTrue() {
+      //console.log('erroremailNotTrue');
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.$message.error("Please enter valid email address");
@@ -1060,10 +1249,12 @@ export default {
       }
     },
     errorco() {
-      this.$message.error(this.getLabels("input_codate", `sentenceCase`));
+      //console.log('errorco');
+      this.$message.error(this.weblabel.inputCoDate);
     },
     /* End Of Handling Error Message */
     hideMCIModal() {
+      //console.log('hideMCIModal');
       // Method for Hiding All MCI Modal
       this.infoMCIEarlyCheckin = false;
       this.infoMCINotFound = false;
@@ -1071,15 +1262,18 @@ export default {
       this.infoMCIRoomNotAvail = false;
     },
     hideMCISearchModal() {
+      //console.log('hideMCISearchModal');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
     reloadPage() {
+      //console.log('reloadPage');
       window.location = this.location;
     },
     getCoDate() {
+      //console.log('getCoDate');
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1087,7 +1281,8 @@ export default {
       return coDate;
     },
     handleFindRsv(mode) {
-      //console.log(mode);
+      //console.log('handleFindRsv');
+      ////console.log(mode);
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1162,7 +1357,7 @@ export default {
               },
             })
             .json();
-          //console.log(data);
+          ////console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
@@ -1195,21 +1390,17 @@ export default {
                 const roomShare = reservation[0].filter((item, index) => {
                   return item["room-sharer"] === true;
                 });
-
                 rsvFix.forEach((item, index) => {
                   Object.assign(item, { rmshare: [] });
-
                   roomShare.forEach((guest, index) => {
                     if (item["zinr"] == guest["zinr"]) {
                       item["rmshare"].push(guest["gast"]);
                     }
                   });
-                  //console.log(item);
+                  ////console.log(item);
                 });
-                //console.log(rsvFix);
-
+                ////console.log(rsvFix);
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
-
                 if (tempTotal.length > 1) {
                   router.push({
                     name: "ListCheckIn",
@@ -1219,7 +1410,28 @@ export default {
                     },
                   });
                 } else {
-                  this.handleSingleGuest(rsvFix[0]);
+                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
+                    // Langsung ke SuccessCheckin.vue
+                    Object.assign(rsvFix[0], { roomReady: true });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: rsvFix[0],
+                        setting: this.setup,
+                      },
+                    });
+                  } else if (rsvFix[0]["ifdata-sent"] == true) {
+                    Object.assign(rsvFix[0], { roomReady: false });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: rsvFix[0],
+                        setting: this.setup,
+                      },
+                    });
+                  } else {
+                    this.handleSingleGuest(rsvFix[0]);
+                  }
                 }
               } else {
                 Object.assign(this.setup[0], { TotalData: 1 });
@@ -1230,6 +1442,23 @@ export default {
                 // Handling Resstatus
                 if (guest["res-status"] == "1 - Guest Already Checkin") {
                   // Langsung ke SuccessCheckin.vue
+                  Object.assign(guest, { roomReady: true });
+                  router.push({
+                    name: "SuccessCheckIn",
+                    params: {
+                      Data: guest,
+                      setting: this.setup,
+                    },
+                  });
+                } else if (guest["ifdata-sent"] == true) {
+                  Object.assign(guest, { roomReady: false });
+                  router.push({
+                    name: "SuccessCheckIn",
+                    params: {
+                      Data: guest,
+                      setting: this.setup,
+                    },
+                  });
                 } else {
                   this.handleSingleGuest(guest);
                 }
@@ -1262,13 +1491,15 @@ export default {
       }
     },
     resetForm() {
+      //console.log('resetForm');
       this.bookingcode = "";
       this.name = "";
       this.email = "";
       this.member = "";
     },
     handleSingleGuest(guest) {
-      // console.log(guest);
+      //console.log('handleSingleGuest');
+      // //console.log(guest);
       const rmStatus = guest["room-status"].split(" ");
       if (parseInt(rmStatus[0]) == 1) {
         // Overlapping
@@ -1300,39 +1531,42 @@ export default {
       }
     },
     handleCancel() {
+      //console.log('handleCancel');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
+    showAnimation() {
+      setTimeout(() => {
+        this.loading = false;
+        //console.log('setTimeout is Triggered');
+      }, 3000);
+    },
+  },
+  async mounted() {
+    await this.$nextTick();
+    //console.log('mounted is triggered');
+    this.showAnimation();
   },
   computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1);
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
+    hexAToRGBA() {
+      return (hex) => {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+          c = hex.substring(1).split("");
+          if (c.length == 3) {
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
+          c = "0x" + c.join("");
+          //console.log('thishexa');
+          return (
+            "rgba(" +
+            [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+            ",0.1)"
+          );
         }
-        return fixLabel;
+        throw new Error("Bad Hex");
       };
     },
   },
