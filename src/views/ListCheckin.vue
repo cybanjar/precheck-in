@@ -132,7 +132,6 @@ export default {
     };
   },
   created() {
-    //console.log(this.$route.params, "nyampe bro");
     let tempData = undefined;
     let setting = undefined;
     if (
@@ -149,20 +148,18 @@ export default {
       tempData = this.$route.params.guestData;
       setting = this.$route.params.setting;
     }
-
     /* Assign ispopup property for tempData */
     tempData.forEach((item) => {
       Object.assign(item, { ispopup: false });
     });
-
     this.guestData = tempData;
     this.setup = setting;
+    console.log(this.guestData, this.setup);
     if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
       this.setup.TotalData =
         this.setup.TotalData - this.setup.successCheckin.length;
     }
-
     this.gambar = this.setup["hotelImage"];
     this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
@@ -209,6 +206,16 @@ export default {
           returnedClass = "selected";
         } else if (item["l-selected"] == false && item["ispopup"] == true) {
           returnedClass = "disabled";
+        } else if (
+          item["l-selected"] == false &&
+          item["res-status"] == "1 - Guest Already Checkin"
+        ) {
+          returnedClass = "checkin";
+        } else if (
+          item["l-selected"] == true &&
+          item["res-status"] == "1 - Guest Already Checkin"
+        ) {
+          returnedClass = "selected";
         } else {
           returnedClass = "notselected";
         }
@@ -219,6 +226,11 @@ export default {
           returnedClass = "selected pl-3 font-weight-bold";
         } else if (item["l-selected"] == false && item["ispopup"] == true) {
           returnedClass = "disabled pl-3 font-weight-bold";
+        } else if (
+          item["l-selected"] == false &&
+          item["res-status"] == "1 - Guest Already Checkin"
+        ) {
+          returnedClass = "checkin pl-3 font-weight-bold";
         } else {
           returnedClass = "notselected pl-3 font-weight-bold";
         }
@@ -294,7 +306,6 @@ export default {
         this.successCheckin.push(this.selectedData["reslinnr"]);
       }
       Object.assign(this.setup, { successCheckin: this.successCheckin });
-
       sessionStorage.setItem("listData", JSON.stringify(this.guestData));
       sessionStorage.setItem("settings", JSON.stringify(this.setup));
       const resstatus = this.selectedData["res-status"].split(" - ");

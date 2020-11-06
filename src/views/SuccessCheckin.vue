@@ -274,10 +274,8 @@ export default {
                 const roomShare = reservation[0].filter((item, index) => {
                   return item["room-sharer"] === true;
                 });
-
                 rsvFix.forEach((item, index) => {
                   Object.assign(item, { rmshare: [] });
-
                   roomShare.forEach((guest, index) => {
                     if (item["zinr"] == guest["zinr"]) {
                       item["rmshare"].push(guest["gast"]);
@@ -286,9 +284,7 @@ export default {
                   //console.log(item);
                 });
                 //console.log(rsvFix);
-
                 this.setup.TotalData = tempTotal.length;
-
                 if (tempTotal.length > 1) {
                   router.push({
                     name: "ListCheckIn",

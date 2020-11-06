@@ -226,18 +226,8 @@
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
           >
-            {{ this.currDataPrepare["gast"] }} -
+            {{ this.currDataPrepare["gast"] }}
             {{ currDataPrepare["guest-member-name"] }}
-            <span
-              v-for="(item, index) in currDataPrepare['rmshare']"
-              :key="item"
-              style="font-weight: 500; font-size: 14px;"
-            >
-              {{ item }}
-              <span v-if="index != currDataPrepare['rmshare'].length - 1"
-                >|</span
-              >
-            </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold">
             {{ this.currDataPrepare["gast"] }},
@@ -1820,9 +1810,9 @@ export default {
     handleBack() {
       window.open(this.location, "_self");
     },
-     checkPayment() {
+    checkPayment() {
       this.checkValidation("2");
-    }
+    },
   },
   computed: {
     getLabels() {
