@@ -255,7 +255,6 @@ export default {
       }
     })();
   },
-  methods: {},
   computed: {
     getLabels() {
       let fixLabel = "";

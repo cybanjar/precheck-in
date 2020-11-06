@@ -211,48 +211,48 @@ export default {
         }
       }
     },
-    formatDate(datum) {
-      const dDate =
-        String(moment(datum, "YYYY-MM-DD").date()).length == 1
-          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-          : String(moment(datum, "YYYY-MM-DD").date());
-      const dMonth =
-        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-          : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
-      const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
-      return fixDate;
+  },
+  computed: {
+    formatDate() {
+      return (datum) => {
+        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(
+          2,
+          "0"
+        );
+        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+          2,
+          "0"
+        );
+        const dYear = String(moment(datum, "YYYY-MM-DD").year());
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+        return fixDate;
+      };
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["lang-variable"] == nameKey
-      );
-
+    getLabels() {
       let fixLabel = "";
-
-      if (label["lang-value"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["lang-value"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["lang-value"].charAt(0).toUpperCase() +
-            label["lang-value"].slice(1);
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["lang-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
         } else {
-          fixLabel = label["lang-value"];
+          if (used === "titleCase") {
+            fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["lang-value"].charAt(0).toUpperCase() +
+              label["lang-value"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["lang-value"].toUpperCase();
+          } else {
+            fixLabel = label["lang-value"];
+          }
         }
-      }
-
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+        return fixLabel;
+      };
     },
   },
 };
