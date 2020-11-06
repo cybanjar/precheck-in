@@ -113,7 +113,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params);
     this.data = this.$route.params.Data;
     this.setup = this.$route.params.Param;
     this.lemparsetup = this.$route.params.Param;
@@ -136,16 +135,34 @@ export default {
   methods: {
     send() {
       if (this.selectedData.length > 1) {
-        for (const i in this.selectedData) {
-          if (this.selectedData[i]["gcomment-desc"] == "GUEST ALREADY PCI") {
-            this.selectedData.splice(i, 1);
-          }
-        }
-        const data = this.selectedData;
-        router.push({
-          name: "Home",
-          params: { Data: data, Param: this.lemparsetup },
+        // for (const i in this.selectedData) {
+        const jumlah = this.selectedData.filter((item, index) => {
+          return item["gcomment-desc"] == "GUEST ALREADY PCI";
         });
+        if (this.selectedData.length == jumlah.length) {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          this.selectedData.splice(jumlah, jumlah.length);
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+        }
       } else {
         if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
           const Data =
