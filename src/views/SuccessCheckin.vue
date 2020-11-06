@@ -43,6 +43,8 @@
         <div v-else>
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
+              <p>{{ getLabels("phone_number", `titleCase`) }} : {{ phone }}</p>
+              <p>{{ getLabels("email", `titleCase`) }} : {{ email }}</p>
               <p>
                 {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
               </p>
@@ -119,7 +121,6 @@ export default {
     // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
-
     this.hotelLogo = this.setup.hotelLogo;
     this.hotelEndpoint = this.setup.hotelEndpoint;
     this.langID = this.setup.langID;
@@ -176,7 +177,6 @@ export default {
         this.QRshow = true;
       }
     })();
-
     // Generate QRCode
     const success = btoa(this.data);
     QRCode.toCanvas(
@@ -239,36 +239,67 @@ export default {
               case "0":
                 // Reservation is Found
                 const reservation = [];
-
                 /* Handling Multiple Guest to ListCheckin.vue */
                 reservation.push(
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
                 );
+                // // Get Total Guest
+                // const tempTotal = reservation[0].filter((item, index) => {
+                //   return (
+                //     item["room-status"] !==
+                //     "1 Room Already assign or Overlapping"
+                //   );
+                // });
+                // this.setup.TotalData = tempTotal.length;
+                // console.log("SuccessCheckin", {
+                //   guestData: reservation[0],
+                //   setting: this.setup,
+                // });
                 // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
-                    "1 Room Already assign or Overlapping"
-                  );
+                const rsvFix = reservation[0].filter((item, index) => {
+                  if (item["room-sharer"] === true) {
+                  } else {
+                    return item;
+                  }
                 });
+                const tempTotal = rsvFix.filter((item, index) => {
+                  if (
+                    item["room-status"] ==
+                    "1 Room Already assign or Overlapping"
+                  ) {
+                  } else {
+                    return item;
+                  }
+                });
+                const roomShare = reservation[0].filter((item, index) => {
+                  return item["room-sharer"] === true;
+                });
+
+                rsvFix.forEach((item, index) => {
+                  Object.assign(item, { rmshare: [] });
+
+                  roomShare.forEach((guest, index) => {
+                    if (item["zinr"] == guest["zinr"]) {
+                      item["rmshare"].push(guest["gast"]);
+                    }
+                  });
+                  //console.log(item);
+                });
+                //console.log(rsvFix);
+
                 this.setup.TotalData = tempTotal.length;
 
-                console.log("SuccessCheckin", {
-                  guestData: reservation[0],
-                  setting: this.setup,
-                });
                 if (tempTotal.length > 1) {
                   router.push({
                     name: "ListCheckIn",
                     params: {
-                      guestData: reservation[0],
+                      guestData: rsvFix,
                       setting: this.setup,
                     },
                   });
                 } else {
                   window.open(this.location, "_self");
                 }
-
                 break;
               default:
                 break;

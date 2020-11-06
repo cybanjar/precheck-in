@@ -19,8 +19,15 @@
             type="primary"
             :loading="loading"
             @click="handleYes"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
           >
+            {{ getLabels("ok_message", `upperCase`) }}
+            <q-spinner
+              v-if="loadingConfirmEmail"
+              style="margin-left: 10px;"
+              color="white"
+              size="12px"
+            />
+          </a-button>
         </template>
         <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
         <p>{{ getLabels("reconfirm_phonemail", `sentenceCase`) }}</p>
@@ -168,15 +175,25 @@
         ONLINE CHECK-IN
       </h5>
       <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
+        <div class="q-ma-md col-md col-md-8 col-xs-12 invisibles">
           <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
             :style="information"
           >
-            {{ this.currDataPrepare["gast"] }}
+            {{ this.currDataPrepare["gast"] }} -
             {{ currDataPrepare["guest-member-name"] }}
+            <span
+              v-for="(item, index) in currDataPrepare['rmshare']"
+              :key="item"
+              style="font-weight: 500; font-size: 14px;"
+            >
+              {{ item }}
+              <span v-if="index != currDataPrepare['rmshare'].length - 1"
+                >|</span
+              >
+            </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold" :style="information">
             {{ this.currDataPrepare["gast"] }}
@@ -204,17 +221,34 @@
             </q-img>
           </q-card>
         </div>
-        <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
+        <div class="q-ma-md col-md col-md-8 col-xs-12 visible">
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
           >
-            {{ this.currDataPrepare["gast"] }}
+            {{ this.currDataPrepare["gast"] }} -
             {{ currDataPrepare["guest-member-name"] }}
+            <span
+              v-for="(item, index) in currDataPrepare['rmshare']"
+              :key="item"
+              style="font-weight: 500; font-size: 14px;"
+            >
+              {{ item }}
+              <span v-if="index != currDataPrepare['rmshare'].length - 1"
+                >|</span
+              >
+            </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold">
             {{ this.currDataPrepare["gast"] }},
           </h6>
+          <div
+            v-for="item in currDataPrepare['rmshare']"
+            :key="item"
+            style="margin-top: 20px;"
+          >
+            <p style="margin-top: -20px;">{{ item }}</p>
+          </div>
           <p class="ant-card-meta-description text-white">
             {{ getLabels("arrival", `titleCase`) }}:
             <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
@@ -366,6 +400,7 @@
                         :label="getLabels('nationality', `titleCase`)"
                       >
                         <a-select
+                          @focus="autoScrollNation"
                           v-decorator="[
                             'nationality',
                             {
@@ -390,6 +425,7 @@
                         :label="getLabels('country_of_residence', `titleCase`)"
                       >
                         <a-select
+                          @focus="autoScrollCountry"
                           @change="handleChangeCountry"
                           v-decorator="[
                             'country',
@@ -496,10 +532,9 @@
                           ]"
                         />
                         <div style="margin-top: -50px;">
-                          <h1>Prepare your Passport for photo verification</h1>
+                          <h1>{{ getLabels("id_photo", `titleCase`) }}</h1>
                           <p>
-                            We need a photograph of your passport or
-                            alternatively you may upload the image file
+                            {{ getLabels("id_photo_desc", `sentenceCase`) }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
@@ -575,7 +610,7 @@
                           class="font-weight-bold mt-3 mr-3"
                           type="primary"
                           :disabled="paid || paymentLoading"
-                          @click="payDeposit()"
+                          @click="checkPayment()"
                         >
                           {{ getLabels("pay", `titleCase`) }}
                           <q-spinner
@@ -859,6 +894,8 @@ export default {
       paidNetworkError: false,
       paidVerError: false,
       errorCode: "",
+      defaultCountry: "",
+      loadingConfirmEmail: false,
     };
   },
   watch: {
@@ -871,7 +908,6 @@ export default {
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
     console.log("GuestData", this.currDataPrepare);
-
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -928,6 +964,7 @@ export default {
     }
     this.region = this.currDataSetting["province"];
     this.countries = this.currDataSetting["countries"];
+    this.defaultCountry = this.currDataSetting["defaultCountry"];
     this.wifiAddress = this.currDataSetting["wifiAddress"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
@@ -959,13 +996,30 @@ export default {
       this.currDataPrepare["step"] == ""
     ) {
       // If not define yet
-      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
+      if (
+        this.currDataPrepare["guest-email"] == "" ||
+        this.currDataPrepare["guest-phnumber"] == "" ||
+        this.currDataPrepare["purposeofstay"] == ""
+      ) {
+        this.currDataPrepare["step"] = 1;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["guest-nation"] == "" ||
+        this.currDataPrepare["guest-country"] == "" ||
+        (this.currDataPrepare["guest-country"].toLowerCase() == "ina" &&
+          this.currDataPrepare["guest-region"] == "")
+      ) {
+        this.currDataPrepare["step"] = 2;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["image-flag"] == "0 image id already exist"
+      ) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
         if (this.precheckin) {
           this.currDataPrepare["step"] = 3;
-          this.termcondition = false;
+          this.termcondition = true;
         } else {
           this.currDataPrepare["step"] = 1;
           this.termcondition = true;
@@ -973,13 +1027,30 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
+      if (
+        this.currDataPrepare["guest-email"] == "" ||
+        this.currDataPrepare["guest-phnumber"] == "" ||
+        this.currDataPrepare["purposeofstay"] == ""
+      ) {
+        this.currDataPrepare["step"] = 1;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["guest-nation"] == "" ||
+        this.currDataPrepare["guest-country"] == "" ||
+        (this.currDataPrepare["guest-country"].toLowerCase() == "ina" &&
+          this.currDataPrepare["guest-region"] == "")
+      ) {
+        this.currDataPrepare["step"] = 2;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["image-flag"] == "0 image id already exist"
+      ) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
         if (this.precheckin) {
           this.currDataPrepare["step"] = 3;
-          this.termcondition = false;
+          this.termcondition = true;
         } else {
           this.currDataPrepare["step"] = 1;
           this.termcondition = true;
@@ -1067,6 +1138,25 @@ export default {
     }
   },
   methods: {
+    async autoScrollNation() {
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-nation"] == "") {
+        this.form.setFieldsValue({
+          nationality: this.defaultCountry,
+        });
+        this.currDataPrepare["guest-nation"] = this.defaultCountry;
+      }
+    },
+    async autoScrollCountry() {
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-country"] == "") {
+        this.form.setFieldsValue({
+          country: this.defaultCountry,
+        });
+        this.country = this.defaultCountry;
+        this.currDataPrepare["guest-country"] = this.defaultCountry;
+      }
+    },
     resendPreauth() {
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
@@ -1535,6 +1625,12 @@ export default {
             }
             break;
           case "2":
+            const responsess = parsed.response["paymentFlag"].split(" - ");
+            if (parseInt(responsess[0]) == 0) {
+              this.payDeposit();
+            } else {
+              this.paid = true;
+            }
             break;
           case "3":
             break;
@@ -1568,6 +1664,7 @@ export default {
             },
           })
           .json();
+        console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
@@ -1614,11 +1711,11 @@ export default {
         this.overlappingModal = true;
       } else {
         /* Room is Ready to Check in */
-
         this.checkValidation("1");
       }
     },
     handleYes() {
+      this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
         this.formresubmit.validateFields(["guest-email"]);
@@ -1635,7 +1732,6 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-
         // Handling Interface WA atau SMS
         //console.log(data);
         (async () => {
@@ -1681,6 +1777,7 @@ export default {
             // Handling Apabila Gagal Simpan ke Table Interface
             this.interfacingModal = true;
           }
+          this.loadingConfirmEmail = false;
         })();
       }
     },
@@ -1723,6 +1820,9 @@ export default {
     handleBack() {
       window.open(this.location, "_self");
     },
+     checkPayment() {
+      this.checkValidation("2");
+    }
   },
   computed: {
     getLabels() {

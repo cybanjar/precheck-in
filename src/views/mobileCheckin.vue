@@ -10,7 +10,7 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right: -15px;">
+      <div class="col-xs-4" style="margin-right:-15px;">
         <q-select
           class="float-right"
           borderless
@@ -22,17 +22,15 @@
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
         >
-          <template v-slot:selected-item="scope">
-            <q-chip
-              @remove="scope.removeAtIndex(scope.index)"
-              :tabindex="scope.tabindex"
-              :style="textOta"
-              class="q-ma-none"
-              style="margin-right: -20px;"
-            >
-              {{ scope.opt }}
-            </q-chip>
-          </template>
+        <template v-slot:selected-item="scope">
+          <q-chip
+            :style="textOta"
+            class="q-ma-none"
+            style="margin-right:-20px;"
+          >
+            {{ scope.opt }}
+          </q-chip>
+        </template>
           <template v-slot:append>
             <q-icon name="language" :style="textOta" />
           </template>
@@ -529,7 +527,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
       },
       setup: [],
       SystemDate: "",
@@ -564,9 +562,13 @@ export default {
       },
       selectedLang: "",
       hotelLogo: "",
+      defaultCountry: "",
+      changeColor:{
+        color: "color: rgba(255, 255, 255, 0.8) !important;"
+      }
     };
   },
-  created() {
+  created() {    
     this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
@@ -772,9 +774,9 @@ export default {
       this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
       const tempfreeParking = this.tempsetup.filter((item, index) => {
         //  Free Parking
-        return item.number1 === 8 && item.number2 == 5;
+        return item.number1 === 8 && item.number2 == 14;
       });
-      this.freeParking = this.tempsetup["0"]["setupflag"];
+      this.freeParking = tempfreeParking["0"]["setupflag"];
       const tempDEFAULTCHECKINTIME = this.tempsetup.filter((item, index) => {
         //  DEFAULT CHECKIN TIME
         return item.number1 === 8 && item.number2 == 2;
@@ -822,8 +824,17 @@ export default {
       const tempTodayOcc = this.tempsetup.filter((item, index) => {
         //  LICENSE WA/SMS GATEWAY
         return item.number1 === 9 && item.number2 === 6;
-      });
+      });      
       this.todayOcc = tempTodayOcc[0]["price"];
+      const defCountry = this.tempsetup.filter((item, index) => {
+        //  LICENSE WA/SMS GATEWAY
+        return item.number1 === 9 && item.number2 === 1;
+      });
+      this.defaultCountry = defCountry[0]["setupvalue"];
+      if(this.defaultCountry.toLowerCase() == 'idn'){
+        this.defaultCountry = 'INA';
+      }      
+      
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -866,6 +877,7 @@ export default {
       obj["location"] = this.location;
       obj["defaultCI"] = this.defaultCI;
       obj["hotelLogo"] = this.hotelLogo;
+      obj["defaultCountry"] = this.defaultCountry;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date
@@ -1150,13 +1162,13 @@ export default {
               },
             })
             .json();
+          //console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
           switch (messResult[0].trim()) {
             case "0":
               // Reservation is Found
-
               const totalGuest =
                 data.response.arrivalGuestlist["arrival-guestlist"].length;
               if (totalGuest > 1) {
@@ -1165,21 +1177,50 @@ export default {
                   data["response"]["arrivalGuestlist"]["arrival-guestlist"]
                 );
                 // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
-                    "1 Room Already assign or Overlapping"
-                  );
+                const rsvFix = reservation[0].filter((item, index) => {
+                  if (item["room-sharer"] === true) {
+                  } else {
+                    return item;
+                  }
                 });
+                const tempTotal = rsvFix.filter((item, index) => {
+                  if (
+                    item["room-status"] ==
+                    "1 Room Already assign or Overlapping"
+                  ) {
+                  } else {
+                    return item;
+                  }
+                });
+                const roomShare = reservation[0].filter((item, index) => {
+                  return item["room-sharer"] === true;
+                });
+
+                rsvFix.forEach((item, index) => {
+                  Object.assign(item, { rmshare: [] });
+
+                  roomShare.forEach((guest, index) => {
+                    if (item["zinr"] == guest["zinr"]) {
+                      item["rmshare"].push(guest["gast"]);
+                    }
+                  });
+                  //console.log(item);
+                });
+                //console.log(rsvFix);
+
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
 
-                router.push({
-                  name: "ListCheckIn",
-                  params: {
-                    guestData: reservation[0],
-                    setting: this.setup[0],
-                  },
-                });
+                if (tempTotal.length > 1) {
+                  router.push({
+                    name: "ListCheckIn",
+                    params: {
+                      guestData: rsvFix,
+                      setting: this.setup[0],
+                    },
+                  });
+                } else {
+                  this.handleSingleGuest(rsvFix[0]);
+                }
               } else {
                 Object.assign(this.setup[0], { TotalData: 1 });
                 const guest =
