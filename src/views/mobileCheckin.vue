@@ -61,7 +61,7 @@
           :style="iconOta"
         />
 
-        <p class="q-mt-sm">{{ weblabel.bookCode }}</p>
+        <p class="mt-3">{{ weblabel.bookCode }}</p>
         <a-modal
           v-model="modalBookingCode"
           :title="weblabel.bookCode"
@@ -136,7 +136,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p class="q-mt-sm">{{ weblabel.iconName }}</p>
+        <p class="mt-3">{{ weblabel.iconName }}</p>
         <a-modal
           v-model="modalGuestName"
           :title="weblabel.guestName"
@@ -210,7 +210,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p class="q-mt-sm">{{ weblabel.email }}</p>
+        <p class="mt-3">{{ weblabel.email }}</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="weblabel.email"
@@ -288,7 +288,7 @@
           name="folder_special"
           :style="licenseMembership == true ? iconOta : iconDisabled"
         />
-        <p class="q-mt-sm">{{ weblabel.membershipID }}</p>
+        <p class="mt-3">{{ weblabel.membershipID }}</p>
         <a-modal
           v-model="modalMembershipID"
           :title="weblabel.membershipID"
@@ -1014,56 +1014,55 @@ export default {
           }
         }
       }
-    })();
-    /* Handling Locale */
-
-    /* Set Variable Label */
-    this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
-    this.weblabel.chooseOption = this.findLabel(
-      "choose_option",
-      "sentenceCase"
-    );
-    this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
-    this.weblabel.cancel = this.findLabel("cancel", "titleCase");
-    this.weblabel.search = this.findLabel("search", "titleCase");
-    this.weblabel.inputBookcode = this.findLabel(
-      "input_bookcode",
-      "sentenceCase"
-    );
-    this.weblabel.coDate = this.findLabel("co_date", "titleCase");
-    this.weblabel.inputCoDate = this.findLabel("input_codate", "sentenceCase");
-    this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
-    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
-    this.weblabel.inputGuestName = this.findLabel(
-      "input_guest_name",
-      "sentenceCase"
-    );
-    this.weblabel.email = this.findLabel("email", "titleCase");
-    this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
-    this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
-    this.weblabel.inputMembership = this.findLabel(
-      "input_membership",
-      "sentenceCase"
-    );
-    this.weblabel.information = this.findLabel("information", "titleCase");
-    this.weblabel.close = this.findLabel("close", "titleCase");
-    this.weblabel.earlyCheckin = this.findLabel(
-      "early_checkin",
-      "sentenceCase"
-    );
-    this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
-    this.weblabel.mciErrorNotFound = this.findLabel(
-      "mci_error_not_found",
-      "sentenceCase"
-    );
-    this.weblabel.mciErrorNotAvail = this.findLabel(
-      "mci_error_not_avail",
-      "sentenceCase"
-    );
-    this.weblabel.mciRoomNotAvail = this.findLabel(
-      "mci_room_not_avail",
-      "sentenceCase"
-    );
+      /* Handling Locale */
+      /* Set Variable Label */
+      this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.chooseOption = this.findLabel(
+        "choose_option",
+        "sentenceCase"
+      );
+      this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+      this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+      this.weblabel.search = this.findLabel("search", "titleCase");
+      this.weblabel.inputBookcode = this.findLabel(
+        "input_bookcode",
+        "sentenceCase"
+      );
+      this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+      this.weblabel.inputCoDate = this.findLabel("input_codate", "sentenceCase");
+      this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+      this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+      this.weblabel.inputGuestName = this.findLabel(
+        "input_guest_name",
+        "sentenceCase"
+      );
+      this.weblabel.email = this.findLabel("email", "titleCase");
+      this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+      this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+      this.weblabel.inputMembership = this.findLabel(
+        "input_membership",
+        "sentenceCase"
+      );
+      this.weblabel.information = this.findLabel("information", "titleCase");
+      this.weblabel.close = this.findLabel("close", "titleCase");
+      this.weblabel.earlyCheckin = this.findLabel(
+        "early_checkin",
+        "sentenceCase"
+      );
+      this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+      this.weblabel.mciErrorNotFound = this.findLabel(
+        "mci_error_not_found",
+        "sentenceCase"
+      );
+      this.weblabel.mciErrorNotAvail = this.findLabel(
+        "mci_error_not_avail",
+        "sentenceCase"
+      );
+      this.weblabel.mciRoomNotAvail = this.findLabel(
+        "mci_room_not_avail",
+        "sentenceCase"
+      );
+    })();    
   },
   methods: {
     resetLabel() {
@@ -1119,13 +1118,13 @@ export default {
       );
     },
     findLabel(nameKey, used) {
-      ////console.log('findLabel');
+      //console.log('findLabel');
       ////console.log('findLabelExecuted',nameKey,used);
-      const labels = JSON.parse(localStorage.getItem("labels"));
+      //const labels = JSON.parse(localStorage.getItem("labels"));
       ////console.log('findLabel is fired',nameKey);
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
-      const label = labels.find((el) => {
+      const label = this.labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
       ////console.log('label',label);
@@ -1357,7 +1356,7 @@ export default {
               },
             })
             .json();
-          console.log(data);
+          //console.log(data);
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
           const messMessage = messResult[1].split(",");
@@ -1366,6 +1365,8 @@ export default {
               // Reservation is Found
               const totalGuest =
                 data.response.arrivalGuestlist["arrival-guestlist"].length;
+
+              //console.log(totalGuest);
               if (totalGuest > 1) {
                 /* Handling Multiple Guest to ListCheckin.vue */
                 reservation.push(
@@ -1396,10 +1397,8 @@ export default {
                     if (item["zinr"] == guest["zinr"]) {
                       item["rmshare"].push(guest["gast"]);
                     }
-                  });
-                  ////console.log(item);
+                  });                  
                 });
-                ////console.log(rsvFix);
                 Object.assign(this.setup[0], { TotalData: tempTotal.length });
                 if (tempTotal.length > 1) {
                   router.push({
@@ -1410,15 +1409,14 @@ export default {
                     },
                   });
                 } else {
-                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
+                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {                    
                     // Langsung ke SuccessCheckin.vue
                     Object.assign(rsvFix[0], { roomReady: true });
-                    //console.log(rsvFix,rsvFix[0]);
                     router.push({
                       name: "SuccessCheckIn",
                       params: {
                         Data: rsvFix[0],
-                        setting: this.setup,
+                        setting: this.setup[0],
                       },
                     });
                   } else if (rsvFix[0]["ifdata-sent"] == true) {
@@ -1427,7 +1425,7 @@ export default {
                       name: "SuccessCheckIn",
                       params: {
                         Data: rsvFix[0],
-                        setting: this.setup,
+                        setting: this.setup[0],
                       },
                     });
                   } else {
@@ -1542,7 +1540,7 @@ export default {
       setTimeout(() => {
         this.loading = false;
         //console.log('setTimeout is Triggered');
-      }, 3000);
+      }, 6000);
     },
   },
   async mounted() {

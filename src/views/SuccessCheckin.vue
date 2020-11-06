@@ -210,8 +210,7 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
-    goBack() {
-      // console.log(this.TotalData);
+    goBack() {      
       if (this.TotalData == undefined) {
         window.open(this.location, "_self");
       } else {
@@ -304,7 +303,7 @@ export default {
         } else {
           window.open(this.location, "_self");
         }
-      }
+      }      
     },
   },
   computed: {
