@@ -52,6 +52,7 @@ export default {
     if (location.search.substring(1) != "") {
       this.location = `${window.location.protocol}//${window.location.host}`;
       (async () => {
+        sessionStorage.setItem("PCI", false);
         const tempParam = location.search.substring(1);
         const tempParams = {};
         let objValue = "";
@@ -222,10 +223,7 @@ export default {
         if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
           // console.log("lebih dari 1");
           const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
-          sessionStorage.setItem(
-            "saveData",
-            JSON.stringify(dataGuest)
-          );
+          sessionStorage.setItem("saveData", JSON.stringify(dataGuest));
           sessionStorage.setItem(
             "saveSetting",
             JSON.stringify(this.setting[0])
