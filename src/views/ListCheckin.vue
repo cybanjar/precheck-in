@@ -154,7 +154,7 @@ export default {
     });
     this.guestData = tempData;
     this.setup = setting;
-    console.log(this.guestData, this.setup);
+    // console.log(this.guestData, this.setup);
     if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
       this.setup.TotalData =

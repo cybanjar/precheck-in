@@ -211,7 +211,7 @@ export default {
       return fixDate;
     },
     goBack() {
-      console.log(this.TotalData);
+      // console.log(this.TotalData);
       if (this.TotalData == undefined) {
         window.open(this.location, "_self");
       } else {

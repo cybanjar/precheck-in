@@ -1210,12 +1210,12 @@ export default {
     async showModalMembershipID() {
       //console.log('showModalMembershipID');
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
-      if(this.licenseMembership){
+      if (this.licenseMembership) {
         this.resetForm();
         this.modalMembershipID = true;
         await this.$nextTick();
         this.$refs.member.focus();
-      }      
+      }
     },
     /* Handling Error Message */
     errorbo() {

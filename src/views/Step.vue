@@ -897,7 +897,7 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    console.log("GuestData", this.currDataPrepare);
+    // console.log("GuestData", this.currDataPrepare);
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -1566,7 +1566,7 @@ export default {
       //this.step = 0;
     },
     checkValidation(caseType) {
-      console.log("checkValidation is triggered");
+      // console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1579,7 +1579,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed);
+        // console.log(parsed);
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -1654,7 +1654,7 @@ export default {
             },
           })
           .json();
-        console.log(parsed);
+        // console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
