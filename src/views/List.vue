@@ -116,10 +116,12 @@ export default {
   created() {
     this.data = this.$route.params.Data;
     this.setup = this.$route.params.Param;
-
     if (this.data == null || this.setup == null) {
       this.data = JSON.parse(sessionStorage.getItem("saveData"));
       this.setup = JSON.parse(sessionStorage.getItem("saveSetting"));
+    }
+    if (sessionStorage.getItem("PCI") == "true") {
+      sessionStorage.setItem("PCI", false);
     }
     this.lemparsetup = this.setup;
 
