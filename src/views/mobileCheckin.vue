@@ -29,8 +29,8 @@
       </div>
     </div>
     <div class="row justify-around bg-white self_checkin">
-      <div class="col-xs-12 text-center q-mb-md">
-        <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-md">
+      <div class="col-xs-12 text-center q-mb-lg">
+        <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-lg">
           Online Check-in
         </h4>
         <h5>
@@ -46,8 +46,7 @@
           name="book_online"
           :style="iconOta"
         />
-
-        <p>{{ getLabels("book_code", `titleCase`) }}</p>
+        <p class="q-mt-sm">{{ getLabels("book_code", `titleCase`) }}</p>
         <a-modal
           v-model="modalBookingCode"
           :title="getLabels('book_code', `titleCase`)"
@@ -122,7 +121,7 @@
       </div>
       <div class="col-sm-3 col-xs-6 text-center">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p>{{ getLabels("icon_name", `titleCase`) }}</p>
+        <p class="q-mt-sm">{{ getLabels("icon_name", `titleCase`) }}</p>
         <a-modal
           v-model="modalGuestName"
           :title="getLabels('guest_name', `titleCase`)"
@@ -194,9 +193,10 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+
+      <div class="col-sm-3 col-xs-6 q-mt-md text-center">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p>{{ getLabels("email", `titleCase`) }}</p>
+        <p class="q-mt-sm">{{ getLabels("email", `titleCase`) }}</p>
         <a-modal
           v-model="modalEmailAddress"
           :title="getLabels('email', `titleCase`)"
@@ -268,13 +268,13 @@
           </a-spin></a-modal
         >
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div class="col-sm-3 col-xs-6 q-mt-md text-center">
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
           :style="iconOta"
         />
-        <p>{{ getLabels("membership_id", `titleCase`) }}</p>
+        <p class="q-mt-sm">{{ getLabels("membership_id", `titleCase`) }}</p>
         <a-modal
           v-model="modalMembershipID"
           :title="getLabels('membership_id', `titleCase`)"
