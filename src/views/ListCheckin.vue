@@ -51,6 +51,11 @@
               <h2 :class="handleClass(item, 'h2')">
                 {{ item["gast"].toUpperCase() }}
               </h2>
+              <div v-for="item in item['rmshare']" :key="item">
+                <p class="pl-3" style="margin-top: -10px;">
+                  {{ item.toUpperCase() }}
+                </p>
+              </div>
               <p class="pl-3">
                 {{ getLabels("book_code", `titleCase`) }}: {{ item["resnr"] }}
               </p>

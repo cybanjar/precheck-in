@@ -103,18 +103,23 @@ export default {
       selectedData: [],
       gambar: "",
       hotelname: "",
-      information: {},
+      information: {
+        backgroundColor: "$green",
+        color: "$white",
+        borderRadius: "4px",
+      },
       lemparsetup: [],
-      fairy: {},
       labels: [],
     };
   },
   created() {
-    this.data = this.$route.params.foo[0];
-    this.setup = this.$route.params.foo[1];
-    this.lemparsetup = this.$route.params.foo[1];
+    console.log(this.$route.params);
+    this.data = this.$route.params.Data;
+    this.setup = this.$route.params.Param;
+    this.lemparsetup = this.$route.params.Param;
     this.gambar = this.setup["gambar"];
-    this.information = this.setup["information"];
+    this.information.backgroundColor = this.setup["Background"];
+    this.information.color = this.setup["Font"];
     this.hotelname = this.setup["hotelname"];
 
     for (const i in this.data) {
@@ -136,10 +141,36 @@ export default {
             this.selectedData.splice(i, 1);
           }
         }
+        const data = this.selectedData;
+        router.push({
+          name: "Home",
+          params: { Data: data, Param: this.lemparsetup },
+        });
+      } else {
+        if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+        }
       }
-      this.fairy["data"] = this.selectedData;
-      this.fairy["setup"] = this.lemparsetup;
-      router.push({ name: "Home", params: { id: this.fairy } });
     },
     select(client) {
       if (client.isSelected == false) {
