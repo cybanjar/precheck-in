@@ -1,8 +1,8 @@
 <template>
-  <div class="spin-load-table" v-if="loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
-    </a-spin>
+  <div v-if="loading">
+    <div style="display: flex; width: 100% !important; height: 100vh; overflow: hidden; text-align: center; align-items: center; justify-content: center;">
+      <q-spinner-ball color="red" size="8em" style=""/>
+    </div>    
   </div>
   <div v-else v-cloak>
     <div :style="ota" class="row justify-between pt-2">
@@ -54,7 +54,7 @@
           {{ weblabel.chooseOption }}
         </p>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div :class="handleClassIcon()" style="margin-bottom: 10px;">
         <q-icon
           @click="showModalBookingCode"
           name="book_online"
@@ -134,7 +134,7 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div :class="handleClassIconCenter()" style="margin-bottom: 10px;">
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
         <p class="mt-3">{{ weblabel.iconName }}</p>
         <a-modal
@@ -208,7 +208,7 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div :class="handleClassIcon()" style="margin-bottom: 10px;">
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
         <p class="mt-3">{{ weblabel.email }}</p>
         <a-modal
@@ -282,11 +282,11 @@
           </a-spin></a-modal
         >
       </div>
-      <div v-if="licenseMembership" class="col-sm-3 col-xs-6 text-center">
+      <div :class="handleClassIcon()" v-if="licenseMembership" style="margin-bottom: 10px;">
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
-          :style="iconOta"
+          :style="licenseMembership == true ? iconOta : iconDisabled"
         />
         <p class="mt-3">{{ weblabel.membershipID }}</p>
         <a-modal
@@ -359,8 +359,7 @@
             </a-form-item>
           </a-spin>
         </a-modal>
-      </div>
-      <div v-else class="col-sm-3 col-xs-6 text-center"></div>
+      </div>     
     </div>
 
     <!-- Modal Early Checkin -->
@@ -601,6 +600,7 @@ export default {
         mciRoomNotAvail: "",
       },
       licenseMembership: false,
+      timer: 0,
     };
   },
   created() {
@@ -735,8 +735,7 @@ export default {
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
-        if (this.tempsetup[i]["number1"] == 1) {
-          this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
+        if (this.tempsetup[i]["number1"] == 1) {          
           this.FilterPurposeofStay.push(this.tempsetup[i]);
           if (this.tempsetup[i].setupflag == true) {
             this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
@@ -878,7 +877,6 @@ export default {
         return item.number1 === 9 && item.number2 === 8;
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -1066,9 +1064,30 @@ export default {
         "mci_room_not_avail",
         "sentenceCase"
       );
+      this.FilterPurposeofStay.forEach(item => {
+        item['setupvalue'] = this.findLabel(item['setupvalue'].toLowerCase(), "upperCase");
+      });
     })();
   },
   methods: {
+    handleClassIcon(){
+      let returnedClass = "";
+      if(this.licenseMembership == false){
+        returnedClass = "col-sm-5 col-xs-12 text-center";
+      } else {
+        returnedClass = "col-sm-3 col-xs-6 text-center"
+      }
+      return returnedClass;
+    },
+    handleClassIconCenter(){
+      let returnedClass = "";
+      if(this.licenseMembership == false){
+        returnedClass = "col-sm-2 col-xs-12 text-center";
+      } else {
+        returnedClass = "col-sm-3 col-xs-6 text-center"
+      }
+      return returnedClass;
+    },
     resetLabel() {
       //console.log('resetLabel');
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
@@ -1120,20 +1139,23 @@ export default {
         "mci_room_not_avail",
         "sentenceCase"
       );
+      this.FilterPurposeofStay.forEach(item => {
+        item['setupvalue'] = this.findLabel(item['setupvalue'].toLowerCase(), "titleCase");
+      });
     },
     findLabel(nameKey, used) {
-      //console.log('findLabel');
-      ////console.log('findLabelExecuted',nameKey,used);
-      //const labels = JSON.parse(localStorage.getItem("labels"));
-      ////console.log('findLabel is fired',nameKey);
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
       const label = this.labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
-      ////console.log('label',label);
       if (label === undefined) {
-        ////console.log(label,'undefined');
         fixLabel = "";
       } else {
         switch (locale) {
@@ -1345,151 +1367,159 @@ export default {
         this.confirmLoading = false;
       } else {
         (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: searchVar,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: this.server,
-                  groupFlag: "false",
+          try{
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/findReservation", {
+                json: {
+                  request: {
+                    coDate: coDate,
+                    bookCode: searchVar,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: this.server,
+                    groupFlag: "false",
+                  },
                 },
-              },
-            })
-            .json();
-          //console.log(data);
-          this.message = data.response["messResult"];
-          const messResult = this.message.split("-");
-          const messMessage = messResult[1].split(",");
-          switch (messResult[0].trim()) {
-            case "0":
-              // Reservation is Found
-              const totalGuest =
-                data.response.arrivalGuestlist["arrival-guestlist"].length;
-
-              //console.log(totalGuest);
-              if (totalGuest > 1) {
-                /* Handling Multiple Guest to ListCheckin.vue */
-                reservation.push(
-                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-                );
-                // Get Total Guest
-                const rsvFix = reservation[0].filter((item, index) => {
-                  if (item["room-sharer"] === true) {
-                  } else {
-                    return item;
-                  }
-                });
-                const tempTotal = rsvFix.filter((item, index) => {
-                  if (
-                    item["room-status"] ==
-                    "1 Room Already assign or Overlapping"
-                  ) {
-                  } else {
-                    return item;
-                  }
-                });
-                const roomShare = reservation[0].filter((item, index) => {
-                  return item["room-sharer"] === true;
-                });
-                rsvFix.forEach((item, index) => {
-                  Object.assign(item, { rmshare: [] });
-                  roomShare.forEach((guest, index) => {
-                    if (item["zinr"] == guest["zinr"]) {
-                      item["rmshare"].push(guest["gast"]);
+                timeout: 10000,
+                throwHttpErrors: false,
+              })
+              .json();
+            //console.log(data);
+            this.message = data.response["messResult"];
+            const messResult = this.message.split("-");
+            const messMessage = messResult[1].split(",");
+            switch (messResult[0].trim()) {
+              case "0":
+                // Reservation is Found
+                const totalGuest =
+                  data.response.arrivalGuestlist["arrival-guestlist"].length;
+                //console.log(totalGuest);
+                if (totalGuest > 1) {
+                  //console.log('totalGuest',totalGuest);
+                  /* Handling Multiple Guest to ListCheckin.vue */
+                  reservation.push(
+                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                  );
+                  // Get Total Guest
+                  const rsvFix = reservation[0].filter((item, index) => {
+                    if (item["room-sharer"] === true) {
+                    } else {
+                      return item;
                     }
                   });
-                });
-                Object.assign(this.setup[0], { TotalData: tempTotal.length });
-                if (tempTotal.length > 1) {
-                  router.push({
-                    name: "ListCheckIn",
-                    params: {
-                      guestData: rsvFix,
-                      setting: this.setup[0],
-                    },
+                  const tempTotal = rsvFix.filter((item, index) => {
+                    if (
+                      item["room-status"] ==
+                      "1 Room Already assign or Overlapping"
+                    ) {
+                    } else {
+                      return item;
+                    }
                   });
-                } else {
-                  if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
-                    // Langsung ke SuccessCheckin.vue
-                    Object.assign(rsvFix[0], { roomReady: true });
-                    router.push({
-                      name: "SuccessCheckIn",
-                      params: {
-                        Data: rsvFix[0],
-                        setting: this.setup[0],
-                      },
+                  const roomShare = reservation[0].filter((item, index) => {
+                    return item["room-sharer"] === true;
+                  });
+                  rsvFix.forEach((item, index) => {
+                    Object.assign(item, { rmshare: [] });
+                    roomShare.forEach((guest, index) => {
+                      if (item["zinr"] == guest["zinr"]) {
+                        item["rmshare"].push(guest["gast"]);
+                      }
                     });
-                  } else if (rsvFix[0]["ifdata-sent"] == true) {
-                    Object.assign(rsvFix[0], { roomReady: false });
+                  });
+                  Object.assign(this.setup[0], { TotalData: tempTotal.length });
+                  //console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
+                  if (rsvFix.length > 1) {
                     router.push({
-                      name: "SuccessCheckIn",
+                      name: "ListCheckIn",
                       params: {
-                        Data: rsvFix[0],
+                        guestData: rsvFix,
                         setting: this.setup[0],
                       },
                     });
                   } else {
-                    this.handleSingleGuest(rsvFix[0]);
+                    if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
+                      // Langsung ke SuccessCheckin.vue
+                      Object.assign(rsvFix[0], { roomReady: true });
+                      router.push({
+                        name: "SuccessCheckIn",
+                        params: {
+                          Data: rsvFix[0],
+                          setting: this.setup[0],
+                        },
+                      });
+                    } else if (rsvFix[0]["ifdata-sent"] == true) {
+                      Object.assign(rsvFix[0], { roomReady: false });
+                      router.push({
+                        name: "SuccessCheckIn",
+                        params: {
+                          Data: rsvFix[0],
+                          setting: this.setup[0],
+                        },
+                      });
+                    } else {
+                      this.handleSingleGuest(rsvFix[0]);
+                    }
+                  }
+                } else {
+                  Object.assign(this.setup[0], { TotalData: 1 });
+                  const guest =
+                    data.response.arrivalGuestlist["arrival-guestlist"][0];
+                  Object.assign(guest, { vreg: "" });
+                  Object.assign(guest, { step: "" });
+                  // Handling Resstatus
+                  if (guest["res-status"] == "1 - Guest Already Checkin") {
+                    // Langsung ke SuccessCheckin.vue
+                    Object.assign(guest, { roomReady: true });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: guest,
+                        setting: this.setup[0],
+                      },
+                    });
+                  } else if (guest["ifdata-sent"] == true) {
+                    Object.assign(guest, { roomReady: false });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: guest,
+                        setting: this.setup[0],
+                      },
+                    });
+                  } else {
+                    this.handleSingleGuest(guest);
                   }
                 }
-              } else {
-                Object.assign(this.setup[0], { TotalData: 1 });
-                const guest =
-                  data.response.arrivalGuestlist["arrival-guestlist"][0];
-                Object.assign(guest, { vreg: "" });
-                Object.assign(guest, { step: "" });
-                // Handling Resstatus
-                if (guest["res-status"] == "1 - Guest Already Checkin") {
-                  // Langsung ke SuccessCheckin.vue
-                  Object.assign(guest, { roomReady: true });
-                  router.push({
-                    name: "SuccessCheckIn",
-                    params: {
-                      Data: guest,
-                      setting: this.setup[0],
-                    },
-                  });
-                } else if (guest["ifdata-sent"] == true) {
-                  Object.assign(guest, { roomReady: false });
-                  router.push({
-                    name: "SuccessCheckIn",
-                    params: {
-                      Data: guest,
-                      setting: this.setup[0],
-                    },
-                  });
-                } else {
-                  this.handleSingleGuest(guest);
-                }
-              }
-              break;
-            case "01":
-              this.infoMCIRoomNotAvail = true;
-              break;
-            case "1":
-              this.infoMCINotFound = true; // Reservation's Not Found
-              break;
-            case "2":
-              this.infoMCINotFound = true;
-              break;
-            case "02":
-              this.infoMCIRoomNotAvail = true;
-              break;
-            case "9":
-              this.infoMCIEarlyCheckin = true; // Early Checkin
-              break;
-            default:
-              this.infoMCINotAvail = true; //mci_error_not_avail
-              break;
-          }
-          this.confirmLoading = false;
-          this.hideMCISearchModal();
-          /* Reset Form */
-          this.resetForm();
+                break;
+              case "01":
+                this.infoMCIRoomNotAvail = true;
+                break;
+              case "1":
+                this.infoMCINotFound = true; // Reservation's Not Found
+                break;
+              case "2":
+                this.infoMCINotFound = true;
+                break;
+              case "02":
+                this.infoMCIRoomNotAvail = true;
+                break;
+              case "9":
+                this.infoMCIEarlyCheckin = true; // Early Checkin
+                break;
+              default:
+                this.infoMCINotAvail = true; //mci_error_not_avail
+                break;
+            }
+            this.confirmLoading = false;
+            this.hideMCISearchModal();
+            /* Reset Form */
+            this.resetForm();
+          }catch(error){
+            this.confirmLoading = false;
+            this.$message.error(error.toString());            
+          }          
         })();
       }
     },
@@ -1541,10 +1571,15 @@ export default {
       this.modalMembershipID = false;
     },
     showAnimation() {
+      if (localStorage.getItem("labels") == null) {
+        this.timer = 6000;
+      } else {
+        this.timer = 4000;
+      }
       setTimeout(() => {
         this.loading = false;
-        //console.log('setTimeout is Triggered');
-      }, 6000);
+        //console.log("setTimeout is Triggered", this.timer);
+      }, this.timer);
     },
   },
   async mounted() {

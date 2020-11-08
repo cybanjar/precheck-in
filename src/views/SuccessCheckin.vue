@@ -12,52 +12,69 @@
       <div class="text-center">
         <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
         <div v-if="roomReady">
-          <p>{{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}</p>
+          <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
           <p>
-            {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
+            {{ weblabel.wifiAddress }} : {{ wifiAddress }}
           </p>
           <p>
-            {{ getLabels("wifi_password", `sentenceCase`) }} :
+            {{ weblabel.wifiPassword }} :
             {{ wifiPassword }}
           </p>
           <p>
-            {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
+            {{ weblabel.arrangement }} : {{ arrangement }}
           </p>
 
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
               <p v-if="!QRshow">
-                {{ getLabels("mci_success_with_max_keycard", `sentenceCase`) }}
+                {{ weblabel.mciSuccessWithMaxKeycard }}
               </p>
               <p v-else>
-                {{ getLabels("mci_success", `sentenceCase`) }}
+                {{ weblabel.mciSuccess }}
               </p>
             </div>
           </div>
 
           <a-button @click="goBack">{{
-            getLabels("done", `titleCase`)
+            weblabel.done
           }}</a-button>
         </div>
         <div v-else>
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p>{{ getLabels("phone_number", `titleCase`) }} : {{ phone }}</p>
-              <p>{{ getLabels("email", `titleCase`) }} : {{ email }}</p>
+              <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
+              <p>{{ weblabel.email }} : {{ email }}</p>
               <p>
-                {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
+                {{ weblabel.mciSuccessNotReady }}
               </p>
             </div>
           </div>
 
           <a-button @click="goBack">{{
-            getLabels("done", `titleCase`)
+            weblabel.done
           }}</a-button>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Modal MCI Confirm Check-in -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="infoMCIConfim"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button key="submit" type="primary" @click="backToHome">{{
+          weblabel.no
+        }}</a-button>
+        <a-button key="submit" type="primary" @click="backToList">{{
+          weblabel.yes
+        }}</a-button>
+      </template>
+      <p>{{ weblabel.mciConfirmCi }}</p>
+    </a-modal>
+  </div>  
 </template>
 
 <script>
@@ -105,6 +122,22 @@ export default {
       serverTime: "",
       message: "",
       guestData: {},
+      weblabel: {
+        roomNumber: "",
+        wifiAddress: "",
+        wifiPassword: "",
+        arrangement: "",
+        mciSuccessWithMaxKeycard: "",
+        mciSuccess: "",
+        done: "",
+        phoneNumber: "",
+        email: "",
+        mciSuccessNotReady: "",
+        mciConfirmCi: "",
+        no: "",
+        yes: "",
+      },
+      infoMCIConfim: false,
     };
   },
   mounted() {
@@ -171,7 +204,7 @@ export default {
         })
         .json();
       this.data = parsed.response.keyString;
-      if (parsed.response.keyMaked >= parsed.response.keyAvail) {
+      if (parsed.response.keyAvail <= 0) {
         this.QRshow = false;
       } else {
         this.QRshow = true;
@@ -188,8 +221,67 @@ export default {
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
       this.url = url.split(",")[1];
     });
+    // Labeling
+    this.weblabel.roomNumber = this.findLabel("room_number", 'titleCase');
+    this.weblabel.wifiAddress = this.findLabel("wifi_address", 'titleCase');
+    this.weblabel.wifiPassword = this.findLabel("wifi_password", 'sentenceCase');
+    this.weblabel.arrangement = this.findLabel("arrangement", 'sentenceCase');
+    this.weblabel.mciSuccessWithMaxKeycard = this.findLabel("mci_success_with_max_keycard", `sentenceCase`);
+    this.weblabel.mciSuccess = this.findLabel("mci_success", 'sentenceCase');
+    this.weblabel.done = this.findLabel("done", 'titleCase');
+    this.weblabel.phoneNumber = this.findLabel("phone_number", 'titleCase');
+    this.weblabel.email = this.findLabel("email", 'titleCase');
+    this.weblabel.mciSuccessNotReady = this.findLabel("mci_success_not_ready", 'sentenceCase');
+    this.weblabel.mciConfirmCi = this.findLabel("mci_confirm_ci", 'sentenceCase');
+    this.weblabel.yes = this.findLabel("yes", 'sentenceCase');
+    this.weblabel.no = this.findLabel("no", 'sentenceCase');
   },
   methods: {
+    findLabel(nameKey, used) {
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
+      }      
+      return fixLabel;
+    },
     formatDate(datum) {
       const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
       const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
@@ -210,132 +302,114 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
-    goBack() {      
-      if (this.TotalData == undefined) {
-        window.open(this.location, "_self");
-      } else {
-        if (parseInt(this.TotalData) > 1) {
-          (async () => {
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/findReservation", {
-                json: {
-                  request: {
-                    coDate: this.coDate,
-                    bookCode: this.bookingcode,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: this.serverTime,
-                    groupFlag: "false",
-                  },
-                },
-              })
-              .json();
-            this.message = data.response["messResult"];
-            const messResult = this.message.split("-");
-            const messMessage = messResult[1].split(",");
-            switch (messResult[0].trim()) {
-              case "0":
-                // Reservation is Found
-                const reservation = [];
-                /* Handling Multiple Guest to ListCheckin.vue */
-                reservation.push(
-                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-                );
-                // // Get Total Guest
-                // const tempTotal = reservation[0].filter((item, index) => {
-                //   return (
-                //     item["room-status"] !==
-                //     "1 Room Already assign or Overlapping"
-                //   );
-                // });
-                // this.setup.TotalData = tempTotal.length;
-                // console.log("SuccessCheckin", {
-                //   guestData: reservation[0],
-                //   setting: this.setup,
-                // });
-                // Get Total Guest
-                const rsvFix = reservation[0].filter((item, index) => {
-                  if (item["room-sharer"] === true) {
-                  } else {
-                    return item;
-                  }
-                });
-                const tempTotal = rsvFix.filter((item, index) => {
-                  if (
-                    item["room-status"] ==
-                    "1 Room Already assign or Overlapping"
-                  ) {
-                  } else {
-                    return item;
-                  }
-                });
-                const roomShare = reservation[0].filter((item, index) => {
-                  return item["room-sharer"] === true;
-                });
-                rsvFix.forEach((item, index) => {
-                  Object.assign(item, { rmshare: [] });
-                  roomShare.forEach((guest, index) => {
-                    if (item["zinr"] == guest["zinr"]) {
-                      item["rmshare"].push(guest["gast"]);
-                    }
-                  });
-                  //console.log(item);
-                });
-                //console.log(rsvFix);
-                this.setup.TotalData = tempTotal.length;
-                if (tempTotal.length > 1) {
-                  router.push({
-                    name: "ListCheckIn",
-                    params: {
-                      guestData: rsvFix,
-                      setting: this.setup,
-                    },
-                  });
-                } else {
-                  window.open(this.location, "_self");
-                }
-                break;
-              default:
-                break;
-            }
-          })();
-        } else {
-          window.open(this.location, "_self");
-        }
-      }      
+    backToHome(){
+      window.open(this.location, "_self");
     },
-  },
-  computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    backToList(){
+      const mainReservation = JSON.parse(sessionStorage.getItem("listData"));
+      const settings = JSON.parse(sessionStorage.getItem("settings"));
+      router.push({
+        name: "ListCheckIn",
+        params: {
+          guestData: mainReservation,
+          setting: settings,
+        },
+      });
+    },
+    goBack() {
+      (async () => {
+        const data = await ky
+          .post(this.hotelEndpoint + "mobileCI/findReservation", {
+            json: {
+              request: {
+                coDate: this.coDate,
+                bookCode: this.bookingcode,
+                chName: " ",
+                earlyCI: "false",
+                maxRoom: "1",
+                citime: this.serverTime,
+                groupFlag: "false",
+              },
+            },
+          })
+          .json();
+        this.message = data.response["messResult"];
+        const messResult = this.message.split("-");
+        const messMessage = messResult[1].split(",");
+        switch (messResult[0].trim()) {
+          case "0":
+            // Reservation is Found
+            const reservation = [];
+            /* Get Temporary Total Reservation */
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            
+            // Reservation Without Room Sharer (Main Guest Reservation)
+            const mainReservation = reservation[0].filter((item, index) => {
+              if (item["room-sharer"] === true) {
+              } else {
+                return item;
+              }
             });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
-          }
+            
+            if (mainReservation.length > 1) {
+              // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
+              const acceptRsv = mainReservation.filter((item, index) => {
+                if (
+                  item["room-status"] ==
+                  "1 Room Already assign or Overlapping"
+                ) {
+                } else {
+                  return item;
+                }
+              });
+              this.setup.TotalData = acceptRsv.length;
+              // Reservation Room Share Only
+              const roomShare = reservation[0].filter((item, index) => {
+                return item["room-sharer"] === true;
+              });
+              // Attach Room Share into Main Guest Reservation
+              // Also counting Total Of Checked-in and Waiting List
+              let countCheckedIn = 0;
+              let countWaiting = 0;
+              mainReservation.forEach((item, index) => {
+                Object.assign(item, { rmshare: [] });
+                roomShare.forEach((guest, index) => {
+                  if (item["zinr"] == guest["zinr"]) {
+                    item["rmshare"].push(guest["gast"]);
+                  }
+                });
+                
+                if(item['res-status'] == "1 - Guest Already Checkin"){
+                  // Checked In Guest
+                  countCheckedIn++;
+                }
+                else if(item["ifdata-sent"] == true){
+                  // Waiting List Guest
+                  countWaiting++;
+                }
+              });
+              
+              if((acceptRsv.length - (countCheckedIn + countWaiting)) >= 1){
+                // Open Modal Question
+                sessionStorage.setItem("listData", JSON.stringify(mainReservation));
+                sessionStorage.setItem("settings", JSON.stringify(this.setup));
+                this.infoMCIConfim = true;
+              }
+              else{
+                this.backToHome();
+              }                            
+            } else {
+              this.backToHome();
+            }
+            break;
+          default:
+            break;
         }
-        return fixLabel;
-      };
+      })();    
     },
-  },
+  },  
 };
 </script>
 
