@@ -8,7 +8,7 @@
     <div class="home">
       <!-- Modal Response Room Status -->
       <a-modal
-        :title="getLabels('information', `titleCase`)"
+        :title="weblabel.information"
         :visible="confirmMailModal"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -20,7 +20,7 @@
             :loading="loading"
             @click="handleYes"
           >
-            {{ getLabels("ok_message", `upperCase`) }}
+            {{ weblabel.okMessage }}
             <q-spinner
               v-if="loadingConfirmEmail"
               style="margin-left: 10px;"
@@ -29,11 +29,11 @@
             />
           </a-button>
         </template>
-        <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
-        <p>{{ getLabels("reconfirm_phonemail", `sentenceCase`) }}</p>
+        <p>{{ weblabel.mciSuccessNotReady }}</p>
+        <p>{{ weblabel.reconfirmPhonemail }}</p>
         <div>
           <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="getLabels('phone_number', `titleCase`)">
+            <a-form-item :label="weblabel.phoneNumber">
               <a-input
                 v-decorator="[
                   'guest-phone',
@@ -42,14 +42,14 @@
                     rules: [
                       {
                         required: true,
-                        message: getLabels('required_phone', `titleCase`),
+                        message: weblabel.requiredPhone,
                       },
                     ],
                   },
                 ]"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('email', `titleCase`)">
+            <a-form-item :label="weblabel.email">
               <a-input
                 v-decorator="[
                   'guest-email',
@@ -58,11 +58,11 @@
                     rules: [
                       {
                         required: true,
-                        message: getLabels('required_email', `sentenceCase`),
+                        message: weblabel.requiredEmail,
                       },
                       {
                         type: 'email',
-                        message: getLabels('not_valid_email', `sentenceCase`),
+                        message: weblabel.notValidEmail,
                       },
                     ],
                   },
@@ -75,7 +75,7 @@
 
       <!-- Modal For Overlapping -->
       <a-modal
-        :title="getLabels('information', `titleCase`)"
+        :title="weblabel.information"
         :visible="overlappingModal"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -86,15 +86,15 @@
             type="primary"
             :loading="loading"
             @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+            >{{ weblabel.okMessage }}</a-button
           >
         </template>
-        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
+        <p>{{ weblabel.mciErrorNotReady }}</p>
       </a-modal>
 
       <!-- Modal For Network Establish Error -->
       <a-modal
-        :title="getLabels('information', `titleCase`)"
+        :title="weblabel.information"
         :visible="preauthModal"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -105,15 +105,15 @@
             type="primary"
             :loading="loading"
             @click="resendPreauth"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+            >{{ weblabel.okMessage }}</a-button
           >
         </template>
-        <p>{{ getLabels("mci_error_preauth", `sentenceCase`) }}</p>
+        <p>{{ weblabel.mciErrorPreauth }}</p>
       </a-modal>
 
       <!-- Modal For Interface -->
       <a-modal
-        :title="getLabels('information', `titleCase`)"
+        :title="weblabel.information"
         :visible="interfacingModal"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -124,15 +124,15 @@
             type="primary"
             :loading="loading"
             @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+            >{{ weblabel.okMessage }}</a-button
           >
         </template>
-        <p>{{ getLabels("mci_error_interface", `sentenceCase`) }}</p>
+        <p>{{ weblabel.mciErrorInterface }}</p>
       </a-modal>
 
       <!-- Modal For Payment Error -->
       <a-modal
-        :title="getLabels('information', `titleCase`)"
+        :title="weblabel.information"
         :visible="paymenterrorModal"
         :confirm-loading="confirmLoading"
         :closable="false"
@@ -143,29 +143,29 @@
             type="primary"
             :loading="loading"
             @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
+            >{{ weblabel.okMessage }}</a-button
           >
         </template>
-        <p>{{ getLabels("mci_error_payment", `sentenceCase`) }}</p>
+        <p>{{ weblabel.mciErrorPayment }}</p>
       </a-modal>
 
       <!-- Modal For Term And Condition -->
       <a-modal
-        :title="getLabels('t_c', `titleCase`)"
+        :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
         :closable="false"
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{ getLabels("disagree", `titleCase`) }}
+            {{ weblabel.disagree }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree", `titleCase`) }}</a-button
+            >{{ weblabel.agree }}</a-button
           >
         </template>
         <p>{{ terms }}</p>
@@ -199,14 +199,14 @@
             {{ this.currDataPrepare["gast"] }}
           </h6>
           <p class="ant-card-meta-description text-white" :style="information">
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
+            {{ weblabel.arrival }}:
+            <strong>{{ weblabel.ciDate }}</strong>
+            {{ weblabel.departure }}:
+            <strong>{{ weblabel.coDate }}</strong>
             <br />
-            {{ getLabels("book_code", `titleCase`) }}:
+            {{ weblabel.bookCode }}:
             <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ getLabels("room_number", `titleCase`) }}:
+            {{ weblabel.roomNumber }}:
             <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
         </div>
@@ -240,14 +240,14 @@
             <p style="margin-top: -20px;">{{ item }}</p>
           </div>
           <p class="ant-card-meta-description text-white">
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
+            {{ weblabel.arrival }}:
+            <strong>{{ weblabel.ciDate }}</strong>
+            {{ weblabel.departure }}:
+            <strong>{{ weblabel.coDate }}</strong>
             <br />
-            {{ getLabels("book_code", `titleCase`) }}:
+            {{ weblabel.bookCode }}:
             <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ getLabels("room_number", `titleCase`) }}:
+            {{ weblabel.roomNumber }}:
             <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
         </div>
@@ -255,16 +255,16 @@
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="step === 1">
-            {{ getLabels("guest_detail", `titleCase`) }}
+            {{ weblabel.guestDetail }}
           </h2>
           <h2 v-show="step === 2">
-            {{ getLabels("guest_detail", `titleCase`) }}
+            {{ weblabel.guestDetail }}
           </h2>
           <h2 v-show="step === 3">
-            {{ getLabels("upload_id", `titleCase`) }}
+            {{ weblabel.uploadID }}
           </h2>
           <h2 v-show="step === 4">
-            {{ getLabels("deposit_payment", `titleCase`) }}
+            {{ weblabel.depositPayment }}
           </h2>
           <div>
             <q-stepper
@@ -288,7 +288,7 @@
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="getLabels('email', `titleCase`)">
+                      <a-form-item :label="weblabel.email">
                         <a-input
                           class="ant-input-h"
                           v-decorator="[
@@ -298,17 +298,11 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_email',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredEmail,
                                 },
                                 {
                                   type: 'email',
-                                  message: getLabels(
-                                    'not_valid_email',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.notValidEmail,
                                 },
                               ],
                             },
@@ -318,7 +312,7 @@
                     </a-col>
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item
-                        :label="getLabels('phone_number', `titleCase`)"
+                        :label="weblabel.phoneNumber"
                       >
                         <q-input
                           v-decorator="[
@@ -328,10 +322,7 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_phone',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredPhone,
                                 },
                               ],
                             },
@@ -346,7 +337,7 @@
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="3" :xl="3" :xs="24">
                       <a-form-item
-                        :label="getLabels('purpose_stay', `titleCase`)"
+                        :label="weblabel.purposeStay"
                       >
                         <a-select
                           v-decorator="[
@@ -362,10 +353,7 @@
                             :key="item.setupvalue"
                             :value="item.setupvalue"
                             >{{
-                              getLabels(
-                                item.setupvalue.toLowerCase(),
-                                `titleCase`
-                              )
+                              item.setupvalue
                             }}</a-select-option
                           >
                         </a-select>
@@ -387,7 +375,7 @@
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item
-                        :label="getLabels('nationality', `titleCase`)"
+                        :label="weblabel.nationality"
                       >
                         <a-select
                           @focus="autoScrollNation"
@@ -412,7 +400,7 @@
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item
-                        :label="getLabels('country_of_residence', `titleCase`)"
+                        :label="weblabel.countryOfResidence"
                       >
                         <a-select
                           @focus="autoScrollCountry"
@@ -437,7 +425,7 @@
 
                     <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
                       <div v-if="country === 'INA' || country === 'ina'">
-                        <a-form-item :label="getLabels('region', `titleCase`)">
+                        <a-form-item :label="weblabel.region">
                           <a-select
                             v-decorator="[
                               'region',
@@ -446,10 +434,7 @@
                                 rules: [
                                   {
                                     required: true,
-                                    message: getLabels(
-                                      'required_province',
-                                      `sentenceCase`
-                                    ),
+                                    message: weblabel.requiredProvince,
                                   },
                                 ],
                               },
@@ -468,7 +453,7 @@
                     <div v-if="freeParking">
                       <a-col :span="5" :xl="5" :xs="24">
                         <a-form-item
-                          :label="getLabels('vehicle_regident', `titleCase`)"
+                          :label="weblabel.vehicleRegident"
                         >
                           <a-input
                             class="ant-input-h"
@@ -512,19 +497,16 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredID,
                                 },
                               ],
                             },
                           ]"
                         />
                         <div style="margin-top: -50px;">
-                          <h1>{{ getLabels("id_photo", `titleCase`) }}</h1>
+                          <h1>{{ weblabel.idPhoto }}</h1>
                           <p>
-                            {{ getLabels("id_photo_desc", `sentenceCase`) }}
+                            {{ weblabel.idPhotoDesc }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
@@ -556,7 +538,7 @@
                   <a-row :gutter="[16, 8]" v-if="pay == false">
                     <a-col :span="12" :xl="12" :xs="12">
                       <a-form-item
-                        :label="getLabels('deposit_payment', `titleCase`)"
+                        :label="weblabel.depositPayment"
                       >
                         <h2>
                           <strong>
@@ -602,7 +584,7 @@
                           :disabled="paid || paymentLoading"
                           @click="checkPayment()"
                         >
-                          {{ getLabels("pay", `titleCase`) }}
+                          {{ weblabel.pay }}
                           <q-spinner
                             v-if="paymentLoading"
                             style="margin-left: 10px;"
@@ -615,10 +597,10 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
                     <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="getLabels('deposit', `titleCase`)">
+                      <a-form-item :label="weblabel.deposit">
                         <h2>
                           <strong>{{
-                            getLabels("cash_basis", `titleCase`)
+                            weblabel.cashBasis
                           }}</strong>
                         </h2>
                       </a-form-item>
@@ -628,31 +610,28 @@
                     <div v-if="paid">
                       <p style="font-size: 16px; text-align: justify;">
                         {{
-                          getLabels("deposit_payment_success", `sentenceCase`)
+                          weblabel.depositPaymentSuccess
                         }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
                       <p style="font-size: 16px; text-align: justify;">
                         {{
-                          getLabels(
-                            "deposit_payment_network_error",
-                            `sentenceCase`
-                          )
+                          weblabel.depositPaymentNetworkError
                         }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
                       <p style="font-size: 16px; text-align: justify;">
                         {{
-                          getLabels("deposit_payment_ver_error", `sentenceCase`)
+                          weblabel.depositPaymentVerError
                         }}
                       </p>
                     </div>
                     <div v-else>
                       <p>
                         <a-checkbox v-model="pay">
-                          {{ getLabels("term_cash_basis", `titleCase`) }}
+                          {{ weblabel.termCashBasis }}
                         </a-checkbox>
                       </p>
                     </div>
@@ -670,7 +649,7 @@
                         outline
                         color="primary"
                       >
-                        {{ getLabels("prev", `titleCase`) }}
+                        {{ weblabel.prev }}
                       </q-btn>
                     </div>
                     <div v-if="step != steps.length" class="col-6 col-xs-6">
@@ -680,7 +659,7 @@
                         unelevated
                         class="float-right"
                       >
-                        {{ getLabels("next", `titleCase`) }}
+                        {{ weblabel.next }}
                       </q-btn>
                     </div>
                   </div>
@@ -703,7 +682,7 @@
                     v-if="step == 4"
                     html-type="submit"
                     :disabled="!pay"
-                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                    >{{ weblabel.ciNow }}</a-button
                   >
                 </div>
                 <div v-else>
@@ -716,7 +695,7 @@
                     @click="save"
                     v-if="step == 4"
                     html-type="submit"
-                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                    >{{ weblabel.ciNow }}</a-button
                   >
                 </div>
               </a-form-item>
@@ -886,6 +865,52 @@ export default {
       errorCode: "",
       defaultCountry: "",
       loadingConfirmEmail: false,
+      weblabel:{ // webla1
+        information: "",
+        okMessage: "",
+        mciSuccessNotReady: "",
+        reconfirmPhonemail: "",
+        phoneNumber: "",
+        requiredPhone: "",
+        email: "",
+        requiredEmail: "",
+        notValidEmail: "",
+        mciErrorNotReady: "",
+        mciErrorPreauth: "",
+        mciErrorInterface: "",
+        mciErrorPayment: "",
+        tcTitle: "",
+        disagree: "",
+        agree: "",
+        arrival: "",
+        departure: "",   
+        bookCode: "",
+        roomNumber: "",
+        guestDetail: "",
+        uploadID: "",
+        depositPayment: "",
+        purposeStay: "",
+        nationality: "",
+        countryOfResidence: "",
+        region: "",
+        requiredProvince: "",
+        vehicleRegident: "",
+        requiredID: "",
+        idPhoto: "",
+        idPhotoDesc: "",
+        pay: "",
+        deposit: "",
+        cashBasis: "",
+        depositPaymentSuccess: "",
+        depositPaymentNetworkError: "",
+        depositPaymentVerError: "",
+        termCashBasis: "",
+        prev: "",
+        next: "",
+        ciNow: "",
+        ciDate: "",
+        coDate: "",
+      }
     };
   },
   watch: {
@@ -897,7 +922,7 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    // console.log("GuestData", this.currDataPrepare);
+    // //console.log("GuestData", this.currDataPrepare);
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -1049,7 +1074,7 @@ export default {
       this.step = this.currDataPrepare["step"];
     }
     this.loading = false;
-    //console.log('setting',this.currDataSetting);
+    ////console.log('setting',this.currDataSetting);
     // router.push(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
@@ -1112,7 +1137,7 @@ export default {
             this.paid = this.currDataPrepare["preAuth-flag"];
             this.paidNetworkError = false;
             this.paidVerError = false;
-            // console.log(this.currDataPrepare);
+            // //console.log(this.currDataPrepare);
             // Session Storage Set
             sessionStorage.setItem(
               "guestData",
@@ -1126,9 +1151,101 @@ export default {
         })();
       }
     }
+    /* Handling Labeling */ 
+    this.weblabel.information = this.findLabel('information', 'titleCase');
+    this.weblabel.okMessage = this.findLabel('ok_message', 'upperCase');
+    this.weblabel.mciSuccessNotReady = this.findLabel('mci_success_not_ready', 'sentenceCase');
+    this.weblabel.reconfirmPhonemail = this.findLabel('reconfirm_phonemail', 'sentenceCase');
+    this.weblabel.phoneNumber = this.findLabel('phone_number', 'titleCase');
+    this.weblabel.requiredPhone = this.findLabel('required_phone', 'titleCase');
+    this.weblabel.email = this.findLabel('email', 'titleCase');
+    this.weblabel.requiredEmail = this.findLabel('required_email', 'sentenceCase');
+    this.weblabel.notValidEmail = this.findLabel('not_valid_email', 'sentenceCase');
+    this.weblabel.mciErrorNotReady = this.findLabel('mci_error_not_ready', 'sentenceCase');
+    this.weblabel.mciErrorPreauth = this.findLabel('mci_error_preauth', 'sentenceCase');
+    this.weblabel.mciErrorInterface = this.findLabel('mci_error_interface', 'sentenceCase');
+    this.weblabel.mciErrorPayment = this.findLabel('mci_error_payment', 'sentenceCase');
+    this.weblabel.tcTitle = this.findLabel('t_c', 'titleCase');
+    this.weblabel.disagree = this.findLabel('disagree', 'titleCase');
+    this.weblabel.agree = this.findLabel('agree', 'titleCase');
+    this.weblabel.arrival = this.findLabel('arrival', 'titleCase');
+    this.weblabel.departure = this.findLabel('departure', 'titleCase');
+    this.weblabel.bookCode = this.findLabel('book_code', 'titleCase');
+    this.weblabel.roomNumber = this.findLabel('room_number', 'titleCase');
+    this.weblabel.guestDetail = this.findLabel('guest_detail', 'titleCase');
+    this.weblabel.uploadID = this.findLabel('upload_id', 'titleCase');
+    this.weblabel.depositPayment = this.findLabel('deposit_payment', 'titleCase');
+    this.weblabel.purposeStay = this.findLabel('purpose_stay', 'titleCase');
+    this.weblabel.nationality = this.findLabel('nationality', 'titleCase');
+    this.weblabel.countryOfResidence = this.findLabel('country_of_residence', 'titleCase');
+    this.weblabel.region = this.findLabel('region', 'titleCase');
+    this.weblabel.requiredProvince = this.findLabel('required_province','sentenceCase');
+    this.weblabel.vehicleRegident = this.findLabel('vehicle_regident', 'titleCase');
+    this.weblabel.requiredID = this.findLabel('required_id','sentenceCase');
+    this.weblabel.idPhoto = this.findLabel('id_photo', 'titleCase');
+    this.weblabel.idPhotoDesc = this.findLabel('id_photo_desc', 'titleCase');
+    this.weblabel.pay = this.findLabel('pay', 'titleCase');
+    this.weblabel.deposit = this.findLabel('deposit', 'titleCase');
+    this.weblabel.cashBasis = this.findLabel('cash_basis', 'titleCase');
+    this.weblabel.depositPaymentSuccess = this.findLabel('deposit_payment_success', 'sentenceCase');
+    this.weblabel.depositPaymentNetworkError = this.findLabel('deposit_payment_network_error','sentenceCase');
+    this.weblabel.depositPaymentVerError = this.findLabel('deposit_payment_ver_error', 'sentenceCase');
+    this.weblabel.termCashBasis = this.findLabel('term_cash_basis', 'titleCase');
+    this.weblabel.prev = this.findLabel('prev', 'titleCase');
+    this.weblabel.next = this.findLabel('next', 'titleCase');
+    this.weblabel.ciNow = this.findLabel('ci_now', 'titleCase');
+    this.weblabel.ciDate = this.formatDate(this.currDataPrepare.ci);
+    this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
   },
   methods: {
+    findLabel(nameKey, used) {
+      //console.log('FindLabel');
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
+      }      
+      return fixLabel;
+    },
     async autoScrollNation() {
+      //console.log('autoScrollNation');
       await this.$nextTick();
       if (this.currDataPrepare["guest-nation"] == "") {
         this.form.setFieldsValue({
@@ -1138,6 +1255,7 @@ export default {
       }
     },
     async autoScrollCountry() {
+      //console.log('autoScrollCountry');
       await this.$nextTick();
       if (this.currDataPrepare["guest-country"] == "") {
         this.form.setFieldsValue({
@@ -1148,6 +1266,7 @@ export default {
       }
     },
     resendPreauth() {
+      //console.log('resendPreauth');
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
         if (this.errorCode == "1004") {
@@ -1190,7 +1309,7 @@ export default {
               this.paid = this.currDataPrepare["preAuth-flag"];
               this.paidNetworkError = false;
               this.paidVerError = false;
-              // console.log(this.currDataPrepare);
+              // //console.log(this.currDataPrepare);
               // Session Storage Set
               sessionStorage.setItem(
                 "guestData",
@@ -1206,10 +1325,12 @@ export default {
       }
     },
     async getFile() {
+      //console.log('getFile');
       await this.$nextTick();
       this.$refs.fileurl.click();
     },
     handleArrayDate(date) {
+      //console.log('handleArrayDate');
       const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
       const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
         2,
@@ -1220,12 +1341,15 @@ export default {
       return dateArray;
     },
     handleChange(value) {
+      //console.log('handleChange');
       this.errorCode = value;
     },
     handleChangeCountry(value) {
+      //console.log('handleChangeCountry');
       this.country = value;
     },
-    isNumber: function (evt) {
+    isNumber(evt) {
+      //console.log('isNumber');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1239,6 +1363,7 @@ export default {
       }
     },
     next() {
+      //console.log('next');
       switch (this.step) {
         case 1:
           const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -1309,6 +1434,7 @@ export default {
       }
     },
     prev() {
+      //console.log('prev');
       switch (this.step) {
         case 4:
           if (!this.precheckin) {
@@ -1340,6 +1466,7 @@ export default {
       }
     },
     payDeposit() {
+      //console.log('payDeposit');
       this.paymentLoading = true;
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
@@ -1348,7 +1475,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        //console.log(this.ipAddr);
+        ////console.log(this.ipAddr);
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1412,15 +1539,15 @@ export default {
             throw new Error("Network response was not ok.");
           })
           .then((data) => {
-            //console.log('after cors',data);
+            ////console.log('after cors',data);
             const resp = data.contents.substr(
               data.contents.indexOf("{"),
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            //console.log(this.resReg);
+            ////console.log(this.resReg);
             if (this.resReg.data["resultCd"] == "0000") {
-              //console.log(this.resReg);
+              ////console.log(this.resReg);
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
@@ -1434,6 +1561,7 @@ export default {
       });
     },
     check() {
+      //console.log('check');
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
       );
@@ -1454,17 +1582,19 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            // console.log("payment valid");
+            // //console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            // console.log("payment invalid");
+            // //console.log("payment invalid");
           }
         });
     },
     closeModal() {
+      //console.log('closeModal');
       this.paymentModal = false;
     },
     hideAllModal() {
+      //console.log('hideAllModal');
       this.confirmMailModal = false;
       this.termcondition = false;
       this.overlappingModal = false;
@@ -1473,6 +1603,7 @@ export default {
       this.preauthModal = false;
     },
     onFileChange(e) {
+      //console.log('onFileChange');
       const file = e.target.files[0];
       /* Start Handling Images Compression */
       const reader = new FileReader();
@@ -1547,7 +1678,7 @@ export default {
               })
               .json();
             if (uploadResult.response.resultMessage != "") {
-              // console.log(uploadResult.response.resultMessage);
+              // //console.log(uploadResult.response.resultMessage);
             }
           })();
           this.hasUpload = "0 image id already exist";
@@ -1556,17 +1687,20 @@ export default {
       };
     },
     onKeydown(event) {
+      //console.log('onKeydown');
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
         event.preventDefault();
       }
     },
     scrollToTop() {
+      //console.log('scrollToTop');
       window.scrollTo(0, 0);
       //this.step = 0;
     },
     checkValidation(caseType) {
-      // console.log("checkValidation is triggered");
+      //console.log('checkValidation');
+      // //console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1579,7 +1713,7 @@ export default {
             },
           })
           .json();
-        // console.log(parsed);
+        // //console.log(parsed);
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -1630,6 +1764,7 @@ export default {
       })();
     },
     handleResCi() {
+      //console.log('handleResCi');
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
@@ -1654,7 +1789,7 @@ export default {
             },
           })
           .json();
-        // console.log(parsed);
+        // //console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
@@ -1695,6 +1830,7 @@ export default {
       })();
     },
     save() {
+      //console.log('save');
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
@@ -1705,6 +1841,7 @@ export default {
       }
     },
     handleYes() {
+      //console.log('handleYes');
       this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
@@ -1723,7 +1860,7 @@ export default {
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
         // Handling Interface WA atau SMS
-        //console.log(data);
+        ////console.log(data);
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -1744,7 +1881,7 @@ export default {
           const responses = parsed.response["resultMessage"];
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          //console.log(responses);
+          ////console.log(responses);
           if (this.responseStatus.statusNumber == 0) {
             Object.assign(this.currDataPrepare, { roomReady: false });
             // Session Storage Set
@@ -1772,6 +1909,7 @@ export default {
       }
     },
     back() {
+      //console.log('back');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -1779,6 +1917,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
+      //console.log('handleOk');
       this.ModalText = "The modal will be closed after two seconds";
       this.confirmLoading = true;
       setTimeout(() => {
@@ -1790,11 +1929,12 @@ export default {
         this.confirmLoading = false;
       }, 300);
     },
-    moment,
     disagree() {
+      //console.log('disagree');
       window.open(this.location, "_self");
     },
     formatDate(datum) {
+      //console.log('formatDate');
       const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
           ? `0${String(moment(datum, "YYYY-M-DD").date())}`
@@ -1808,40 +1948,12 @@ export default {
       return fixDate;
     },
     handleBack() {
+      //console.log('handleBack');
       window.open(this.location, "_self");
     },
     checkPayment() {
+      //console.log('checkPayment');
       this.checkValidation("2");
-    },
-  },
-  computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
-          }
-        }
-        return fixLabel;
-      };
     },
   },
 };
