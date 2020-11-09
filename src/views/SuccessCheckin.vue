@@ -13,16 +13,12 @@
         <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
         <div v-if="roomReady">
           <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
-          <p>
-            {{ weblabel.wifiAddress }} : {{ wifiAddress }}
-          </p>
+          <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
           <p>
             {{ weblabel.wifiPassword }} :
             {{ wifiPassword }}
           </p>
-          <p>
-            {{ weblabel.arrangement }} : {{ arrangement }}
-          </p>
+          <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
 
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
@@ -36,9 +32,7 @@
             </div>
           </div>
 
-          <a-button @click="goBack">{{
-            weblabel.done
-          }}</a-button>
+          <a-button @click="goBack">{{ weblabel.done }}</a-button>
         </div>
         <div v-else>
           <div class="row justify-center q-mt-xl">
@@ -51,9 +45,7 @@
             </div>
           </div>
 
-          <a-button @click="goBack">{{
-            weblabel.done
-          }}</a-button>
+          <a-button @click="goBack">{{ weblabel.done }}</a-button>
         </div>
       </div>
     </div>
@@ -74,7 +66,7 @@
       </template>
       <p>{{ weblabel.mciConfirmCi }}</p>
     </a-modal>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -222,19 +214,31 @@ export default {
       this.url = url.split(",")[1];
     });
     // Labeling
-    this.weblabel.roomNumber = this.findLabel("room_number", 'titleCase');
-    this.weblabel.wifiAddress = this.findLabel("wifi_address", 'titleCase');
-    this.weblabel.wifiPassword = this.findLabel("wifi_password", 'sentenceCase');
-    this.weblabel.arrangement = this.findLabel("arrangement", 'sentenceCase');
-    this.weblabel.mciSuccessWithMaxKeycard = this.findLabel("mci_success_with_max_keycard", `sentenceCase`);
-    this.weblabel.mciSuccess = this.findLabel("mci_success", 'sentenceCase');
-    this.weblabel.done = this.findLabel("done", 'titleCase');
-    this.weblabel.phoneNumber = this.findLabel("phone_number", 'titleCase');
-    this.weblabel.email = this.findLabel("email", 'titleCase');
-    this.weblabel.mciSuccessNotReady = this.findLabel("mci_success_not_ready", 'sentenceCase');
-    this.weblabel.mciConfirmCi = this.findLabel("mci_confirm_ci", 'sentenceCase');
-    this.weblabel.yes = this.findLabel("yes", 'sentenceCase');
-    this.weblabel.no = this.findLabel("no", 'sentenceCase');
+    this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
+    this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
+    this.weblabel.wifiPassword = this.findLabel(
+      "wifi_password",
+      "sentenceCase"
+    );
+    this.weblabel.arrangement = this.findLabel("arrangement", "sentenceCase");
+    this.weblabel.mciSuccessWithMaxKeycard = this.findLabel(
+      "mci_success_with_max_keycard",
+      `sentenceCase`
+    );
+    this.weblabel.mciSuccess = this.findLabel("mci_success", "sentenceCase");
+    this.weblabel.done = this.findLabel("done", "titleCase");
+    this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.mciSuccessNotReady = this.findLabel(
+      "mci_success_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.mciConfirmCi = this.findLabel(
+      "mci_confirm_ci",
+      "sentenceCase"
+    );
+    this.weblabel.yes = this.findLabel("yes", "sentenceCase");
+    this.weblabel.no = this.findLabel("no", "sentenceCase");
   },
   methods: {
     findLabel(nameKey, used) {
@@ -279,7 +283,7 @@ export default {
             fixLabel = fixLabel;
             break;
         }
-      }      
+      }
       return fixLabel;
     },
     formatDate(datum) {
@@ -302,10 +306,10 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
-    backToHome(){
+    backToHome() {
       window.open(this.location, "_self");
     },
-    backToList(){
+    backToList() {
       const mainReservation = JSON.parse(sessionStorage.getItem("listData"));
       const settings = JSON.parse(sessionStorage.getItem("settings"));
       router.push({
@@ -344,7 +348,7 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-            
+
             // Reservation Without Room Sharer (Main Guest Reservation)
             const mainReservation = reservation[0].filter((item, index) => {
               if (item["room-sharer"] === true) {
@@ -352,13 +356,12 @@ export default {
                 return item;
               }
             });
-            
+
             if (mainReservation.length > 1) {
               // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
               const acceptRsv = mainReservation.filter((item, index) => {
                 if (
-                  item["room-status"] ==
-                  "1 Room Already assign or Overlapping"
+                  item["room-status"] == "1 Room Already assign or Overlapping"
                 ) {
                 } else {
                   return item;
@@ -380,26 +383,27 @@ export default {
                     item["rmshare"].push(guest["gast"]);
                   }
                 });
-                
-                if(item['res-status'] == "1 - Guest Already Checkin"){
+
+                if (item["res-status"] == "1 - Guest Already Checkin") {
                   // Checked In Guest
                   countCheckedIn++;
-                }
-                else if(item["ifdata-sent"] == true){
+                } else if (item["ifdata-sent"] == true) {
                   // Waiting List Guest
                   countWaiting++;
                 }
               });
-              
-              if((acceptRsv.length - (countCheckedIn + countWaiting)) >= 1){
+
+              if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
                 // Open Modal Question
-                sessionStorage.setItem("listData", JSON.stringify(mainReservation));
+                sessionStorage.setItem(
+                  "listData",
+                  JSON.stringify(mainReservation)
+                );
                 sessionStorage.setItem("settings", JSON.stringify(this.setup));
                 this.infoMCIConfim = true;
-              }
-              else{
+              } else {
                 this.backToHome();
-              }                            
+              }
             } else {
               this.backToHome();
             }
@@ -407,9 +411,9 @@ export default {
           default:
             break;
         }
-      })();    
+      })();
     },
-  },  
+  },
 };
 </script>
 

@@ -623,7 +623,7 @@ export default {
       checkInTIme: "",
       tempHour: "",
       hotelLogo: "",
-      id: [],      
+      id: [],
       defaultCountry: "",
     };
   },

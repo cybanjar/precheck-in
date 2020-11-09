@@ -311,9 +311,7 @@
                       </a-form-item>
                     </a-col>
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="weblabel.phoneNumber"
-                      >
+                      <a-form-item :label="weblabel.phoneNumber">
                         <q-input
                           v-decorator="[
                             'phone',
@@ -336,9 +334,7 @@
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="3" :xl="3" :xs="24">
-                      <a-form-item
-                        :label="weblabel.purposeStay"
-                      >
+                      <a-form-item :label="weblabel.purposeStay">
                         <a-select
                           v-decorator="[
                             'purpose',
@@ -352,9 +348,7 @@
                             v-for="item in FilterPurposeofStay"
                             :key="item.setupvalue"
                             :value="item.setupvalue"
-                            >{{
-                              item.setupvalue
-                            }}</a-select-option
+                            >{{ item.setupvalue }}</a-select-option
                           >
                         </a-select>
                       </a-form-item>
@@ -374,9 +368,7 @@
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="weblabel.nationality"
-                      >
+                      <a-form-item :label="weblabel.nationality">
                         <a-select
                           @focus="autoScrollNation"
                           v-decorator="[
@@ -399,9 +391,7 @@
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="weblabel.countryOfResidence"
-                      >
+                      <a-form-item :label="weblabel.countryOfResidence">
                         <a-select
                           @focus="autoScrollCountry"
                           @change="handleChangeCountry"
@@ -452,9 +442,7 @@
                     </a-col>
                     <div v-if="freeParking">
                       <a-col :span="5" :xl="5" :xs="24">
-                        <a-form-item
-                          :label="weblabel.vehicleRegident"
-                        >
+                        <a-form-item :label="weblabel.vehicleRegident">
                           <a-input
                             class="ant-input-h"
                             v-decorator="[
@@ -537,9 +525,7 @@
                 <div class="steps-content">
                   <a-row :gutter="[16, 8]" v-if="pay == false">
                     <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item
-                        :label="weblabel.depositPayment"
-                      >
+                      <a-form-item :label="weblabel.depositPayment">
                         <h2>
                           <strong>
                             {{ this.currDataPrepare["currency-usage"] }}
@@ -599,9 +585,7 @@
                     <a-col :span="12" :xl="12" :xs="12">
                       <a-form-item :label="weblabel.deposit">
                         <h2>
-                          <strong>{{
-                            weblabel.cashBasis
-                          }}</strong>
+                          <strong>{{ weblabel.cashBasis }}</strong>
                         </h2>
                       </a-form-item>
                     </a-col>
@@ -609,23 +593,17 @@
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
                       <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          weblabel.depositPaymentSuccess
-                        }}
+                        {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
                       <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          weblabel.depositPaymentNetworkError
-                        }}
+                        {{ weblabel.depositPaymentNetworkError }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
                       <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          weblabel.depositPaymentVerError
-                        }}
+                        {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
                     <div v-else>
@@ -865,7 +843,8 @@ export default {
       errorCode: "",
       defaultCountry: "",
       loadingConfirmEmail: false,
-      weblabel:{ // webla1
+      weblabel: {
+        // webla1
         information: "",
         okMessage: "",
         mciSuccessNotReady: "",
@@ -883,7 +862,7 @@ export default {
         disagree: "",
         agree: "",
         arrival: "",
-        departure: "",   
+        departure: "",
         bookCode: "",
         roomNumber: "",
         guestDetail: "",
@@ -910,7 +889,7 @@ export default {
         ciNow: "",
         ciDate: "",
         coDate: "",
-      }
+      },
     };
   },
   watch: {
@@ -1151,49 +1130,98 @@ export default {
         })();
       }
     }
-    /* Handling Labeling */ 
-    this.weblabel.information = this.findLabel('information', 'titleCase');
-    this.weblabel.okMessage = this.findLabel('ok_message', 'upperCase');
-    this.weblabel.mciSuccessNotReady = this.findLabel('mci_success_not_ready', 'sentenceCase');
-    this.weblabel.reconfirmPhonemail = this.findLabel('reconfirm_phonemail', 'sentenceCase');
-    this.weblabel.phoneNumber = this.findLabel('phone_number', 'titleCase');
-    this.weblabel.requiredPhone = this.findLabel('required_phone', 'titleCase');
-    this.weblabel.email = this.findLabel('email', 'titleCase');
-    this.weblabel.requiredEmail = this.findLabel('required_email', 'sentenceCase');
-    this.weblabel.notValidEmail = this.findLabel('not_valid_email', 'sentenceCase');
-    this.weblabel.mciErrorNotReady = this.findLabel('mci_error_not_ready', 'sentenceCase');
-    this.weblabel.mciErrorPreauth = this.findLabel('mci_error_preauth', 'sentenceCase');
-    this.weblabel.mciErrorInterface = this.findLabel('mci_error_interface', 'sentenceCase');
-    this.weblabel.mciErrorPayment = this.findLabel('mci_error_payment', 'sentenceCase');
-    this.weblabel.tcTitle = this.findLabel('t_c', 'titleCase');
-    this.weblabel.disagree = this.findLabel('disagree', 'titleCase');
-    this.weblabel.agree = this.findLabel('agree', 'titleCase');
-    this.weblabel.arrival = this.findLabel('arrival', 'titleCase');
-    this.weblabel.departure = this.findLabel('departure', 'titleCase');
-    this.weblabel.bookCode = this.findLabel('book_code', 'titleCase');
-    this.weblabel.roomNumber = this.findLabel('room_number', 'titleCase');
-    this.weblabel.guestDetail = this.findLabel('guest_detail', 'titleCase');
-    this.weblabel.uploadID = this.findLabel('upload_id', 'titleCase');
-    this.weblabel.depositPayment = this.findLabel('deposit_payment', 'titleCase');
-    this.weblabel.purposeStay = this.findLabel('purpose_stay', 'titleCase');
-    this.weblabel.nationality = this.findLabel('nationality', 'titleCase');
-    this.weblabel.countryOfResidence = this.findLabel('country_of_residence', 'titleCase');
-    this.weblabel.region = this.findLabel('region', 'titleCase');
-    this.weblabel.requiredProvince = this.findLabel('required_province','sentenceCase');
-    this.weblabel.vehicleRegident = this.findLabel('vehicle_regident', 'titleCase');
-    this.weblabel.requiredID = this.findLabel('required_id','sentenceCase');
-    this.weblabel.idPhoto = this.findLabel('id_photo', 'titleCase');
-    this.weblabel.idPhotoDesc = this.findLabel('id_photo_desc', 'titleCase');
-    this.weblabel.pay = this.findLabel('pay', 'titleCase');
-    this.weblabel.deposit = this.findLabel('deposit', 'titleCase');
-    this.weblabel.cashBasis = this.findLabel('cash_basis', 'titleCase');
-    this.weblabel.depositPaymentSuccess = this.findLabel('deposit_payment_success', 'sentenceCase');
-    this.weblabel.depositPaymentNetworkError = this.findLabel('deposit_payment_network_error','sentenceCase');
-    this.weblabel.depositPaymentVerError = this.findLabel('deposit_payment_ver_error', 'sentenceCase');
-    this.weblabel.termCashBasis = this.findLabel('term_cash_basis', 'titleCase');
-    this.weblabel.prev = this.findLabel('prev', 'titleCase');
-    this.weblabel.next = this.findLabel('next', 'titleCase');
-    this.weblabel.ciNow = this.findLabel('ci_now', 'titleCase');
+    /* Handling Labeling */
+
+    this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
+    this.weblabel.mciSuccessNotReady = this.findLabel(
+      "mci_success_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.reconfirmPhonemail = this.findLabel(
+      "reconfirm_phonemail",
+      "sentenceCase"
+    );
+    this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
+    this.weblabel.requiredPhone = this.findLabel("required_phone", "titleCase");
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.requiredEmail = this.findLabel(
+      "required_email",
+      "sentenceCase"
+    );
+    this.weblabel.notValidEmail = this.findLabel(
+      "not_valid_email",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorNotReady = this.findLabel(
+      "mci_error_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorPreauth = this.findLabel(
+      "mci_error_preauth",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorInterface = this.findLabel(
+      "mci_error_interface",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorPayment = this.findLabel(
+      "mci_error_payment",
+      "sentenceCase"
+    );
+    this.weblabel.tcTitle = this.findLabel("t_c", "titleCase");
+    this.weblabel.disagree = this.findLabel("disagree", "titleCase");
+    this.weblabel.agree = this.findLabel("agree", "titleCase");
+    this.weblabel.arrival = this.findLabel("arrival", "titleCase");
+    this.weblabel.departure = this.findLabel("departure", "titleCase");
+    this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+    this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
+    this.weblabel.guestDetail = this.findLabel("guest_detail", "titleCase");
+    this.weblabel.uploadID = this.findLabel("upload_id", "titleCase");
+    this.weblabel.depositPayment = this.findLabel(
+      "deposit_payment",
+      "titleCase"
+    );
+    this.weblabel.purposeStay = this.findLabel("purpose_stay", "titleCase");
+    this.weblabel.nationality = this.findLabel("nationality", "titleCase");
+    this.weblabel.countryOfResidence = this.findLabel(
+      "country_of_residence",
+      "titleCase"
+    );
+    this.weblabel.region = this.findLabel("region", "titleCase");
+    this.weblabel.requiredProvince = this.findLabel(
+      "required_province",
+      "sentenceCase"
+    );
+    this.weblabel.vehicleRegident = this.findLabel(
+      "vehicle_regident",
+      "titleCase"
+    );
+    this.weblabel.requiredID = this.findLabel("required_id", "sentenceCase");
+    this.weblabel.idPhoto = this.findLabel("id_photo", "titleCase");
+    this.weblabel.idPhotoDesc = this.findLabel("id_photo_desc", "titleCase");
+    this.weblabel.pay = this.findLabel("pay", "titleCase");
+    this.weblabel.deposit = this.findLabel("deposit", "titleCase");
+    this.weblabel.cashBasis = this.findLabel("cash_basis", "titleCase");
+    this.weblabel.depositPaymentSuccess = this.findLabel(
+      "deposit_payment_success",
+      "sentenceCase"
+    );
+    this.weblabel.depositPaymentNetworkError = this.findLabel(
+      "deposit_payment_network_error",
+      "sentenceCase"
+    );
+    this.weblabel.depositPaymentVerError = this.findLabel(
+      "deposit_payment_ver_error",
+      "sentenceCase"
+    );
+    this.weblabel.termCashBasis = this.findLabel(
+      "term_cash_basis",
+      "titleCase"
+    );
+    this.weblabel.prev = this.findLabel("prev", "titleCase");
+    this.weblabel.next = this.findLabel("next", "titleCase");
+    this.weblabel.ciNow = this.findLabel("ci_now", "titleCase");
     this.weblabel.ciDate = this.formatDate(this.currDataPrepare.ci);
     this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
   },
@@ -1241,7 +1269,7 @@ export default {
             fixLabel = fixLabel;
             break;
         }
-      }      
+      }
       return fixLabel;
     },
     async autoScrollNation() {

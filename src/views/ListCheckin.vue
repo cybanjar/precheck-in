@@ -63,7 +63,7 @@
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
+          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 3, xxl: 3 }"
           :data-source="guestData"
         >
           <a-list-item slot="renderItem" slot-scope="item">
@@ -73,10 +73,25 @@
             <a-card :class="handleClass(item, 'card')" @click="select(item)">
               <h2 :class="handleClass(item, 'h2')">
                 {{ item["gast"].toUpperCase() }}
+                <q-icon
+                  name="people"
+                  v-if="item['rmshare'].length !== 0"
+                  @click="
+                    visible == true ? (visible = false) : (visible = true)
+                  "
+                />
               </h2>
+              <h2>{{ item["shortname"] }}</h2>
               <div v-if="item['rmshare'].length !== 0">
-                <a-icon type="team" @click="showModal" style="margion-top: -10px"/>
-                <div v-show="visible">
+                <q-tooltip v-model="visible">
+                  <div v-for="item in item['rmshare']" :key="item">
+                    <p>
+                      {{ item.toUpperCase() }}
+                    </p>
+                  </div></q-tooltip
+                >
+
+                <!-- <div v-show="visible">
                   <a-modal
                     :title="weblabel.information"
                     :visible="visible"
@@ -93,7 +108,7 @@
                       </p>
                     </div>
                   </a-modal>
-                </div>
+                </div> -->
               </div>
               <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
               <p v-if="item.description != ''" class="pl-3">
@@ -202,8 +217,14 @@ export default {
       tempData = this.$route.params.guestData;
       setting = this.$route.params.setting;
     }
+    console.log(this.$route.params);
     /* Assign ispopup property for tempData */
+    console.log(tempData, "dataa");
     tempData.forEach((item) => {
+      // if ((isMobile = true)) {
+      const Name = item["gast"].substring(0, 5) + "...";
+      Object.assign(item, { shortname: Name });
+      // }
       Object.assign(item, { ispopup: false });
       Object.assign(item, { guestStatus: "" });
     });
@@ -277,12 +298,6 @@ export default {
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
   },
   methods: {
-    showModal() {
-      this.visible = true;
-    },
-    handleOk() {
-      this.visible = false;
-    },
     handleStatus(item) {
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
@@ -565,5 +580,9 @@ export default {
   padding-top: 3px;
   -webkit-transform: translate3d(0, 0, 0);
   border-top: 1px solid #e8e8e8;
+}
+.ant-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
 }
 </style>

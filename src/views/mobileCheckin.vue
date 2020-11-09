@@ -1,8 +1,18 @@
 <template>
   <div v-if="loading">
-    <div style="display: flex; width: 100% !important; height: 100vh; overflow: hidden; text-align: center; align-items: center; justify-content: center;">
-      <q-spinner-ball color="red" size="8em" style=""/>
-    </div>    
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
+    </div>
   </div>
   <div v-else v-cloak>
     <div :style="ota" class="row justify-between pt-2">
@@ -282,7 +292,11 @@
           </a-spin></a-modal
         >
       </div>
-      <div :class="handleClassIcon()" v-if="licenseMembership" style="margin-bottom: 10px;">
+      <div
+        :class="handleClassIcon()"
+        v-if="licenseMembership"
+        style="margin-bottom: 10px;"
+      >
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
@@ -359,7 +373,7 @@
             </a-form-item>
           </a-spin>
         </a-modal>
-      </div>     
+      </div>
     </div>
 
     <!-- Modal Early Checkin -->
@@ -735,7 +749,7 @@ export default {
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
-        if (this.tempsetup[i]["number1"] == 1) {          
+        if (this.tempsetup[i]["number1"] == 1) {
           this.FilterPurposeofStay.push(this.tempsetup[i]);
           if (this.tempsetup[i].setupflag == true) {
             this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
@@ -1064,27 +1078,30 @@ export default {
         "mci_room_not_avail",
         "sentenceCase"
       );
-      this.FilterPurposeofStay.forEach(item => {
-        item['setupvalue'] = this.findLabel(item['setupvalue'].toLowerCase(), "upperCase");
+      this.FilterPurposeofStay.forEach((item) => {
+        item["setupvalue"] = this.findLabel(
+          item["setupvalue"].toLowerCase(),
+          "upperCase"
+        );
       });
     })();
   },
   methods: {
-    handleClassIcon(){
+    handleClassIcon() {
       let returnedClass = "";
-      if(this.licenseMembership == false){
+      if (this.licenseMembership == false) {
         returnedClass = "col-sm-5 col-xs-12 text-center";
       } else {
-        returnedClass = "col-sm-3 col-xs-6 text-center"
+        returnedClass = "col-sm-3 col-xs-6 text-center";
       }
       return returnedClass;
     },
-    handleClassIconCenter(){
+    handleClassIconCenter() {
       let returnedClass = "";
-      if(this.licenseMembership == false){
+      if (this.licenseMembership == false) {
         returnedClass = "col-sm-2 col-xs-12 text-center";
       } else {
-        returnedClass = "col-sm-3 col-xs-6 text-center"
+        returnedClass = "col-sm-3 col-xs-6 text-center";
       }
       return returnedClass;
     },
@@ -1139,8 +1156,11 @@ export default {
         "mci_room_not_avail",
         "sentenceCase"
       );
-      this.FilterPurposeofStay.forEach(item => {
-        item['setupvalue'] = this.findLabel(item['setupvalue'].toLowerCase(), "titleCase");
+      this.FilterPurposeofStay.forEach((item) => {
+        item["setupvalue"] = this.findLabel(
+          item["setupvalue"].toLowerCase(),
+          "titleCase"
+        );
       });
     },
     findLabel(nameKey, used) {
@@ -1367,7 +1387,7 @@ export default {
         this.confirmLoading = false;
       } else {
         (async () => {
-          try{
+          try {
             const data = await ky
               .post(this.hotelEndpoint + "mobileCI/findReservation", {
                 json: {
@@ -1439,7 +1459,9 @@ export default {
                       },
                     });
                   } else {
-                    if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
+                    if (
+                      rsvFix[0]["res-status"] == "1 - Guest Already Checkin"
+                    ) {
                       // Langsung ke SuccessCheckin.vue
                       Object.assign(rsvFix[0], { roomReady: true });
                       router.push({
@@ -1516,10 +1538,10 @@ export default {
             this.hideMCISearchModal();
             /* Reset Form */
             this.resetForm();
-          }catch(error){
+          } catch (error) {
             this.confirmLoading = false;
-            this.$message.error(error.toString());            
-          }          
+            this.$message.error(error.toString());
+          }
         })();
       }
     },
