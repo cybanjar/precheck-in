@@ -18,6 +18,7 @@
           </p>
         </a-modal>
       </div>
+
       <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
       <div v-show="informationQueue">
         <a-modal
@@ -35,6 +36,7 @@
           </p>
         </a-modal>
       </div>
+
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -72,10 +74,29 @@
               <h2 :class="handleClass(item, 'h2')">
                 {{ item["gast"].toUpperCase() }}
               </h2>
-              <div v-for="item in item['rmshare']" :key="item">
-                <p class="pl-3" style="margin-top: -10px;">
-                  {{ item.toUpperCase() }}
-                </p>
+
+              <div v-if="item['rmshare'].length !== 0">
+                <a-button type="primary" @click="showModal">
+                  Open Modal
+                </a-button>
+                <div v-show="visible">
+                  <a-modal
+                    :title="weblabel.information"
+                    :visible="visible"
+                    :closable="false"
+                  >
+                    <template slot="footer">
+                      <a-button key="submit" type="primary" @click="handleOk">{{
+                        weblabel.okMessage
+                      }}</a-button>
+                    </template>
+                    <div v-for="item in item['rmshare']" :key="item">
+                      <p>
+                        {{ item.toUpperCase() }}
+                      </p>
+                    </div>
+                  </a-modal>
+                </div>
               </div>
               <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
               <p v-if="item.description != ''" class="pl-3">
@@ -164,6 +185,7 @@ export default {
         statusCi: "",
         statusQueue: "",
       },
+      visible: false,
     };
   },
   created() {
@@ -258,6 +280,12 @@ export default {
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
   },
   methods: {
+    showModal() {
+      this.visible = true;
+    },
+    handleOk() {
+      this.visible = false;
+    },
     handleStatus(item) {
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
@@ -326,6 +354,7 @@ export default {
         return 0;
       }
     },
+
     handleClass(item, used) {
       let returnedClass = "";
       if (used == "card") {
