@@ -1,8 +1,17 @@
 <template>
   <div class="q-pa-md doc-container">
-    <div class="column items-center" style="height: 150px;">
-      <h4>Loading...</h4>
-      <q-spinner-pie color="red" size="5.5em" />
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
     </div>
   </div>
 </template>
