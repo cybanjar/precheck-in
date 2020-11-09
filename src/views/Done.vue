@@ -46,6 +46,7 @@ export default {
       hotelLogo: "",
       setting: [],
       location: "",
+      defaultCountry: "",
     };
   },
   created() {
@@ -166,6 +167,14 @@ export default {
           }
         );
         this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
+        const defCountry = this.tempsetup.filter((item, index) => {
+          //  Default Country Code
+          return item.number1 === 9 && item.number2 === 1;
+        });
+        this.defaultCountry = defCountry[0]["setupvalue"];
+        if (this.defaultCountry.toLowerCase() == "idn") {
+          this.defaultCountry = "INA";
+        }
         //console.log(this.hotelParams);
         const jatah = [];
         for (const i in this.tempsetup) {
@@ -211,6 +220,7 @@ export default {
         obj["hotelname"] = this.hotelname;
         obj["showPickupRequest"] = this.showPickupRequest;
         obj["countries"] = this.countries;
+        obj["defaultCountry"] = this.defaultCountry;
         obj["province"] = this.province;
         obj["hotelEndpoint"] = this.hotelEndpoint;
         obj["hotelParams"] = this.hotelParams;

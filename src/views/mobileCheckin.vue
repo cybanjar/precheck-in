@@ -865,7 +865,7 @@ export default {
       });
       this.todayOcc = tempTodayOcc[0]["price"];
       const defCountry = this.tempsetup.filter((item, index) => {
-        //  LICENSE WA/SMS GATEWAY
+        //  Default Country Code
         return item.number1 === 9 && item.number2 === 1;
       });
       this.defaultCountry = defCountry[0]["setupvalue"];

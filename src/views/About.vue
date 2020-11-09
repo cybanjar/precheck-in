@@ -359,6 +359,7 @@
           <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
             <a-form-item :label="getLabels('nationality', `titleCase`)">
               <a-select
+                @focus="autoScrollNation"
                 v-decorator="[
                   'nationality',
                   {
@@ -385,6 +386,7 @@
               :label="getLabels('country_of_residence', `titleCase`)"
             >
               <a-select
+                @focus="autoScrollCountry"
                 @change="handleChangeCountry"
                 v-decorator="[
                   'country',
@@ -621,7 +623,8 @@ export default {
       checkInTIme: "",
       tempHour: "",
       hotelLogo: "",
-      id: [],
+      id: [],      
+      defaultCountry: "",
     };
   },
   created() {
@@ -649,6 +652,7 @@ export default {
     this.hotelname = this.$route.params.Param["hotelname"];
     this.showPickupRequest = this.$route.params.Param["showPickupRequest"];
     this.countries = this.$route.params.Param["countries"];
+    this.defaultCountry = this.$route.params.Param["defaultCountry"];
     this.province = this.$route.params.Param["province"];
     this.hotelEndpoint = this.$route.params.Param["hotelEndpoint"];
     this.hotelParams = this.$route.params.Param["hotelParams"];
@@ -849,6 +853,27 @@ export default {
       this.country = this.currDataPrepare["guest-country"];
       /* Go To Next Guest */
       this.counter += 1;
+    },
+    async autoScrollNation() {
+      //console.log('autoScrollNation');
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-doc-nation"] == "") {
+        this.form.setFieldsValue({
+          nationality: this.defaultCountry,
+        });
+        this.currDataPrepare["guest-doc-nation"] = this.defaultCountry;
+      }
+    },
+    async autoScrollCountry() {
+      //console.log('autoScrollCountry');
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-country"] == "") {
+        this.form.setFieldsValue({
+          country: this.defaultCountry,
+        });
+        this.country = this.defaultCountry;
+        this.currDataPrepare["guest-country"] = this.defaultCountry;
+      }
     },
   },
   computed: {
