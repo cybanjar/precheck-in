@@ -74,11 +74,8 @@
               <h2 :class="handleClass(item, 'h2')">
                 {{ item["gast"].toUpperCase() }}
               </h2>
-
               <div v-if="item['rmshare'].length !== 0">
-                <a-button type="primary" @click="showModal">
-                  Open Modal
-                </a-button>
+                <a-icon type="team" @click="showModal" style="margion-top: -10px"/>
                 <div v-show="visible">
                   <a-modal
                     :title="weblabel.information"
