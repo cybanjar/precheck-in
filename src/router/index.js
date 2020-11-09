@@ -21,67 +21,78 @@ const routes = [
   {
     path: "/guest-list",
     name: "Guest List",
-    component: () => import("../views/GuestList"),
+    component: () =>
+      import(/* webpackChunkName: "GuestList" */ "../views/GuestList"),
   },
   {
     path: "/mobilecheckin",
     name: "MobileCheckin",
-    component: () => import("../views/mobileCheckin"),
+    component: () =>
+      import(/* webpackChunkName: "MobileCheckin" */ "../views/mobileCheckin"),
   },
   {
     path: "/success",
     name: "Success",
-    component: () => import("../views/Success"),
+    component: () =>
+      import(/* webpackChunkName: "Success" */ "../views/Success"),
   },
   {
     path: "/list",
     name: "List",
-    component: () => import("../views/List"),
+    component: () => import(/* webpackChunkName: "List" */ "../views/List"),
   },
   {
     path: "/step",
     name: "Step",
-    component: () => import("../views/Step"),
+    component: () => import(/* webpackChunkName: "Step" */ "../views/Step"),
   },
   {
     path: "/successcheckin",
     name: "SuccessCheckIn",
-    component: () => import("../views/SuccessCheckin"),
+    component: () =>
+      import(
+        /* webpackChunkName: "SuccessCheckin" */ "../views/SuccessCheckin"
+      ),
   },
   {
     path: "/listcheckin",
     name: "ListCheckIn",
-    component: () => import("../views/ListCheckin"),
+    component: () =>
+      import(/* webpackChunkName: "ListCheckin" */ "../views/ListCheckin"),
   },
   {
     path: "/precheckin",
     name: "Done",
-    component: () => import("../views/Done"),
+    component: () => import(/* webpackChunkName: "Done" */ "../views/Done"),
   },
   {
     path: "/notfound",
     name: "NotFound",
-    component: () => import("../views/NotFound"),
+    component: () =>
+      import(/* webpackChunkName: "NotFound" */ "../views/NotFound"),
   },
   {
     path: "*",
     name: "404",
-    component: () => import("../views/404"),
+    component: () => import(/* webpackChunkName: "404" */ "../views/404"),
   },
   {
     path: "/setup",
     name: "Setup",
-    component: () => import("../views/SetUp"),
+    component: () => import(/* webpackChunkName: "Setup" */ "../views/SetUp"),
   },
   {
     path: "/setup2",
     name: "Setup2",
-    component: () => import("../views/SetUp2"),
+    component: () => import(/* webpackChunkName: "Setup2" */ "../views/SetUp2"),
   },
   {
     path: "/successdeposit",
     name: "Successdeposit",
-    component: () => import("../views/SuccessDeposit"),
+    component: () =>
+      import(
+        /* webpackChunkName: "SuccessDeposit" */ "../views/SuccessDeposit"
+      ),
   },
 ];
 

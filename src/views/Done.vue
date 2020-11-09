@@ -60,7 +60,7 @@ export default {
         objValue = objValue.replace(" ", "+");
         Object.assign(tempParams, { hotelParams: objValue });
         this.location += `/precheckin?${tempParam}`;
-        console.log(this.location);
+        // console.log(this.location);
         const parsed = await ky
           .post(
             "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
@@ -73,7 +73,7 @@ export default {
             }
           )
           .json();
-        console.log(parsed);
+        // console.log(parsed);
         // Handling null Response
         if (parsed.response.messResult == null) {
           router.push({
