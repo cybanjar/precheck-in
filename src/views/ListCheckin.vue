@@ -83,7 +83,7 @@
                       color="gray"
                       clickable
                       size="sm"
-                      text-color="black"                      
+                      text-color="black"
                       style="
                         margin-top: -3px !important;
                         margin-left: 15px !important;
@@ -264,8 +264,7 @@ export default {
       )
     ) {
       this.isMobile = true;
-    }
-    else{
+    } else {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
@@ -273,14 +272,14 @@ export default {
     tempData.forEach((item) => {
       if (this.isMobile == false) {
         let Name = "";
-        if(item['gast'].length <= 22){
+        if (item["gast"].length <= 22) {
           Name = item["gast"].toUpperCase();
-        }else{
+        } else {
           Name = item["gast"].toUpperCase().substring(0, 22) + "...";
         }
-        
+
         Object.assign(item, { shortname: Name });
-      }else{
+      } else {
         const Name = item["gast"].toUpperCase();
         Object.assign(item, { shortname: Name });
       }
