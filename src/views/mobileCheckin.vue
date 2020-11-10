@@ -658,7 +658,7 @@ export default {
     } else {
       this.isMobile = false;
     }
-    //console.log('Created is Triggered');
+    // console.log('Created is Triggered');
     this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
@@ -738,7 +738,7 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      //console.log(this.hotelEndpoint,this.hotelCode,this.langID);
+      // console.log(this.hotelEndpoint,this.hotelCode,this.langID);
       /* Check Used Language */
       switch (this.langID.toLowerCase()) {
         case "eng":
@@ -1158,7 +1158,7 @@ export default {
       return returnedClass;
     },
     resetLabel() {
-      //console.log('resetLabel');
+      // console.log('resetLabel');
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
       this.weblabel.chooseOption = this.findLabel(
         "choose_option",
@@ -1258,11 +1258,11 @@ export default {
             break;
         }
       }
-      //console.log(locale,label,fixLabel);
+      // console.log(locale,label,fixLabel);
       return fixLabel;
     },
     changeLang(data) {
-      //console.log('changeLang');
+      // console.log('changeLang');
       // Method for changing MCI Language
       if (data.value == "Indonesia") {
         this.programLabel = "program-label2";
@@ -1281,7 +1281,7 @@ export default {
       }
     },
     async showModalBookingCode() {
-      //console.log('showModalBookingCode');
+      // console.log('showModalBookingCode');
       // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.resetForm();
       this.modalBookingCode = true;
@@ -1289,7 +1289,7 @@ export default {
       this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
-      //console.log('showModalGuestName');
+      // console.log('showModalGuestName');
       // Method for Set Guest Name Input Form to Focus When Activate Modal Guest Name
       this.resetForm();
       this.modalGuestName = true;
@@ -1297,16 +1297,16 @@ export default {
       this.$refs.name.focus();
     },
     async showModalEmailAddress() {
-      //console.log('showModalEmailAddress');
+      // console.log('showModalEmailAddress');
       // Method for Set Email Address Input Form to Focus When Activate Modal Email Address
       this.resetForm();
       this.modalEmailAddress = true;
       await this.$nextTick();
       this.$refs.email.focus();
-      console.log(this.$refs.email);
+      // console.log(this.$refs.email);
     },
     async showModalMembershipID() {
-      //console.log('showModalMembershipID');
+      // console.log('showModalMembershipID');
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
       if (this.licenseMembership) {
         this.resetForm();
@@ -1317,23 +1317,23 @@ export default {
     },
     /* Handling Error Message */
     errorbo() {
-      //console.log('errorbo');
+      // console.log('errorbo');
       this.$message.error(this.weblabel.inputBookcode);
     },
     errorname() {
-      //console.log('errorname');
+      // console.log('errorname');
       this.$message.error(this.weblabel.inputGuestName);
     },
     erroremail() {
-      //console.log('erroremail');
+      // console.log('erroremail');
       this.$message.error(this.weblabel.inputEmail);
     },
     errormembership() {
-      //console.log('errormembership');
+      // console.log('errormembership');
       this.$message.error(this.weblabel.inputMembership);
     },
     erroremailNotTrue() {
-      //console.log('erroremailNotTrue');
+      // console.log('erroremailNotTrue');
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.$message.error("Please enter valid email address");
@@ -1347,12 +1347,12 @@ export default {
       }
     },
     errorco() {
-      //console.log('errorco');
+      // console.log('errorco');
       this.$message.error(this.weblabel.inputCoDate);
     },
     /* End Of Handling Error Message */
     hideMCIModal() {
-      //console.log('hideMCIModal');
+      // console.log('hideMCIModal');
       // Method for Hiding All MCI Modal
       this.infoMCIEarlyCheckin = false;
       this.infoMCINotFound = false;
@@ -1360,18 +1360,18 @@ export default {
       this.infoMCIRoomNotAvail = false;
     },
     hideMCISearchModal() {
-      //console.log('hideMCISearchModal');
+      // console.log('hideMCISearchModal');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
     reloadPage() {
-      //console.log('reloadPage');
+      // console.log('reloadPage');
       window.location = this.location;
     },
     getCoDate() {
-      //console.log('getCoDate');
+      // console.log('getCoDate');
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1379,8 +1379,8 @@ export default {
       return coDate;
     },
     handleFindRsv(mode) {
-      //console.log('handleFindRsv');
-      //console.log(mode);
+      // console.log('handleFindRsv');
+      // console.log(mode);
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1458,7 +1458,7 @@ export default {
                 throwHttpErrors: false,
               })
               .json();
-            //console.log(data);
+            // console.log(data);
             this.message = data.response["messResult"];
             const messResult = this.message.split("-");
             const messMessage = messResult[1].split(",");
@@ -1467,9 +1467,9 @@ export default {
                 // Reservation is Found
                 const totalGuest =
                   data.response.arrivalGuestlist["arrival-guestlist"].length;
-                //console.log(totalGuest);
+                // console.log(totalGuest);
                 if (totalGuest > 1) {
-                  //console.log('totalGuest',totalGuest);
+                  // console.log('totalGuest',totalGuest);
                   /* Handling Multiple Guest to ListCheckin.vue */
                   reservation.push(
                     data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -1507,7 +1507,7 @@ export default {
                   Object.assign(this.setup[0], { SearchMethod: mode });
                   Object.assign(this.setup[0], { SearchValue: searchVar });
                   Object.assign(this.setup[0], { SearchCO: coDate });
-                  //console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
+                  // console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
                   if (rsvFix.length > 1) {
                     router.push({
                       name: "ListCheckIn",
@@ -1608,15 +1608,15 @@ export default {
       }
     },
     resetForm() {
-      //console.log('resetForm');
+      // console.log('resetForm');
       this.bookingcode = "";
       this.name = "";
       this.email = "";
       this.member = "";
     },
     handleSingleGuest(guest) {
-      //console.log('handleSingleGuest');
-      //console.log(guest);
+      // console.log('handleSingleGuest');
+      // console.log(guest);
       const rmStatus = guest["room-status"].split(" ");
       if (parseInt(rmStatus[0]) == 1) {
         // Overlapping
@@ -1648,7 +1648,7 @@ export default {
       }
     },
     handleCancel() {
-      //console.log('handleCancel');
+      // console.log('handleCancel');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
@@ -1662,13 +1662,13 @@ export default {
       }
       setTimeout(() => {
         this.loading = false;
-        //console.log("setTimeout is Triggered", this.timer);
+        // console.log("setTimeout is Triggered", this.timer);
       }, this.timer);
     },
   },
   async mounted() {
     await this.$nextTick();
-    //console.log('mounted is triggered');
+    // console.log('mounted is triggered');
     this.showAnimation();
     window.history.pushState(null, "", this.location);
     window.addEventListener("popstate", function (event) {
@@ -1685,7 +1685,7 @@ export default {
             c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
           c = "0x" + c.join("");
-          //console.log('thishexa');
+          // console.log('thishexa');
           return (
             "rgba(" +
             [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +

@@ -416,7 +416,7 @@ export default {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      //console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {
