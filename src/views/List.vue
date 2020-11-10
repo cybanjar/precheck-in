@@ -74,13 +74,14 @@
               </p>
               <p class="pl-3">
                 {{ item.rmqty }} {{ getLabels("adult", `titleCase`) }}
-                <a-tag color="green">{{ item["rate-desc"] }}</a-tag>
+                <a-tag color="green" v-if="item['rate-desc'] != ''">{{
+                  item["rate-desc"]
+                }}</a-tag>
               </p>
             </a-card>
           </a-list-item>
         </a-list>
       </div>
-      {{ selectedData }}
       <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
       <a-button
         class="fixed-bottom-right mr-3 float-right"
