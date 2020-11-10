@@ -18,6 +18,7 @@
           </p>
         </a-modal>
       </div>
+
       <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
       <div v-show="informationQueue">
         <a-modal
@@ -35,6 +36,7 @@
           </p>
         </a-modal>
       </div>
+
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5>
@@ -73,15 +75,70 @@
               {{ item.guestStatus }}
             </div>
             <a-card :class="handleClass(item, 'card')" @click="select(item)">
-              <div style="padding-right: 8px;">
-                <h2 :class="handleClass(item, 'h2')">
-                  {{ item["gast"].toUpperCase() }}
-                </h2>
+              <h2 v-if="isMobile == true" :class="handleClass(item, 'h2')">
+                {{ item["shortname"] }}
+                <span>
+                  <q-chip
+                    color="gray"
+                    clickable
+                    size="sm"
+                    text-color="black"
+                    icon="people"
+                    style="
+                      margin-top: -3px !important;
+                      margin-left: 15px !important;
+                    "
+                  >
+                    Detail
+                    <q-popup-proxy>
+                      <q-banner style="width: 300px;">
+                        <template v-slot:avatar>
+                          <q-icon name="people" color="primary" />
+                        </template>
+                        <p>
+                          {{ item["gast"] }}
+                        </p>
+                      </q-banner>
+                    </q-popup-proxy>
+                  </q-chip>
+                </span>
+              </h2>
+              <h2 v-else :class="handleClass(item, 'h2')">
+                {{ item["gast"].toUpperCase() }}
+              </h2>
+              <div v-if="item['rmshare'].length !== 0">
+                <span>
+                  <q-chip
+                    color="gray"
+                    clickable
+                    size="sm"
+                    text-color="black"
+                    icon="supervisor_account"
+                    style="
+                      margin-top: -3px !important;
+                      margin-left: 15px !important;
+                    "
+                  >
+                    Room Sharer
+                    <q-popup-proxy>
+                      <q-banner style="width: 300px;">
+                        <template v-slot:avatar>
+                          <q-icon name="supervisor_account" color="primary" />
+                        </template>
+                        <p
+                          v-for="item in item['rmshare']"
+                          :key="item"
+                          style="margin: 0 !important; text-size: 12px;"
+                        >
+                          {{ item }}
+                        </p>
+                      </q-banner>
+                    </q-popup-proxy>
+                  </q-chip>
+                </span>
               </div>
-              <div v-for="item in item['rmshare']" :key="item">
-                <p class="pl-3" style="margin-top: -10px;">
-                  {{ item.toUpperCase() }}
-                </p>
+              <div v-else>
+                <br/>
               </div>
               <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
               <p v-if="item.description != ''" class="pl-3">
@@ -171,6 +228,8 @@ export default {
         statusCi: "",
         statusQueue: "",
       },
+      visible: false,
+      isMobile: false,
     };
   },
   created() {
@@ -194,7 +253,6 @@ export default {
       tempData = this.$route.params.guestData;
       setting = this.$route.params.setting;
     }
-    let isMobile = undefined;
     // Detect Mobile Device
     if (
       /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
@@ -204,15 +262,17 @@ export default {
         navigator.userAgent.substr(0, 4)
       )
     ) {
-      isMobile = true;
+      this.isMobile = true;
     }
     /* Assign ispopup property for tempData */
-    console.log("tempData", tempData);
+
     tempData.forEach((item) => {
+      if (this.isMobile == true) {
+        const Name = item["gast"].toUpperCase().substring(0, 12) + "...";
+        Object.assign(item, { shortname: Name });
+      }
       Object.assign(item, { ispopup: false });
       Object.assign(item, { guestStatus: "" });
-      const shortName = item["gast"].substring(0, 20) + "...";
-      Object.assign(item, { shortName: shortName });
     });
     this.guestData = tempData;
     this.setup = setting;
@@ -355,6 +415,7 @@ export default {
         return 0;
       }
     },
+
     handleClass(item, used) {
       let returnedClass = "";
       if (used == "card") {
@@ -581,6 +642,10 @@ export default {
   padding-top: 3px;
   -webkit-transform: translate3d(0, 0, 0);
   border-top: 1px solid #e8e8e8;
+}
+.ant-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
 }
 </style>
 <style scoped lang="scss" src="../css/listcheckin.scss" />

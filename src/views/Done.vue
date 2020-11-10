@@ -1,8 +1,17 @@
 <template>
   <div class="q-pa-md doc-container">
-    <div class="column items-center" style="height: 150px;">
-      <h4>Loading...</h4>
-      <q-spinner-pie color="red" size="5.5em" />
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
     </div>
   </div>
 </template>
@@ -46,6 +55,7 @@ export default {
       hotelLogo: "",
       setting: [],
       location: "",
+      defaultCountry: "",
     };
   },
   created() {
@@ -166,6 +176,14 @@ export default {
           }
         );
         this.hotelParams = tempHOTELENCRIPTIONPARAMS[0]["setupvalue"];
+        const defCountry = this.tempsetup.filter((item, index) => {
+          //  Default Country Code
+          return item.number1 === 9 && item.number2 === 1;
+        });
+        this.defaultCountry = defCountry[0]["setupvalue"];
+        if (this.defaultCountry.toLowerCase() == "idn") {
+          this.defaultCountry = "INA";
+        }
         //console.log(this.hotelParams);
         const jatah = [];
         for (const i in this.tempsetup) {
@@ -211,6 +229,7 @@ export default {
         obj["hotelname"] = this.hotelname;
         obj["showPickupRequest"] = this.showPickupRequest;
         obj["countries"] = this.countries;
+        obj["defaultCountry"] = this.defaultCountry;
         obj["province"] = this.province;
         obj["hotelEndpoint"] = this.hotelEndpoint;
         obj["hotelParams"] = this.hotelParams;

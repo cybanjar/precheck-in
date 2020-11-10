@@ -19,12 +19,6 @@ const routes = [
   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // },
   {
-    path: "/guest-list",
-    name: "Guest List",
-    component: () =>
-      import(/* webpackChunkName: "GuestList" */ "../views/GuestList"),
-  },
-  {
     path: "/mobilecheckin",
     name: "MobileCheckin",
     component: () =>
@@ -85,14 +79,6 @@ const routes = [
     path: "/setup2",
     name: "Setup2",
     component: () => import(/* webpackChunkName: "Setup2" */ "../views/SetUp2"),
-  },
-  {
-    path: "/successdeposit",
-    name: "Successdeposit",
-    component: () =>
-      import(
-        /* webpackChunkName: "SuccessDeposit" */ "../views/SuccessDeposit"
-      ),
   },
 ];
 
