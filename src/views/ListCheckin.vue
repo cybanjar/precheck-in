@@ -78,7 +78,7 @@
               <div style="padding-right: 8px;">
                 <h2 v-if="isMobile == false" :class="handleClass(item, 'h2')">
                   {{ item["shortname"] }}
-                  <span v-if="item['gast'].length > 22">
+                  <span v-if="item['gast'].length > 20">
                     <q-chip
                       color="gray"
                       clickable
