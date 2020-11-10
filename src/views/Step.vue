@@ -973,6 +973,7 @@ export default {
         coDate: "",
       },
       rmShareTooltip: true,
+      afterPayment: false,
     };
   },
   watch: {
@@ -1063,15 +1064,6 @@ export default {
       this.terms = this.term1;
     }
 
-    this.loading = false;
-    if (
-      this.currDataPrepare["purposeofstay"] == "" ||
-      this.currDataPrepare["purposeofstay"] == "_"
-    ) {
-      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
-        "PurposeofStay"
-      ];
-    }
     // console.log('setting',this.currDataSetting);
     // router.push(this.location);
     /* Handling Deposit Other Value */
@@ -1095,6 +1087,7 @@ export default {
     }
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
+      this.afterPayment = true;
       if (this.errorCode == "1004") {
         //this.tempParam.resultCd.substring(0, 1)
         /* Payment Gateway Network Error */
@@ -1138,6 +1131,7 @@ export default {
             this.paidVerError = false;
             // console.log(this.currDataPrepare);
             // Session Storage Set
+            console.log('Success',this.currDataPrepare["preAuth-flag"]);
             sessionStorage.setItem(
               "guestData",
               JSON.stringify(this.currDataPrepare)
@@ -1187,7 +1181,8 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      if (this.currDataPrepare["preAuth-flag"] == true) {
+      //console.log('Not PCI',this.currDataPrepare["preAuth-flag"]);
+      if (this.currDataPrepare["preAuth-flag"] == true || this.afterPayment == true) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
@@ -1195,6 +1190,15 @@ export default {
         this.termcondition = true;
       }
       this.step = this.currDataPrepare["step"];
+    }
+    this.loading = false;
+    if (
+      this.currDataPrepare["purposeofstay"] == "" ||
+      this.currDataPrepare["purposeofstay"] == "_"
+    ) {
+      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
+        "PurposeofStay"
+      ];
     }
 
     /* Handling Labeling */
@@ -1363,6 +1367,7 @@ export default {
       // console.log('resendPreauth');
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
+        this.afterPayment = true;
         if (this.errorCode == "1004") {
           //this.tempParam.resultCd.substring(0, 1)
           /* Payment Gateway Network Error */
