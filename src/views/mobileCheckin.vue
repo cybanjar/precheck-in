@@ -1552,6 +1552,7 @@ export default {
                     data.response.arrivalGuestlist["arrival-guestlist"][0];
                   Object.assign(guest, { vreg: "" });
                   Object.assign(guest, { step: "" });
+                  Object.assign(guest, { rmshare: [] });
                   // Handling Resstatus
                   if (guest["res-status"] == "1 - Guest Already Checkin") {
                     // Langsung ke SuccessCheckin.vue
@@ -1573,7 +1574,8 @@ export default {
                       },
                     });
                   } else {
-                    this.handleSingleGuest(guest);
+                    // console.log('disini');
+                    this.handleSingleGuest(guest, this.setup[0]);
                   }
                 }
                 break;
@@ -1614,7 +1616,7 @@ export default {
       this.email = "";
       this.member = "";
     },
-    handleSingleGuest(guest) {
+    handleSingleGuest(guest, setup) {
       // console.log('handleSingleGuest');
       // console.log(guest);
       const rmStatus = guest["room-status"].split(" ");
@@ -1629,7 +1631,7 @@ export default {
             name: "Step",
             params: {
               guestData: guest,
-              setting: this.setup[0],
+              setting: setup,
             },
           });
         } else {
@@ -1637,12 +1639,13 @@ export default {
           this.infoMCIRoomNotAvail = true; //mci_room_not_avail
         }
       } else {
+        // console.log('Single Guest Handle',guest,setup);
         // Ready to MCI Go to Step
         router.push({
           name: "Step",
           params: {
             guestData: guest,
-            setting: this.setup[0],
+            setting: setup,
           },
         });
       }
