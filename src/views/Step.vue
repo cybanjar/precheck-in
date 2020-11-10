@@ -34,7 +34,7 @@
         <div>
           <a-form layout="vertical" :form="formresubmit">
             <a-form-item :label="weblabel.phoneNumber">
-              <a-input
+              <q-input
                 v-decorator="[
                   'guest-phone',
                   {
@@ -47,10 +47,13 @@
                     ],
                   },
                 ]"
+                class="ant-input-h"
+                outlined
+                dense
               />
             </a-form-item>
             <a-form-item :label="weblabel.email">
-              <a-input
+              <q-input
                 v-decorator="[
                   'guest-email',
                   {
@@ -67,6 +70,10 @@
                     ],
                   },
                 ]"
+                class="ant-input-h"
+                type="email"
+                outlined
+                dense
               />
             </a-form-item>
           </a-form>
@@ -175,29 +182,75 @@
         ONLINE CHECK-IN
       </h5>
       <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-8 col-xs-12 invisibles">
+        <div
+          class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
+          style="padding-right: 30px;"
+        >
           <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
           <h6
             v-if="currDataPrepare['guest-member-name'] !== ''"
             class="text-white font-weight-bold"
             :style="information"
           >
-            {{ this.currDataPrepare["gast"] }} -
+            {{ this.currDataPrepare["gast"] }}
             {{ currDataPrepare["guest-member-name"] }}
-            <span
-              v-for="(item, index) in currDataPrepare['rmshare']"
-              :key="item"
-              style="font-weight: 500; font-size: 14px;"
-            >
-              {{ item }}
-              <span v-if="index != currDataPrepare['rmshare'].length - 1"
-                >|</span
+            <span>
+              <q-chip
+                color="gray"
+                clickable
+                size="sm"
+                text-color="black"
+                icon="supervisor_account"
+                style="margin-top: -3px !important;"
               >
+                Room Sharer
+                <q-popup-proxy>
+                  <q-banner style="width: 300px;">
+                    <template v-slot:avatar>
+                      <q-icon name="supervisor_account" color="primary" />
+                    </template>
+                    <p
+                      v-for="item in currDataPrepare['rmshare']"
+                      :key="item"
+                      style="margin: 0 !important; text-size: 12px;"
+                    >
+                      {{ item }}
+                    </p>
+                  </q-banner>
+                </q-popup-proxy>
+              </q-chip>
             </span>
           </h6>
           <h6 v-else class="text-white font-weight-bold" :style="information">
             {{ this.currDataPrepare["gast"] }}
+            <span>
+              <q-chip
+                color="gray"
+                clickable
+                size="sm"
+                text-color="black"
+                icon="supervisor_account"
+                style="margin-top: -3px !important;"
+              >
+                Room Sharer
+                <q-popup-proxy>
+                  <q-banner style="width: 300px;">
+                    <template v-slot:avatar>
+                      <q-icon name="supervisor_account" color="primary" />
+                    </template>
+                    <p
+                      v-for="item in currDataPrepare['rmshare']"
+                      :key="item"
+                      style="margin: 0 !important; text-size: 12px;"
+                    >
+                      {{ item }}
+                    </p>
+                  </q-banner>
+                </q-popup-proxy>
+              </q-chip>
+            </span>
           </h6>
+
           <p class="ant-card-meta-description text-white" :style="information">
             {{ weblabel.arrival }}:
             <strong>{{ weblabel.ciDate }}</strong>
@@ -232,12 +285,35 @@
           <h6 v-else class="text-white font-weight-bold">
             {{ this.currDataPrepare["gast"] }},
           </h6>
-          <div
-            v-for="item in currDataPrepare['rmshare']"
-            :key="item"
-            style="margin-top: 20px;"
-          >
-            <p style="margin-top: -20px;">{{ item }}</p>
+          <div>
+            <q-chip
+              color="gray"
+              clickable
+              size="sm"
+              text-color="black"
+              icon="supervisor_account"
+              style="
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                margin-bottom: 5px !important;
+              "
+            >
+              Room Sharer
+              <q-menu>
+                <q-banner style="width: 300px;">
+                  <template v-slot:avatar>
+                    <q-icon name="supervisor_account" color="primary" />
+                  </template>
+                  <p
+                    v-for="item in currDataPrepare['rmshare']"
+                    :key="item"
+                    style="margin: 0 !important; text-size: 12px;"
+                  >
+                    {{ item }}
+                  </p>
+                </q-banner>
+              </q-menu>
+            </q-chip>
           </div>
           <p class="ant-card-meta-description text-white">
             {{ weblabel.arrival }}:
@@ -289,8 +365,11 @@
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item :label="weblabel.email">
-                        <a-input
+                        <q-input
                           class="ant-input-h"
+                          outlined
+                          dense
+                          type="email"
                           v-decorator="[
                             'email',
                             {
@@ -443,8 +522,10 @@
                     <div v-if="freeParking">
                       <a-col :span="5" :xl="5" :xs="24">
                         <a-form-item :label="weblabel.vehicleRegident">
-                          <a-input
+                          <q-input
                             class="ant-input-h"
+                            outlined
+                            dense
                             v-decorator="[
                               'vRegident',
                               {
@@ -686,6 +767,7 @@
 </template>
 
 <script>
+import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
 import Antd, {
@@ -890,6 +972,7 @@ export default {
         ciDate: "",
         coDate: "",
       },
+      rmShareTooltip: true,
     };
   },
   watch: {
@@ -901,7 +984,7 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    // //console.log("GuestData", this.currDataPrepare);
+    //console.log("GuestData", this.currDataPrepare);
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -951,11 +1034,6 @@ export default {
     this.per = this.currDataSetting["per"];
     this.FilterPurposeofStay = this.currDataSetting["FilterPurposeofStay"];
     this.freeParking = this.currDataSetting["freeParking"];
-    if (this.currDataPrepare["purposeofstay"] == "") {
-      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
-        "PurposeofStay"
-      ];
-    }
     this.region = this.currDataSetting["province"];
     this.countries = this.currDataSetting["countries"];
     this.defaultCountry = this.currDataSetting["defaultCountry"];
@@ -985,15 +1063,13 @@ export default {
       this.terms = this.term1;
     }
     /* Handle Stepper */
-    if (
-      this.currDataPrepare["step"] == undefined ||
-      this.currDataPrepare["step"] == ""
-    ) {
-      // If not define yet
+    //console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
+    if (this.precheckin) {
       if (
         this.currDataPrepare["guest-email"] == "" ||
         this.currDataPrepare["guest-phnumber"] == "" ||
-        this.currDataPrepare["purposeofstay"] == ""
+        this.currDataPrepare["purposeofstay"] == "" ||
+        this.currDataPrepare["purposeofstay"] == "_"
       ) {
         this.currDataPrepare["step"] = 1;
         this.termcondition = true;
@@ -1006,54 +1082,41 @@ export default {
         this.currDataPrepare["step"] = 2;
         this.termcondition = true;
       } else if (
+        this.freeParking == true &&
+        this.currDataPrepare["vreg"] == ""
+      ) {
+        this.currDataPrepare["step"] = 2;
+        this.termcondition = true;
+      } else if (
         this.currDataPrepare["image-flag"] == "0 image id already exist"
       ) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
-        if (this.precheckin) {
-          this.currDataPrepare["step"] = 3;
-          this.termcondition = true;
-        } else {
-          this.currDataPrepare["step"] = 1;
-          this.termcondition = true;
-        }
+        this.currDataPrepare["step"] = 3;
+        this.termcondition = true;
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      if (
-        this.currDataPrepare["guest-email"] == "" ||
-        this.currDataPrepare["guest-phnumber"] == "" ||
-        this.currDataPrepare["purposeofstay"] == ""
-      ) {
-        this.currDataPrepare["step"] = 1;
-        this.termcondition = true;
-      } else if (
-        this.currDataPrepare["guest-nation"] == "" ||
-        this.currDataPrepare["guest-country"] == "" ||
-        (this.currDataPrepare["guest-country"].toLowerCase() == "ina" &&
-          this.currDataPrepare["guest-region"] == "")
-      ) {
-        this.currDataPrepare["step"] = 2;
-        this.termcondition = true;
-      } else if (
-        this.currDataPrepare["image-flag"] == "0 image id already exist"
-      ) {
+      if (this.paid == true) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
-        if (this.precheckin) {
-          this.currDataPrepare["step"] = 3;
-          this.termcondition = true;
-        } else {
-          this.currDataPrepare["step"] = 1;
-          this.termcondition = true;
-        }
+        this.currDataPrepare["step"] = 1;
+        this.termcondition = true;
       }
       this.step = this.currDataPrepare["step"];
     }
     this.loading = false;
-    ////console.log('setting',this.currDataSetting);
+    if (
+      this.currDataPrepare["purposeofstay"] == "" ||
+      this.currDataPrepare["purposeofstay"] == "_"
+    ) {
+      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
+        "PurposeofStay"
+      ];
+    }
+    //console.log('setting',this.currDataSetting);
     // router.push(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
@@ -1116,7 +1179,7 @@ export default {
             this.paid = this.currDataPrepare["preAuth-flag"];
             this.paidNetworkError = false;
             this.paidVerError = false;
-            // //console.log(this.currDataPrepare);
+            //console.log(this.currDataPrepare);
             // Session Storage Set
             sessionStorage.setItem(
               "guestData",
@@ -1131,7 +1194,6 @@ export default {
       }
     }
     /* Handling Labeling */
-
     this.weblabel.information = this.findLabel("information", "titleCase");
     this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
     this.weblabel.mciSuccessNotReady = this.findLabel(
@@ -1337,7 +1399,7 @@ export default {
               this.paid = this.currDataPrepare["preAuth-flag"];
               this.paidNetworkError = false;
               this.paidVerError = false;
-              // //console.log(this.currDataPrepare);
+              //console.log(this.currDataPrepare);
               // Session Storage Set
               sessionStorage.setItem(
                 "guestData",
@@ -1493,6 +1555,21 @@ export default {
           break;
       }
     },
+    payDepositDoku() {
+      const MALLID = 1113679; // Set From Database
+      const CHAINMERCHANT = "NA"; // Set From Database
+      const AMOUNT = this.Deposit; // Set From Deposit Other Amount
+      const PURCHASEAMOUNT = this.Deposit; // Set From Deposit Other Amount
+      const TRANSIDMERCHANT = "INVOICE-TEST-157196"; // Set From Database
+      const PAYMENTTYPE = "AUTHORIZATION"; // Authorization for CardVer
+      const SHAREDKEY = "rpT4jeLsWHHK"; // Set From Database
+      const CURRENCY = "360"; // for IDN ISO 3166; Refer to : https://datahub.io/core/country-codes#data
+      const WORDS = CryptoJS.SHA1(
+        AMOUNT.toString() + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY
+      ); // sha1(AMOUNT + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY);
+      const todayPayment = new Date();
+      console.log(todayPayment);
+    },
     payDeposit() {
       //console.log('payDeposit');
       this.paymentLoading = true;
@@ -1503,7 +1580,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        ////console.log(this.ipAddr);
+        //console.log(this.ipAddr);
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1567,15 +1644,15 @@ export default {
             throw new Error("Network response was not ok.");
           })
           .then((data) => {
-            ////console.log('after cors',data);
+            //console.log('after cors',data);
             const resp = data.contents.substr(
               data.contents.indexOf("{"),
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            ////console.log(this.resReg);
+            //console.log(this.resReg);
             if (this.resReg.data["resultCd"] == "0000") {
-              ////console.log(this.resReg);
+              //console.log(this.resReg);
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
@@ -1610,10 +1687,10 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            // //console.log("payment valid");
+            //console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            // //console.log("payment invalid");
+            //console.log("payment invalid");
           }
         });
     },
@@ -1706,7 +1783,7 @@ export default {
               })
               .json();
             if (uploadResult.response.resultMessage != "") {
-              // //console.log(uploadResult.response.resultMessage);
+              //console.log(uploadResult.response.resultMessage);
             }
           })();
           this.hasUpload = "0 image id already exist";
@@ -1728,7 +1805,7 @@ export default {
     },
     checkValidation(caseType) {
       //console.log('checkValidation');
-      // //console.log("checkValidation is triggered");
+      //console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1741,7 +1818,7 @@ export default {
             },
           })
           .json();
-        // //console.log(parsed);
+        //console.log(parsed);
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -1779,7 +1856,8 @@ export default {
           case "2":
             const responsess = parsed.response["paymentFlag"].split(" - ");
             if (parseInt(responsess[0]) == 0) {
-              this.payDeposit();
+              //this.payDeposit();
+              this.payDepositDoku();
             } else {
               this.paid = true;
             }
@@ -1817,7 +1895,7 @@ export default {
             },
           })
           .json();
-        // //console.log(parsed);
+        //console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
@@ -1888,7 +1966,7 @@ export default {
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
         // Handling Interface WA atau SMS
-        ////console.log(data);
+        //console.log(data);
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -1909,7 +1987,7 @@ export default {
           const responses = parsed.response["resultMessage"];
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          ////console.log(responses);
+          //console.log(responses);
           if (this.responseStatus.statusNumber == 0) {
             Object.assign(this.currDataPrepare, { roomReady: false });
             // Session Storage Set
@@ -1982,6 +2060,19 @@ export default {
     checkPayment() {
       //console.log('checkPayment');
       this.checkValidation("2");
+    },
+  },
+  watch: {
+    isIdle(newIdle, oldIdle) {
+      if (newIdle == true || newIdle == "true") {
+        window.open(this.location, "_self");
+      }
+      //console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+    },
+  },
+  computed: {
+    isIdle() {
+      return store.state.idleVue.isIdle;
     },
   },
 };

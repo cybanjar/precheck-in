@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import store from "@/store/store";
 import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
@@ -326,8 +327,8 @@ export default {
           .post(this.hotelEndpoint + "mobileCI/findReservation", {
             json: {
               request: {
-                coDate: this.coDate,
-                bookCode: this.bookingcode,
+                coDate: this.setup.SearchCO,
+                bookCode: this.setup.SearchValue,
                 chName: " ",
                 earlyCI: "false",
                 maxRoom: "1",
@@ -348,7 +349,6 @@ export default {
             reservation.push(
               data["response"]["arrivalGuestlist"]["arrival-guestlist"]
             );
-
             // Reservation Without Room Sharer (Main Guest Reservation)
             const mainReservation = reservation[0].filter((item, index) => {
               if (item["room-sharer"] === true) {
@@ -356,7 +356,6 @@ export default {
                 return item;
               }
             });
-
             if (mainReservation.length > 1) {
               // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
               const acceptRsv = mainReservation.filter((item, index) => {
@@ -383,7 +382,6 @@ export default {
                     item["rmshare"].push(guest["gast"]);
                   }
                 });
-
                 if (item["res-status"] == "1 - Guest Already Checkin") {
                   // Checked In Guest
                   countCheckedIn++;
@@ -392,7 +390,6 @@ export default {
                   countWaiting++;
                 }
               });
-
               if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
                 // Open Modal Question
                 sessionStorage.setItem(
@@ -412,6 +409,19 @@ export default {
             break;
         }
       })();
+    },
+  },
+  watch: {
+    isIdle(newIdle, oldIdle) {
+      if (newIdle == true || newIdle == "true") {
+        window.open(this.location, "_self");
+      }
+      //console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+    },
+  },
+  computed: {
+    isIdle() {
+      return store.state.idleVue.isIdle;
     },
   },
 };
