@@ -1131,7 +1131,7 @@ export default {
             this.paidVerError = false;
             // console.log(this.currDataPrepare);
             // Session Storage Set
-            console.log('Success',this.currDataPrepare["preAuth-flag"]);
+            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
             sessionStorage.setItem(
               "guestData",
               JSON.stringify(this.currDataPrepare)
@@ -1181,8 +1181,11 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      //console.log('Not PCI',this.currDataPrepare["preAuth-flag"]);
-      if (this.currDataPrepare["preAuth-flag"] == true || this.afterPayment == true) {
+      // console.log('Not PCI',this.currDataPrepare["preAuth-flag"]);
+      if (
+        this.currDataPrepare["preAuth-flag"] == true ||
+        this.afterPayment == true
+      ) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
