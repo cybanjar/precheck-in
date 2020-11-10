@@ -642,6 +642,8 @@ export default {
       licenseMembership: false,
       timer: 0,
       isMobile: false,
+      conditionSMOOKING: false,
+      termSMOOKING: '',
     };
   },
   created() {
@@ -920,6 +922,12 @@ export default {
         return item.number1 === 9 && item.number2 === 6;
       });
       this.todayOcc = tempTodayOcc[0]["price"];
+      const tempSMOOKING = this.tempsetup.filter((item, index) => {
+        //  TERM AND CONDITION - SMOOKING
+        return item.number1 === 6 && item.number2 === 3;
+      });
+      this.conditionSMOOKING = tempSMOOKING[0]["setupflag"];
+      this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
       const defCountry = this.tempsetup.filter((item, index) => {
         //  Default Country Code
         return item.number1 === 9 && item.number2 === 1;
@@ -977,6 +985,8 @@ export default {
       obj["defaultCI"] = this.defaultCI;
       obj["hotelLogo"] = this.hotelLogo;
       obj["defaultCountry"] = this.defaultCountry;
+      obj["termSMOOKING"] = this.termSMOOKING;
+      obj["conditionSMOOKING"] = this.conditionSMOOKING;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date

@@ -157,7 +157,7 @@
       </a-modal>
 
       <!-- Modal For Term And Condition -->
-      <a-modal
+      <!-- <a-modal
         :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
@@ -176,7 +176,38 @@
           >
         </template>
         <p>{{ terms }}</p>
-      </a-modal>
+      </a-modal> -->
+
+      <q-dialog v-model="termcondition">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">{{ weblabel.tcTitle }}</div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section style="max-height: 50vh;" class="scroll">
+            <p>{{ terms }}</p>
+            <p>{{ termSMOOKING }}</p>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              :label="weblabel.disagree"
+              color="primary"
+              @click="disagree"
+            /><q-btn
+              flat
+              :label="weblabel.agree"
+              color="primary"
+              @click="handleOk"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
@@ -974,6 +1005,8 @@ export default {
       },
       rmShareTooltip: true,
       afterPayment: false,
+      termSMOOKING: "",
+      conditionSMOOKING: false,
     };
   },
   watch: {
@@ -1023,6 +1056,8 @@ export default {
     this.currency = this.currDataPrepare["currency-usage"];
     this.term = this.currDataSetting["termENG"];
     this.term1 = this.currDataSetting["termIDN"];
+    this.termSMOOKING = this.currDataSetting["termSMOOKING"];
+    this.conditionSMOOKING = this.currDataSetting["conditionSMOOKING"];
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
     this.gambar = this.currDataSetting["hotelImage"];

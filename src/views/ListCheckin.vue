@@ -63,7 +63,7 @@
       </div>
       <div class="ml-3 mt-3 mr-3">
         <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 3, xxl: 3 }"
+          :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 3 }"
           :data-source="guestData"
         >
           <a-list-item
