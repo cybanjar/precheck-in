@@ -194,7 +194,7 @@
           >
             {{ this.currDataPrepare["gast"] }}
             {{ currDataPrepare["guest-member-name"] }}
-            <span>
+            <span v-if="currDataPrepare['rmshare'].length > 1">
               <q-chip
                 color="gray"
                 clickable
@@ -223,7 +223,7 @@
           </h6>
           <h6 v-else class="text-white font-weight-bold" :style="information">
             {{ this.currDataPrepare["gast"] }}
-            <span>
+            <span v-if="currDataPrepare['rmshare'].length > 1">
               <q-chip
                 color="gray"
                 clickable
@@ -285,7 +285,7 @@
           <h6 v-else class="text-white font-weight-bold">
             {{ this.currDataPrepare["gast"] }},
           </h6>
-          <div>
+          <div v-if="currDataPrepare['rmshare'].length > 1">
             <q-chip
               color="gray"
               clickable

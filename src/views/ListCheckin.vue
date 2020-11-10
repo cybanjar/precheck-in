@@ -272,10 +272,10 @@ export default {
     tempData.forEach((item) => {
       if (this.isMobile == false) {
         let Name = "";
-        if (item["gast"].length <= 22) {
+        if (item["gast"].length <= 20) {
           Name = item["gast"].toUpperCase();
         } else {
-          Name = item["gast"].toUpperCase().substring(0, 22) + "...";
+          Name = item["gast"].toUpperCase().substring(0, 20) + "...";
         }
 
         Object.assign(item, { shortname: Name });
