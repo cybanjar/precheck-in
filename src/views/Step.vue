@@ -5,7 +5,15 @@
     </a-spin>
   </div>
   <div v-else>
-    <div class="home">
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="justify-around home">
       <!-- Modal Response Room Status -->
       <a-modal
         :title="weblabel.information"
@@ -209,10 +217,10 @@
         </q-card>
       </q-dialog>
 
-      <h5 class="text-black text-center font-weight-bold visible">
+      <!-- <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
+      </h5> -->
+      <!-- <div class="row justify-between" :style="information">
         <div
           class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
           style="padding-right: 30px;"
@@ -358,7 +366,8 @@
             <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
         </div>
-      </div>
+      </div> -->
+
       <div>
         <a-form layout="vertical" :form="form">
           <h2 v-show="step === 1">
@@ -1007,6 +1016,17 @@ export default {
       afterPayment: false,
       termSMOOKING: "",
       conditionSMOOKING: false,
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
     };
   },
   watch: {
@@ -1060,8 +1080,10 @@ export default {
     this.conditionSMOOKING = this.currDataSetting["conditionSMOOKING"];
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
+    this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
+    this.hotelLogo = this.currDataSetting["hotelLogo"];
     this.minimumDeposit = this.currDataSetting["minimumDeposit"];
     this.maximumDeposit = this.currDataSetting["maximumDeposit"];
     this.OverNightDeposit = this.currDataSetting["OverNightDeposit"];
@@ -1074,6 +1096,7 @@ export default {
     this.countries = this.currDataSetting["countries"];
     this.defaultCountry = this.currDataSetting["defaultCountry"];
     this.wifiAddress = this.currDataSetting["wifiAddress"];
+    this.textOta.color = this.currDataSetting["FontColor"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
     switch (this.langID.toLowerCase()) {
