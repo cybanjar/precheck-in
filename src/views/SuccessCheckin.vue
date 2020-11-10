@@ -10,8 +10,8 @@
     </div>
     <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
-        <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
-        <div v-if="roomReady" style="margin-top: 20px;">
+        <canvas v-show="QRshow == true" id="canvas"></canvas>
+        <div v-if="roomReady" style="margin-top: 2rem;">
           <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
           <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
           <p>
@@ -23,7 +23,7 @@
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p v-if="!QRshow" style="margin-top: 20px;">
+              <p v-if="QRshow == false" style="margin-top: 2rem;">
                 {{ weblabel.mciSuccessWithMaxKeycard }}
               </p>
               <p v-else>
@@ -133,7 +133,7 @@ export default {
       infoMCIConfim: false,
     };
   },
-  mounted() {
+  created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
     if (this.setup == null || this.guestData == null) {
@@ -204,16 +204,7 @@ export default {
       }
     })();
     // Generate QRCode
-    const success = btoa(this.data);
-    QRCode.toCanvas(
-      document.getElementById("canvas"),
-      success,
-      { errorCorrectionLevel: "H" },
-      { width: "76", height: "76" }
-    );
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      this.url = url.split(",")[1];
-    });
+
     // Labeling
     this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
     this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
@@ -240,6 +231,18 @@ export default {
     );
     this.weblabel.yes = this.findLabel("yes", "sentenceCase");
     this.weblabel.no = this.findLabel("no", "sentenceCase");
+  },
+  mounted() {
+    const success = btoa(this.data);
+    QRCode.toCanvas(
+      document.getElementById("canvas"),
+      success,
+      { errorCorrectionLevel: "H" },
+      { width: "76", height: "76" }
+    );
+    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
+      this.url = url.split(",")[1];
+    });
   },
   methods: {
     findLabel(nameKey, used) {
