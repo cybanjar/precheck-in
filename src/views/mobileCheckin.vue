@@ -643,7 +643,7 @@ export default {
       timer: 0,
       isMobile: false,
       conditionSMOOKING: false,
-      termSMOOKING: '',
+      termSMOOKING: "",
     };
   },
   created() {
