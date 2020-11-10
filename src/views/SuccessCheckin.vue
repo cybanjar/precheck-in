@@ -11,7 +11,7 @@
     <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
         <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
-        <div v-if="roomReady">
+        <div v-if="roomReady" style="margin-top: 20px;">
           <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
           <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
           <p>
@@ -23,7 +23,7 @@
           <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
           <div class="row justify-center q-mt-xl">
             <div class="col-md-6 col-xs-11">
-              <p v-if="!QRshow">
+              <p v-if="!QRshow" style="margin-top: 20px;">
                 {{ weblabel.mciSuccessWithMaxKeycard }}
               </p>
               <p v-else>
