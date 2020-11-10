@@ -204,7 +204,7 @@
                 style="margin-top: -3px !important;"
               >
                 Room Sharer
-                <q-popup-proxy>
+                <q-menu>
                   <q-banner style="width: 300px;">
                     <template v-slot:avatar>
                       <q-icon name="supervisor_account" color="primary" />
@@ -217,7 +217,7 @@
                       {{ item }}
                     </p>
                   </q-banner>
-                </q-popup-proxy>
+                </q-menu>
               </q-chip>
             </span>
           </h6>
@@ -233,7 +233,7 @@
                 style="margin-top: -3px !important;"
               >
                 Room Sharer
-                <q-popup-proxy>
+                <q-menu>
                   <q-banner style="width: 300px;">
                     <template v-slot:avatar>
                       <q-icon name="supervisor_account" color="primary" />
@@ -246,7 +246,7 @@
                       {{ item }}
                     </p>
                   </q-banner>
-                </q-popup-proxy>
+                </q-menu>
               </q-chip>
             </span>
           </h6>
@@ -984,7 +984,7 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    //console.log("GuestData", this.currDataPrepare);
+    // console.log("GuestData", this.currDataPrepare);
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -1062,8 +1062,97 @@ export default {
     } else {
       this.terms = this.term1;
     }
+
+    this.loading = false;
+    if (
+      this.currDataPrepare["purposeofstay"] == "" ||
+      this.currDataPrepare["purposeofstay"] == "_"
+    ) {
+      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
+        "PurposeofStay"
+      ];
+    }
+    // console.log('setting',this.currDataSetting);
+    // router.push(this.location);
+    /* Handling Deposit Other Value */
+    const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
+    const coDate = moment(this.handleArrayDate(this.currDataPrepare["co"]));
+    const night = coDate.diff(ciDate, "days");
+    if (night === 1) {
+      this.Deposit = this.minimumDeposit;
+    } else if (night > 1) {
+      if (this.OverNightDeposit <= 0) {
+        this.Deposit = this.minimumDeposit;
+      } else {
+        this.Deposit =
+          1 * this.minimumDeposit + (night - 1) * this.OverNightDeposit;
+      }
+    }
+    if (this.maximumDeposit > 0) {
+      if (this.Deposit > this.maximumDeposit) {
+        this.Deposit = this.maximumDeposit;
+      }
+    }
+    // Handling Callback Payment and Save to Database
+    if (this.tempParam.resultCd != null) {
+      if (this.errorCode == "1004") {
+        //this.tempParam.resultCd.substring(0, 1)
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
+        /* Payment Gateway Network Error */
+        this.paidNetworkError = true;
+        this.paidVerError = false;
+      } else {
+        this.currDataPrepare["preAuth-flag"] = true;
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();
+      }
+    }
+
     /* Handle Stepper */
-    //console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
+    // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
     if (this.precheckin) {
       if (
         this.currDataPrepare["guest-email"] == "" ||
@@ -1098,7 +1187,7 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      if (this.paid == true) {
+      if (this.currDataPrepare["preAuth-flag"] == true) {
         this.currDataPrepare["step"] = 4;
         this.termcondition = false;
       } else {
@@ -1107,92 +1196,7 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     }
-    this.loading = false;
-    if (
-      this.currDataPrepare["purposeofstay"] == "" ||
-      this.currDataPrepare["purposeofstay"] == "_"
-    ) {
-      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
-        "PurposeofStay"
-      ];
-    }
-    //console.log('setting',this.currDataSetting);
-    // router.push(this.location);
-    /* Handling Deposit Other Value */
-    const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
-    const coDate = moment(this.handleArrayDate(this.currDataPrepare["co"]));
-    const night = coDate.diff(ciDate, "days");
-    if (night === 1) {
-      this.Deposit = this.minimumDeposit;
-    } else if (night > 1) {
-      if (this.OverNightDeposit <= 0) {
-        this.Deposit = this.minimumDeposit;
-      } else {
-        this.Deposit =
-          1 * this.minimumDeposit + (night - 1) * this.OverNightDeposit;
-      }
-    }
-    if (this.maximumDeposit > 0) {
-      if (this.Deposit > this.maximumDeposit) {
-        this.Deposit = this.maximumDeposit;
-      }
-    }
-    // Handling Callback Payment and Save to Database
-    if (this.tempParam.resultCd != null) {
-      if (this.errorCode == "1004") {
-        //this.tempParam.resultCd.substring(0, 1)
-        /* Payment Gateway Network Error */
-        this.paidNetworkError = true;
-        this.paidVerError = false;
-      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-        /* Payment Gateway Network Error */
-        this.paidNetworkError = true;
-        this.paidVerError = false;
-      } else {
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare["resnr"],
-                  rsvlineNumber: this.currDataPrepare["reslinnr"],
-                  userInit: "MC",
-                  newRoomno: "",
-                  purposeOfStay: "",
-                  email: "",
-                  guestPhnumber: "",
-                  guestNation: "",
-                  guestCountry: "",
-                  guestRegion: "",
-                  base64image: "",
-                  vehicleNumber: "",
-                  preAuthString: this.callbackParam,
-                },
-              },
-            })
-            .json();
-          const responses = data.response["resultMessage"].split(" - ");
-          if (parseInt(responses[0]) > 0) {
-            this.preauthModal = true;
-          } else {
-            this.currDataPrepare["preAuth-flag"] = true;
-            this.paid = this.currDataPrepare["preAuth-flag"];
-            this.paidNetworkError = false;
-            this.paidVerError = false;
-            //console.log(this.currDataPrepare);
-            // Session Storage Set
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-          }
-        })();
-      }
-    }
+
     /* Handling Labeling */
     this.weblabel.information = this.findLabel("information", "titleCase");
     this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
@@ -1289,7 +1293,7 @@ export default {
   },
   methods: {
     findLabel(nameKey, used) {
-      //console.log('FindLabel');
+      // console.log('FindLabel');
       let labels = undefined;
       if (localStorage.getItem("labels") == null) {
         labels = localStorage.getItem("labels");
@@ -1335,7 +1339,7 @@ export default {
       return fixLabel;
     },
     async autoScrollNation() {
-      //console.log('autoScrollNation');
+      // console.log('autoScrollNation');
       await this.$nextTick();
       if (this.currDataPrepare["guest-nation"] == "") {
         this.form.setFieldsValue({
@@ -1345,7 +1349,7 @@ export default {
       }
     },
     async autoScrollCountry() {
-      //console.log('autoScrollCountry');
+      // console.log('autoScrollCountry');
       await this.$nextTick();
       if (this.currDataPrepare["guest-country"] == "") {
         this.form.setFieldsValue({
@@ -1356,7 +1360,7 @@ export default {
       }
     },
     resendPreauth() {
-      //console.log('resendPreauth');
+      // console.log('resendPreauth');
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
         if (this.errorCode == "1004") {
@@ -1369,6 +1373,7 @@ export default {
           this.paidNetworkError = true;
           this.paidVerError = false;
         } else {
+          this.currDataPrepare["preAuth-flag"] = true;
           (async () => {
             const data = await ky
               .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1399,7 +1404,7 @@ export default {
               this.paid = this.currDataPrepare["preAuth-flag"];
               this.paidNetworkError = false;
               this.paidVerError = false;
-              //console.log(this.currDataPrepare);
+              // console.log(this.currDataPrepare);
               // Session Storage Set
               sessionStorage.setItem(
                 "guestData",
@@ -1415,12 +1420,12 @@ export default {
       }
     },
     async getFile() {
-      //console.log('getFile');
+      // console.log('getFile');
       await this.$nextTick();
       this.$refs.fileurl.click();
     },
     handleArrayDate(date) {
-      //console.log('handleArrayDate');
+      // console.log('handleArrayDate');
       const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
       const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
         2,
@@ -1431,15 +1436,15 @@ export default {
       return dateArray;
     },
     handleChange(value) {
-      //console.log('handleChange');
+      // console.log('handleChange');
       this.errorCode = value;
     },
     handleChangeCountry(value) {
-      //console.log('handleChangeCountry');
+      // console.log('handleChangeCountry');
       this.country = value;
     },
     isNumber(evt) {
-      //console.log('isNumber');
+      // console.log('isNumber');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1453,7 +1458,7 @@ export default {
       }
     },
     next() {
-      //console.log('next');
+      // console.log('next');
       switch (this.step) {
         case 1:
           const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -1524,7 +1529,7 @@ export default {
       }
     },
     prev() {
-      //console.log('prev');
+      // console.log('prev');
       switch (this.step) {
         case 4:
           if (!this.precheckin) {
@@ -1568,10 +1573,10 @@ export default {
         AMOUNT.toString() + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY
       ); // sha1(AMOUNT + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY);
       const todayPayment = new Date();
-      console.log(todayPayment);
+      // console.log(todayPayment);
     },
     payDeposit() {
-      //console.log('payDeposit');
+      // console.log('payDeposit');
       this.paymentLoading = true;
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
@@ -1580,7 +1585,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        //console.log(this.ipAddr);
+        // console.log(this.ipAddr);
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1644,15 +1649,15 @@ export default {
             throw new Error("Network response was not ok.");
           })
           .then((data) => {
-            //console.log('after cors',data);
+            // console.log('after cors',data);
             const resp = data.contents.substr(
               data.contents.indexOf("{"),
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            //console.log(this.resReg);
+            // console.log(this.resReg);
             if (this.resReg.data["resultCd"] == "0000") {
-              //console.log(this.resReg);
+              // console.log(this.resReg);
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
@@ -1666,7 +1671,7 @@ export default {
       });
     },
     check() {
-      //console.log('check');
+      // console.log('check');
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
       );
@@ -1687,19 +1692,19 @@ export default {
           this.resPaid = JSON.parse(data.contents);
           if (this.resPaid.resultCd == "0000") {
             this.paymentStatus = true;
-            //console.log("payment valid");
+            // console.log("payment valid");
           } else {
             this.paymentStatus = false;
-            //console.log("payment invalid");
+            // console.log("payment invalid");
           }
         });
     },
     closeModal() {
-      //console.log('closeModal');
+      // console.log('closeModal');
       this.paymentModal = false;
     },
     hideAllModal() {
-      //console.log('hideAllModal');
+      // console.log('hideAllModal');
       this.confirmMailModal = false;
       this.termcondition = false;
       this.overlappingModal = false;
@@ -1708,7 +1713,7 @@ export default {
       this.preauthModal = false;
     },
     onFileChange(e) {
-      //console.log('onFileChange');
+      // console.log('onFileChange');
       const file = e.target.files[0];
       /* Start Handling Images Compression */
       const reader = new FileReader();
@@ -1783,7 +1788,7 @@ export default {
               })
               .json();
             if (uploadResult.response.resultMessage != "") {
-              //console.log(uploadResult.response.resultMessage);
+              // console.log(uploadResult.response.resultMessage);
             }
           })();
           this.hasUpload = "0 image id already exist";
@@ -1792,20 +1797,20 @@ export default {
       };
     },
     onKeydown(event) {
-      //console.log('onKeydown');
+      // console.log('onKeydown');
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
         event.preventDefault();
       }
     },
     scrollToTop() {
-      //console.log('scrollToTop');
+      // console.log('scrollToTop');
       window.scrollTo(0, 0);
       //this.step = 0;
     },
     checkValidation(caseType) {
-      //console.log('checkValidation');
-      //console.log("checkValidation is triggered");
+      // console.log('checkValidation');
+      // console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1818,7 +1823,7 @@ export default {
             },
           })
           .json();
-        //console.log(parsed);
+        // console.log(parsed);
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -1857,7 +1862,7 @@ export default {
             const responsess = parsed.response["paymentFlag"].split(" - ");
             if (parseInt(responsess[0]) == 0) {
               //this.payDeposit();
-              this.payDepositDoku();
+              this.payDeposit();
             } else {
               this.paid = true;
             }
@@ -1870,7 +1875,7 @@ export default {
       })();
     },
     handleResCi() {
-      //console.log('handleResCi');
+      // console.log('handleResCi');
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
@@ -1895,7 +1900,7 @@ export default {
             },
           })
           .json();
-        //console.log(parsed);
+        // console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
@@ -1936,7 +1941,7 @@ export default {
       })();
     },
     save() {
-      //console.log('save');
+      // console.log('save');
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
@@ -1947,7 +1952,7 @@ export default {
       }
     },
     handleYes() {
-      //console.log('handleYes');
+      // console.log('handleYes');
       this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
@@ -1966,7 +1971,7 @@ export default {
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
         // Handling Interface WA atau SMS
-        //console.log(data);
+        // console.log(data);
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -1987,7 +1992,7 @@ export default {
           const responses = parsed.response["resultMessage"];
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          //console.log(responses);
+          // console.log(responses);
           if (this.responseStatus.statusNumber == 0) {
             Object.assign(this.currDataPrepare, { roomReady: false });
             // Session Storage Set
@@ -2015,7 +2020,7 @@ export default {
       }
     },
     back() {
-      //console.log('back');
+      // console.log('back');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -2023,7 +2028,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      //console.log('handleOk');
+      // console.log('handleOk');
       this.ModalText = "The modal will be closed after two seconds";
       this.confirmLoading = true;
       setTimeout(() => {
@@ -2036,11 +2041,11 @@ export default {
       }, 300);
     },
     disagree() {
-      //console.log('disagree');
+      // console.log('disagree');
       window.open(this.location, "_self");
     },
     formatDate(datum) {
-      //console.log('formatDate');
+      // console.log('formatDate');
       const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
           ? `0${String(moment(datum, "YYYY-M-DD").date())}`
@@ -2054,11 +2059,11 @@ export default {
       return fixDate;
     },
     handleBack() {
-      //console.log('handleBack');
+      // console.log('handleBack');
       window.open(this.location, "_self");
     },
     checkPayment() {
-      //console.log('checkPayment');
+      // console.log('checkPayment');
       this.checkValidation("2");
     },
   },
@@ -2067,7 +2072,7 @@ export default {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      //console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {

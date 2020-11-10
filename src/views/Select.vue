@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     // handleChangeProvince(isi) {
-    //   console.log(isi, "isi");
+    // console.log(isi, "isi");
 
     //   this.filteredCity = [];
     //   for (let i = 0; i < this.City.length; i++) {
@@ -81,10 +81,10 @@ export default {
     //     }
     //   }
 
-    //   console.log("filteredCity : ", this.filteredCity);
+    // console.log("filteredCity : ", this.filteredCity);
     // },
     // handleChangeCity(value) {
-    //   console.log("City : ", value);
+    // console.log("City : ", value);
     // },
     handleBlur() {
       // console.log("blur");

@@ -855,7 +855,7 @@ export default {
       this.counter += 1;
     },
     async autoScrollNation() {
-      //console.log('autoScrollNation');
+      // console.log('autoScrollNation');
       await this.$nextTick();
       if (this.currDataPrepare["guest-doc-nation"] == "") {
         this.form.setFieldsValue({
@@ -865,7 +865,7 @@ export default {
       }
     },
     async autoScrollCountry() {
-      //console.log('autoScrollCountry');
+      // console.log('autoScrollCountry');
       await this.$nextTick();
       if (this.currDataPrepare["guest-country"] == "") {
         this.form.setFieldsValue({

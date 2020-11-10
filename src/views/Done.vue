@@ -184,7 +184,7 @@ export default {
         if (this.defaultCountry.toLowerCase() == "idn") {
           this.defaultCountry = "INA";
         }
-        //console.log(this.hotelParams);
+        // console.log(this.hotelParams);
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {

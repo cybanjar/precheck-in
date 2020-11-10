@@ -678,7 +678,6 @@ export default {
       //     ssid.push(this.tempsetup[i]);
 
       //     for (const ssi in ssid) {
-      //       // console.log(ssid, "ssid");
       //       if (ssid[ssi].setupflag == true) {
       //         this.ssid = ssid[ssi]["setupvalue"];
       //       }
@@ -690,7 +689,6 @@ export default {
       //     wifipass.push(this.tempsetup[i]);
 
       //     for (const wifipas in wifipass) {
-      //       // console.log(wifipass, "wifipass");
       //       if (wifipass[wifipas].setupflag == true) {
       //         this.wifipass = wifipass[wifipas]["setupvalue"];
       //       }

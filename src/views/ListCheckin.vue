@@ -75,37 +75,38 @@
               {{ item.guestStatus }}
             </div>
             <a-card :class="handleClass(item, 'card')" @click="select(item)">
-              <h2 v-if="isMobile == true" :class="handleClass(item, 'h2')">
-                {{ item["shortname"] }}
-                <span>
-                  <q-chip
-                    color="gray"
-                    clickable
-                    size="sm"
-                    text-color="black"
-                    icon="people"
-                    style="
-                      margin-top: -3px !important;
-                      margin-left: 15px !important;
-                    "
-                  >
-                    Detail
-                    <q-popup-proxy>
-                      <q-banner style="width: 300px;">
-                        <template v-slot:avatar>
-                          <q-icon name="people" color="primary" />
-                        </template>
-                        <p>
-                          {{ item["gast"] }}
-                        </p>
-                      </q-banner>
-                    </q-popup-proxy>
-                  </q-chip>
-                </span>
-              </h2>
-              <h2 v-else :class="handleClass(item, 'h2')">
-                {{ item["gast"].toUpperCase() }}
-              </h2>
+              <div style="padding-right: 8px;">
+                <h2 v-if="isMobile == false" :class="handleClass(item, 'h2')">
+                  {{ item["shortname"] }}
+                  <span v-if="item['gast'].length > 22">
+                    <q-chip
+                      color="gray"
+                      clickable
+                      size="sm"
+                      text-color="black"                      
+                      style="
+                        margin-top: -3px !important;
+                        margin-left: 15px !important;
+                      "
+                    >
+                      Full Name
+                      <q-menu>
+                        <q-banner style="width: 300px;">
+                          <template v-slot:avatar>
+                            <q-icon name="people" color="primary" />
+                          </template>
+                          <p>
+                            {{ item["gast"] }}
+                          </p>
+                        </q-banner>
+                      </q-menu>
+                    </q-chip>
+                  </span>
+                </h2>
+                <h2 v-else :class="handleClass(item, 'h2')">
+                  {{ item["gast"].toUpperCase() }}
+                </h2>
+              </div>
               <div v-if="item['rmshare'].length !== 0">
                 <span>
                   <q-chip
@@ -120,8 +121,8 @@
                     "
                   >
                     Room Sharer
-                    <q-popup-proxy>
-                      <q-banner style="width: 300px;">
+                    <q-menu>
+                      <q-banner>
                         <template v-slot:avatar>
                           <q-icon name="supervisor_account" color="primary" />
                         </template>
@@ -133,12 +134,12 @@
                           {{ item }}
                         </p>
                       </q-banner>
-                    </q-popup-proxy>
+                    </q-menu>
                   </q-chip>
                 </span>
               </div>
               <div v-else>
-                <br/>
+                <br />
               </div>
               <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
               <p v-if="item.description != ''" class="pl-3">
@@ -264,11 +265,23 @@ export default {
     ) {
       this.isMobile = true;
     }
+    else{
+      this.isMobile = false;
+    }
     /* Assign ispopup property for tempData */
 
     tempData.forEach((item) => {
-      if (this.isMobile == true) {
-        const Name = item["gast"].toUpperCase().substring(0, 12) + "...";
+      if (this.isMobile == false) {
+        let Name = "";
+        if(item['gast'].length <= 22){
+          Name = item["gast"].toUpperCase();
+        }else{
+          Name = item["gast"].toUpperCase().substring(0, 22) + "...";
+        }
+        
+        Object.assign(item, { shortname: Name });
+      }else{
+        const Name = item["gast"].toUpperCase();
         Object.assign(item, { shortname: Name });
       }
       Object.assign(item, { ispopup: false });
@@ -292,11 +305,11 @@ export default {
     this.guestData = guestNotMCI.concat(guestWaiting.concat(guestCheckedIn));
     sessionStorage.setItem("listData", JSON.stringify(this.guestData));
     sessionStorage.setItem("settings", JSON.stringify(this.setup));
-    //console.log("Guest Not MCI", guestNotMCI);
-    //console.log("Guest Waiting", guestWaiting);
-    //console.log("Guest Checkin", guestCheckedIn);
-    //console.log(this.guestData);
-    //console.log(this.guestData, this.setup);
+    // console.log("Guest Not MCI", guestNotMCI);
+    // console.log("Guest Waiting", guestWaiting);
+    // console.log("Guest Checkin", guestCheckedIn);
+    // console.log(this.guestData);
+    // console.log(this.guestData, this.setup);
 
     if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
@@ -598,7 +611,7 @@ export default {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      //console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {
