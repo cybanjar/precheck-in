@@ -1,26 +1,18 @@
 <template>
   <div>
-    <div class="home">
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-        </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
-        </div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div
+      class="row justify-around bg-white self-checkin"
+      style="padding-left: 1.5rem; padding-right: 1.5rem;"
+    >
+      <div class="text-center">
         <h4 class="mt-3 text-center">
           {{ getLabels("guest_list", `titleCase`) }}
         </h4>
@@ -112,6 +104,18 @@ export default {
       },
       lemparsetup: [],
       labels: [],
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      hotelLogo: "",
     };
   },
   created() {
@@ -130,6 +134,9 @@ export default {
     this.information.backgroundColor = this.setup["Background"];
     this.information.color = this.setup["Font"];
     this.hotelname = this.setup["hotelname"];
+    this.textOta.color = this.setup["Font"];
+    this.ota.backgroundColor = this.setup["Background"];
+    this.hotelLogo = this.setup["hotelLogo"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;

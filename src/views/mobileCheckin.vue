@@ -933,6 +933,7 @@ export default {
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
       //this.licenseMembership = true;
+
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
