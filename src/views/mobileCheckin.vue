@@ -107,8 +107,6 @@
                 class="ant-input-h"
                 v-model="bookingcode"
                 ref="bookingcode"
-                type="number"
-                min="0"
                 outlined
                 dense
                 :placeholder="weblabel.inputBookcode"
@@ -706,6 +704,7 @@ export default {
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
     // Save Location
+    sessionStorage.clear();
     sessionStorage.setItem("location", this.location);
     /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
     (async () => {
@@ -1501,7 +1500,6 @@ export default {
                       }
                     });
                   });
-
                   // Assigning Setup
                   Object.assign(this.setup[0], { TotalData: tempTotal.length });
                   Object.assign(this.setup[0], { SearchMethod: mode });
