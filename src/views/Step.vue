@@ -5,167 +5,158 @@
     </a-spin>
   </div>
   <div v-else>
-    <div :style="ota" class="row justify-between pt-2">
-      <div class="text-center col-xs-12">
-        <img class="logo_hotel" :src="hotelLogo" />
-      </div>
-      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
-      </div>
-    </div>
-    <div class="justify-around home">
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="confirmMailModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-          >
-            {{ weblabel.okMessage }}
-            <q-spinner
-              v-if="loadingConfirmEmail"
-              style="margin-left: 10px;"
-              color="white"
-              size="12px"
+    <!-- Modal Response Room Status -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="confirmMailModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="handleYes"
+        >
+          {{ weblabel.okMessage }}
+          <q-spinner
+            v-if="loadingConfirmEmail"
+            style="margin-left: 10px;"
+            color="white"
+            size="12px"
+          />
+        </a-button>
+      </template>
+      <p>{{ weblabel.mciSuccessNotReady }}</p>
+      <p>{{ weblabel.reconfirmPhonemail }}</p>
+      <div>
+        <a-form layout="vertical" :form="formresubmit">
+          <a-form-item :label="weblabel.phoneNumber">
+            <q-input
+              v-decorator="[
+                'guest-phone',
+                {
+                  initialValue: currDataPrepare['guest-phnumber'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredPhone,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              outlined
+              dense
             />
-          </a-button>
-        </template>
-        <p>{{ weblabel.mciSuccessNotReady }}</p>
-        <p>{{ weblabel.reconfirmPhonemail }}</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="weblabel.phoneNumber">
-              <q-input
-                v-decorator="[
-                  'guest-phone',
-                  {
-                    initialValue: currDataPrepare['guest-phnumber'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredPhone,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                outlined
-                dense
-              />
-            </a-form-item>
-            <a-form-item :label="weblabel.email">
-              <q-input
-                v-decorator="[
-                  'guest-email',
-                  {
-                    initialValue: currDataPrepare['guest-email'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredEmail,
-                      },
-                      {
-                        type: 'email',
-                        message: weblabel.notValidEmail,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                type="email"
-                outlined
-                dense
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
+          </a-form-item>
+          <a-form-item :label="weblabel.email">
+            <q-input
+              v-decorator="[
+                'guest-email',
+                {
+                  initialValue: currDataPrepare['guest-email'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredEmail,
+                    },
+                    {
+                      type: 'email',
+                      message: weblabel.notValidEmail,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              type="email"
+              outlined
+              dense
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
 
-      <!-- Modal For Overlapping -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="overlappingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorNotReady }}</p>
-      </a-modal>
+    <!-- Modal For Overlapping -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="overlappingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorNotReady }}</p>
+    </a-modal>
 
-      <!-- Modal For Network Establish Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="preauthModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="resendPreauth"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPreauth }}</p>
-      </a-modal>
+    <!-- Modal For Network Establish Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="preauthModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="resendPreauth"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPreauth }}</p>
+    </a-modal>
 
-      <!-- Modal For Interface -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="interfacingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorInterface }}</p>
-      </a-modal>
+    <!-- Modal For Interface -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="interfacingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorInterface }}</p>
+    </a-modal>
 
-      <!-- Modal For Payment Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="paymenterrorModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPayment }}</p>
-      </a-modal>
+    <!-- Modal For Payment Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="paymenterrorModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPayment }}</p>
+    </a-modal>
 
-      <!-- Modal For Term And Condition -->
-      <!-- <a-modal
+    <!-- Modal For Term And Condition -->
+    <!-- <a-modal
         :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
@@ -185,42 +176,51 @@
         </template>
         <p>{{ terms }}</p>
       </a-modal> -->
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="text-center">
+        <q-dialog v-model="termcondition">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">{{ weblabel.tcTitle }}</div>
+            </q-card-section>
 
-      <q-dialog v-model="termcondition">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">{{ weblabel.tcTitle }}</div>
-          </q-card-section>
+            <q-separator />
 
-          <q-separator />
+            <q-card-section style="max-height: 50vh;" class="scroll">
+              <p>{{ terms }}</p>
+              <p>{{ termSMOOKING }}</p>
+            </q-card-section>
 
-          <q-card-section style="max-height: 50vh;" class="scroll">
-            <p>{{ terms }}</p>
-            <p>{{ termSMOOKING }}</p>
-          </q-card-section>
+            <q-separator />
 
-          <q-separator />
+            <q-card-actions align="right">
+              <q-btn
+                flat
+                :label="weblabel.disagree"
+                color="primary"
+                @click="disagree"
+              /><q-btn
+                flat
+                :label="weblabel.agree"
+                color="primary"
+                @click="handleOk"
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
 
-          <q-card-actions align="right">
-            <q-btn
-              flat
-              :label="weblabel.disagree"
-              color="primary"
-              @click="disagree"
-            /><q-btn
-              flat
-              :label="weblabel.agree"
-              color="primary"
-              @click="handleOk"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <!-- <h5 class="text-black text-center font-weight-bold visible">
+        <!-- <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5> -->
-      <!-- <div class="row justify-between" :style="information">
+        <!-- <div class="row justify-between" :style="information">
         <div
           class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
           style="padding-right: 30px;"
@@ -368,439 +368,445 @@
         </div>
       </div> -->
 
-      <div>
-        <a-form layout="vertical" :form="form">
-          <h2 v-show="step === 1">
-            {{ weblabel.guestDetail }}
-          </h2>
-          <h2 v-show="step === 2">
-            {{ weblabel.guestDetail }}
-          </h2>
-          <h2 v-show="step === 3">
-            {{ weblabel.uploadID }}
-          </h2>
-          <h2 v-show="step === 4">
-            {{ weblabel.depositPayment }}
-          </h2>
-          <div>
-            <q-stepper
-              v-model="step"
-              flat
-              bordered
-              ref="stepper"
-              contracted
-              color="primary"
-              animated
-              keep-alive
-            >
-              <q-step
-                :name="1"
-                title="Input Guest Detail"
-                icon="person"
-                active-icon="person"
-                style="font-size: 3em;"
-                :done="step > 1"
+        <div>
+          <a-form layout="vertical" :form="form">
+            <h2 v-show="step === 1">
+              {{ weblabel.guestDetail }}
+            </h2>
+            <h2 v-show="step === 2">
+              {{ weblabel.guestDetail }}
+            </h2>
+            <h2 v-show="step === 3">
+              {{ weblabel.uploadID }}
+            </h2>
+            <h2 v-show="step === 4">
+              {{ weblabel.depositPayment }}
+            </h2>
+            <div>
+              <q-stepper
+                v-model="step"
+                flat
+                bordered
+                ref="stepper"
+                contracted
+                done-color="deep-orange"
+                active-color="deep-orange"
+                inactive-color="deep-orange"
+                animated
+                keep-alive
               >
-                <div class="steps-content">
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="weblabel.email">
-                        <q-input
-                          class="ant-input-h"
-                          outlined
-                          dense
-                          type="email"
-                          v-decorator="[
-                            'email',
-                            {
-                              initialValue: currDataPrepare['guest-email'],
-                              rules: [
-                                {
-                                  required: true,
-                                  message: weblabel.requiredEmail,
-                                },
-                                {
-                                  type: 'email',
-                                  message: weblabel.notValidEmail,
-                                },
-                              ],
-                            },
-                          ]"
-                        />
-                      </a-form-item>
-                    </a-col>
-                    <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="weblabel.phoneNumber">
-                        <q-input
-                          v-decorator="[
-                            'phone',
-                            {
-                              initialValue: currDataPrepare['guest-phnumber'],
-                              rules: [
-                                {
-                                  required: true,
-                                  message: weblabel.requiredPhone,
-                                },
-                              ],
-                            },
-                          ]"
-                          outlined
-                          dense
-                          mask="##############"
-                        ></q-input>
-                      </a-form-item>
-                    </a-col>
-                  </a-row>
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="3" :xl="3" :xs="24">
-                      <a-form-item :label="weblabel.purposeStay">
-                        <a-select
-                          v-decorator="[
-                            'purpose',
-                            {
-                              initialValue: currDataPrepare['purposeofstay'],
-                              rules: [{ required: true }],
-                            },
-                          ]"
-                        >
-                          <a-select-option
-                            v-for="item in FilterPurposeofStay"
-                            :key="item.setupvalue"
-                            :value="item.setupvalue"
-                            >{{ item.setupvalue }}</a-select-option
-                          >
-                        </a-select>
-                      </a-form-item>
-                    </a-col>
-                  </a-row>
-                </div>
-              </q-step>
-
-              <q-step
-                :name="2"
-                title="Input Address"
-                icon="room"
-                active-icon="room"
-                style="font-size: 3em;"
-                :done="step > 2"
-              >
-                <div class="steps-content">
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="weblabel.nationality">
-                        <a-select
-                          @focus="autoScrollNation"
-                          v-decorator="[
-                            'nationality',
-                            {
-                              initialValue: currDataPrepare['guest-nation'],
-                              rules: [{ required: true }],
-                            },
-                          ]"
-                        >
-                          <a-select-option
-                            v-for="item in FilterCountry"
-                            :key="item['descr']"
-                            :value="item['descr']"
-                            >{{ item.setupvalue }}</a-select-option
-                          >
-                        </a-select>
-                      </a-form-item>
-                    </a-col>
-                  </a-row>
-                  <a-row class :gutter="[16, 8]">
-                    <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="weblabel.countryOfResidence">
-                        <a-select
-                          @focus="autoScrollCountry"
-                          @change="handleChangeCountry"
-                          v-decorator="[
-                            'country',
-                            {
-                              initialValue: currDataPrepare['guest-country'],
-                              rules: [{ required: true }],
-                            },
-                          ]"
-                        >
-                          <a-select-option
-                            v-for="item in FilterCountry"
-                            :key="item['descr']"
-                            :value="item['descr']"
-                            >{{ item.setupvalue }}</a-select-option
-                          >
-                        </a-select>
-                      </a-form-item>
-                    </a-col>
-
-                    <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-                      <div v-if="country === 'INA' || country === 'ina'">
-                        <a-form-item :label="weblabel.region">
-                          <a-select
+                <q-step
+                  :name="1"
+                  title="Input Guest Detail"
+                  icon="person"
+                  active-icon="person"
+                  style="font-size: 3em;"
+                  :done="step > 1"
+                >
+                  <div class="steps-content">
+                    <a-row class :gutter="[16, 8]">
+                      <a-col :span="5" :xl="5" :xs="24">
+                        <a-form-item :label="weblabel.email">
+                          <q-input
+                            class="ant-input-h"
+                            outlined
+                            dense
+                            type="email"
                             v-decorator="[
-                              'region',
+                              'email',
                               {
-                                initialValue: currDataPrepare['guest-region'],
+                                initialValue: currDataPrepare['guest-email'],
                                 rules: [
                                   {
                                     required: true,
-                                    message: weblabel.requiredProvince,
+                                    message: weblabel.requiredEmail,
+                                  },
+                                  {
+                                    type: 'email',
+                                    message: weblabel.notValidEmail,
                                   },
                                 ],
                               },
                             ]"
+                          />
+                        </a-form-item>
+                      </a-col>
+                      <a-col :span="5" :xl="5" :xs="24">
+                        <a-form-item :label="weblabel.phoneNumber">
+                          <q-input
+                            v-decorator="[
+                              'phone',
+                              {
+                                initialValue: currDataPrepare['guest-phnumber'],
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: weblabel.requiredPhone,
+                                  },
+                                ],
+                              },
+                            ]"
+                            outlined
+                            dense
+                            mask="##############"
+                          ></q-input>
+                        </a-form-item>
+                      </a-col>
+                    </a-row>
+                    <a-row class :gutter="[16, 8]">
+                      <a-col :span="3" :xl="3" :xs="24">
+                        <a-form-item :label="weblabel.purposeStay">
+                          <a-select
+                            v-decorator="[
+                              'purpose',
+                              {
+                                initialValue: currDataPrepare['purposeofstay'],
+                                rules: [{ required: true }],
+                              },
+                            ]"
                           >
                             <a-select-option
-                              v-for="item in filteredRegion"
+                              v-for="item in FilterPurposeofStay"
+                              :key="item.setupvalue"
+                              :value="item.setupvalue"
+                              >{{ item.setupvalue }}</a-select-option
+                            >
+                          </a-select>
+                        </a-form-item>
+                      </a-col>
+                    </a-row>
+                  </div>
+                </q-step>
+
+                <q-step
+                  :name="2"
+                  title="Input Address"
+                  icon="room"
+                  active-icon="room"
+                  style="font-size: 3em;"
+                  :done="step > 2"
+                >
+                  <div class="steps-content">
+                    <a-row class :gutter="[16, 8]">
+                      <a-col :span="5" :xl="5" :xs="24">
+                        <a-form-item :label="weblabel.nationality">
+                          <a-select
+                            @focus="autoScrollNation"
+                            v-decorator="[
+                              'nationality',
+                              {
+                                initialValue: currDataPrepare['guest-nation'],
+                                rules: [{ required: true }],
+                              },
+                            ]"
+                          >
+                            <a-select-option
+                              v-for="item in FilterCountry"
                               :key="item['descr']"
                               :value="item['descr']"
                               >{{ item.setupvalue }}</a-select-option
                             >
                           </a-select>
                         </a-form-item>
-                      </div>
-                    </a-col>
-                    <div v-if="freeParking">
+                      </a-col>
+                    </a-row>
+                    <a-row class :gutter="[16, 8]">
                       <a-col :span="5" :xl="5" :xs="24">
-                        <a-form-item :label="weblabel.vehicleRegident">
-                          <q-input
-                            class="ant-input-h"
-                            outlined
-                            dense
+                        <a-form-item :label="weblabel.countryOfResidence">
+                          <a-select
+                            @focus="autoScrollCountry"
+                            @change="handleChangeCountry"
                             v-decorator="[
-                              'vRegident',
+                              'country',
                               {
-                                initialValue: currDataPrepare['vreg'],
+                                initialValue: currDataPrepare['guest-country'],
+                                rules: [{ required: true }],
+                              },
+                            ]"
+                          >
+                            <a-select-option
+                              v-for="item in FilterCountry"
+                              :key="item['descr']"
+                              :value="item['descr']"
+                              >{{ item.setupvalue }}</a-select-option
+                            >
+                          </a-select>
+                        </a-form-item>
+                      </a-col>
+
+                      <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+                        <div v-if="country === 'INA' || country === 'ina'">
+                          <a-form-item :label="weblabel.region">
+                            <a-select
+                              v-decorator="[
+                                'region',
+                                {
+                                  initialValue: currDataPrepare['guest-region'],
+                                  rules: [
+                                    {
+                                      required: true,
+                                      message: weblabel.requiredProvince,
+                                    },
+                                  ],
+                                },
+                              ]"
+                            >
+                              <a-select-option
+                                v-for="item in filteredRegion"
+                                :key="item['descr']"
+                                :value="item['descr']"
+                                >{{ item.setupvalue }}</a-select-option
+                              >
+                            </a-select>
+                          </a-form-item>
+                        </div>
+                      </a-col>
+                      <div v-if="freeParking">
+                        <a-col :span="5" :xl="5" :xs="24">
+                          <a-form-item :label="weblabel.vehicleRegident">
+                            <q-input
+                              class="ant-input-h"
+                              outlined
+                              dense
+                              v-decorator="[
+                                'vRegident',
+                                {
+                                  initialValue: currDataPrepare['vreg'],
+                                },
+                              ]"
+                            />
+                          </a-form-item>
+                        </a-col>
+                      </div>
+                    </a-row>
+                  </div>
+                </q-step>
+
+                <q-step
+                  :name="3"
+                  title="Upload ID"
+                  caption="Optional"
+                  icon="portrait"
+                  active-icon="portrait"
+                  style="font-size: 3em;"
+                  :done="step > 3"
+                >
+                  <div class="steps-content">
+                    <a-row class :gutter="[16, 8]">
+                      <a-col class="text-center">
+                        <a-form-item>
+                          <input
+                            style="display: none;"
+                            ref="fileurl"
+                            accept="image/*"
+                            type="file"
+                            @change="onFileChange"
+                            v-decorator="[
+                              'url',
+                              {
+                                initialValue: '',
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: weblabel.requiredID,
+                                  },
+                                ],
                               },
                             ]"
                           />
+                          <div style="margin-top: -50px;">
+                            <h1>{{ weblabel.idPhoto }}</h1>
+                            <p>
+                              {{ weblabel.idPhotoDesc }}
+                            </p>
+                          </div>
+                          <img class="preview" v-if="url" :src="url" />
+                          <div style="margin-top: 40px;">
+                            <q-btn
+                              unelevated
+                              rounded
+                              @click="getFile"
+                              color="primary"
+                              label="Upload"
+                              style="width: 200px;"
+                            />
+                          </div>
                         </a-form-item>
                       </a-col>
-                    </div>
-                  </a-row>
-                </div>
-              </q-step>
-
-              <q-step
-                :name="3"
-                title="Upload ID"
-                caption="Optional"
-                icon="portrait"
-                active-icon="portrait"
-                style="font-size: 3em;"
-                :done="step > 3"
-              >
-                <div class="steps-content">
-                  <a-row class :gutter="[16, 8]">
-                    <a-col class="text-center">
-                      <a-form-item>
-                        <input
-                          style="display: none;"
-                          ref="fileurl"
-                          accept="image/*"
-                          type="file"
-                          @change="onFileChange"
-                          v-decorator="[
-                            'url',
-                            {
-                              initialValue: '',
-                              rules: [
-                                {
-                                  required: true,
-                                  message: weblabel.requiredID,
-                                },
-                              ],
-                            },
-                          ]"
-                        />
-                        <div style="margin-top: -50px;">
-                          <h1>{{ weblabel.idPhoto }}</h1>
-                          <p>
-                            {{ weblabel.idPhotoDesc }}
-                          </p>
-                        </div>
-                        <img class="preview" v-if="url" :src="url" />
-                        <div style="margin-top: 40px;">
-                          <q-btn
-                            unelevated
-                            rounded
-                            @click="getFile"
-                            color="primary"
-                            label="Upload"
-                            style="width: 200px;"
-                          />
-                        </div>
-                      </a-form-item>
-                    </a-col>
-                  </a-row>
-                </div>
-              </q-step>
-
-              <q-step
-                :name="4"
-                title="Deposit Payment"
-                icon="payment"
-                active-icon="payment"
-                style="font-size: 3em;"
-                :done="step > 4"
-              >
-                <div class="steps-content">
-                  <a-row :gutter="[16, 8]" v-if="pay == false">
-                    <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="weblabel.depositPayment">
-                        <h2>
-                          <strong>
-                            {{ this.currDataPrepare["currency-usage"] }}
-                            {{
-                              `${Deposit}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            }}
-                          </strong>
-                        </h2>
-                      </a-form-item>
-                      <div>
-                        <a-form-item
-                          label="Deposit Payment Response"
-                          style="margin-top: 10px;"
-                        >
-                          <a-select
-                            v-model="errorCode"
-                            default-value="0000"
-                            style="width: 180px;"
-                            @change="handleChange"
-                          >
-                            <a-select-option value="0000">
-                              Success
-                            </a-select-option>
-                            <a-select-option value="1004">
-                              Connection timeout
-                            </a-select-option>
-                            <a-select-option value="9002">
-                              Server is busy
-                            </a-select-option>
-                            <a-select-option value="8021">
-                              Card authorization error
-                            </a-select-option>
-                          </a-select>
-                        </a-form-item>
-                      </div>
-                    </a-col>
-                    <a-col :span="10" :xl="10" :xs="12">
-                      <div>
-                        <a-button
-                          class="font-weight-bold mt-3 mr-3"
-                          type="primary"
-                          :disabled="paid || paymentLoading"
-                          @click="checkPayment()"
-                        >
-                          {{ weblabel.pay }}
-                          <q-spinner
-                            v-if="paymentLoading"
-                            style="margin-left: 10px;"
-                            color="primary"
-                            size="12px"
-                          />
-                        </a-button>
-                      </div>
-                    </a-col>
-                  </a-row>
-                  <a-row :gutter="[16, 8]" v-else>
-                    <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="weblabel.deposit">
-                        <h2>
-                          <strong>{{ weblabel.cashBasis }}</strong>
-                        </h2>
-                      </a-form-item>
-                    </a-col>
-                  </a-row>
-                  <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
-                    <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{ weblabel.depositPaymentSuccess }}
-                      </p>
-                    </div>
-                    <div v-else-if="paidNetworkError">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{ weblabel.depositPaymentNetworkError }}
-                      </p>
-                    </div>
-                    <div v-else-if="paidVerError">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{ weblabel.depositPaymentVerError }}
-                      </p>
-                    </div>
-                    <div v-else>
-                      <p>
-                        <a-checkbox v-model="pay">
-                          {{ weblabel.termCashBasis }}
-                        </a-checkbox>
-                      </p>
-                    </div>
-                  </a-row>
-                </div>
-              </q-step>
-
-              <template v-slot:navigation>
-                <q-stepper-navigation>
-                  <div class="row justify-between">
-                    <div class="col-6 col-xs-6">
-                      <q-btn
-                        v-if="step > 1"
-                        @click="prev"
-                        outline
-                        color="primary"
-                      >
-                        {{ weblabel.prev }}
-                      </q-btn>
-                    </div>
-                    <div v-if="step != steps.length" class="col-6 col-xs-6">
-                      <q-btn
-                        @click="next"
-                        color="primary"
-                        unelevated
-                        class="float-right"
-                      >
-                        {{ weblabel.next }}
-                      </q-btn>
-                    </div>
+                    </a-row>
                   </div>
-                </q-stepper-navigation>
-              </template>
-            </q-stepper>
-          </div>
+                </q-step>
 
-          <a-row class :gutter="[16, 8]">
-            <a-col :span="4" :xl="4" :xs="24">
-              <a-form-item>
-                <div v-if="!paid">
-                  <a-button
-                    :xl="12"
-                    class="font-weight-bold mt-3"
-                    type="primary"
-                    block
-                    :size="size"
-                    @click="save"
-                    v-if="step == 4"
-                    html-type="submit"
-                    :disabled="!pay"
-                    >{{ weblabel.ciNow }}</a-button
-                  >
-                </div>
-                <div v-else>
-                  <a-button
-                    :xl="12"
-                    class="font-weight-bold mt-3"
-                    type="primary"
-                    block
-                    :size="size"
-                    @click="save"
-                    v-if="step == 4"
-                    html-type="submit"
-                    >{{ weblabel.ciNow }}</a-button
-                  >
-                </div>
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </a-form>
+                <q-step
+                  :name="4"
+                  title="Deposit Payment"
+                  icon="payment"
+                  active-icon="payment"
+                  style="font-size: 3em;"
+                  :done="step > 4"
+                >
+                  <div class="steps-content">
+                    <a-row :gutter="[16, 8]" v-if="pay == false">
+                      <a-col :span="12" :xl="12" :xs="12">
+                        <a-form-item :label="weblabel.depositPayment">
+                          <h2>
+                            <strong>
+                              {{ this.currDataPrepare["currency-usage"] }}
+                              {{
+                                `${Deposit}`.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
+                              }}
+                            </strong>
+                          </h2>
+                        </a-form-item>
+                        <div>
+                          <a-form-item
+                            label="Deposit Payment Response"
+                            style="margin-top: 10px;"
+                          >
+                            <a-select
+                              v-model="errorCode"
+                              default-value="0000"
+                              style="width: 180px;"
+                              @change="handleChange"
+                            >
+                              <a-select-option value="0000">
+                                Success
+                              </a-select-option>
+                              <a-select-option value="1004">
+                                Connection timeout
+                              </a-select-option>
+                              <a-select-option value="9002">
+                                Server is busy
+                              </a-select-option>
+                              <a-select-option value="8021">
+                                Card authorization error
+                              </a-select-option>
+                            </a-select>
+                          </a-form-item>
+                        </div>
+                      </a-col>
+                      <a-col :span="10" :xl="10" :xs="12">
+                        <div>
+                          <a-button
+                            class="font-weight-bold mt-3 mr-3"
+                            type="primary"
+                            :disabled="paid || paymentLoading"
+                            @click="checkPayment()"
+                          >
+                            {{ weblabel.pay }}
+                            <q-spinner
+                              v-if="paymentLoading"
+                              style="margin-left: 10px;"
+                              color="primary"
+                              size="12px"
+                            />
+                          </a-button>
+                        </div>
+                      </a-col>
+                    </a-row>
+                    <a-row :gutter="[16, 8]" v-else>
+                      <a-col :span="12" :xl="12" :xs="12">
+                        <a-form-item :label="weblabel.deposit">
+                          <h2>
+                            <strong>{{ weblabel.cashBasis }}</strong>
+                          </h2>
+                        </a-form-item>
+                      </a-col>
+                    </a-row>
+                    <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
+                      <div v-if="paid">
+                        <p style="font-size: 16px; text-align: justify;">
+                          {{ weblabel.depositPaymentSuccess }}
+                        </p>
+                      </div>
+                      <div v-else-if="paidNetworkError">
+                        <p style="font-size: 16px; text-align: justify;">
+                          {{ weblabel.depositPaymentNetworkError }}
+                        </p>
+                      </div>
+                      <div v-else-if="paidVerError">
+                        <p style="font-size: 16px; text-align: justify;">
+                          {{ weblabel.depositPaymentVerError }}
+                        </p>
+                      </div>
+                      <div v-else>
+                        <p>
+                          <a-checkbox v-model="pay">
+                            {{ weblabel.termCashBasis }}
+                          </a-checkbox>
+                        </p>
+                      </div>
+                    </a-row>
+                  </div>
+                </q-step>
+
+                <template v-slot:navigation>
+                  <q-stepper-navigation>
+                    <div class="row justify-between">
+                      <div class="col-6 col-xs-6">
+                        <q-btn
+                          v-if="step > 1"
+                          @click="prev"
+                          outline
+                          color="primary"
+                        >
+                          {{ weblabel.prev }}
+                        </q-btn>
+                      </div>
+                      <div v-if="step != steps.length" class="col-6 col-xs-6">
+                        <q-btn
+                          @click="next"
+                          color="primary"
+                          unelevated
+                          class="float-right"
+                        >
+                          {{ weblabel.next }}
+                        </q-btn>
+                      </div>
+                    </div>
+                  </q-stepper-navigation>
+                </template>
+              </q-stepper>
+            </div>
+
+            <a-row class :gutter="[16, 8]">
+              <a-col :span="4" :xl="4" :xs="24">
+                <a-form-item>
+                  <div v-if="!paid">
+                    <a-button
+                      :xl="12"
+                      class="font-weight-bold mt-3"
+                      type="primary"
+                      block
+                      :size="size"
+                      @click="save"
+                      v-if="step == 4"
+                      html-type="submit"
+                      :disabled="!pay"
+                      >{{ weblabel.ciNow }}</a-button
+                    >
+                  </div>
+                  <div v-else>
+                    <a-button
+                      :xl="12"
+                      class="font-weight-bold mt-3"
+                      type="primary"
+                      block
+                      :size="size"
+                      @click="save"
+                      v-if="step == 4"
+                      html-type="submit"
+                      >{{ weblabel.ciNow }}</a-button
+                    >
+                  </div>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
       </div>
     </div>
   </div>

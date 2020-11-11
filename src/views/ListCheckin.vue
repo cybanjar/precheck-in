@@ -153,27 +153,23 @@
         </a-list>
       </div>
     </div>
-    <div class="row justify-between">
-      <div class="col-4 text-center">
-        <a-button
-          type="default"
-          size="large"
-          @click="back"
-          style="margin-bottom: 2rem !important; margin-left: -1.5rem;"
-          >{{ weblabel.back }}</a-button
-        >
-      </div>
-      <div class="col-4 text-center">
-        <a-button
-          type="primary"
-          size="large"
-          :disabled="selectedData == 0 || selectedData == undefined"
-          @click="send"
-          style="margin-bottom: 2rem !important; margin-right: -1.5rem;"
-          >{{ weblabel.next }}</a-button
-        >
-      </div>
-    </div>
+    <a-button
+      class="ml-3 float-left"
+      type="default"
+      size="large"
+      style="margin-bottom: 20px !important;"
+      @click="back"
+      >{{ weblabel.back }}</a-button
+    >
+    <a-button
+      class="mr-3 float-right"
+      type="primary"
+      size="large"
+      style="margin-bottom: 20px !important;"
+      :disabled="selectedData == 0 || selectedData == undefined"
+      @click="send"
+      >{{ weblabel.next }}</a-button
+    >
   </div>
 </template>
 <script>
