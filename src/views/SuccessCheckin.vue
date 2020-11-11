@@ -1,51 +1,69 @@
 <template>
   <div>
-    <div :style="ota" class="row justify-between pt-2">
-      <div class="text-center col-xs-12">
-        <img class="logo_hotel" :src="hotelLogo" />
-      </div>
-      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
+    <div v-if="loading">
+      <div
+        style="
+          display: flex;
+          width: 100% !important;
+          height: 100vh;
+          overflow: hidden;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          margin-top: -50px;
+        "
+      >
+        <q-spinner-ball color="red" size="8em" style="" />
       </div>
     </div>
-    <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
-        <canvas v-show="QRshow == true" id="canvas"></canvas>
-        <div v-if="roomReady" style="margin-top: 2rem;">
-          <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
-          <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
-          <p>
-            {{ weblabel.wifiPassword }} :
-            {{ wifiPassword }}
-          </p>
-          <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
-
-          <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-          <div class="row justify-center q-mt-xl">
-            <div class="col-md-6 col-xs-11">
-              <p v-if="QRshow == false" style="margin-top: 2rem;">
-                {{ weblabel.mciSuccessWithMaxKeycard }}
-              </p>
-              <p v-else>
-                {{ weblabel.mciSuccess }}
-              </p>
-            </div>
-          </div>
-
-          <a-button @click="goBack">{{ weblabel.done }}</a-button>
+    <div v-else>
+      <div :style="ota" class="row justify-between pt-2">
+        <div class="text-center col-xs-12">
+          <img class="logo_hotel" :src="hotelLogo" />
         </div>
-        <div v-else>
-          <div class="row justify-center q-mt-xl">
-            <div class="col-md-6 col-xs-11">
-              <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
-              <p>{{ weblabel.email }} : {{ email }}</p>
-              <p>
-                {{ weblabel.mciSuccessNotReady }}
-              </p>
-            </div>
-          </div>
+        <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+          <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
+        </div>
+      </div>
+      <div class="row justify-around bg-white self-checkin">
+        <div class="text-center">
+          <canvas v-show="QRshow == true" id="canvas"></canvas>
+          <div v-if="roomReady" style="margin-top: 2rem;">
+            <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
+            <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
+            <p>
+              {{ weblabel.wifiPassword }} :
+              {{ wifiPassword }}
+            </p>
+            <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
 
-          <a-button @click="goBack">{{ weblabel.done }}</a-button>
+            <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p v-if="QRshow == false" style="margin-top: 2rem;">
+                  {{ weblabel.mciSuccessWithMaxKeycard }}
+                </p>
+                <p v-else>
+                  {{ weblabel.mciSuccess }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack">{{ weblabel.done }}</a-button>
+          </div>
+          <div v-else>
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
+                <p>{{ weblabel.email }} : {{ email }}</p>
+                <p>
+                  {{ weblabel.mciSuccessNotReady }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack">{{ weblabel.done }}</a-button>
+          </div>
         </div>
       </div>
     </div>
@@ -57,10 +75,10 @@
       :closable="false"
     >
       <template slot="footer">
-        <a-button key="submit" type="primary" @click="backToHome">{{
+        <a-button type="primary" @click="backToHome">{{
           weblabel.no
         }}</a-button>
-        <a-button key="submit" type="primary" @click="backToList">{{
+        <a-button type="primary" @click="backToList">{{
           weblabel.yes
         }}</a-button>
       </template>
@@ -131,6 +149,7 @@ export default {
         yes: "",
       },
       infoMCIConfim: false,
+      loading: true,
     };
   },
   created() {
@@ -204,7 +223,6 @@ export default {
       }
     })();
     // Generate QRCode
-
     // Labeling
     this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
     this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
@@ -413,6 +431,12 @@ export default {
         }
       })();
     },
+    showAnimation() {
+      setTimeout(() => {
+        this.loading = false;
+        // console.log("setTimeout is Triggered", this.timer);
+      }, 1000);
+    },
   },
   watch: {
     isIdle(newIdle, oldIdle) {
@@ -421,6 +445,11 @@ export default {
       }
       // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
+  },
+  async mounted() {
+    await this.$nextTick();
+    // console.log('mounted is triggered');
+    this.showAnimation();
   },
   computed: {
     isIdle() {
