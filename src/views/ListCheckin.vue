@@ -1,62 +1,50 @@
 <template>
   <div>
-    <div class="home">
-      <!-- Information Room Not Avail (For Overlapping) -->
-      <div v-show="informationModal">
-        <a-modal
-          :title="weblabel.information"
-          :visible="informationModal"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="submit" type="primary" @click="handleYes">{{
-              weblabel.okMessage
-            }}</a-button>
-          </template>
-          <p>
-            {{ weblabel.mciRoomNotAvail }}
-          </p>
-        </a-modal>
-      </div>
+    <!-- Information Room Not Avail (For Overlapping) -->
+    <div v-show="informationModal">
+      <a-modal
+        :title="weblabel.information"
+        :visible="informationModal"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="handleYes">{{
+            weblabel.okMessage
+          }}</a-button>
+        </template>
+        <p>
+          {{ weblabel.mciRoomNotAvail }}
+        </p>
+      </a-modal>
+    </div>
 
-      <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
-      <div v-show="informationQueue">
-        <a-modal
-          :title="weblabel.information"
-          :visible="informationQueue"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="submit" type="primary" @click="refreshStatus">{{
-              weblabel.okMessage
-            }}</a-button>
-          </template>
-          <p>
-            {{ weblabel.mciConfirmStatus }}
-          </p>
-        </a-modal>
+    <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
+    <div v-show="informationQueue">
+      <a-modal
+        :title="weblabel.information"
+        :visible="informationQueue"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="refreshStatus">{{
+            weblabel.okMessage
+          }}</a-button>
+        </template>
+        <p>
+          {{ weblabel.mciConfirmStatus }}
+        </p>
+      </a-modal>
+    </div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
-
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-        </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
-        </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
       </div>
-      <div>
+    </div>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="text-center">
         <h1 class="mt-3 text-center">
           {{ weblabel.guestList }}
         </h1>
@@ -164,23 +152,27 @@
           </a-list-item>
         </a-list>
       </div>
-      <a-button
-        class="ml-3 float-left"
-        type="default"
-        size="large"
-        style="margin-bottom: 20px !important;"
-        @click="back"
-        >{{ weblabel.back }}</a-button
-      >
-      <a-button
-        class="mr-3 float-right"
-        type="primary"
-        size="large"
-        style="margin-bottom: 20px !important;"
-        :disabled="selectedData == 0 || selectedData == undefined"
-        @click="send"
-        >{{ weblabel.next }}</a-button
-      >
+    </div>
+    <div class="row justify-between">
+      <div class="col-4">
+        <a-button
+          type="default"
+          size="large"
+          @click="back"
+          style="margin-bottom: 20px !important;"
+          >{{ weblabel.back }}</a-button
+        >
+      </div>
+      <div class="col-4">
+        <a-button
+          type="primary"
+          size="large"
+          :disabled="selectedData == 0 || selectedData == undefined"
+          @click="send"
+          style="margin-bottom: 20px !important;"
+          >{{ weblabel.next }}</a-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -231,6 +223,18 @@ export default {
       },
       visible: false,
       isMobile: false,
+      hotelLogo: "",
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
     };
   },
   created() {
@@ -316,7 +320,10 @@ export default {
         this.setup.TotalData - this.setup.successCheckin.length;
     }
     this.gambar = this.setup["hotelImage"];
+    this.hotelLogo = this.setup["hotelLogo"];
     this.location = this.setup["location"];
+    this.textOta.color = this.setup["FontColor"];
+    this.ota.backgroundColor = this.setup["BackgroundColor"];
     this.license = this.setup["LICENSE"];
     this.information.backgroundColor = this.setup["BackgroundColor"];
     this.information.color = this.setup["FontColor"];
