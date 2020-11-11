@@ -138,7 +138,7 @@
           </q-card>
         </div>
       </div>
-      <!-- <div class="ml-3 mt-3 mr-3">
+      <div class="ml-3 mt-3 mr-3">
         <a-list
           :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 3 }"
           :data-source="guestData"
@@ -240,7 +240,7 @@
             </a-card>
           </a-list-item>
         </a-list>
-      </div> -->
+      </div>
     </div>
     <a-button
       class="float-left"

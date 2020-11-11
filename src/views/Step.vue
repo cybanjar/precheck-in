@@ -194,9 +194,7 @@
 
             <q-separator />
 
-            <q-card-section style="max-height: 50vh;" class="scroll">
-              <p>{{ terms }}</p>
-              <p>{{ termSMOOKING }}</p>
+            <q-card-section style="max-height: 50vh;" class="scroll" v-html="terms">
             </q-card-section>
 
             <q-separator />
@@ -1127,6 +1125,8 @@ export default {
     } else {
       this.terms = this.term1;
     }
+
+    this.terms = this.terms.replace(/(?:\r\n|\r|\n)/g, '<br />');
 
     // console.log('setting',this.currDataSetting);
     // router.push(this.location);
