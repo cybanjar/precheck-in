@@ -1,18 +1,18 @@
 <template>
-  <div class="q-pa-md doc-container">
-    <div
-      style="
-        display: flex;
-        width: 100% !important;
-        height: 100vh;
-        overflow: hidden;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <q-spinner-ball color="red" size="8em" style="" />
-    </div>
+  <!-- <div class="q-pa-md doc-container"> -->
+  <div
+    style="
+      display: flex;
+      width: 100% !important;
+      height: 100vh;
+      overflow: hidden;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <q-spinner-ball color="red" size="8em" style="" />
+    <!-- </div> -->
   </div>
 </template>
 <script>
