@@ -176,50 +176,41 @@
         </template>
         <p>{{ terms }}</p>
       </a-modal> -->
-    <div :style="ota" class="row justify-between pt-2">
-      <div class="text-center col-xs-12">
-        <img class="logo_hotel" :src="hotelLogo" />
-      </div>
-      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
-      </div>
-    </div>
-    <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
-        <q-dialog v-model="termcondition">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">{{ weblabel.tcTitle }}</div>
-            </q-card-section>
 
-            <q-separator />
+    <q-dialog v-model="termcondition">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">{{ weblabel.tcTitle }}</div>
+        </q-card-section>
 
-            <q-card-section style="max-height: 50vh;" class="scroll">
-              <p style="white-space: pre-wrap;">{{terms}} </p>
-            </q-card-section>
+        <q-separator />
 
-            <q-separator />
+        <q-card-section style="max-height: 50vh;" class="scroll">
+          <p style="white-space: pre-wrap;">{{ terms }}</p>
+        </q-card-section>
 
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                :label="weblabel.disagree"
-                color="primary"
-                @click="disagree"
-              /><q-btn
-                flat
-                :label="weblabel.agree"
-                color="primary"
-                @click="handleOk"
-              />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+        <q-separator />
 
-        <!-- <h5 class="text-black text-center font-weight-bold visible">
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            :label="weblabel.disagree"
+            color="primary"
+            @click="disagree"
+          /><q-btn
+            flat
+            :label="weblabel.agree"
+            color="primary"
+            @click="handleOk"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- <h5 class="text-black text-center font-weight-bold visible">
         ONLINE CHECK-IN
       </h5> -->
-        <!-- <div class="row justify-between" :style="information">
+    <!-- <div class="row justify-between" :style="information">
         <div
           class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
           style="padding-right: 30px;"
@@ -366,8 +357,15 @@
           </p>
         </div>
       </div> -->
-
-        <div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="row justify-evenly bg-white self-checkin">
           <a-form layout="vertical" :form="form">
             <h2 v-show="step === 1">
               {{ weblabel.guestDetail }}
@@ -807,8 +805,6 @@
           </a-form>
         </div>
       </div>
-    </div>
-  </div>
 </template>
 
 <script>
