@@ -154,22 +154,22 @@
       </div>
     </div>
     <div class="row justify-between">
-      <div class="col-4">
+      <div class="col-4 text-center">
         <a-button
           type="default"
           size="large"
           @click="back"
-          style="margin-bottom: 20px !important;"
+          style="margin-bottom: 2rem !important; margin-left: -1.5rem;"
           >{{ weblabel.back }}</a-button
         >
       </div>
-      <div class="col-4">
+      <div class="col-4 text-center">
         <a-button
           type="primary"
           size="large"
           :disabled="selectedData == 0 || selectedData == undefined"
           @click="send"
-          style="margin-bottom: 20px !important;"
+          style="margin-bottom: 2rem !important; margin-right: -1.5rem;"
           >{{ weblabel.next }}</a-button
         >
       </div>
