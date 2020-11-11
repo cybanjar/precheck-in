@@ -1,186 +1,190 @@
 <template>
   <div>
-    <div class="home">
-      <!-- Information Room Not Avail (For Overlapping) -->
-      <div v-show="informationModal">
-        <a-modal
-          :title="weblabel.information"
-          :visible="informationModal"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="submit" type="primary" @click="handleYes">{{
-              weblabel.okMessage
-            }}</a-button>
-          </template>
-          <p>
-            {{ weblabel.mciRoomNotAvail }}
-          </p>
-        </a-modal>
-      </div>
+    <!-- Information Room Not Avail (For Overlapping) -->
+    <div v-show="informationModal">
+      <a-modal
+        :title="weblabel.information"
+        :visible="informationModal"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="handleYes">{{
+            weblabel.okMessage
+          }}</a-button>
+        </template>
+        <p>
+          {{ weblabel.mciRoomNotAvail }}
+        </p>
+      </a-modal>
+    </div>
 
-      <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
-      <div v-show="informationQueue">
-        <a-modal
-          :title="weblabel.information"
-          :visible="informationQueue"
-          :closable="false"
-        >
-          <template slot="footer">
-            <a-button key="submit" type="primary" @click="refreshStatus">{{
-              weblabel.okMessage
-            }}</a-button>
-          </template>
-          <p>
-            {{ weblabel.mciConfirmStatus }}
-          </p>
-        </a-modal>
-      </div>
+    <!-- Information Room Not Ready Yet (For Status VacantDirty / Not Assigned) -->
+    <div v-show="informationQueue">
+      <a-modal
+        :title="weblabel.information"
+        :visible="informationQueue"
+        :closable="false"
+      >
+        <template slot="footer">
+          <a-button key="submit" type="primary" @click="refreshStatus">{{
+            weblabel.okMessage
+          }}</a-button>
+        </template>
+        <p>
+          {{ weblabel.mciConfirmStatus }}
+        </p>
+      </a-modal>
+    </div>
 
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-        </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
-        </div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="text-center">
         <h1 class="mt-3 text-center">
           {{ weblabel.guestList }}
         </h1>
       </div>
-      <div class="ml-3 mt-3 mr-3">
-        <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 3 }"
-          :data-source="guestData"
+      <div class="listGuest row items-center q-col-gutter-md">
+        <div
+          v-for="guest in guestData"
+          :key="guest['gast']"
+          class="col-lg-4 col-md-4 col-sm-6 col-xs-12 guestItem"
         >
-          <a-list-item
-            slot="renderItem"
-            slot-scope="item"
-            style="margin-bottom: 10px;"
+          <q-card
+            flat
+            bordered
+            :class="handleClass(guest, 'card')"
+            @click="select(guest)"
           >
-            <div :class="handleClass(item, 'status')" v-if="handleStatus(item)">
-              {{ item.guestStatus }}
-            </div>
-            <a-card :class="handleClass(item, 'card')" @click="select(item)">
-              <div style="padding-right: 8px;">
-                <h2 v-if="isMobile == false" :class="handleClass(item, 'h2')">
-                  {{ item["shortname"] }}
-                  <span v-if="item['gast'].length > 20">
-                    <q-chip
-                      color="gray"
-                      clickable
-                      size="sm"
-                      text-color="black"
-                      style="
-                        margin-top: -3px !important;
-                        margin-left: 15px !important;
-                      "
-                    >
-                      Full Name
-                      <q-menu>
-                        <q-banner style="width: 300px;">
-                          <template v-slot:avatar>
-                            <q-icon name="people" color="primary" />
-                          </template>
-                          <p>
-                            {{ item["gast"] }}
-                          </p>
-                        </q-banner>
-                      </q-menu>
-                    </q-chip>
-                  </span>
-                </h2>
-                <h2 v-else :class="handleClass(item, 'h2')">
-                  {{ item["gast"].toUpperCase() }}
-                </h2>
-              </div>
-              <div v-if="item['rmshare'].length !== 0">
-                <span>
+            <q-card-section class="row">
+              <div class="col-12 row" style="margin-bottom: 5px;">
+                <div class="col-4 label-guestname">
+                  {{ weblabel.guestName }}
+                </div>
+                <div class="col-8">
                   <q-chip
-                    color="gray"
-                    clickable
-                    size="sm"
-                    text-color="black"
-                    icon="supervisor_account"
-                    style="
-                      margin-top: -3px !important;
-                      margin-left: 15px !important;
-                    "
+                    size="18px"
+                    outline
+                    :color="handleStatusColor(guest)"
+                    text-color="white"
+                    class="float-right"
                   >
-                    Room Sharer
+                    {{ handleStatus(guest) }}
+                  </q-chip>
+                </div>
+              </div>
+              <div :class="guestNameClass">
+                {{ guest["gast"].toUpperCase() }}
+              </div>
+            </q-card-section>
+            <q-separator inset />
+            <q-card-section class="guestcard-item">
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.bookCode }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ guest["resnr"] }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.stayPeriod }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ formatDate(guest["ci"]) }} - {{ formatDate(guest["co"]) }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.roomNumber }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ guest["zinr"] }}
+                  <a-tag
+                    color="green"
+                    style="font-weight: normal !important;"
+                    >{{ guest["rmtype-str"] }}</a-tag
+                  >
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.guests }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ guest["adult"] }} {{ weblabel.adult }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.package }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ guest["argt-str"] }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ weblabel.roomShare }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  <q-chip
+                    color="primary"
+                    clickable
+                    square
+                    style="
+                      background: white !important;
+                      color: #262728 !important;
+                      font-size: 0.6rem !important;
+                      border: 1px solid gray;
+                    "
+                    v-if="guest['rmshare'].length > 0"
+                  >
+                    {{ weblabel.mciShow }}
                     <q-menu>
                       <q-banner>
                         <template v-slot:avatar>
                           <q-icon name="supervisor_account" color="primary" />
                         </template>
                         <p
-                          v-for="item in item['rmshare']"
-                          :key="item"
+                          v-for="rmShare in guest['rmshare']"
+                          :key="rmShare"
                           style="margin: 0 !important; text-size: 12px;"
                         >
-                          {{ item }}
+                          {{ rmShare }}
                         </p>
                       </q-banner>
                     </q-menu>
                   </q-chip>
-                </span>
+                </div>
               </div>
-              <div v-else>
-                <br />
-              </div>
-              <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
-              <p v-if="item.description != ''" class="pl-3">
-                {{ item.description }}
-              </p>
-              <p v-else class="pl-3">
-                <br />
-              </p>
-              <p class="pl-3">
-                {{ weblabel.arrival }}:
-                {{ formatDate(item.ci) }}
-                {{ weblabel.departure }}:
-                {{ formatDate(item.co) }}
-              </p>
-              <p class="pl-3">{{ weblabel.roomNumber }}: {{ item.zinr }}</p>
-              <p class="pl-3">
-                {{ item.adult }} {{ weblabel.adult }}
-                <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
-              </p>
-              <p class="pl-3">{{ item["argt-str"] }}</p>
-            </a-card>
-          </a-list-item>
-        </a-list>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
-      <a-button
-        class="ml-3 float-left"
-        type="default"
-        size="large"
-        style="margin-bottom: 20px !important;"
-        @click="back"
-        >{{ weblabel.back }}</a-button
-      >
-      <a-button
-        class="mr-3 float-right"
-        type="primary"
-        size="large"
-        style="margin-bottom: 20px !important;"
-        :disabled="selectedData == 0 || selectedData == undefined"
-        @click="send"
-        >{{ weblabel.next }}</a-button
-      >
+      <div class="row guest-list-button">
+        <div class="col-6 button-item-left">
+          <a-button type="default" size="large" @click="back">{{
+            weblabel.back
+          }}</a-button>
+        </div>
+        <div class="col-6 button-item-right">
+          <a-button
+            type="primary"
+            size="large"
+            :disabled="selectedData == 0 || selectedData == undefined"
+            @click="send"
+            >{{ weblabel.next }}</a-button
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -228,9 +232,30 @@ export default {
         mciConfirmStatus: "",
         statusCi: "",
         statusQueue: "",
+        notCheckedInYet: "",
+        stayPeriod: "",
+        guests: "",
+        package: "",
+        roomShare: "",
+        guestName: "",
+        notAvailableForCheckin: "",
+        mciShow: "",
       },
       visible: false,
       isMobile: false,
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      hotelLogo: "",
+      guestNameClass: "col-12 content-guestname",
     };
   },
   created() {
@@ -268,20 +293,10 @@ export default {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
-
     tempData.forEach((item) => {
-      if (this.isMobile == false) {
-        let Name = "";
-        if (item["gast"].length <= 20) {
-          Name = item["gast"].toUpperCase();
-        } else {
-          Name = item["gast"].toUpperCase().substring(0, 20) + "...";
-        }
-
-        Object.assign(item, { shortname: Name });
-      } else {
-        const Name = item["gast"].toUpperCase();
-        Object.assign(item, { shortname: Name });
+      if (item["gast"].length >= 36) {
+        this.guestNameClass =
+          "col-12 content-guestname content-guestname-space";
       }
       Object.assign(item, { ispopup: false });
       Object.assign(item, { guestStatus: "" });
@@ -309,12 +324,14 @@ export default {
     // console.log("Guest Checkin", guestCheckedIn);
     // console.log(this.guestData);
     // console.log(this.guestData, this.setup);
-
     if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
       this.setup.TotalData =
         this.setup.TotalData - this.setup.successCheckin.length;
     }
+    this.textOta.color = this.setup["FontColor"];
+    this.ota.backgroundColor = this.setup["BackgroundColor"];
+    this.hotelLogo = this.setup["hotelLogo"];
     this.gambar = this.setup["hotelImage"];
     this.location = this.setup["location"];
     this.license = this.setup["LICENSE"];
@@ -357,18 +374,44 @@ export default {
     );
     this.weblabel.statusCi = this.findLabel("status_ci", "sentenceCase");
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
+    this.weblabel.notCheckedInYet = this.findLabel(
+      "not_checked_in_yet",
+      "upperCase"
+    );
+    this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
+    this.weblabel.guests = this.findLabel("guests", "titleCase");
+    this.weblabel.package = this.findLabel("package", "titleCase");
+    this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.notAvailableForCheckin = this.findLabel(
+      "not_available_for_checkin",
+      "titleCase"
+    );
+    this.weblabel.mciShow = this.findLabel("show", "titleCase");
   },
   methods: {
     handleStatus(item) {
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
-        return true;
+        return item["guestStatus"];
       } else if (item["ifdata-sent"] == true) {
         item["guestStatus"] = this.weblabel.statusQueue;
-        return true;
+        return item["guestStatus"];
       } else {
-        return false;
+        item["guestStatus"] = this.weblabel.notCheckedInYet;
+        return item["guestStatus"];
       }
+    },
+    handleStatusColor(item) {
+      let returnedColor = "";
+      if (item["res-status"] == "1 - Guest Already Checkin") {
+        returnedColor = "teal";
+      } else if (item["ifdata-sent"] == true) {
+        returnedColor = "orange";
+      } else {
+        returnedColor = "gray";
+      }
+      return returnedColor;
     },
     findLabel(nameKey, used) {
       let labels = undefined;
@@ -427,7 +470,6 @@ export default {
         return 0;
       }
     },
-
     handleClass(item, used) {
       let returnedClass = "";
       if (used == "card") {
