@@ -8,82 +8,140 @@
         <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
       </div>
     </div>
-    <div
-      class="row justify-around bg-white self-checkin"
-      style="padding-left: 1.5rem; padding-right: 1.5rem;"
-    >
+    <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
         <h4 class="mt-3 text-center">
           {{ getLabels("guest_list", `titleCase`) }}
         </h4>
       </div>
-      <div class="ml-3 mt-3 mr-3">
-        <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3 }"
-          :data-source="data"
+      <div class="listGuest row items-center q-col-gutter-md">
+        <div
+          v-for="item in data"
+          :key="item['guest-lname']"
+          class="col-lg-4 col-md-4 col-sm-6 col-xs-12 guestItem"
         >
-          <a-list-item slot="renderItem" slot-scope="item">
-            <a-card
-              :class="
-                item.isSelected == true
-                  ? 'selected'
-                  : item['gcomment-desc'] == 'GUEST ALREADY PCI'
-                  ? 'notready'
-                  : 'notselected'
-              "
-              @click="select(item)"
-            >
-              <h6
-                :class="
-                  item.isSelected == true
-                    ? 'selected pl-3 font-weight-bold'
-                    : item['gcomment-desc'] == 'GUEST ALREADY PCI'
-                    ? 'notready pl-3 font-weight-bold'
-                    : 'notselected pl-3 font-weight-bold'
-                "
-              >
-                {{ item["guest-fname"] }} {{ item["guest-lname"] }},
-                {{ item["guest-pname"] }}
-              </h6>
-              <p v-if="item['room-sharer'] != ''" class="pl-3">
-                {{ item["room-sharer"] }}
-              </p>
-              <p v-else-if="item['accompaying-guest'] != ''" class="pl-3">
-                {{ item["accompaying-guest"] }}
-              </p>
-              <p v-else class="pl-3">
-                <br />
-              </p>
-              <p class="pl-3">
-                {{ getLabels("arrival", `titleCase`) }}:
-                <span class="font-weight-bold">
-                  {{ formatDate(item.arrive) }}
-                </span>
-                {{ getLabels("departure", `titleCase`) }}:
-                <span class="font-weight-bold">
-                  {{ formatDate(item.depart) }}
-                </span>
-              </p>
-              <p class="pl-3">
-                {{ item.rmqty }} {{ getLabels("adult", `titleCase`) }}
-                <a-tag color="green" v-if="item['rate-desc'] != ''">{{
-                  item["rate-desc"]
-                }}</a-tag>
-              </p>
-            </a-card>
-          </a-list-item>
-        </a-list>
+          <q-card
+            flat
+            bordered
+            :class="handleClass(item, 'card')"
+            @click="select(item)"
+          >
+            <q-card-section class="row">
+              <div class="col-12 row" style="margin-bottom: 5px">
+                <div class="col-4 label-guestname">
+                  {{ getLabels("guest_name", `titleCase`) }}
+                </div>
+                <div class="col-8">
+                  <q-chip
+                    size="18px"
+                    outline
+                    :color="handleStatusColor(item)"
+                    text-color="white"
+                    class="float-right"
+                  >
+                    {{ handleStatus(item) }}
+                  </q-chip>
+                </div>
+              </div>
+              <div :class="guestNameClass">
+                {{ item["guest-lname"].toUpperCase() }}
+              </div>
+            </q-card-section>
+            <q-separator inset />
+            <q-card-section class="guestcard-item">
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("book_code", `titleCase`) }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ item["uid"] }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("stay_period", `titleCase`) }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ formatDate(item["arrive"]) }} -
+                  {{ formatDate(item["depart"]) }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("room_number", `titleCase`) }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ item["rsv-number"] }}
+                  <a-tag color="green" style="font-weight: normal !important">{{
+                    item["argt-code"]
+                  }}</a-tag>
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("guests", `titleCase`) }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ item["rmqty"] }} {{ getLabels("adult", `titleCase`) }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("package", `titleCase`) }}
+                </div>
+                <div class="col-8 guestcard-item-text">
+                  {{ item["argt-code"] }}
+                </div>
+              </div>
+              <div class="row guestcard-peritem">
+                <div class="col-4">
+                  {{ getLabels("roomShare", `titleCase`) }}
+                </div>
+                <!-- <div class="col-8 guestcard-item-text">
+                  <q-chip
+                    color="primary"
+                    clickable
+                    square
+                    style="
+                      background: white !important;
+                      color: #262728 !important;
+                      font-size: 0.6rem !important;
+                      border: 1px solid gray;
+                    "
+                    v-if="guest['room-sharer'].length > 0"
+                  >
+                    {{ getLabels("mciShow", `titleCase`) }}
+                    <q-menu>
+                      <q-banner>
+                        <template v-slot:avatar>
+                          <q-icon name="supervisor_account" color="primary" />
+                        </template>
+                        <p
+                          v-for="rmShare in guest['rmshare']"
+                          :key="rmShare"
+                          style="margin: 0 !important; text-size: 12px"
+                        >
+                          {{ rmShare }}
+                        </p>
+                      </q-banner>
+                    </q-menu>
+                  </q-chip>
+                </div> -->
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
-      <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
-      <a-button
-        class="fixed-bottom-right mr-3 float-right"
-        type="primary"
-        size="large"
-        :disabled="selectedData == 0 || selectedData == undefined"
-        @click="send"
-        >{{ getLabels("next", `titleCase`) }}</a-button
-      >
-      <!-- </router-link> -->
+      <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+        <a-button
+          class="fixed-bottom-right mr-3 float-right"
+          type="primary"
+          size="large"
+          :disabled="selectedData == 0 || selectedData == undefined"
+          @click="send"
+          >{{ getLabels("next", `titleCase`) }}</a-button
+        >
+      </router-link>
     </div>
   </div>
 </template>
@@ -116,6 +174,7 @@ export default {
         textAlign: "center",
       },
       hotelLogo: "",
+      guestNameClass: "col-12 content-guestname",
     };
   },
   created() {
@@ -140,6 +199,7 @@ export default {
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
+      this.data[i].guestStatus = "";
       // console.log(i);
       this.data[i].key = Number(i) + 1;
     }
@@ -229,6 +289,77 @@ export default {
         }
       }
     },
+    handleClass(item, used) {
+      let returnedClass = "";
+      if (used == "card") {
+        if (item["isSelected"] == true) {
+          returnedClass = "selected";
+        } else if (
+          item["isSelected"] == false &&
+          item["gcomment-desc"] == "GUEST ALREADY PCI"
+        ) {
+          returnedClass = "checkin";
+        } else if (
+          item["isSelected"] == true &&
+          item["gcomment-desc"] == "GUEST ALREADY PCI"
+        ) {
+          returnedClass = "selected";
+        } else {
+          returnedClass = "notselected";
+        }
+      } else if (used == "h2") {
+        if (item["isSelected"] == true) {
+          returnedClass = "disabled pl-3 font-weight-bold";
+        } else if (item["isSelected"] == true) {
+          returnedClass = "selected pl-3 font-weight-bold";
+        } else if (item["isSelected"] == false) {
+          returnedClass = "disabled pl-3 font-weight-bold";
+        } else if (
+          item["isSelected"] == false &&
+          item["gcomment-desc"] == "GUEST ALREADY PCI"
+        ) {
+          returnedClass = "checkin pl-3 font-weight-bold";
+        } else {
+          returnedClass = "notselected pl-3 font-weight-bold";
+        }
+      } else if (used == "status") {
+        const locale = localStorage.getItem("locale");
+        if (locale == "EN") {
+          returnedClass = "infoCardEN";
+        } else if (locale == "ID") {
+          returnedClass = "infoCardID";
+        } else {
+          returnedClass = "infoCardEN";
+        }
+      }
+      return returnedClass;
+    },
+    handleStatus(item) {
+      if (item["gcomment-desc"] == "GUEST ALREADY PCI") {
+        item["guestStatus"] = this.getLabels("status_ci", "sentenceCase");
+        return item["guestStatus"];
+      } else if (item["ifdata-sent"] == true) {
+        item["guestStatus"] = this.getLabels("status_queue", "sentenceCase");
+        return item["guestStatus"];
+      } else {
+        item["guestStatus"] = this.getLabels(
+          "not_checked_in_yet",
+          "sentenceCase"
+        );
+        return item["guestStatus"];
+      }
+    },
+    handleStatusColor(item) {
+      let returnedColor = "";
+      if (item["gcomment-desc"] == "GUEST ALREADY PCI") {
+        returnedColor = "teal";
+        // } else if (item["ifdata-sent"] == true) {
+        //   returnedColor = "orange";
+      } else {
+        returnedColor = "gray";
+      }
+      return returnedColor;
+    },
   },
   computed: {
     formatDate() {
@@ -275,3 +406,4 @@ export default {
   },
 };
 </script>
+<style scoped lang="scss" src="../css/listcheckin.scss" />
