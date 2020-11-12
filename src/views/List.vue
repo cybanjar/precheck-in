@@ -27,7 +27,7 @@
             @click="select(item)"
           >
             <q-card-section class="row">
-              <div class="col-12 row" style="margin-bottom: 5px">
+              <div class="col-12 row" style="margin-bottom: 5px;">
                 <div class="col-4 label-guestname">
                   {{ getLabels("guest_name", `titleCase`) }}
                 </div>
@@ -72,9 +72,11 @@
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ item["rsv-number"] }}
-                  <a-tag color="green" style="font-weight: normal !important">{{
-                    item["argt-code"]
-                  }}</a-tag>
+                  <a-tag
+                    color="green"
+                    style="font-weight: normal !important;"
+                    >{{ item["argt-code"] }}</a-tag
+                  >
                 </div>
               </div>
               <div class="row guestcard-peritem">
@@ -97,7 +99,7 @@
                 <div class="col-4">
                   {{ getLabels("roomShare", `titleCase`) }}
                 </div>
-                <!-- <div class="col-8 guestcard-item-text">
+                <div class="col-8 guestcard-item-text">
                   <q-chip
                     color="primary"
                     clickable
@@ -108,25 +110,25 @@
                       font-size: 0.6rem !important;
                       border: 1px solid gray;
                     "
-                    v-if="guest['room-sharer'].length > 0"
+                    v-if="item['rmshare'].length != 0"
                   >
-                    {{ getLabels("mciShow", `titleCase`) }}
+                    {{ getLabels("mci_show", `titleCase`) }}
                     <q-menu>
                       <q-banner>
                         <template v-slot:avatar>
                           <q-icon name="supervisor_account" color="primary" />
                         </template>
                         <p
-                          v-for="rmShare in guest['rmshare']"
+                          v-for="rmShare in item['rmshare']"
                           :key="rmShare"
-                          style="margin: 0 !important; text-size: 12px"
+                          style="margin: 0 !important; text-size: 12px;"
                         >
                           {{ rmShare }}
                         </p>
                       </q-banner>
                     </q-menu>
                   </q-chip>
-                </div> -->
+                </div>
               </div>
             </q-card-section>
           </q-card>
@@ -200,11 +202,17 @@ export default {
     for (const i in this.data) {
       this.data[i].isSelected = false;
       this.data[i].guestStatus = "";
+      this.data[i].rmshare = [];
+      if (this.data[i]["room-sharer"] != "") {
+        this.data[i].rmshare.push(this.data[i]["room-sharer"]);
+      }
+      if (this.data[i]["accompaying-guest"] != "") {
+        this.data[i].rmshare.push(this.data[i]["accompaying-guest"]);
+      }
       // console.log(i);
       this.data[i].key = Number(i) + 1;
     }
     return this.data;
-    // console.log(this.data, "berubah");
   },
 
   mounted() {

@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="text-center">          
-          <img v-show="QRshow == true && roomReady == true" :src="url" />         
+        <div class="text-center">
+          <img v-show="QRshow == true && roomReady == true" :src="url" />
           <div v-if="roomReady" style="margin-top: 2rem;">
             <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
             <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
@@ -50,7 +50,12 @@
             </div>
 
             <a-button @click="goBack" :disabled="gobackLoading">
-              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+              {{ weblabel.done }}
+              <q-spinner-ball
+                color="red"
+                style="margin-left: 10px;"
+                v-if="gobackLoading"
+              />
             </a-button>
           </div>
           <div v-else>
@@ -65,7 +70,12 @@
             </div>
 
             <a-button @click="goBack" :disabled="gobackLoading">
-              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+              {{ weblabel.done }}
+              <q-spinner-ball
+                color="red"
+                style="margin-left: 10px;"
+                v-if="gobackLoading"
+              />
             </a-button>
           </div>
         </div>
@@ -220,7 +230,7 @@ export default {
           },
         })
         .json();
-      this.data = parsed.response.keyString;      
+      this.data = parsed.response.keyString;
       if (parsed.response.keyAvail <= 0) {
         this.QRshow = false;
       } else {
@@ -429,15 +439,18 @@ export default {
     showAnimation() {
       setTimeout(() => {
         this.loading = false;
-        /* Generate QR Code */        
-        const success = btoa(this.data);        
-        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((err,url) => {
-          if(err){            
-            this.url = err;
-          } else {
-            this.url = url.split(",")[1];
-          }          
-        });        
+        /* Generate QR Code */
+
+        const success = btoa(this.data);
+        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then(
+          (err, url) => {
+            if (err) {
+              this.url = err;
+            } else {
+              this.url = url.split(",")[1];
+            }
+          }
+        );
       }, 1000);
     },
   },
@@ -452,7 +465,7 @@ export default {
   async mounted() {
     await this.$nextTick();
     // console.log('mounted is triggered');
-    this.showAnimation();    
+    this.showAnimation();
   },
   computed: {
     isIdle() {

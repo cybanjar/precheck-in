@@ -56,10 +56,17 @@
           :key="guest['gast']"
           class="col-lg-4 col-md-4 col-sm-6 col-xs-12 guestItem"
         >
-          <q-card flat bordered :class="handleClass(guest, 'card')" @click="select(guest)">
+          <q-card
+            flat
+            bordered
+            :class="handleClass(guest, 'card')"
+            @click="select(guest)"
+          >
             <q-card-section class="row">
               <div class="col-12 row" style="margin-bottom: 5px;">
-                <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
+                <div class="col-4 label-guestname">
+                  {{ weblabel.guestName }}
+                </div>
                 <div class="col-8">
                   <q-chip
                     size="18px"
@@ -132,7 +139,12 @@
                     color="primary"
                     clickable
                     square
-                    style="background: white !important; color: #262728 !important; font-size: 0.6rem !important; border: 1px solid gray;"                    
+                    style="
+                      background: white !important;
+                      color: #262728 !important;
+                      font-size: 0.6rem !important;
+                      border: 1px solid gray;
+                    "
                     v-if="guest['rmshare'].length > 0"
                   >
                     {{ weblabel.mciShow }}
@@ -156,15 +168,12 @@
             </q-card-section>
           </q-card>
         </div>
-      </div>      
+      </div>
       <div class="row guest-list-button">
         <div class="col-6 button-item-left">
-          <a-button
-            type="default"
-            size="large"
-            @click="back"
-            >{{ weblabel.back }}</a-button
-          >
+          <a-button type="default" size="large" @click="back">{{
+            weblabel.back
+          }}</a-button>
         </div>
         <div class="col-6 button-item-right">
           <a-button
@@ -174,7 +183,7 @@
             @click="send"
             >{{ weblabel.next }}</a-button
           >
-        </div>        
+        </div>
       </div>
     </div>
     <a-button
@@ -301,7 +310,7 @@ export default {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
-    tempData.forEach((item) => {      
+    tempData.forEach((item) => {
       if (item["gast"].length >= 36) {
         this.guestNameClass =
           "col-12 content-guestname content-guestname-space";
@@ -382,14 +391,20 @@ export default {
     );
     this.weblabel.statusCi = this.findLabel("status_ci", "sentenceCase");
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
-    this.weblabel.notCheckedInYet = this.findLabel("not_checked_in_yet", "upperCase");
+    this.weblabel.notCheckedInYet = this.findLabel(
+      "not_checked_in_yet",
+      "upperCase"
+    );
     this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
     this.weblabel.guests = this.findLabel("guests", "titleCase");
     this.weblabel.package = this.findLabel("package", "titleCase");
     this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
     this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
-    this.weblabel.notAvailableForCheckin = this.findLabel("not_available_for_checkin", "titleCase");
-    this.weblabel.mciShow = this.findLabel("show", "titleCase");
+    this.weblabel.notAvailableForCheckin = this.findLabel(
+      "not_available_for_checkin",
+      "titleCase"
+    );
+    this.weblabel.mciShow = this.findLabel("mci_show", "titleCase");
   },
   methods: {
     handleStatus(item) {
@@ -610,10 +625,7 @@ export default {
       if (parseInt(resstatus[0]) == 1) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: true });
-        sessionStorage.setItem(
-          "guestData",
-          JSON.stringify(this.selectedData)
-        );
+        sessionStorage.setItem("guestData", JSON.stringify(this.selectedData));
         router.push({
           name: "SuccessCheckIn",
           params: {
@@ -627,10 +639,7 @@ export default {
       ) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: false });
-        sessionStorage.setItem(
-          "guestData",
-          JSON.stringify(this.selectedData)
-        );
+        sessionStorage.setItem("guestData", JSON.stringify(this.selectedData));
         router.push({
           name: "SuccessCheckIn",
           params: {
@@ -639,10 +648,7 @@ export default {
           },
         });
       } else {
-        sessionStorage.setItem(
-          "guestData",
-          JSON.stringify(this.selectedData)
-        );
+        sessionStorage.setItem("guestData", JSON.stringify(this.selectedData));
         router.push({
           name: "Step",
           params: {
@@ -650,7 +656,7 @@ export default {
             setting: this.setup,
           },
         });
-      }      
+      }
     },
     formatDate(datum) {
       const dDate =
@@ -684,44 +690,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-.infoCardEN {
-  position: absolute !important;
-  top: 0;
-  right: 20px;
-  height: 30px !important;
-  width: 100px !important;
-  color: #606060 !important;
-  background-color: white !important;
-  border-radius: 0 0 5px 5px;
-  -webkit-border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  z-index: 999;
-  text-align: center;
-  padding-top: 3px;
-  -webkit-transform: translate3d(0, 0, 0);
-  border-top: 1px solid #e8e8e8;
-}
-.infoCardID {
-  position: absolute !important;
-  top: 0;
-  right: 20px;
-  height: 30px !important;
-  width: 130px !important;
-  color: #606060 !important;
-  background-color: white !important;
-  border-radius: 0 0 5px 5px;
-  -webkit-border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  z-index: 999;
-  text-align: center;
-  padding-top: 3px;
-  -webkit-transform: translate3d(0, 0, 0);
-  border-top: 1px solid #e8e8e8;
-}
-.ant-row {
-  display: flex !important;
-  flex-wrap: wrap !important;
-}
-</style>
 <style scoped lang="scss" src="../css/listcheckin.scss" />
