@@ -53,8 +53,11 @@
                 {{ item["guest-fname"] }} {{ item["guest-lname"] }},
                 {{ item["guest-pname"] }}
               </h6>
-              <p v-if="item['guest-member-name'] != ''" class="pl-3">
-                {{ item["guest-member-name"] }}
+              <p v-if="item['room-sharer'] != ''" class="pl-3">
+                {{ item["room-sharer"] }}
+              </p>
+              <p v-else-if="item['accompaying-guest'] != ''" class="pl-3">
+                {{ item["accompaying-guest"] }}
               </p>
               <p v-else class="pl-3">
                 <br />
@@ -71,7 +74,9 @@
               </p>
               <p class="pl-3">
                 {{ item.rmqty }} {{ getLabels("adult", `titleCase`) }}
-                <a-tag color="green">{{ item["rate-desc"] }}</a-tag>
+                <a-tag color="green" v-if="item['rate-desc'] != ''">{{
+                  item["rate-desc"]
+                }}</a-tag>
               </p>
             </a-card>
           </a-list-item>
@@ -100,19 +105,31 @@ export default {
       selectedData: [],
       gambar: "",
       hotelname: "",
-      information: {},
+      information: {
+        backgroundColor: "$green",
+        color: "$white",
+        borderRadius: "4px",
+      },
       lemparsetup: [],
-      fairy: {},
       labels: [],
     };
   },
   created() {
-    this.data = this.$route.params.foo[0];
-    this.setup = this.$route.params.foo[1];
-    this.lemparsetup = this.$route.params.foo[1];
-    this.gambar = this.setup["01"];
-    this.information = this.setup["02"];
-    this.hotelname = this.setup["13"];
+    this.data = this.$route.params.Data;
+    this.setup = this.$route.params.Param;
+    if (this.data == null || this.setup == null) {
+      this.data = JSON.parse(sessionStorage.getItem("saveData"));
+      this.setup = JSON.parse(sessionStorage.getItem("saveSetting"));
+    }
+    if (sessionStorage.getItem("PCI") == "true") {
+      sessionStorage.setItem("PCI", false);
+    }
+    this.lemparsetup = this.setup;
+
+    this.gambar = this.setup["gambar"];
+    this.information.backgroundColor = this.setup["Background"];
+    this.information.color = this.setup["Font"];
+    this.hotelname = this.setup["hotelname"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
@@ -122,23 +139,69 @@ export default {
     return this.data;
     // console.log(this.data, "berubah");
   },
+
   mounted() {
     this.labels = JSON.parse(localStorage.getItem("labels"));
   },
   methods: {
     send() {
-      for (const i in this.selectedData) {
-        if (this.selectedData[i]["gcomment-desc"] == "GUEST ALREADY PCI") {
-          this.selectedData.splice(i, 1);
+      if (this.selectedData.length > 1) {
+        // for (const i in this.selectedData) {
+        const jumlah = this.selectedData.filter((item, index) => {
+          return item["gcomment-desc"] == "GUEST ALREADY PCI";
+        });
+        if (this.selectedData.length == jumlah.length) {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          this.selectedData.splice(jumlah, jumlah.length);
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+        }
+      } else {
+        if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
         }
       }
-      this.fairy["data"] = this.selectedData;
-      this.fairy["setup"] = this.lemparsetup;
-      router.push({ name: "Home", params: { id: this.fairy } });
     },
     select(client) {
       if (client.isSelected == false) {
-        // console.log('BLAH', client);
         this.selectedData.push(client);
         for (const i in this.data) {
           if (this.data[i].key == client.key) {
@@ -159,48 +222,48 @@ export default {
         }
       }
     },
-    formatDate(datum) {
-      const dDate =
-        String(moment(datum, "YYYY-MM-DD").date()).length == 1
-          ? `0${String(moment(datum, "YYYY-M-DD").date())}`
-          : String(moment(datum, "YYYY-MM-DD").date());
-      const dMonth =
-        String(moment(datum, "YYYY-MM-DD").month() + 1).length == 1
-          ? `0${String(moment(datum, "YYYY-MM-DD").month() + 1)}`
-          : String(moment(datum, "YYYY-MM-DD").month() + 1);
-
-      const dYear = moment(datum, "YYYY-MM-DD").year();
-      const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
-
-      return fixDate;
+  },
+  computed: {
+    formatDate() {
+      return (datum) => {
+        const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(
+          2,
+          "0"
+        );
+        const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+          2,
+          "0"
+        );
+        const dYear = String(moment(datum, "YYYY-MM-DD").year());
+        const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD-MM-YYYY")._i;
+        return fixDate;
+      };
     },
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["lang-variable"] == nameKey
-      );
-
+    getLabels() {
       let fixLabel = "";
-
-      if (label["lang-value"] == "undefined") {
-        fixLabel = "";
-      } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["lang-value"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["lang-value"].charAt(0).toUpperCase() +
-            label["lang-value"].slice(1);
+      return (nameKey, used) => {
+        const label = this.labels.find((el) => {
+          return el["lang-variable"] == nameKey;
+        });
+        if (label === undefined) {
+          fixLabel = "";
         } else {
-          fixLabel = label["lang-value"];
+          if (used === "titleCase") {
+            fixLabel = label["lang-value"].replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+          } else if (used === "sentenceCase") {
+            fixLabel =
+              label["lang-value"].charAt(0).toUpperCase() +
+              label["lang-value"].slice(1);
+          } else if (used === "upperCase") {
+            fixLabel = label["lang-value"].toUpperCase();
+          } else {
+            fixLabel = label["lang-value"];
+          }
         }
-      }
-
-      return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+        return fixLabel;
+      };
     },
   },
 };

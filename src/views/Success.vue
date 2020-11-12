@@ -1,32 +1,44 @@
 <template>
-  <div class="text-center">
-    <canvas id="canvas" v-show="(!flagKiosk)"></canvas>
-    <p>
-      {{ getLabels("book_code", `titleCase`) }} :
-      <span class="font-weight-bold">{{ taejin }}</span>
-    </p>
-    <p>
-      {{ getLabels("co_date", `titleCase`) }} :
-      <span class="font-weight-bold">{{ formatDate(iplyo) }}</span>
-    </p>
-    <p>
-      {{ getLabels("ci_time", `titleCase`) }} :
-      <span class="font-weight-bold">{{ jegal }}</span>
-    </p>
-    <p>
-      <a-button type="primary" @click="checkin">{{
-        getLabels("ci_now", `titleCase`)
-      }}</a-button>
-    </p>
-    <p>
-      <br />
-    </p>
-    <p v-show="(!flagKiosk)" class="p-mobile">
-      {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
-    </p>
-    <p v-show="(flagKiosk)" class="p-mobile">
-      {{ getLabels("success_w_kiosk", `sentenceCase`) }}
-    </p>
+  <div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
+      </div>
+    </div>
+    <div class="row justify-around bg-white self-checkin">
+      <div class="text-center" style="margin-top: 10px;">
+        <canvas id="canvas" v-show="flagKiosk"></canvas>
+        <p>
+          {{ getLabels("book_code", `titleCase`) }} :
+          <span class="font-weight-bold">{{ bookingCode }}</span>
+        </p>
+        <p>
+          {{ getLabels("co_date", `titleCase`) }} :
+          <span class="font-weight-bold">{{ formatDate(coDate) }}</span>
+        </p>
+        <p>
+          {{ getLabels("ci_time", `titleCase`) }} :
+          <span class="font-weight-bold">{{ ciTime }}</span>
+        </p>
+        <p>
+          <a-button type="primary" @click="checkin">{{
+            getLabels("ci_now", `titleCase`)
+          }}</a-button>
+        </p>
+        <p>
+          <br />
+        </p>
+        <p v-if="flagKiosk == false" class="p-mobile">
+          {{ getLabels("success_wo_kiosk", `sentenceCase`) }}
+        </p>
+        <p v-else class="p-mobile">
+          {{ getLabels("success_w_kiosk", `sentenceCase`) }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -35,35 +47,51 @@ import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
 import router from "../router";
-
 export default {
   data() {
     return {
-      taejin: "", //Booking Code
-      iplyo: "", // Checkout Date
-      jegal: "", // Check-in Time
+      bookingCode: "", //Booking Code
+      coDate: "", // Checkout Date
+      ciTime: "", // Check-in Time
       url: "",
       labels: [],
       flagKiosk: false,
       urlMCI: "",
       hotelEndpoint: "",
       hotelParams: "",
+      hotelName: "",
+      ota: {
+        backgroundColor: "#ea580B",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      textOta: {
+        color: "#FFFFFF",
+      },
+      hotelLogo: "",
     };
   },
   mounted() {
-    this.data = this.$route.params.jin;
-    this.flagKiosk = this.$route.params.jen;
-    this.hotelParams = this.$route.params.mihawk;
-    this.hotelEndpoint = this.$route.params.luffy;
+    sessionStorage.setItem("PCI", true);
+    // console.log(this.$route.params);
+    this.data = this.$route.params.Data;
+    this.flagKiosk = this.$route.params.Param.flagKiosk;
+    this.hotelParams = this.$route.params.Param.hotelParams;
+    this.hotelEndpoint = this.$route.params.Param.hotelEndpoint;
+    this.hotelName = this.$route.params.Param.hotelName;
+    this.ota.backgroundColor = this.$route.params.Param.Background;
+    this.textOta.color = this.$route.params.Param.Font;
+    this.hotelLogo = this.$route.params.Param.hotelLogo;
     this.labels = JSON.parse(localStorage.getItem("labels"));
-
     const success = btoa(this.data);
-    this.taejin = this.data.substring(1, this.data.indexOf(";"));
-    this.iplyo = this.data.substring(
+    this.bookingCode = this.data.substring(1, this.data.indexOf(";"));
+    this.coDate = this.data.substring(
       this.data.lastIndexOf(";") + 1,
       this.data.lastIndexOf(",")
     );
-    this.jegal = this.data.substring(
+    this.ciTime = this.data.substring(
       this.data.lastIndexOf(",") + 1,
       this.data.lastIndexOf("}")
     );
@@ -71,11 +99,11 @@ export default {
     //   "http://vhp-online.com/mobilecheckin?lang=" +
     //   this.$route.params.jun +
     //   "&book=" +
-    //   this.taejin +
+    //   this.bookingCode +
     //   "&codate=" +
-    //   this.iplyo +
+    //   this.coDate +
     //   "&citime=" +
-    //   this.jegal +
+    //   this.ciTime +
     //   "&hotelcode=" +
     //   this.hotelCode;
     QRCode.toCanvas(
@@ -87,19 +115,17 @@ export default {
       // console.log("success!");
       // }
     );
-
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
       // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
-
     (async () => {
       const parsed = await ky
         .post(this.hotelEndpoint + "preCI/storeQRCode", {
           json: {
             request: {
               base64image: this.url,
-              resno: this.taejin,
+              resno: this.bookingCode,
             },
           },
         })
@@ -113,9 +139,9 @@ export default {
         name: "MobileCheckin",
         params: {
           hotelParameter: this.hotelParams,
-          bookingcode: this.taejin,
-          coDate: this.iplyo,
-          citime: this.jegal,
+          bookingcode: this.bookingCode,
+          coDate: this.coDate,
+          citime: this.ciTime,
         },
       });
     },
@@ -123,9 +149,7 @@ export default {
       const label = this.labels.find(
         (element) => element["lang-variable"] == nameKey
       );
-
       let fixLabel = "";
-
       if (label == undefined) {
         fixLabel = "";
       } else {
@@ -139,7 +163,6 @@ export default {
           fixLabel = label["lang-value"];
         }
       }
-
       return fixLabel;
     },
     setTitleCase(label) {
@@ -155,7 +178,6 @@ export default {
       );
       const dYear = String(moment(datum, "MM/DD/YYYY").year());
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
-
       return fixDate;
     },
   },

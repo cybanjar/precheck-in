@@ -1,132 +1,305 @@
 <template>
-  <div class="text-center">
-    <div v-if="!roomNotReady">
-      <canvas id="canvas"></canvas>
-      <p>{{ getLabels("room_number", `titleCase`) }} : {{ taejin }}</p>
-      <p>{{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}</p>
-      <p>{{ getLabels("wifi_password", `sentenceCase`) }} : {{ wifiPassword }}</p>
-      <p>{{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}</p>
-
-      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-      <div class="row justify-center q-mt-xl">
-        <div class="col-md-6 col-xs-11">
-          <p>{{ getLabels("mci_success", `sentenceCase`) }}</p>
-        </div>
-      </div>
-
-      <a-button
-        type="primary"
-        href="http://vhp-online.com/mobilecheckin?lang=eng&hotelcode=vhpweb"
-        >{{ getLabels("done", `titleCase`) }}</a-button
+  <div>
+    <div v-if="loading">
+      <div
+        style="
+          display: flex;
+          width: 100% !important;
+          height: 100vh;
+          overflow: hidden;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          margin-top: -50px;
+        "
       >
+        <q-spinner-ball color="red" size="8em" style="" />
+      </div>
     </div>
     <div v-else>
-      <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-      <div class="row justify-center q-mt-xl">
-        <div class="col-md-6 col-xs-11">
-          <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
-          <p>{{getLabels('email', `titleCase`)}} <a-input v-model="email" /></p>
-          <p>{{getLabels('phone_number', `titleCase`)}} <a-input v-model="phone" /></p>
+      <div :style="ota" class="row justify-between pt-2">
+        <div class="text-center col-xs-12">
+          <img class="logo_hotel" :src="hotelLogo" />
+        </div>
+        <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+          <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
         </div>
       </div>
+      <div class="row justify-around bg-white self-checkin">
+        <div class="text-center">          
+          <img v-show="QRshow == true && roomReady == true" :src="url" />         
+          <div v-if="roomReady" style="margin-top: 2rem;">
+            <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
+            <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
+            <p>
+              {{ weblabel.wifiPassword }} :
+              {{ wifiPassword }}
+            </p>
+            <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
 
-      <a-button
-        type="primary"
-        @click="goBack"
-        >{{ getLabels("done", `titleCase`) }}</a-button
-      >
+            <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p v-if="QRshow == false" style="margin-top: 2rem;">
+                  {{ weblabel.mciSuccessWithMaxKeycard }}
+                </p>
+                <p v-else>
+                  {{ weblabel.mciSuccess }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+            </a-button>
+          </div>
+          <div v-else>
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
+                <p>{{ weblabel.email }} : {{ email }}</p>
+                <p>
+                  {{ weblabel.mciSuccessNotReady }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+            </a-button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Modal MCI Confirm Check-in -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="infoMCIConfim"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button type="primary" @click="backToHome">{{
+          weblabel.no
+        }}</a-button>
+        <a-button type="primary" @click="backToList">{{
+          weblabel.yes
+        }}</a-button>
+      </template>
+      <p>{{ weblabel.mciConfirmCi }}</p>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import store from "@/store/store";
 import QRCode from "qrcode";
 import ky from "ky";
-
+import moment from "moment";
+import router from "../router";
 export default {
   data() {
     return {
-      taejin: "",
+      roomNumber: "",
       url: "",
       wifiAddress: "",
       wifiPassword: "",
       arrangement: "",
       labels: [],
-      roomNotReady: false,
+      roomReady: false,
       email: "",
       phone: "",
-      param: "",
+      langID: "",
+      location: "",
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      textOta: {
+        color: "",
+        // opacity: "0.65",
+      },
+      hotelImage: "",
+      hotelName: "",
+      hotelParams: "",
+      coDate: "",
+      ciTime: "",
+      bookingcode: "",
+      TotalData: "",
+      hotelLogo: "",
+      setup: "",
+      hotelEndpoint: "",
+      QRshow: "false",
+      reslinnr: "",
+      serverTime: "",
+      message: "",
+      guestData: {},
+      weblabel: {
+        roomNumber: "",
+        wifiAddress: "",
+        wifiPassword: "",
+        arrangement: "",
+        mciSuccessWithMaxKeycard: "",
+        mciSuccess: "",
+        done: "",
+        phoneNumber: "",
+        email: "",
+        mciSuccessNotReady: "",
+        mciConfirmCi: "",
+        no: "",
+        yes: "",
+      },
+      infoMCIConfim: false,
+      loading: true,
+      gobackLoading: false,
     };
   },
-  mounted() {
-    // console.log(this.$route.params.jin, "nyampe");
-    this.data = this.$route.params.jin;
+  created() {
+    this.setup = this.$route.params.setting;
+    this.guestData = this.$route.params.Data;
+    if (this.setup == null || this.guestData == null) {
+      if (sessionStorage.getItem("guestData") != null) {
+        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
+      }
+      if (sessionStorage.getItem("settings") != null) {
+        this.setup = JSON.parse(sessionStorage.getItem("settings"));
+      }
+    }
+    // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
-    const success = btoa(this.data);
-    this.taejin = this.data.substr(1, this.data.indexOf(";") - 1);
-    this.wifiAddress = this.$route.params.jun;
-    this.wifiPassword = this.$route.params.jen;
-    this.arrangement = this.$route.params.jon;
-    this.roomNotReady = this.$route.params.jan;
-    this.email = this.$route.params.email;
-    this.phone = this.$route.params.phnum;
-    this.param = this.$route.params.param;
-    QRCode.toCanvas(
-      document.getElementById("canvas"),
-      success,
-      { errorCorrectionLevel: "H" },
-      { width: "76", height: "76" }
-      // function (error) {
-      // if (error) console.error(error);
-      // console.log("success!");
-      // }
+    // Get Parsing Web Setting
+    this.hotelLogo = this.setup.hotelLogo;
+    this.hotelEndpoint = this.setup.hotelEndpoint;
+    this.langID = this.setup.langID;
+    this.ota.backgroundColor = this.setup.BackgroundColor;
+    this.textOta.color = this.setup.FontColor;
+    this.hotelImage = this.setup.hotelImage;
+    this.hotelName = this.setup.hotelname;
+    this.ciTime = this.setup.defaultCI;
+    this.TotalData = this.setup.TotalData;
+    this.location = this.setup.location;
+    this.serverTime = this.setup.serverTime;
+    const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
+    this.hotelParams = decodeURIComponent(tempParam);
+    this.wifiAddress = this.setup.wifiAddress;
+    this.wifiPassword = this.setup.wifiPassword;
+    // Get Parsing Guest Data
+    this.coDate = this.formatDateFind(this.guestData["co"]);
+    this.bookingcode = this.guestData["resnr"];
+    this.reslinnr = this.guestData["reslinnr"];
+    this.roomReady = this.guestData["roomReady"];
+    this.roomNumber = this.guestData["zinr"];
+    this.arrangement = this.guestData["argt-str"];
+    this.email = this.guestData["guest-email"];
+    this.phone = this.guestData["guest-phnumber"];
+    // Selecting Language
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        break;
+      default:
+        this.programLabel = "program-label1";
+        break;
+    }
+    // Check Validation of Keycard
+    (async () => {
+      const parsed = await ky
+        .post(this.hotelEndpoint + "mobileCI/checkValidation", {
+          json: {
+            request: {
+              rsvNumber: this.bookingcode,
+              rsvlineNumber: this.reslinnr,
+              caseType: "3", // 1 = check res status; 2 = check payment; 3 = check keycard
+            },
+          },
+        })
+        .json();
+      this.data = parsed.response.keyString;      
+      if (parsed.response.keyAvail <= 0) {
+        this.QRshow = false;
+      } else {
+        this.QRshow = true;
+      }
+    })();
+    // Generate QRCode
+    // Labeling
+    this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
+    this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
+    this.weblabel.wifiPassword = this.findLabel(
+      "wifi_password",
+      "sentenceCase"
     );
-
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      // console.log(url.split(",")[1]);
-      this.url = url.split(",")[1];
-    });
-
-    // (async () => {
-    //   const parsed = await ky
-    //     .post("http://ws1.e1-vhp.com/VHPWebBased/rest/preCI/storeQRCode", {
-    //       json: {
-    //         request: {
-    //           base64image: this.url,
-    //           resno: this.taejin,
-    //         },
-    //       },
-    //     })
-    //     .json();
-    //   console.log(parsed);
-    // })();
+    this.weblabel.arrangement = this.findLabel("arrangement", "sentenceCase");
+    this.weblabel.mciSuccessWithMaxKeycard = this.findLabel(
+      "mci_success_with_max_keycard",
+      `sentenceCase`
+    );
+    this.weblabel.mciSuccess = this.findLabel("mci_success", "sentenceCase");
+    this.weblabel.done = this.findLabel("done", "titleCase");
+    this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.mciSuccessNotReady = this.findLabel(
+      "mci_success_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.mciConfirmCi = this.findLabel(
+      "mci_confirm_ci",
+      "sentenceCase"
+    );
+    this.weblabel.yes = this.findLabel("yes", "sentenceCase");
+    this.weblabel.no = this.findLabel("no", "sentenceCase");
   },
   methods: {
-    getLabels(nameKey, used) {
-      const label = this.labels.find(
-        (element) => element["program-variable"] == nameKey
-      );
+    findLabel(nameKey, used) {
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
       let fixLabel = "";
-      if (label == undefined) {
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
         fixLabel = "";
       } else {
-        if (used === "titleCase") {
-          fixLabel = this.setTitleCase(label["program-label1"]);
-        } else if (used === "sentenceCase") {
-          fixLabel =
-            label["program-label1"].charAt(0).toUpperCase() +
-            label["program-label1"].slice(1);
-        } else {
-          fixLabel = label["program-label1"];
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
         }
       }
-
       return fixLabel;
-    },
-    setTitleCase(label) {
-      return label.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
     },
     formatDate(datum) {
       const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
@@ -136,11 +309,154 @@ export default {
       );
       const dYear = String(moment(datum, "MM/DD/YYYY").year());
       const fixDate = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
-
       return fixDate;
     },
+    formatDateFind(datum) {
+      const dDate = String(moment(datum, "YYYY-MM-DD").date()).padStart(2, "0");
+      const dMonth = String(moment(datum, "YYYY-MM-DD").month() + 1).padStart(
+        2,
+        "0"
+      );
+      const dYear = String(moment(datum, "YYYY-MM-DD").year());
+      const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
+      return fixDate;
+    },
+    backToHome() {
+      window.open(this.location, "_self");
+    },
+    backToList() {
+      const mainReservation = JSON.parse(sessionStorage.getItem("listData"));
+      const settings = JSON.parse(sessionStorage.getItem("settings"));
+      router.push({
+        name: "ListCheckIn",
+        params: {
+          guestData: mainReservation,
+          setting: settings,
+        },
+      });
+    },
     goBack() {
-      window.open("http://vhp-online.com/mobilecheckin?param=" + this.param, "_self")
+      this.gobackLoading = true;
+      (async () => {
+        const data = await ky
+          .post(this.hotelEndpoint + "mobileCI/findReservation", {
+            json: {
+              request: {
+                coDate: this.setup.SearchCO,
+                bookCode: this.setup.SearchValue,
+                chName: " ",
+                earlyCI: "false",
+                maxRoom: "1",
+                citime: this.serverTime,
+                groupFlag: "false",
+              },
+            },
+          })
+          .json();
+        this.message = data.response["messResult"];
+        const messResult = this.message.split("-");
+        const messMessage = messResult[1].split(",");
+        this.gobackLoading = false;
+        switch (messResult[0].trim()) {
+          case "0":
+            // Reservation is Found
+            const reservation = [];
+            /* Get Temporary Total Reservation */
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            // Reservation Without Room Sharer (Main Guest Reservation)
+            const mainReservation = reservation[0].filter((item, index) => {
+              if (item["room-sharer"] === true) {
+              } else {
+                return item;
+              }
+            });
+            if (mainReservation.length > 1) {
+              // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
+              const acceptRsv = mainReservation.filter((item, index) => {
+                if (
+                  item["room-status"] == "1 Room Already assign or Overlapping"
+                ) {
+                } else {
+                  return item;
+                }
+              });
+              this.setup.TotalData = acceptRsv.length;
+              // Reservation Room Share Only
+              const roomShare = reservation[0].filter((item, index) => {
+                return item["room-sharer"] === true;
+              });
+              // Attach Room Share into Main Guest Reservation
+              // Also counting Total Of Checked-in and Waiting List
+              let countCheckedIn = 0;
+              let countWaiting = 0;
+              mainReservation.forEach((item, index) => {
+                Object.assign(item, { rmshare: [] });
+                roomShare.forEach((guest, index) => {
+                  if (item["zinr"] == guest["zinr"]) {
+                    item["rmshare"].push(guest["gast"]);
+                  }
+                });
+                if (item["res-status"] == "1 - Guest Already Checkin") {
+                  // Checked In Guest
+                  countCheckedIn++;
+                } else if (item["ifdata-sent"] == true) {
+                  // Waiting List Guest
+                  countWaiting++;
+                }
+              });
+              if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
+                // Open Modal Question
+                sessionStorage.setItem(
+                  "listData",
+                  JSON.stringify(mainReservation)
+                );
+                sessionStorage.setItem("settings", JSON.stringify(this.setup));
+                this.infoMCIConfim = true;
+              } else {
+                this.backToHome();
+              }
+            } else {
+              this.backToHome();
+            }
+            break;
+          default:
+            break;
+        }
+      })();
+    },
+    showAnimation() {
+      setTimeout(() => {
+        this.loading = false;
+        /* Generate QR Code */        
+        const success = btoa(this.data);        
+        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((err,url) => {
+          if(err){            
+            this.url = err;
+          } else {
+            this.url = url.split(",")[1];
+          }          
+        });        
+      }, 1000);
+    },
+  },
+  watch: {
+    isIdle(newIdle, oldIdle) {
+      if (newIdle == true || newIdle == "true") {
+        window.open(this.location, "_self");
+      }
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+    },
+  },
+  async mounted() {
+    await this.$nextTick();
+    // console.log('mounted is triggered');
+    this.showAnimation();    
+  },
+  computed: {
+    isIdle() {
+      return store.state.idleVue.isIdle;
     },
   },
 };
