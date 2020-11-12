@@ -56,17 +56,10 @@
           :key="guest['gast']"
           class="col-lg-4 col-md-4 col-sm-6 col-xs-12 guestItem"
         >
-          <q-card
-            flat
-            bordered
-            :class="handleClass(guest, 'card')"
-            @click="select(guest)"
-          >
+          <q-card flat bordered :class="handleClass(guest, 'card')" @click="select(guest)">
             <q-card-section class="row">
               <div class="col-12 row" style="margin-bottom: 5px;">
-                <div class="col-4 label-guestname">
-                  {{ weblabel.guestName }}
-                </div>
+                <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
                 <div class="col-8">
                   <q-chip
                     size="18px"
@@ -139,12 +132,7 @@
                     color="primary"
                     clickable
                     square
-                    style="
-                      background: white !important;
-                      color: #262728 !important;
-                      font-size: 0.6rem !important;
-                      border: 1px solid gray;
-                    "
+                    style="background: white !important; color: #262728 !important; font-size: 0.6rem !important; border: 1px solid gray;"                    
                     v-if="guest['rmshare'].length > 0"
                   >
                     {{ weblabel.mciShow }}
@@ -168,12 +156,15 @@
             </q-card-section>
           </q-card>
         </div>
-      </div>
+      </div>      
       <div class="row guest-list-button">
         <div class="col-6 button-item-left">
-          <a-button type="default" size="large" @click="back">{{
-            weblabel.back
-          }}</a-button>
+          <a-button
+            type="default"
+            size="large"
+            @click="back"
+            >{{ weblabel.back }}</a-button
+          >
         </div>
         <div class="col-6 button-item-right">
           <a-button
@@ -183,7 +174,7 @@
             @click="send"
             >{{ weblabel.next }}</a-button
           >
-        </div>
+        </div>        
       </div>
     </div>
   </div>
@@ -293,7 +284,7 @@ export default {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
-    tempData.forEach((item) => {
+    tempData.forEach((item) => {      
       if (item["gast"].length >= 36) {
         this.guestNameClass =
           "col-12 content-guestname content-guestname-space";
@@ -374,19 +365,13 @@ export default {
     );
     this.weblabel.statusCi = this.findLabel("status_ci", "sentenceCase");
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
-    this.weblabel.notCheckedInYet = this.findLabel(
-      "not_checked_in_yet",
-      "upperCase"
-    );
+    this.weblabel.notCheckedInYet = this.findLabel("not_checked_in_yet", "upperCase");
     this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
     this.weblabel.guests = this.findLabel("guests", "titleCase");
     this.weblabel.package = this.findLabel("package", "titleCase");
     this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
     this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
-    this.weblabel.notAvailableForCheckin = this.findLabel(
-      "not_available_for_checkin",
-      "titleCase"
-    );
+    this.weblabel.notAvailableForCheckin = this.findLabel("not_available_for_checkin", "titleCase");
     this.weblabel.mciShow = this.findLabel("show", "titleCase");
   },
   methods: {
@@ -584,6 +569,7 @@ export default {
       this.informationQueue = false;
     },
     send() {
+      /*
       if (
         this.selectedData["ifdata-sent"] == true &&
         this.selectedData["res-status"] != "1 - Guest Already Checkin"
@@ -591,44 +577,63 @@ export default {
         // Show Pop Up Message
         this.informationQueue = true;
       } else {
-        const findData = this.successCheckin.find((item) => {
-          return item == this.selectedData["reslinnr"];
-        });
-        if (findData == undefined) {
-          this.successCheckin.push(this.selectedData["reslinnr"]);
-        }
-        Object.assign(this.setup, { successCheckin: this.successCheckin });
-        sessionStorage.setItem("listData", JSON.stringify(this.guestData));
-        sessionStorage.setItem("settings", JSON.stringify(this.setup));
-        const resstatus = this.selectedData["res-status"].split(" - ");
-        if (parseInt(resstatus[0]) == 1) {
-          // Add RoomReady Variable
-          Object.assign(this.selectedData, { roomReady: true });
-          sessionStorage.setItem(
-            "guestData",
-            JSON.stringify(this.selectedData)
-          );
-          router.push({
-            name: "SuccessCheckIn",
-            params: {
-              Data: this.selectedData,
-              setting: this.setup,
-            },
-          });
-        } else {
-          sessionStorage.setItem(
-            "guestData",
-            JSON.stringify(this.selectedData)
-          );
-          router.push({
-            name: "Step",
-            params: {
-              guestData: this.selectedData,
-              setting: this.setup,
-            },
-          });
-        }
+        
       }
+      */
+      const findData = this.successCheckin.find((item) => {
+        return item == this.selectedData["reslinnr"];
+      });
+      if (findData == undefined) {
+        this.successCheckin.push(this.selectedData["reslinnr"]);
+      }
+      Object.assign(this.setup, { successCheckin: this.successCheckin });
+      sessionStorage.setItem("listData", JSON.stringify(this.guestData));
+      sessionStorage.setItem("settings", JSON.stringify(this.setup));
+      const resstatus = this.selectedData["res-status"].split(" - ");
+      if (parseInt(resstatus[0]) == 1) {
+        // Add RoomReady Variable
+        Object.assign(this.selectedData, { roomReady: true });
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      } else if (
+        this.selectedData["ifdata-sent"] == true &&
+        this.selectedData["res-status"] != "1 - Guest Already Checkin"
+      ) {
+        // Add RoomReady Variable
+        Object.assign(this.selectedData, { roomReady: false });
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      } else {
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "Step",
+          params: {
+            guestData: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      }      
     },
     formatDate(datum) {
       const dDate =

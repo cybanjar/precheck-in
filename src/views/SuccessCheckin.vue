@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="text-center">
-          <canvas v-show="QRshow == true" id="canvas"></canvas>
+        <div class="text-center">          
+          <img v-show="QRshow == true && roomReady == true" :src="url" />         
           <div v-if="roomReady" style="margin-top: 2rem;">
             <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
             <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
@@ -49,7 +49,9 @@
               </div>
             </div>
 
-            <a-button @click="goBack">{{ weblabel.done }}</a-button>
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+            </a-button>
           </div>
           <div v-else>
             <div class="row justify-center q-mt-xl">
@@ -62,7 +64,9 @@
               </div>
             </div>
 
-            <a-button @click="goBack">{{ weblabel.done }}</a-button>
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }} <q-spinner-ball color="red" style="margin-left: 10px;" v-if="gobackLoading"/>
+            </a-button>
           </div>
         </div>
       </div>
@@ -150,6 +154,7 @@ export default {
       },
       infoMCIConfim: false,
       loading: true,
+      gobackLoading: false,
     };
   },
   created() {
@@ -215,7 +220,7 @@ export default {
           },
         })
         .json();
-      this.data = parsed.response.keyString;
+      this.data = parsed.response.keyString;      
       if (parsed.response.keyAvail <= 0) {
         this.QRshow = false;
       } else {
@@ -249,18 +254,6 @@ export default {
     );
     this.weblabel.yes = this.findLabel("yes", "sentenceCase");
     this.weblabel.no = this.findLabel("no", "sentenceCase");
-  },
-  mounted() {
-    const success = btoa(this.data);
-    QRCode.toCanvas(
-      document.getElementById("canvas"),
-      success,
-      { errorCorrectionLevel: "H" },
-      { width: "76", height: "76" }
-    );
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      this.url = url.split(",")[1];
-    });
   },
   methods: {
     findLabel(nameKey, used) {
@@ -343,6 +336,7 @@ export default {
       });
     },
     goBack() {
+      this.gobackLoading = true;
       (async () => {
         const data = await ky
           .post(this.hotelEndpoint + "mobileCI/findReservation", {
@@ -362,6 +356,7 @@ export default {
         this.message = data.response["messResult"];
         const messResult = this.message.split("-");
         const messMessage = messResult[1].split(",");
+        this.gobackLoading = false;
         switch (messResult[0].trim()) {
           case "0":
             // Reservation is Found
@@ -434,7 +429,15 @@ export default {
     showAnimation() {
       setTimeout(() => {
         this.loading = false;
-        // console.log("setTimeout is Triggered", this.timer);
+        /* Generate QR Code */        
+        const success = btoa(this.data);        
+        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((err,url) => {
+          if(err){            
+            this.url = err;
+          } else {
+            this.url = url.split(",")[1];
+          }          
+        });        
       }, 1000);
     },
   },
@@ -449,7 +452,7 @@ export default {
   async mounted() {
     await this.$nextTick();
     // console.log('mounted is triggered');
-    this.showAnimation();
+    this.showAnimation();    
   },
   computed: {
     isIdle() {
