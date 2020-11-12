@@ -44,10 +44,7 @@
         <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
       </div>
     </div>
-    <div
-      class="row justify-around bg-white self-checkin"
-      style="padding-left: 1.5rem; padding-right: 1.5rem;"
-    >
+    <div class="row justify-around bg-white self-checkin">
       <div class="text-center">
         <h1 class="mt-3 text-center">
           {{ weblabel.guestList }}
@@ -59,23 +56,23 @@
           :key="guest['gast']"
           class="col-lg-4 col-md-4 col-sm-6 col-xs-12 guestItem"
         >
-          <q-card flat bordered>
+          <q-card flat bordered :class="handleClass(guest, 'card')" @click="select(guest)">
             <q-card-section class="row">
               <div class="col-12 row" style="margin-bottom: 5px;">
-                <div class="col-4 label-guestname">Guest</div>
+                <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
                 <div class="col-8">
                   <q-chip
                     size="18px"
                     outline
-                    color="primary"
+                    :color="handleStatusColor(guest)"
                     text-color="white"
                     class="float-right"
                   >
-                    Not Check-in
+                    {{ handleStatus(guest) }}
                   </q-chip>
                 </div>
               </div>
-              <div class="col-12 content-guestname">
+              <div :class="guestNameClass">
                 {{ guest["gast"].toUpperCase() }}
               </div>
             </q-card-section>
@@ -83,7 +80,7 @@
             <q-card-section class="guestcard-item">
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Booking Code
+                  {{ weblabel.bookCode }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ guest["resnr"] }}
@@ -91,7 +88,7 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Stay Period
+                  {{ weblabel.stayPeriod }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ formatDate(guest["ci"]) }} - {{ formatDate(guest["co"]) }}
@@ -99,7 +96,7 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Room Number
+                  {{ weblabel.roomNumber }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ guest["zinr"] }}
@@ -112,7 +109,7 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Person
+                  {{ weblabel.guests }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ guest["adult"] }} {{ weblabel.adult }}
@@ -120,7 +117,7 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Package
+                  {{ weblabel.package }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ guest["argt-str"] }}
@@ -128,118 +125,56 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  Room Share
+                  {{ weblabel.roomShare }}
                 </div>
                 <div class="col-8 guestcard-item-text">
-                  .
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-      <div class="ml-3 mt-3 mr-3">
-        <a-list
-          :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 3 }"
-          :data-source="guestData"
-        >
-          <a-list-item
-            slot="renderItem"
-            slot-scope="item"
-            style="margin-bottom: 10px;"
-          >
-            <div :class="handleClass(item, 'status')" v-if="handleStatus(item)">
-              {{ item.guestStatus }}
-            </div>
-            <a-card :class="handleClass(item, 'card')" @click="select(item)">
-              <div style="padding-right: 8px;">
-                <h2 v-if="isMobile == false" :class="handleClass(item, 'h2')">
-                  {{ item["shortname"] }}
-                  <span v-if="item['gast'].length > 20">
-                    <q-chip
-                      color="gray"
-                      clickable
-                      size="sm"
-                      text-color="black"
-                      style="
-                        margin-top: -3px !important;
-                        margin-left: 15px !important;
-                      "
-                    >
-                      Full Name
-                      <q-menu>
-                        <q-banner style="width: 300px;">
-                          <template v-slot:avatar>
-                            <q-icon name="people" color="primary" />
-                          </template>
-                          <p>
-                            {{ item["gast"] }}
-                          </p>
-                        </q-banner>
-                      </q-menu>
-                    </q-chip>
-                  </span>
-                </h2>
-                <h2 v-else :class="handleClass(item, 'h2')">
-                  {{ item["gast"].toUpperCase() }}
-                </h2>
-              </div>
-              <div v-if="item['rmshare'].length !== 0">
-                <span>
                   <q-chip
-                    color="gray"
+                    color="primary"
                     clickable
-                    size="sm"
-                    text-color="black"
-                    icon="supervisor_account"
-                    style="
-                      margin-top: -3px !important;
-                      margin-left: 15px !important;
-                    "
+                    square
+                    style="background: white !important; color: #262728 !important; font-size: 0.6rem !important; border: 1px solid gray;"                    
+                    v-if="guest['rmshare'].length > 0"
                   >
-                    Room Sharer
+                    {{ weblabel.mciShow }}
                     <q-menu>
                       <q-banner>
                         <template v-slot:avatar>
                           <q-icon name="supervisor_account" color="primary" />
                         </template>
                         <p
-                          v-for="item in item['rmshare']"
-                          :key="item"
+                          v-for="rmShare in guest['rmshare']"
+                          :key="rmShare"
                           style="margin: 0 !important; text-size: 12px;"
                         >
-                          {{ item }}
+                          {{ rmShare }}
                         </p>
                       </q-banner>
                     </q-menu>
                   </q-chip>
-                </span>
+                </div>
               </div>
-              <div v-else>
-                <br />
-              </div>
-              <p class="pl-3">{{ weblabel.bookCode }}: {{ item["resnr"] }}</p>
-              <p v-if="item.description != ''" class="pl-3">
-                {{ item.description }}
-              </p>
-              <p v-else class="pl-3">
-                <br />
-              </p>
-              <p class="pl-3">
-                {{ weblabel.arrival }}:
-                {{ formatDate(item.ci) }}
-                {{ weblabel.departure }}:
-                {{ formatDate(item.co) }}
-              </p>
-              <p class="pl-3">{{ weblabel.roomNumber }}: {{ item.zinr }}</p>
-              <p class="pl-3">
-                {{ item.adult }} {{ weblabel.adult }}
-                <a-tag color="green">{{ item["rmtype-str"] }}</a-tag>
-              </p>
-              <p class="pl-3">{{ item["argt-str"] }}</p>
-            </a-card>
-          </a-list-item>
-        </a-list>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>      
+      <div class="row guest-list-button">
+        <div class="col-6 button-item-left">
+          <a-button
+            type="default"
+            size="large"
+            @click="back"
+            >{{ weblabel.back }}</a-button
+          >
+        </div>
+        <div class="col-6 button-item-right">
+          <a-button
+            type="primary"
+            size="large"
+            :disabled="selectedData == 0 || selectedData == undefined"
+            @click="send"
+            >{{ weblabel.next }}</a-button
+          >
+        </div>        
       </div>
     </div>
     <a-button
@@ -305,6 +240,14 @@ export default {
         mciConfirmStatus: "",
         statusCi: "",
         statusQueue: "",
+        notCheckedInYet: "",
+        stayPeriod: "",
+        guests: "",
+        package: "",
+        roomShare: "",
+        guestName: "",
+        notAvailableForCheckin: "",
+        mciShow: "",
       },
       visible: false,
       isMobile: false,
@@ -320,6 +263,7 @@ export default {
         textAlign: "center",
       },
       hotelLogo: "",
+      guestNameClass: "col-12 content-guestname",
     };
   },
   created() {
@@ -357,18 +301,10 @@ export default {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
-    tempData.forEach((item) => {
-      if (this.isMobile == false) {
-        let Name = "";
-        if (item["gast"].length <= 20) {
-          Name = item["gast"].toUpperCase();
-        } else {
-          Name = item["gast"].toUpperCase().substring(0, 20) + "...";
-        }
-        Object.assign(item, { shortname: Name });
-      } else {
-        const Name = item["gast"].toUpperCase();
-        Object.assign(item, { shortname: Name });
+    tempData.forEach((item) => {      
+      if (item["gast"].length >= 36) {
+        this.guestNameClass =
+          "col-12 content-guestname content-guestname-space";
       }
       Object.assign(item, { ispopup: false });
       Object.assign(item, { guestStatus: "" });
@@ -446,18 +382,38 @@ export default {
     );
     this.weblabel.statusCi = this.findLabel("status_ci", "sentenceCase");
     this.weblabel.statusQueue = this.findLabel("status_queue", "sentenceCase");
+    this.weblabel.notCheckedInYet = this.findLabel("not_checked_in_yet", "upperCase");
+    this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
+    this.weblabel.guests = this.findLabel("guests", "titleCase");
+    this.weblabel.package = this.findLabel("package", "titleCase");
+    this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.notAvailableForCheckin = this.findLabel("not_available_for_checkin", "titleCase");
+    this.weblabel.mciShow = this.findLabel("show", "titleCase");
   },
   methods: {
     handleStatus(item) {
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
-        return true;
+        return item["guestStatus"];
       } else if (item["ifdata-sent"] == true) {
         item["guestStatus"] = this.weblabel.statusQueue;
-        return true;
+        return item["guestStatus"];
       } else {
-        return false;
+        item["guestStatus"] = this.weblabel.notCheckedInYet;
+        return item["guestStatus"];
       }
+    },
+    handleStatusColor(item) {
+      let returnedColor = "";
+      if (item["res-status"] == "1 - Guest Already Checkin") {
+        returnedColor = "teal";
+      } else if (item["ifdata-sent"] == true) {
+        returnedColor = "orange";
+      } else {
+        returnedColor = "gray";
+      }
+      return returnedColor;
     },
     findLabel(nameKey, used) {
       let labels = undefined;
@@ -630,6 +586,7 @@ export default {
       this.informationQueue = false;
     },
     send() {
+      /*
       if (
         this.selectedData["ifdata-sent"] == true &&
         this.selectedData["res-status"] != "1 - Guest Already Checkin"
@@ -637,44 +594,63 @@ export default {
         // Show Pop Up Message
         this.informationQueue = true;
       } else {
-        const findData = this.successCheckin.find((item) => {
-          return item == this.selectedData["reslinnr"];
-        });
-        if (findData == undefined) {
-          this.successCheckin.push(this.selectedData["reslinnr"]);
-        }
-        Object.assign(this.setup, { successCheckin: this.successCheckin });
-        sessionStorage.setItem("listData", JSON.stringify(this.guestData));
-        sessionStorage.setItem("settings", JSON.stringify(this.setup));
-        const resstatus = this.selectedData["res-status"].split(" - ");
-        if (parseInt(resstatus[0]) == 1) {
-          // Add RoomReady Variable
-          Object.assign(this.selectedData, { roomReady: true });
-          sessionStorage.setItem(
-            "guestData",
-            JSON.stringify(this.selectedData)
-          );
-          router.push({
-            name: "SuccessCheckIn",
-            params: {
-              Data: this.selectedData,
-              setting: this.setup,
-            },
-          });
-        } else {
-          sessionStorage.setItem(
-            "guestData",
-            JSON.stringify(this.selectedData)
-          );
-          router.push({
-            name: "Step",
-            params: {
-              guestData: this.selectedData,
-              setting: this.setup,
-            },
-          });
-        }
+        
       }
+      */
+      const findData = this.successCheckin.find((item) => {
+        return item == this.selectedData["reslinnr"];
+      });
+      if (findData == undefined) {
+        this.successCheckin.push(this.selectedData["reslinnr"]);
+      }
+      Object.assign(this.setup, { successCheckin: this.successCheckin });
+      sessionStorage.setItem("listData", JSON.stringify(this.guestData));
+      sessionStorage.setItem("settings", JSON.stringify(this.setup));
+      const resstatus = this.selectedData["res-status"].split(" - ");
+      if (parseInt(resstatus[0]) == 1) {
+        // Add RoomReady Variable
+        Object.assign(this.selectedData, { roomReady: true });
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      } else if (
+        this.selectedData["ifdata-sent"] == true &&
+        this.selectedData["res-status"] != "1 - Guest Already Checkin"
+      ) {
+        // Add RoomReady Variable
+        Object.assign(this.selectedData, { roomReady: false });
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      } else {
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.selectedData)
+        );
+        router.push({
+          name: "Step",
+          params: {
+            guestData: this.selectedData,
+            setting: this.setup,
+          },
+        });
+      }      
     },
     formatDate(datum) {
       const dDate =

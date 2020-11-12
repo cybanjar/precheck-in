@@ -640,6 +640,8 @@ export default {
       licenseMembership: false,
       timer: 0,
       isMobile: false,
+      conditionSMOOKING: false,
+      termSMOOKING: "",
     };
   },
   created() {
