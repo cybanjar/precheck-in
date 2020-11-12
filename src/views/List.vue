@@ -132,7 +132,7 @@
           </q-card>
         </div>
       </div>
-      <router-link :to="{ name: 'Home', params: { id: selectedData } }">
+      <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
         <a-button
           class="fixed-bottom-right mr-3 float-right"
           type="primary"
@@ -141,7 +141,7 @@
           @click="send"
           >{{ getLabels("next", `titleCase`) }}</a-button
         >
-      </router-link>
+      <!-- </router-link> -->
     </div>
   </div>
 </template>
@@ -232,20 +232,20 @@ export default {
             "," +
             this.setup["checkInTIme"] +
             "}";
-          // router.push({
-          //   name: "Success",
-          //   params: {
-          //     Data: Data,
-          //     Param: this.lemparsetup,
-          //   },
-          // });
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
         } else {
           this.selectedData.splice(jumlah, jumlah.length);
           const data = this.selectedData;
-          // router.push({
-          //   name: "Home",
-          //   params: { Data: data, Param: this.lemparsetup },
-          // });
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
         }
       } else {
         if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
@@ -258,21 +258,21 @@ export default {
             this.setup["checkInTIme"] +
             "}";
 
-          console.log(this.selectedData[0]["gcomment-desc"]);
-          // router.push({
-          //   name: "Success",
-          //   params: {
-          //     Data: Data,
-          //     Param: this.lemparsetup,
-          //   },
-          // });
+          // console.log(this.selectedData[0]["gcomment-desc"]);
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
         } else {
           const data = this.selectedData;
-          // router.push({
-          //   name: "Home",
-          //   params: { Data: data, Param: this.lemparsetup },
-          // });
-          console.log(this.selectedData[0]["gcomment-desc"],"sana");
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+          // console.log(this.selectedData[0]["gcomment-desc"],"sana");
         }
       }
     },
