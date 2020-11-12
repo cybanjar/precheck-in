@@ -27,7 +27,7 @@
             @click="select(item)"
           >
             <q-card-section class="row">
-              <div class="col-12 row" style="margin-bottom: 5px;">
+              <div class="col-12 row" style="margin-bottom: 5px">
                 <div class="col-4 label-guestname">
                   {{ getLabels("guest_name", `titleCase`) }}
                 </div>
@@ -72,11 +72,9 @@
                 </div>
                 <div class="col-8 guestcard-item-text">
                   {{ item["rsv-number"] }}
-                  <a-tag
-                    color="green"
-                    style="font-weight: normal !important;"
-                    >{{ item["argt-code"] }}</a-tag
-                  >
+                  <a-tag color="green" style="font-weight: normal !important">{{
+                    item["argt-code"]
+                  }}</a-tag>
                 </div>
               </div>
               <div class="row guestcard-peritem">
@@ -121,7 +119,7 @@
                         <p
                           v-for="rmShare in item['rmshare']"
                           :key="rmShare"
-                          style="margin: 0 !important; text-size: 12px;"
+                          style="margin: 0 !important; text-size: 12px"
                         >
                           {{ rmShare }}
                         </p>
@@ -234,20 +232,20 @@ export default {
             "," +
             this.setup["checkInTIme"] +
             "}";
-          router.push({
-            name: "Success",
-            params: {
-              Data: Data,
-              Param: this.lemparsetup,
-            },
-          });
+          // router.push({
+          //   name: "Success",
+          //   params: {
+          //     Data: Data,
+          //     Param: this.lemparsetup,
+          //   },
+          // });
         } else {
           this.selectedData.splice(jumlah, jumlah.length);
           const data = this.selectedData;
-          router.push({
-            name: "Home",
-            params: { Data: data, Param: this.lemparsetup },
-          });
+          // router.push({
+          //   name: "Home",
+          //   params: { Data: data, Param: this.lemparsetup },
+          // });
         }
       } else {
         if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
@@ -259,19 +257,22 @@ export default {
             "," +
             this.setup["checkInTIme"] +
             "}";
-          router.push({
-            name: "Success",
-            params: {
-              Data: Data,
-              Param: this.lemparsetup,
-            },
-          });
+
+          console.log(this.selectedData[0]["gcomment-desc"]);
+          // router.push({
+          //   name: "Success",
+          //   params: {
+          //     Data: Data,
+          //     Param: this.lemparsetup,
+          //   },
+          // });
         } else {
           const data = this.selectedData;
-          router.push({
-            name: "Home",
-            params: { Data: data, Param: this.lemparsetup },
-          });
+          // router.push({
+          //   name: "Home",
+          //   params: { Data: data, Param: this.lemparsetup },
+          // });
+          console.log(this.selectedData[0]["gcomment-desc"],"sana");
         }
       }
     },
