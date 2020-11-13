@@ -1606,7 +1606,7 @@ export default {
           this.email = this.form.getFieldValue(["email"][0]);
           this.mobilephone = this.form.getFieldValue(["phone"][0]);
           this.requestdatetime = moment().format("YYYYMMDDHHmmss");
-          this.trxID = this.currDataPrepare.resnr + moment().format("YYYYMMDDHHmmss");
+          this.trxID = this.pad(this.currDataPrepare.resnr, 7) + moment().format("DDMMYYYYHHmmss");
           this.words = CryptoJS.SHA1(
           this.Deposit + '.00' +
           "11133679" +
@@ -2218,6 +2218,11 @@ export default {
       }).catch(function(error) {
         console.log(error);
       });
+    },
+    pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
     },
   },
   watch: {
