@@ -186,23 +186,6 @@
         </div>
       </div>
     </div>
-    <a-button
-      class="float-left"
-      type="default"
-      size="large"
-      style="margin-bottom: 20px !important; margin-left: 1.5rem;"
-      @click="back"
-      >{{ weblabel.back }}</a-button
-    >
-    <a-button
-      class="float-right"
-      type="primary"
-      size="large"
-      style="margin-bottom: 20px !important; margin-right: 1.5rem;"
-      :disabled="selectedData == 0 || selectedData == undefined"
-      @click="send"
-      >{{ weblabel.next }}</a-button
-    >
   </div>
 </template>
 <script>

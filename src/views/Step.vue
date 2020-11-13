@@ -1,7 +1,7 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
   <div v-else>
@@ -23,7 +23,7 @@
             {{ weblabel.okMessage }}
             <q-spinner
               v-if="loadingConfirmEmail"
-              style="margin-left: 10px;"
+              style="margin-left: 10px"
               color="white"
               size="12px"
             />
@@ -181,28 +181,70 @@
       <q-dialog v-model="termcondition">
         <q-card>
           <q-card-section>
-            <div class="text-h6">{{ weblabel.tcTitle }}</div>
+            <div class="text-h6" v-show="stepTerm === 1">
+              {{ weblabel.tcTitle }}
+            </div>
+            <div class="text-h6" v-show="stepTerm === 2">Privacy Policy</div>
           </q-card-section>
 
           <q-separator />
 
-          <q-card-section style="max-height: 50vh;" class="scroll">
-            <p style="white-space: pre-wrap;">{{ terms }}</p>
+          <q-card-section style="max-height: 50vh" class="scroll">
+            <q-stepper
+              v-model="stepTerm"
+              ref="stepper"
+              flat
+              contracted
+              animated
+            >
+              <q-step :name="1" :done="stepTerm > 1">
+                <p style="white-space: pre-wrap">{{ terms }}</p>
+              </q-step>
+
+              <q-step :name="2" :done="stepTerm > 2">
+                <p style="white-space: pre-wrap">{{ termSMOOKING }}</p>
+              </q-step>
+
+              <!-- <template v-slot:navigation>
+                <q-stepper-navigation>
+                  <q-btn
+                    @click="$refs.stepper.next()"
+                    color="primary"
+                    :label="stepTerm === 2 ? 'Finish' : 'Continue'"
+                  />
+                  <q-btn
+                    v-if="stepTerm > 1"
+                    flat
+                    color="primary"
+                    @click="$refs.stepper.previous()"
+                    label="Back"
+                    class="q-ml-sm"
+                  />
+                </q-stepper-navigation>
+              </template> -->
+            </q-stepper>
           </q-card-section>
 
           <q-separator />
 
           <q-card-actions align="right">
             <q-btn
-              flat
               :label="weblabel.disagree"
-              color="primary"
+              color="red"
               @click="disagree"
-            /><q-btn
+            />
+            <q-btn
+              v-if="stepTerm > 1"
               flat
-              :label="weblabel.agree"
               color="primary"
-              @click="handleOk"
+              @click="$refs.stepper.previous()"
+              label="Back"
+              class="q-ml-sm"
+            />
+            <q-btn
+              :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
+              color="primary"
+              @click="stepTerm === 2 ? handleOk() : $refs.stepper.next()"
             />
           </q-card-actions>
         </q-card>
@@ -214,7 +256,7 @@
       <div class="row justify-between" :style="information">
         <div
           class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
-          style="padding-right: 30px;"
+          style="padding-right: 30px"
         >
           <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
           <h6
@@ -231,18 +273,18 @@
                 size="sm"
                 text-color="black"
                 icon="supervisor_account"
-                style="margin-top: -3px !important;"
+                style="margin-top: -3px !important"
               >
                 Room Sharer
                 <q-menu>
-                  <q-banner style="width: 300px;">
+                  <q-banner style="width: 300px">
                     <template v-slot:avatar>
                       <q-icon name="supervisor_account" color="primary" />
                     </template>
                     <p
                       v-for="item in currDataPrepare['rmshare']"
                       :key="item"
-                      style="margin: 0 !important; text-size: 12px;"
+                      style="margin: 0 !important; text-size: 12px"
                     >
                       {{ item }}
                     </p>
@@ -260,18 +302,18 @@
                 size="sm"
                 text-color="black"
                 icon="supervisor_account"
-                style="margin-top: -3px !important;"
+                style="margin-top: -3px !important"
               >
                 Room Sharer
                 <q-menu>
-                  <q-banner style="width: 300px;">
+                  <q-banner style="width: 300px">
                     <template v-slot:avatar>
                       <q-icon name="supervisor_account" color="primary" />
                     </template>
                     <p
                       v-for="item in currDataPrepare['rmshare']"
                       :key="item"
-                      style="margin: 0 !important; text-size: 12px;"
+                      style="margin: 0 !important; text-size: 12px"
                     >
                       {{ item }}
                     </p>
@@ -330,14 +372,14 @@
             >
               Room Sharer
               <q-menu>
-                <q-banner style="width: 300px;">
+                <q-banner style="width: 300px">
                   <template v-slot:avatar>
                     <q-icon name="supervisor_account" color="primary" />
                   </template>
                   <p
                     v-for="item in currDataPrepare['rmshare']"
                     :key="item"
-                    style="margin: 0 !important; text-size: 12px;"
+                    style="margin: 0 !important; text-size: 12px"
                   >
                     {{ item }}
                   </p>
@@ -390,7 +432,7 @@
                 title="Input Guest Detail"
                 icon="person"
                 active-icon="person"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 1"
               >
                 <div class="steps-content">
@@ -473,7 +515,7 @@
                 title="Input Address"
                 icon="room"
                 active-icon="room"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 2"
               >
                 <div class="steps-content">
@@ -578,7 +620,7 @@
                 caption="Optional"
                 icon="portrait"
                 active-icon="portrait"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 3"
               >
                 <div class="steps-content">
@@ -586,7 +628,7 @@
                     <a-col class="text-center">
                       <a-form-item>
                         <input
-                          style="display: none;"
+                          style="display: none"
                           ref="fileurl"
                           accept="image/*"
                           type="file"
@@ -604,21 +646,21 @@
                             },
                           ]"
                         />
-                        <div style="margin-top: -50px;">
+                        <div style="margin-top: -50px">
                           <h1>{{ weblabel.idPhoto }}</h1>
                           <p>
                             {{ weblabel.idPhotoDesc }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
-                        <div style="margin-top: 40px;">
+                        <div style="margin-top: 40px">
                           <q-btn
                             unelevated
                             rounded
                             @click="getFile"
                             color="primary"
                             label="Upload"
-                            style="width: 200px;"
+                            style="width: 200px"
                           />
                         </div>
                       </a-form-item>
@@ -632,7 +674,7 @@
                 title="Deposit Payment"
                 icon="payment"
                 active-icon="payment"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 4"
               >
                 <div class="steps-content">
@@ -651,12 +693,12 @@
                       <div>
                         <a-form-item
                           label="Deposit Payment Response"
-                          style="margin-top: 10px;"
+                          style="margin-top: 10px"
                         >
                           <a-select
                             v-model="errorCode"
                             default-value="0000"
-                            style="width: 180px;"
+                            style="width: 180px"
                             @change="handleChange"
                           >
                             <a-select-option value="0000">
@@ -686,7 +728,7 @@
                           {{ weblabel.pay }}
                           <q-spinner
                             v-if="paymentLoading"
-                            style="margin-left: 10px;"
+                            style="margin-left: 10px"
                             color="primary"
                             size="12px"
                           />
@@ -705,17 +747,17 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentNetworkError }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
@@ -941,6 +983,7 @@ export default {
       maximumDeposit: "0",
       OverNightDeposit: "0",
       paid: "0",
+      stepTerm: 1,
       TotalData: "",
       defaultCI: "",
       overlappingModal: false,
@@ -1007,7 +1050,6 @@ export default {
       rmShareTooltip: true,
       afterPayment: false,
       termSMOOKING: "",
-      conditionSMOOKING: false,
       textOta: {
         color: "",
         backgroundColor: "transparent",
@@ -1069,7 +1111,6 @@ export default {
     this.term = this.currDataSetting["termENG"];
     this.term1 = this.currDataSetting["termIDN"];
     this.termSMOOKING = this.currDataSetting["termSMOOKING"];
-    this.conditionSMOOKING = this.currDataSetting["conditionSMOOKING"];
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];

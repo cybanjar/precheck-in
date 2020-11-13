@@ -95,7 +95,7 @@
               </div>
               <div class="row guestcard-peritem">
                 <div class="col-4">
-                  {{ getLabels("roomShare", `titleCase`) }}
+                  {{ getLabels("room_share", `titleCase`) }}
                 </div>
                 <div class="col-8 guestcard-item-text">
                   <q-chip
