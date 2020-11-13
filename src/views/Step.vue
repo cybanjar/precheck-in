@@ -190,61 +190,40 @@
           <q-separator />
 
           <q-card-section style="max-height: 50vh" class="scroll">
-            <q-stepper
-              v-model="stepTerm"
-              ref="stepper"
-              flat
-              contracted
-              animated
-            >
-              <q-step :name="1" :done="stepTerm > 1">
-                <p style="white-space: pre-wrap">{{ terms }}</p>
-              </q-step>
+            <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+              {{ terms }}
+            </p>
+            <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+              {{ termSMOOKING }}
+            </p>
 
-              <q-step :name="2" :done="stepTerm > 2">
-                <p style="white-space: pre-wrap">{{ termSMOOKING }}</p>
-              </q-step>
-
-              <!-- <template v-slot:navigation>
-                <q-stepper-navigation>
-                  <q-btn
-                    @click="$refs.stepper.next()"
-                    color="primary"
-                    :label="stepTerm === 2 ? 'Finish' : 'Continue'"
-                  />
-                  <q-btn
-                    v-if="stepTerm > 1"
-                    flat
-                    color="primary"
-                    @click="$refs.stepper.previous()"
-                    label="Back"
-                    class="q-ml-sm"
-                  />
-                </q-stepper-navigation>
-              </template> -->
-            </q-stepper>
+            <p
+              style="white-space: pre-wrap"
+              v-show="stepTerm == 2"
+              v-html="policy"
+            ></p>
           </q-card-section>
 
           <q-separator />
 
           <q-card-actions align="right">
             <q-btn
-              :label="weblabel.disagree"
-              color="red"
-              @click="disagree"
-            />
-            <q-btn
               v-if="stepTerm > 1"
               flat
               color="primary"
-              @click="$refs.stepper.previous()"
+              @click="kurang()"
               label="Back"
-              class="q-ml-sm"
+            />
+            <q-btn
+              :label="weblabel.disagree"
+              color="red"
+              @click="disagree"
+              
             />
             <q-btn
               :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
               color="primary"
-              @click="stepTerm === 2 ? handleOk() : $refs.stepper.next()"
+              @click="handleOk"
             />
           </q-card-actions>
         </q-card>
@@ -1061,6 +1040,7 @@ export default {
         overflowX: "hidden",
         textAlign: "center",
       },
+      policy: "",
     };
   },
   watch: {
@@ -1132,6 +1112,7 @@ export default {
     this.textOta.color = this.currDataSetting["FontColor"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
+    this.policy = this.currDataSetting["policy"];
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -1389,6 +1370,9 @@ export default {
     this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
   },
   methods: {
+    kurang() {
+      this.stepTerm = this.stepTerm - 1;
+    },
     findLabel(nameKey, used) {
       // console.log('FindLabel');
       let labels = undefined;
@@ -2126,17 +2110,22 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      // console.log('handleOk');
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.muncul = false;
-        this.keluar = false;
-        this.guest = false;
-        this.termcondition = false;
-        this.confirmLoading = false;
-      }, 300);
+      console.log(this.stepTerm);
+      if (this.stepTerm < 2) {
+        this.stepTerm = this.stepTerm + 1;
+      } else {
+        // console.log('handleOk');
+        this.ModalText = "The modal will be closed after two seconds";
+        this.confirmLoading = true;
+        setTimeout(() => {
+          this.visible = false;
+          this.muncul = false;
+          this.keluar = false;
+          this.guest = false;
+          this.termcondition = false;
+          this.confirmLoading = false;
+        }, 300);
+      }
     },
     disagree() {
       // console.log('disagree');

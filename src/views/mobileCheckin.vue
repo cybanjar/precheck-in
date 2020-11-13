@@ -21,7 +21,7 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right: -15px;">
+      <div class="col-xs-4" style="margin-right: -15px">
         <q-select
           class="float-right"
           borderless
@@ -37,7 +37,7 @@
             <q-chip
               :style="textOta"
               class="q-ma-none"
-              style="margin-right: -20px;"
+              style="margin-right: -20px"
             >
               {{ scope.opt }}
             </q-chip>
@@ -70,7 +70,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon
           @click="showModalBookingCode"
@@ -155,7 +155,7 @@
       </div>
       <div
         :class="handleClassIconCenter()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
         <p class="mt-3">{{ weblabel.iconName }}</p>
@@ -234,7 +234,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
         <p class="mt-3">{{ weblabel.email }}</p>
@@ -315,7 +315,7 @@
       <div
         :class="handleClassIcon()"
         v-if="licenseMembership"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon
           @click="showModalMembershipID"
@@ -461,6 +461,7 @@
 import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
+import privacyPolicy from "../store/privacy";
 import {
   Quasar,
   QInput,
@@ -641,6 +642,7 @@ export default {
       timer: 0,
       isMobile: false,
       termSMOOKING: "",
+      policy: "",
     };
   },
   created() {
@@ -933,7 +935,9 @@ export default {
         return item.number1 === 9 && item.number2 === 8;
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
-      
+
+      this.policy = privacyPolicy.responses["0"].policy;
+
       const tempSMOOKING = this.tempsetup.filter((item, index) => {
         //  condition SMOOKING
         return item.number1 === 6 && item.number2 === 3;
@@ -984,6 +988,7 @@ export default {
       obj["hotelLogo"] = this.hotelLogo;
       obj["defaultCountry"] = this.defaultCountry;
       obj["termSMOOKING"] = this.termSMOOKING;
+      obj["policy"] = this.policy;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date
