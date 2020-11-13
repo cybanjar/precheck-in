@@ -6,6 +6,24 @@
   </div>
   <div v-else>
     <div class="home">
+    <q-form action="/step" method="post">
+      <q-input name="RESULTMSG" style="display: none;" />
+      <!--<q-input name="BASKET" value="Deposit,300000.00,1,300000.00" style="display: none;" />
+      <q-input name="CHAINMERCHANT" value="0" style="display: none;" />
+      <q-input name="CURRENCY" value="360" style="display: none;" />
+      <q-input name="EMAIL" value="michael_yohannes@sindata.net" style="display: none;" />
+      <q-input name="MALLID" value="11133679" style="display: none;" />
+      <q-input name="NAME" value="Aa Ngurah Jayalantara,  MR" style="display: none;" />
+      <q-input name="PAYMENTTYPE" value="AUTHORIZATION" style="display: none;" />
+      <q-input name="PURCHASEAMOUNT" value="300000.00" style="display: none;" />
+      <q-input name="PURCHASECURRENCY" value="360" style="display: none;" />
+      <q-input name="REQUESTDATETIME" value="20201111151207" style="display: none;" />
+      <q-input name="SESSIONID" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
+      <q-input name="TRANSIDMERCHANT" value="TRX202011091007" style="display: none;" />
+      <q-input name="WORDS" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
+      <q-input name="PAYMENTCHANNEL" value="15" style="display: none;" />
+      <q-input name="MOBILEPHONE" value="335235" style="display: none;" />-->
+    </q-form>
       <!-- Modal Response Room Status -->
       <a-modal
         :title="weblabel.information"
@@ -683,26 +701,26 @@
                           @click="checkPayment()"
                         >-->
                         <q-form action="https://staging.doku.com/Suite/Receive" method="post">
-                          <q-input name="AMOUNT" value="300000.00" style="display: none;" />
-                          <q-input name="BASKET" value="Deposit,300000.00,1,300000.00" style="display: none;" />
+                          <q-input name="AMOUNT" :value="Deposit + '.00'" style="display: none;" />
+                          <q-input name="BASKET" :value="'Deposit,' + Deposit + '.00,1,' + Deposit + '.00'" style="display: none;" />
                           <q-input name="CHAINMERCHANT" value="0" style="display: none;" />
                           <q-input name="CURRENCY" value="360" style="display: none;" />
-                          <q-input name="EMAIL" value="michael_yohannes@sindata.net" style="display: none;" />
+                          <q-input name="EMAIL" :value="email" style="display: none;" />
                           <q-input name="MALLID" value="11133679" style="display: none;" />
-                          <q-input name="NAME" value="Aa Ngurah Jayalantara,  MR" style="display: none;" />
+                          <q-input name="NAME" :value="currDataPrepare['gast'].replace(/,/g, '')" style="display: none;" />
                           <q-input name="PAYMENTTYPE" value="AUTHORIZATION" style="display: none;" />
-                          <q-input name="PURCHASEAMOUNT" value="300000.00" style="display: none;" />
+                          <q-input name="PURCHASEAMOUNT" :value="Deposit + '.00'" style="display: none;" />
                           <q-input name="PURCHASECURRENCY" value="360" style="display: none;" />
-                          <q-input name="REQUESTDATETIME" value="20201111151207" style="display: none;" />
-                          <q-input name="SESSIONID" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
-                          <q-input name="TRANSIDMERCHANT" value="TRX202011091007" style="display: none;" />
-                          <q-input name="WORDS" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
+                          <q-input name="REQUESTDATETIME" :value="requestdatetime" style="display: none;" />
+                          <q-input name="SESSIONID" :value="words" style="display: none;" />
+                          <q-input name="TRANSIDMERCHANT" :value="trxID" style="display: none;" />
+                          <q-input name="WORDS" :value="words" style="display: none;" />
                           <q-input name="PAYMENTCHANNEL" value="15" style="display: none;" />
+                          <q-input name="MOBILEPHONE" :value="mobilephone" style="display: none;" />
                         <q-btn
                           class="font-weight-bold mt-3 mr-3"
                           type="submit"
                           :disabled="paid || paymentLoading"
-                          @click="test()"
                         >
                           {{ weblabel.pay }}
                           <q-spinner
@@ -1031,6 +1049,9 @@ export default {
       termSMOOKING: "",
       conditionSMOOKING: false,
       trxID: "",
+      mobilephone: "",
+      requestdatetime: "",
+      words: "",
     };
   },
   watch: {
@@ -1581,6 +1602,17 @@ export default {
               this.$refs.stepper.next();
             }
           }
+          // preparing data for payment gateway
+          this.email = this.form.getFieldValue(["email"][0]);
+          this.mobilephone = this.form.getFieldValue(["phone"][0]);
+          this.requestdatetime = moment().format("YYYYMMDDHHmmss");
+          this.trxID = this.currDataPrepare.resnr + moment().format("YYYYMMDDHHmmss");
+          this.words = CryptoJS.SHA1(
+          this.Deposit + '.00' +
+          "11133679" +
+          "rpT4jeLsWHHK" +
+          this.trxID
+          ).toString();
           break;
         case 3:
           if (this.form.getFieldValue(["url"][0]) == "") {
@@ -2171,8 +2203,6 @@ export default {
         EMAIL: this.currDataPrepare["guest-email"],
         BASKET: 'Deposit,' + this.Deposit + '.00' + ',1,' + this.Deposit + '.00',
       };
-      console.log(words.toString());
-      console.log(datas.get('MALLID'));
       fetch('https://api.allorigins.win/get?url=https://staging.doku.com/Suite/Receive', {
         method: 'post',
         redirect: "follow",
@@ -2189,9 +2219,6 @@ export default {
         console.log(error);
       });
     },
-    test() {
-      console.log(this.currDataPrepare.resnr);
-    }
   },
   watch: {
     isIdle(newIdle, oldIdle) {
