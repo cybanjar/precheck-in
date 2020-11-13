@@ -133,14 +133,14 @@
         </div>
       </div>
       <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
-        <a-button
-          class="fixed-bottom-right mr-3 float-right"
-          type="primary"
-          size="large"
-          :disabled="selectedData == 0 || selectedData == undefined"
-          @click="send"
-          >{{ getLabels("next", `titleCase`) }}</a-button
-        >
+      <a-button
+        class="fixed-bottom-right mr-3 float-right"
+        type="primary"
+        size="large"
+        :disabled="selectedData == 0 || selectedData == undefined"
+        @click="send"
+        >{{ getLabels("next", `titleCase`) }}</a-button
+      >
       <!-- </router-link> -->
     </div>
   </div>
@@ -240,8 +240,10 @@ export default {
             },
           });
         } else {
-          this.selectedData.splice(jumlah, jumlah.length);
-          const data = this.selectedData;
+          const asli = this.selectedData.filter((item, index) => {
+            return item["gcomment-desc"] != "GUEST ALREADY PCI";
+          });
+          const data = asli;
           router.push({
             name: "Home",
             params: { Data: data, Param: this.lemparsetup },
