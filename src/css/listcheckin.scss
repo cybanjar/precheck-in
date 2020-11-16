@@ -2,12 +2,15 @@
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
+
 .listGuest {
   max-width: 100vw;
 }
+
 .guestItem {
   min-height: 18rem !important;
 }
+
 .q-card {
   border-radius: 10px 10px 10px 10px !important;
   -webkit-border-radius: 10px 10px 10px 10px !important;
@@ -18,6 +21,7 @@
   background-color: #f5f6f7;
   color: #262728;
 }
+
 .q-chip {
   margin: 0 !important;
   font-size: 0.5rem !important;
@@ -25,39 +29,49 @@
   max-width: none !important;
   text-transform: uppercase;
 }
+
 .guest-name {
   display: flex;
   flex-direction: column;
 }
+
 .label-guestname {
   font-size: 0.6rem;
 }
+
 .content-guestname {
   line-height: 1.25rem;
   font-weight: bold;
   font-size: 1rem;
 }
+
 .content-guestname-space {
   height: 2.87rem !important;
 }
+
 .guestcard-item {
   font-size: 0.75rem;
 }
+
 .guestcard-item-text {
   font-weight: 600;
 }
+
 .guestcard-peritem {
   margin-bottom: 0.3rem;
 }
+
 .guest-list-button {
   width: 100%;
   height: 5rem;
 }
+
 .button-item-left {
   display: flex;
   align-self: center;
   justify-content: flex-start;
 }
+
 .button-item-right {
   display: flex;
   align-self: center;
