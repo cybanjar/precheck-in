@@ -193,8 +193,20 @@
 }
 
 .selected {
-  background: $primary;
-  color: white;
+  background-color: $primary !important;
+  color: white !important;
+  transition: all 0.3s;
+}
+
+.checkin {
+  background-color: #9ad3bc !important;
+  color: #262728 !important;
+  transition: all 0.3s;
+}
+
+.disabled {
+  background-color: $black !important;
+  color: white !important;
   transition: all 0.3s;
 }
 
@@ -205,8 +217,8 @@
 }
 
 .notselected {
-  background: #f5f6f7;
-  color: #262728;
+  background-color: #f5f6f7 ;
+  color: #262728 !important;
   transition: all 0.3s;
 }
 

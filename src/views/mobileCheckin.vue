@@ -1,18 +1,28 @@
 <template>
-  <div class="spin-load-table" v-if="loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
-    </a-spin>
+  <div v-if="loading">
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        margin-top: -50px;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
+    </div>
   </div>
-  <div v-else>
+  <div v-else v-cloak>
     <div :style="ota" class="row justify-between pt-2">
       <div class="col-xs-4"></div>
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="padding-right: 10px;">
+      <div class="col-xs-4" style="margin-right: -15px">
         <q-select
-          :style="textOta"
           class="float-right"
           borderless
           behavior="menu"
@@ -22,34 +32,56 @@
             { label: 'English', value: 'English' },
             { label: 'Indonesia', value: 'Indonesia' },
           ]"
-        />
+        >
+          <template v-slot:selected-item="scope">
+            <q-chip
+              :style="textOta"
+              class="q-ma-none"
+              style="margin-right: -20px"
+            >
+              {{ scope.opt }}
+            </q-chip>
+          </template>
+          <template v-slot:append>
+            <q-icon name="language" :style="textOta" />
+          </template>
+        </q-select>
       </div>
       <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
         <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
       </div>
     </div>
-    <div class="row justify-around bg-white self_checkin">
-      <div class="col-xs-12 text-center q-mb-lg">
-        <h4 class="text-uppercase font-weight-bold q-mt-md q-mb-lg">
+    <div
+      class="row justify-around bg-white self-checkin"
+      :style="handleBodyPadding()"
+    >
+      <div class="col-xs-12 text-center q-mb-md">
+        <h4
+          class="text-uppercase font-weight-bold q-mt-md q-mb-md mci-size titlecolor"
+        >
           Online Check-in
         </h4>
-        <h5>
-          <b>{{ getLabels("find_rsv", `titleCase`) }}</b>
+        <h5 class="titlecolor">
+          <b>{{ weblabel.findRsv }}</b>
         </h5>
         <p>
-          {{ getLabels("choose_option", `sentenceCase`) }}
+          {{ weblabel.chooseOption }}
         </p>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div
+        :class="handleClassIcon()"
+        style="margin-bottom: 10px; margin-top: 20px"
+      >
         <q-icon
           @click="showModalBookingCode"
           name="book_online"
           :style="iconOta"
         />
-        <p class="q-mt-sm">{{ getLabels("book_code", `titleCase`) }}</p>
+
+        <p class="mt-3">{{ weblabel.bookCode }}</p>
         <a-modal
           v-model="modalBookingCode"
-          :title="getLabels('book_code', `titleCase`)"
+          :title="weblabel.bookCode"
           :closable="false"
         >
           <template slot="footer">
@@ -58,7 +90,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -66,19 +98,21 @@
               @click="handleFindRsv('bookingcode')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('book_code', `titleCase`)">
-              <a-input
+            <a-form-item :label="weblabel.bookCode">
+              <q-input
                 class="ant-input-h"
                 v-model="bookingcode"
                 ref="bookingcode"
-                :placeholder="getLabels('input_bookcode', `sentenceCase`)"
+                outlined
+                dense
+                :placeholder="weblabel.inputBookcode"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -119,12 +153,15 @@
           </a-spin>
         </a-modal>
       </div>
-      <div class="col-sm-3 col-xs-6 text-center">
+      <div
+        :class="handleClassIconCenter()"
+        style="margin-bottom: 10px; margin-top: 20px"
+      >
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
-        <p class="q-mt-sm">{{ getLabels("icon_name", `titleCase`) }}</p>
+        <p class="mt-3">{{ weblabel.iconName }}</p>
         <a-modal
           v-model="modalGuestName"
-          :title="getLabels('guest_name', `titleCase`)"
+          :title="weblabel.guestName"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -132,7 +169,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -140,19 +177,21 @@
               @click="handleFindRsv('guestname')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('guest_name', `titleCase`)">
-              <a-input
+            <a-form-item :label="weblabel.guestName">
+              <q-input
                 class="ant-input-h"
                 v-model="name"
                 ref="name"
-                :placeholder="getLabels('input_guest_name', `sentenceCase`)"
+                outlined
+                dense
+                :placeholder="weblabel.inputGuestName"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -193,13 +232,15 @@
           </a-spin>
         </a-modal>
       </div>
-
-      <div class="col-sm-3 col-xs-6 q-mt-md text-center">
+      <div
+        :class="handleClassIcon()"
+        style="margin-bottom: 10px; margin-top: 20px"
+      >
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
-        <p class="q-mt-sm">{{ getLabels("email", `titleCase`) }}</p>
+        <p class="mt-3">{{ weblabel.email }}</p>
         <a-modal
           v-model="modalEmailAddress"
-          :title="getLabels('email', `titleCase`)"
+          :title="weblabel.email"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -207,7 +248,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -215,19 +256,22 @@
               @click="handleFindRsv('email')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
+            <a-form-item :label="weblabel.email">
+              <q-input
                 class="ant-input-h"
                 v-model="email"
+                type="email"
                 ref="email"
-                :placeholder="getLabels('input_email', `sentenceCase`)"
+                outlined
+                dense
+                :placeholder="weblabel.inputEmail"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -268,16 +312,20 @@
           </a-spin></a-modal
         >
       </div>
-      <div class="col-sm-3 col-xs-6 q-mt-md text-center">
+      <div
+        :class="handleClassIcon()"
+        v-if="licenseMembership"
+        style="margin-bottom: 10px; margin-top: 20px"
+      >
         <q-icon
           @click="showModalMembershipID"
           name="folder_special"
-          :style="iconOta"
+          :style="licenseMembership == true ? iconOta : iconDisabled"
         />
-        <p class="q-mt-sm">{{ getLabels("membership_id", `titleCase`) }}</p>
+        <p class="mt-3">{{ weblabel.membershipID }}</p>
         <a-modal
           v-model="modalMembershipID"
-          :title="getLabels('membership_id', `titleCase`)"
+          :title="weblabel.membershipID"
           :closable="false"
           ><template slot="footer">
             <a-button
@@ -285,7 +333,7 @@
               @click="handleCancel"
               :disabled="confirmLoading"
             >
-              {{ getLabels("cancel", `titleCase`) }}
+              {{ weblabel.cancel }}
             </a-button>
             <a-button
               key="submit"
@@ -293,19 +341,22 @@
               @click="handleFindRsv('membership')"
               :disabled="confirmLoading"
             >
-              {{ getLabels("search", `titleCase`) }}
+              {{ weblabel.search }}
             </a-button>
           </template>
           <a-spin :spinning="confirmLoading">
-            <a-form-item :label="getLabels('membership_id', `titleCase`)">
-              <a-input
+            <a-form-item :label="weblabel.membershipID">
+              <q-input
                 v-model="member"
                 class="ant-input-h"
                 ref="member"
-                :placeholder="getLabels('input_membership', `sentenceCase`)"
+                type="number"
+                outlined
+                dense
+                :placeholder="weblabel.inputMembership"
               />
             </a-form-item>
-            <a-form-item :label="getLabels('co_date', `titleCase`)">
+            <a-form-item :label="weblabel.coDate">
               <q-input
                 v-model="date"
                 @click="$refs.qDateProxy.show()"
@@ -350,65 +401,67 @@
 
     <!-- Modal Early Checkin -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCIEarlyCheckin"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="reloadPage">{{
-          getLabels("close", `titleCase`)
+          weblabel.close
         }}</a-button>
       </template>
-      <p>{{ getLabels("early_checkin", `sentenceCase`) }}{{ checkin }}</p>
+      <p>{{ weblabel.earlyCheckin }}{{ checkin }}</p>
     </a-modal>
 
     <!-- Modal MCI Reservation Not Found -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCINotFound"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_error_not_found", `sentenceCase`) }}</p>
+      <p>{{ weblabel.mciErrorNotFound }}</p>
     </a-modal>
 
     <!-- Modal MCI Self Check-In Service is not available yet. Please proceed to Front Desk. -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCINotAvail"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_error_not_avail", "sentenceCase") }}</p>
+      <p>{{ weblabel.mciErrorNotAvail }}</p>
     </a-modal>
 
     <!-- Modal MCI Sorry, your room is not ready yet. Please proceed to Front Desk. -->
     <a-modal
-      :title="getLabels('information', `titleCase`)"
+      :title="weblabel.information"
       :visible="infoMCIRoomNotAvail"
       :closable="false"
     >
       <template slot="footer">
         <a-button key="submit" type="primary" @click="hideMCIModal">{{
-          getLabels("ok_message", `titleCase`)
+          weblabel.okMessage
         }}</a-button>
       </template>
-      <p>{{ getLabels("mci_room_not_avail", "sentenceCase") }}</p>
+      <p>{{ weblabel.mciRoomNotAvail }}</p>
     </a-modal>
   </div>
 </template>
 
 <script>
+import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
+import privacyPolicy from "../store/privacy";
 import {
   Quasar,
   QInput,
@@ -515,6 +568,7 @@ export default {
       FG: "",
       textOta: {
         color: "",
+        backgroundColor: "transparent",
       },
       setup: [],
       SystemDate: "",
@@ -542,17 +596,71 @@ export default {
       },
       iconOta: {
         fontSize: "4em",
-        color: "#FFFFFF",
+        color: "#1890ff",
         padding: "16px",
-        backgroundColor: "rgba(255, 255, 255, 0)",
+        backgroundColor: "rgba(24, 144, 255, 0.1)",
+        borderRadius: "20px",
+      },
+      iconDisabled: {
+        fontSize: "4em",
+        color: "#606060",
+        padding: "16px",
+        backgroundColor: "rgba(96, 96, 96, 0.1)",
         borderRadius: "20px",
       },
       selectedLang: "",
       hotelLogo: "",
+      defaultCountry: "",
+      changeColor: {
+        color: "color: rgba(255, 255, 255, 0.8) !important;",
+      },
+      weblabel: {
+        findRsv: "",
+        chooseOption: "",
+        bookCode: "",
+        cancel: "",
+        search: "",
+        inputBookcode: "",
+        coDate: "",
+        inputCoDate: "",
+        iconName: "",
+        guestName: "",
+        inputGuestName: "",
+        email: "",
+        inputEmail: "",
+        membershipID: "",
+        inputMembership: "",
+        information: "",
+        close: "",
+        earlyCheckin: "",
+        okMessage: "",
+        mciErrorNotFound: "",
+        mciErrorNotAvail: "",
+        mciRoomNotAvail: "",
+      },
+      licenseMembership: false,
+      timer: 0,
+      isMobile: false,
+      termSMOOKING: "",
+      policy: "",
     };
   },
   created() {
-    this.$q.iconSet.arrow.dropdown = "language";
+    // Detect Mobile Device
+    if (
+      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
+        navigator.userAgent
+      ) ||
+      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+        navigator.userAgent.substr(0, 4)
+      )
+    ) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
+    // console.log('Created is Triggered');
+    this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
     /* tempParam Variable for Nicepay */
@@ -598,6 +706,9 @@ export default {
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
+    // Save Location
+    sessionStorage.clear();
+    sessionStorage.setItem("location", this.location);
     /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
     (async () => {
       const code = await ky
@@ -629,20 +740,23 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      //console.log(this.hotelEndpoint,this.hotelCode,this.langID);
+      // console.log(this.hotelEndpoint,this.hotelCode,this.langID);
       /* Check Used Language */
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.programLabel = "program-label1";
           this.selectedLang = "English";
+          localStorage.setItem("locale", "EN");
           break;
         case "idn":
           this.programLabel = "program-label2";
           this.selectedLang = "Indonesia";
+          localStorage.setItem("locale", "ID");
           break;
         default:
           this.programLabel = "program-label1";
           this.selectedLang = "English";
+          localStorage.setItem("locale", "ENG");
           break;
       }
       /* Async Get Label From Database */
@@ -680,7 +794,6 @@ export default {
       const jatah = [];
       for (const i in this.tempsetup) {
         if (this.tempsetup[i]["number1"] == 1) {
-          this.tempsetup[i].setupvalue = this.tempsetup[i].setupvalue;
           this.FilterPurposeofStay.push(this.tempsetup[i]);
           if (this.tempsetup[i].setupflag == true) {
             this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
@@ -757,9 +870,9 @@ export default {
       this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
       const tempfreeParking = this.tempsetup.filter((item, index) => {
         //  Free Parking
-        return item.number1 === 8 && item.number2 == 5;
+        return item.number1 === 8 && item.number2 == 14;
       });
-      this.freeParking = this.tempsetup["0"]["setupflag"];
+      this.freeParking = tempfreeParking["0"]["setupflag"];
       const tempDEFAULTCHECKINTIME = this.tempsetup.filter((item, index) => {
         //  DEFAULT CHECKIN TIME
         return item.number1 === 8 && item.number2 == 2;
@@ -809,6 +922,28 @@ export default {
         return item.number1 === 9 && item.number2 === 6;
       });
       this.todayOcc = tempTodayOcc[0]["price"];
+      const defCountry = this.tempsetup.filter((item, index) => {
+        //  Default Country Code
+        return item.number1 === 9 && item.number2 === 1;
+      });
+      this.defaultCountry = defCountry[0]["setupvalue"];
+      if (this.defaultCountry.toLowerCase() == "idn") {
+        this.defaultCountry = "INA";
+      }
+      const tempLicenseMember = this.tempsetup.filter((item, index) => {
+        //  LICENSE WA/SMS GATEWAY
+        return item.number1 === 9 && item.number2 === 8;
+      });
+      this.licenseMembership = tempLicenseMember[0]["setupflag"];
+
+      this.policy = privacyPolicy.responses["0"].policy;
+
+      const tempSMOOKING = this.tempsetup.filter((item, index) => {
+        //  condition SMOOKING
+        return item.number1 === 6 && item.number2 === 3;
+      });
+      this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
+
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -851,6 +986,9 @@ export default {
       obj["location"] = this.location;
       obj["defaultCI"] = this.defaultCI;
       obj["hotelLogo"] = this.hotelLogo;
+      obj["defaultCountry"] = this.defaultCountry;
+      obj["termSMOOKING"] = this.termSMOOKING;
+      obj["policy"] = this.policy;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date
@@ -944,41 +1082,218 @@ export default {
           }
         }
       }
+      /* Handling Locale */
+      /* Set Variable Label */
+      this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.chooseOption = this.findLabel(
+        "choose_option",
+        "sentenceCase"
+      );
+      this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+      this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+      this.weblabel.search = this.findLabel("search", "titleCase");
+      this.weblabel.inputBookcode = this.findLabel(
+        "input_bookcode",
+        "sentenceCase"
+      );
+      this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+      this.weblabel.inputCoDate = this.findLabel(
+        "input_codate",
+        "sentenceCase"
+      );
+      this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+      this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+      this.weblabel.inputGuestName = this.findLabel(
+        "input_guest_name",
+        "sentenceCase"
+      );
+      this.weblabel.email = this.findLabel("email", "titleCase");
+      this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+      this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+      this.weblabel.inputMembership = this.findLabel(
+        "input_membership",
+        "sentenceCase"
+      );
+      this.weblabel.information = this.findLabel("information", "titleCase");
+      this.weblabel.close = this.findLabel("close", "titleCase");
+      this.weblabel.earlyCheckin = this.findLabel(
+        "early_checkin",
+        "sentenceCase"
+      );
+      this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+      this.weblabel.mciErrorNotFound = this.findLabel(
+        "mci_error_not_found",
+        "sentenceCase"
+      );
+      this.weblabel.mciErrorNotAvail = this.findLabel(
+        "mci_error_not_avail",
+        "sentenceCase"
+      );
+      this.weblabel.mciRoomNotAvail = this.findLabel(
+        "mci_room_not_avail",
+        "sentenceCase"
+      );
+      this.FilterPurposeofStay.forEach((item) => {
+        item["setupvalue"] = this.findLabel(
+          item["setupvalue"].toLowerCase(),
+          "upperCase"
+        );
+      });
     })();
-    this.loading = false;
   },
   methods: {
-    hexAToRGBA(hex) {
-      let c;
-      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split("");
-        if (c.length == 3) {
-          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c = "0x" + c.join("");
-        return (
-          "rgba(" +
-          [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
-          ",0.1)"
-        );
+    handleBodyPadding() {
+      let returnedStyle = "";
+      if (this.isMobile) {
+        returnedStyle = "padding-left: 10px; padding-right: 10px;";
+      } else {
+        returnedStyle = "padding-left: 50px; padding-right: 50px;";
       }
-      throw new Error("Bad Hex");
+      return returnedStyle;
+    },
+    handleClassIcon() {
+      let returnedClass = "";
+      if (this.licenseMembership == false) {
+        returnedClass = "col-sm-3 col-xs-4 text-center";
+      } else {
+        returnedClass = "col-sm-3 col-xs-6 text-center";
+      }
+      return returnedClass;
+    },
+    handleClassIconCenter() {
+      let returnedClass = "";
+      if (this.licenseMembership == false) {
+        returnedClass = "col-sm-3 col-xs-4 text-center";
+      } else {
+        returnedClass = "col-sm-3 col-xs-6 text-center";
+      }
+      return returnedClass;
+    },
+    resetLabel() {
+      // console.log('resetLabel');
+      this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.chooseOption = this.findLabel(
+        "choose_option",
+        "sentenceCase"
+      );
+      this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+      this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+      this.weblabel.search = this.findLabel("search", "titleCase");
+      this.weblabel.inputBookcode = this.findLabel(
+        "input_bookcode",
+        "sentenceCase"
+      );
+      this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+      this.weblabel.inputCoDate = this.findLabel(
+        "input_codate",
+        "sentenceCase"
+      );
+      this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+      this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+      this.weblabel.inputGuestName = this.findLabel(
+        "input_guest_name",
+        "sentenceCase"
+      );
+      this.weblabel.email = this.findLabel("email", "titleCase");
+      this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+      this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+      this.weblabel.inputMembership = this.findLabel(
+        "input_membership",
+        "sentenceCase"
+      );
+      this.weblabel.information = this.findLabel("information", "titleCase");
+      this.weblabel.close = this.findLabel("close", "titleCase");
+      this.weblabel.earlyCheckin = this.findLabel(
+        "early_checkin",
+        "sentenceCase"
+      );
+      this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+      this.weblabel.mciErrorNotFound = this.findLabel(
+        "mci_error_not_found",
+        "sentenceCase"
+      );
+      this.weblabel.mciErrorNotAvail = this.findLabel(
+        "mci_error_not_avail",
+        "sentenceCase"
+      );
+      this.weblabel.mciRoomNotAvail = this.findLabel(
+        "mci_room_not_avail",
+        "sentenceCase"
+      );
+      this.FilterPurposeofStay.forEach((item) => {
+        item["setupvalue"] = this.findLabel(
+          item["setupvalue"].toLowerCase(),
+          "titleCase"
+        );
+      });
+    },
+    findLabel(nameKey, used) {
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
+      }
+      // console.log(locale,label,fixLabel);
+      return fixLabel;
     },
     changeLang(data) {
+      // console.log('changeLang');
       // Method for changing MCI Language
       if (data.value == "Indonesia") {
         this.programLabel = "program-label2";
         this.langID = "IDN";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "Indonesia";
+        localStorage.setItem("locale", "ID");
+        this.resetLabel();
       } else {
         this.programLabel = "program-label1";
         this.langID = "ENG";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "English";
+        localStorage.setItem("locale", "EN");
+        this.resetLabel();
       }
     },
     async showModalBookingCode() {
+      // console.log('showModalBookingCode');
       // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.resetForm();
       this.modalBookingCode = true;
@@ -986,6 +1301,7 @@ export default {
       this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
+      // console.log('showModalGuestName');
       // Method for Set Guest Name Input Form to Focus When Activate Modal Guest Name
       this.resetForm();
       this.modalGuestName = true;
@@ -993,33 +1309,43 @@ export default {
       this.$refs.name.focus();
     },
     async showModalEmailAddress() {
+      // console.log('showModalEmailAddress');
       // Method for Set Email Address Input Form to Focus When Activate Modal Email Address
       this.resetForm();
       this.modalEmailAddress = true;
       await this.$nextTick();
       this.$refs.email.focus();
+      // console.log(this.$refs.email);
     },
     async showModalMembershipID() {
+      // console.log('showModalMembershipID');
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
-      this.resetForm();
-      this.modalMembershipID = true;
-      await this.$nextTick();
-      this.$refs.member.focus();
+      if (this.licenseMembership) {
+        this.resetForm();
+        this.modalMembershipID = true;
+        await this.$nextTick();
+        this.$refs.member.focus();
+      }
     },
     /* Handling Error Message */
     errorbo() {
-      this.$message.error(this.getLabels("input_bookcode", `sentenceCase`));
+      // console.log('errorbo');
+      this.$message.error(this.weblabel.inputBookcode);
     },
     errorname() {
-      this.$message.error(this.getLabels("input_guest_name", `sentenceCase`));
+      // console.log('errorname');
+      this.$message.error(this.weblabel.inputGuestName);
     },
     erroremail() {
-      this.$message.error(this.getLabels("input_email", `sentenceCase`));
+      // console.log('erroremail');
+      this.$message.error(this.weblabel.inputEmail);
     },
     errormembership() {
-      this.$message.error(this.getLabels("input_membership", `sentenceCase`));
+      // console.log('errormembership');
+      this.$message.error(this.weblabel.inputMembership);
     },
     erroremailNotTrue() {
+      // console.log('erroremailNotTrue');
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.$message.error("Please enter valid email address");
@@ -1033,10 +1359,12 @@ export default {
       }
     },
     errorco() {
-      this.$message.error(this.getLabels("input_codate", `sentenceCase`));
+      // console.log('errorco');
+      this.$message.error(this.weblabel.inputCoDate);
     },
     /* End Of Handling Error Message */
     hideMCIModal() {
+      // console.log('hideMCIModal');
       // Method for Hiding All MCI Modal
       this.infoMCIEarlyCheckin = false;
       this.infoMCINotFound = false;
@@ -1044,15 +1372,18 @@ export default {
       this.infoMCIRoomNotAvail = false;
     },
     hideMCISearchModal() {
+      // console.log('hideMCISearchModal');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
     reloadPage() {
+      // console.log('reloadPage');
       window.location = this.location;
     },
     getCoDate() {
+      // console.log('getCoDate');
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1060,7 +1391,8 @@ export default {
       return coDate;
     },
     handleFindRsv(mode) {
-      //console.log(mode);
+      // console.log('handleFindRsv');
+      // console.log(mode);
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1120,83 +1452,170 @@ export default {
         this.confirmLoading = false;
       } else {
         (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: coDate,
-                  bookCode: searchVar,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: this.server,
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();
-          this.message = data.response["messResult"];
-          const messResult = this.message.split("-");
-          const messMessage = messResult[1].split(",");
-          switch (messResult[0].trim()) {
-            case "0":
-              // Reservation is Found
-
-              const totalGuest =
-                data.response.arrivalGuestlist["arrival-guestlist"].length;
-              if (totalGuest > 1) {
-                /* Handling Multiple Guest to ListCheckin.vue */
-                reservation.push(
-                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-                );
-                // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
-                    "1 Room Already assign or Overlapping"
-                  );
-                });
-                Object.assign(this.setup[0], { TotalData: tempTotal.length });
-
-                router.push({
-                  name: "ListCheckIn",
-                  params: {
-                    guestData: reservation[0],
-                    setting: this.setup[0],
+          try {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/findReservation", {
+                json: {
+                  request: {
+                    coDate: coDate,
+                    bookCode: searchVar,
+                    chName: " ",
+                    earlyCI: "false",
+                    maxRoom: "1",
+                    citime: this.server,
+                    groupFlag: "false",
                   },
-                });
-              } else {
-                Object.assign(this.setup[0], { TotalData: 1 });
-                const guest =
-                  data.response.arrivalGuestlist["arrival-guestlist"][0];
-                Object.assign(guest, { vreg: "" });
-                Object.assign(guest, { step: "" });
-                // Handling Resstatus
-                if (guest["res-status"] == "1 - Guest Already Checkin") {
-                  // Langsung ke SuccessCheckin.vue
+                },
+                timeout: 10000,
+                throwHttpErrors: false,
+              })
+              .json();
+            // console.log(data);
+            this.message = data.response["messResult"];
+            const messResult = this.message.split("-");
+            const messMessage = messResult[1].split(",");
+            switch (messResult[0].trim()) {
+              case "0":
+                // Reservation is Found
+                const totalGuest =
+                  data.response.arrivalGuestlist["arrival-guestlist"].length;
+                // console.log(totalGuest);
+                if (totalGuest > 1) {
+                  // console.log('totalGuest',totalGuest);
+                  /* Handling Multiple Guest to ListCheckin.vue */
+                  reservation.push(
+                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+                  );
+                  // Get Total Guest
+                  const rsvFix = reservation[0].filter((item, index) => {
+                    if (item["room-sharer"] === true) {
+                    } else {
+                      return item;
+                    }
+                  });
+                  const tempTotal = rsvFix.filter((item, index) => {
+                    if (
+                      item["room-status"] ==
+                      "1 Room Already assign or Overlapping"
+                    ) {
+                    } else {
+                      return item;
+                    }
+                  });
+                  const roomShare = reservation[0].filter((item, index) => {
+                    return item["room-sharer"] === true;
+                  });
+                  rsvFix.forEach((item, index) => {
+                    Object.assign(item, { rmshare: [] });
+                    roomShare.forEach((guest, index) => {
+                      if (item["zinr"] == guest["zinr"]) {
+                        item["rmshare"].push(guest["gast"]);
+                      }
+                    });
+                  });
+                  // Assigning Setup
+                  Object.assign(this.setup[0], { TotalData: tempTotal.length });
+                  Object.assign(this.setup[0], { SearchMethod: mode });
+                  Object.assign(this.setup[0], { SearchValue: searchVar });
+                  Object.assign(this.setup[0], { SearchCO: coDate });
+                  // console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
+                  if (rsvFix.length > 1) {
+                    router.push({
+                      name: "ListCheckIn",
+                      params: {
+                        guestData: rsvFix,
+                        setting: this.setup[0],
+                      },
+                    });
+                  } else {
+                    if (
+                      rsvFix[0]["res-status"] == "1 - Guest Already Checkin"
+                    ) {
+                      // Langsung ke SuccessCheckin.vue
+                      Object.assign(rsvFix[0], { roomReady: true });
+                      router.push({
+                        name: "SuccessCheckIn",
+                        params: {
+                          Data: rsvFix[0],
+                          setting: this.setup[0],
+                        },
+                      });
+                    } else if (rsvFix[0]["ifdata-sent"] == true) {
+                      Object.assign(rsvFix[0], { roomReady: false });
+                      router.push({
+                        name: "SuccessCheckIn",
+                        params: {
+                          Data: rsvFix[0],
+                          setting: this.setup[0],
+                        },
+                      });
+                    } else {
+                      this.handleSingleGuest(rsvFix[0]);
+                    }
+                  }
                 } else {
-                  this.handleSingleGuest(guest);
+                  // Assigning Setup
+                  Object.assign(this.setup[0], { TotalData: 1 });
+                  Object.assign(this.setup[0], { SearchMethod: mode });
+                  Object.assign(this.setup[0], { SearchValue: searchVar });
+                  Object.assign(this.setup[0], { SearchCO: coDate });
+                  const guest =
+                    data.response.arrivalGuestlist["arrival-guestlist"][0];
+                  Object.assign(guest, { vreg: "" });
+                  Object.assign(guest, { step: "" });
+                  Object.assign(guest, { rmshare: [] });
+                  // Handling Resstatus
+                  if (guest["res-status"] == "1 - Guest Already Checkin") {
+                    // Langsung ke SuccessCheckin.vue
+                    Object.assign(guest, { roomReady: true });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: guest,
+                        setting: this.setup[0],
+                      },
+                    });
+                  } else if (guest["ifdata-sent"] == true) {
+                    Object.assign(guest, { roomReady: false });
+                    router.push({
+                      name: "SuccessCheckIn",
+                      params: {
+                        Data: guest,
+                        setting: this.setup[0],
+                      },
+                    });
+                  } else {
+                    // console.log('disini');
+                    this.handleSingleGuest(guest, this.setup[0]);
+                  }
                 }
-              }
-              break;
-            case "01":
-              this.infoMCIRoomNotAvail = true;
-              break;
-            case "1":
-              this.infoMCINotFound = true; // Reservation's Not Found
-              break;
-            case "2":
-              this.infoMCINotFound = true;
-              break;
-            case "02":
-              this.infoMCIRoomNotAvail = true;
-              break;
-            case "9":
-              this.infoMCIEarlyCheckin = true; // Early Checkin
-              break;
-            default:
-              this.infoMCINotAvail = true; //mci_error_not_avail
-              break;
+                break;
+              case "01":
+                this.infoMCIRoomNotAvail = true;
+                break;
+              case "1":
+                this.infoMCINotFound = true; // Reservation's Not Found
+                break;
+              case "2":
+                this.infoMCINotFound = true;
+                break;
+              case "02":
+                this.infoMCIRoomNotAvail = true;
+                break;
+              case "9":
+                this.infoMCIEarlyCheckin = true; // Early Checkin
+                break;
+              default:
+                this.infoMCINotAvail = true; //mci_error_not_avail
+                break;
+            }
+            this.confirmLoading = false;
+            this.hideMCISearchModal();
+            /* Reset Form */
+            this.resetForm();
+          } catch (error) {
+            this.confirmLoading = false;
+            this.$message.error(error.toString());
           }
           this.confirmLoading = false;
           this.hideMCISearchModal();
@@ -1206,12 +1625,14 @@ export default {
       }
     },
     resetForm() {
+      // console.log('resetForm');
       this.bookingcode = "";
       this.name = "";
       this.email = "";
       this.member = "";
     },
-    handleSingleGuest(guest) {
+    handleSingleGuest(guest, setup) {
+      // console.log('handleSingleGuest');
       // console.log(guest);
       const rmStatus = guest["room-status"].split(" ");
       if (parseInt(rmStatus[0]) == 1) {
@@ -1225,7 +1646,7 @@ export default {
             name: "Step",
             params: {
               guestData: guest,
-              setting: this.setup[0],
+              setting: setup,
             },
           });
         } else {
@@ -1233,50 +1654,63 @@ export default {
           this.infoMCIRoomNotAvail = true; //mci_room_not_avail
         }
       } else {
+        // console.log('Single Guest Handle',guest,setup);
         // Ready to MCI Go to Step
         router.push({
           name: "Step",
           params: {
             guestData: guest,
-            setting: this.setup[0],
+            setting: setup,
           },
         });
       }
     },
     handleCancel() {
+      // console.log('handleCancel');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
+    showAnimation() {
+      if (localStorage.getItem("labels") == null) {
+        this.timer = 6000;
+      } else {
+        this.timer = 4000;
+      }
+      setTimeout(() => {
+        this.loading = false;
+        // console.log("setTimeout is Triggered", this.timer);
+      }, this.timer);
+    },
+  },
+  async mounted() {
+    await this.$nextTick();
+    // console.log('mounted is triggered');
+    this.showAnimation();
+    window.history.pushState(null, "", this.location);
+    window.addEventListener("popstate", function (event) {
+      history.pushState(null, document.title, this.location);
+    });
   },
   computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1);
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
+    hexAToRGBA() {
+      return (hex) => {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+          c = hex.substring(1).split("");
+          if (c.length == 3) {
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
+          c = "0x" + c.join("");
+          // console.log('thishexa');
+          return (
+            "rgba(" +
+            [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+            ",0.1)"
+          );
         }
-        return fixLabel;
+        throw new Error("Bad Hex");
       };
     },
   },

@@ -1,246 +1,311 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
   <div v-else>
-    <div class="home">
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="confirmMailModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_success_not_ready", `sentenceCase`) }}</p>
-        <p>{{ getLabels("reconfirm_phonemail", `sentenceCase`) }}</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="getLabels('phone_number', `titleCase`)">
-              <a-input
-                v-decorator="[
-                  'guest-phone',
-                  {
-                    initialValue: currDataPrepare['guest-phnumber'],
-                    rules: [
-                      {
-                        required: true,
-                        message: getLabels('required_phone', `titleCase`),
-                      },
-                    ],
-                  },
-                ]"
-              />
-            </a-form-item>
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
-                v-decorator="[
-                  'guest-email',
-                  {
-                    initialValue: currDataPrepare['guest-email'],
-                    rules: [
-                      {
-                        required: true,
-                        message: getLabels('required_email', `sentenceCase`),
-                      },
-                      {
-                        type: 'email',
-                        message: getLabels('not_valid_email', `sentenceCase`),
-                      },
-                    ],
-                  },
-                ]"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
+    <!-- Modal Response Room Status -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="confirmMailModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="handleYes"
+        >
+          {{ weblabel.okMessage }}
+          <q-spinner
+            v-if="loadingConfirmEmail"
+            style="margin-left: 10px"
+            color="white"
+            size="12px"
+          />
+        </a-button>
+      </template>
+      <p>{{ weblabel.mciSuccessNotReady }}</p>
+      <p>{{ weblabel.reconfirmPhonemail }}</p>
+      <div>
+        <a-form layout="vertical" :form="formresubmit">
+          <a-form-item :label="weblabel.phoneNumber">
+            <q-input
+              v-decorator="[
+                'guest-phone',
+                {
+                  initialValue: currDataPrepare['guest-phnumber'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredPhone,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              outlined
+              dense
+            />
+          </a-form-item>
+          <a-form-item :label="weblabel.email">
+            <q-input
+              v-decorator="[
+                'guest-email',
+                {
+                  initialValue: currDataPrepare['guest-email'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredEmail,
+                    },
+                    {
+                      type: 'email',
+                      message: weblabel.notValidEmail,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              type="email"
+              outlined
+              dense
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
 
-      <!-- Modal For Overlapping -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="overlappingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_error_not_ready", `sentenceCase`) }}</p>
-      </a-modal>
+    <!-- Modal For Overlapping -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="overlappingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorNotReady }}</p>
+    </a-modal>
 
-      <!-- Modal For Network Establish Error -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="preauthModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="resendPreauth"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_error_preauth", `sentenceCase`) }}</p>
-      </a-modal>
+    <!-- Modal For Network Establish Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="preauthModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="resendPreauth"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPreauth }}</p>
+    </a-modal>
 
-      <!-- Modal For Interface -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="interfacingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_error_interface", `sentenceCase`) }}</p>
-      </a-modal>
+    <!-- Modal For Interface -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="interfacingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorInterface }}</p>
+    </a-modal>
 
-      <!-- Modal For Payment Error -->
-      <a-modal
-        :title="getLabels('information', `titleCase`)"
-        :visible="paymenterrorModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ getLabels("ok_message", `titleCase`) }}</a-button
-          >
-        </template>
-        <p>{{ getLabels("mci_error_payment", `sentenceCase`) }}</p>
-      </a-modal>
+    <!-- Modal For Payment Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="paymenterrorModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPayment }}</p>
+    </a-modal>
 
-      <!-- Modal For Term And Condition -->
-      <a-modal
-        :title="getLabels('t_c', `titleCase`)"
+    <!-- Modal For Term And Condition -->
+    <!-- <a-modal
+        :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
         :closable="false"
       >
         <template slot="footer">
           <a-button key="back" @click="disagree">
-            {{ getLabels("disagree", `titleCase`) }}
+            {{ weblabel.disagree }}
           </a-button>
           <a-button
             key="submit"
             type="primary"
             :loading="loading"
             @click="handleOk"
-            >{{ getLabels("agree", `titleCase`) }}</a-button
+            >{{ weblabel.agree }}</a-button
           >
         </template>
         <p>{{ terms }}</p>
-      </a-modal>
+      </a-modal> -->
 
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-            :style="information"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6 v-else class="text-white font-weight-bold" :style="information">
-            {{ this.currDataPrepare["gast"] }}
-          </h6>
-          <p class="ant-card-meta-description text-white" :style="information">
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
-            <br />
-            {{ getLabels("book_code", `titleCase`) }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ getLabels("room_number", `titleCase`) }}:
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
+    <q-dialog v-model="termcondition">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6" v-show="stepTerm === 1">
+            {{ weblabel.tcTitle }}
+          </div>
+          <div class="text-h6" v-show="stepTerm === 2">Privacy Policy</div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ terms }}
           </p>
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ termSMOOKING }}
+          </p>
+
+          <p
+            style="white-space: pre-wrap"
+            v-show="stepTerm == 2"
+            v-html="policy"
+          ></p>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn
+            v-if="stepTerm > 1"
+            flat
+            color="primary"
+            @click="kurang()"
+            label="Back"
+          />
+          <q-btn :label="weblabel.disagree" color="red" @click="disagree" />
+          <q-btn
+            :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
+            color="primary"
+            @click="handleOk"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="justify-around bg-white self-checkin">
+      <div class="row">
+        <div class="ml-3 col-md-7 col-xs-12 col-sm-6">
+          <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
+          <p class="font-weight-bold">{{ currDataPrepare["gast"] }}</p>
         </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img class="" :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
+        <div class="col-md-2 col-xs-5 col-sm-6">
+          <p>{{ weblabel.arrival }}</p>
+          <p>{{ weblabel.departure }}</p>
+          <p>{{ weblabel.bookCode }}</p>
+          <p>{{ weblabel.roomNumber }}</p>
+          <p>{{ weblabel.roomShare }}</p>
         </div>
-        <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6 v-else class="text-white font-weight-bold">
-            {{ this.currDataPrepare["gast"] }},
-          </h6>
-          <p class="ant-card-meta-description text-white">
-            {{ getLabels("arrival", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.ci) }}</strong>
-            {{ getLabels("departure", `titleCase`) }}:
-            <strong>{{ formatDate(this.currDataPrepare.co) }}</strong>
-            <br />
-            {{ getLabels("book_code", `titleCase`) }}:
+        <div class="col-md-2 col-xs-6 col-sm-6">
+          <p>
+            <strong>{{ weblabel.ciDate }}</strong>
+          </p>
+          <p>
+            <strong>{{ weblabel.coDate }}</strong>
+          </p>
+          <p>
             <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ getLabels("room_number", `titleCase`) }}:
+          </p>
+          <p>
             <strong>{{ this.currDataPrepare.zinr }}</strong>
+            <a-tag color="green" style="font-weight: normal !important">{{
+              this.currDataPrepare["rmtype-str"]
+            }}</a-tag>
+          </p>
+          <p>
+            <q-chip
+              color="primary"
+              clickable
+              square
+              style="
+                background: white !important;
+                color: #262728 !important;
+                font-size: 0.6rem !important;
+                border: 1px solid gray;
+              "
+              v-if="this.currDataPrepare['rmshare'].length > 0"
+            >
+              {{ weblabel.mciShow }}
+              <q-menu>
+                <q-banner>
+                  <template v-slot:avatar>
+                    <q-icon name="supervisor_account" color="primary" />
+                  </template>
+                  <p
+                    v-for="rmShare in this.currDataPrepare['rmshare']"
+                    :key="rmShare"
+                    style="margin: 0 !important; text-size: 12px"
+                  >
+                    {{ rmShare }}
+                  </p>
+                </q-banner>
+              </q-menu>
+            </q-chip>
           </p>
         </div>
       </div>
+      <hr />
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="step === 1">
-            {{ getLabels("guest_detail", `titleCase`) }}
+          <h2 class="text-center" v-show="step === 1">
+            {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 2">
-            {{ getLabels("guest_detail", `titleCase`) }}
+          <h2 class="text-center" v-show="step === 2">
+            {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 3">
-            {{ getLabels("upload_id", `titleCase`) }}
+          <h2 class="text-center" v-show="step === 3">
+            {{ weblabel.uploadID }}
           </h2>
-          <h2 v-show="step === 4">
-            {{ getLabels("deposit_payment", `titleCase`) }}
+          <h2 class="text-center" v-show="step === 4">
+            {{ weblabel.depositPayment }}
           </h2>
           <div>
             <q-stepper
@@ -249,7 +314,6 @@
               bordered
               ref="stepper"
               contracted
-              color="primary"
               animated
               keep-alive
             >
@@ -257,16 +321,20 @@
                 :name="1"
                 title="Input Guest Detail"
                 icon="person"
+                color="#ea580b"
                 active-icon="person"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 1"
               >
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item :label="getLabels('email', `titleCase`)">
-                        <a-input
+                      <a-form-item :label="weblabel.email">
+                        <q-input
                           class="ant-input-h"
+                          outlined
+                          dense
+                          type="email"
                           v-decorator="[
                             'email',
                             {
@@ -274,17 +342,11 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_email',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredEmail,
                                 },
                                 {
                                   type: 'email',
-                                  message: getLabels(
-                                    'not_valid_email',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.notValidEmail,
                                 },
                               ],
                             },
@@ -293,9 +355,7 @@
                       </a-form-item>
                     </a-col>
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="getLabels('phone_number', `titleCase`)"
-                      >
+                      <a-form-item :label="weblabel.phoneNumber">
                         <q-input
                           v-decorator="[
                             'phone',
@@ -304,10 +364,7 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_phone',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredPhone,
                                 },
                               ],
                             },
@@ -321,9 +378,7 @@
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="3" :xl="3" :xs="24">
-                      <a-form-item
-                        :label="getLabels('purpose_stay', `titleCase`)"
-                      >
+                      <a-form-item :label="weblabel.purposeStay">
                         <a-select
                           v-decorator="[
                             'purpose',
@@ -337,12 +392,7 @@
                             v-for="item in FilterPurposeofStay"
                             :key="item.setupvalue"
                             :value="item.setupvalue"
-                            >{{
-                              getLabels(
-                                item.setupvalue.toLowerCase(),
-                                `titleCase`
-                              )
-                            }}</a-select-option
+                            >{{ item.setupvalue }}</a-select-option
                           >
                         </a-select>
                       </a-form-item>
@@ -356,16 +406,15 @@
                 title="Input Address"
                 icon="room"
                 active-icon="room"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 2"
               >
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="getLabels('nationality', `titleCase`)"
-                      >
+                      <a-form-item :label="weblabel.nationality">
                         <a-select
+                          @focus="autoScrollNation"
                           v-decorator="[
                             'nationality',
                             {
@@ -386,10 +435,9 @@
                   </a-row>
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
-                      <a-form-item
-                        :label="getLabels('country_of_residence', `titleCase`)"
-                      >
+                      <a-form-item :label="weblabel.countryOfResidence">
                         <a-select
+                          @focus="autoScrollCountry"
                           @change="handleChangeCountry"
                           v-decorator="[
                             'country',
@@ -411,7 +459,7 @@
 
                     <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
                       <div v-if="country === 'INA' || country === 'ina'">
-                        <a-form-item :label="getLabels('region', `titleCase`)">
+                        <a-form-item :label="weblabel.region">
                           <a-select
                             v-decorator="[
                               'region',
@@ -420,10 +468,7 @@
                                 rules: [
                                   {
                                     required: true,
-                                    message: getLabels(
-                                      'required_province',
-                                      `sentenceCase`
-                                    ),
+                                    message: weblabel.requiredProvince,
                                   },
                                 ],
                               },
@@ -441,11 +486,11 @@
                     </a-col>
                     <div v-if="freeParking">
                       <a-col :span="5" :xl="5" :xs="24">
-                        <a-form-item
-                          :label="getLabels('vehicle_regident', `titleCase`)"
-                        >
-                          <a-input
+                        <a-form-item :label="weblabel.vehicleRegident">
+                          <q-input
                             class="ant-input-h"
+                            outlined
+                            dense
                             v-decorator="[
                               'vRegident',
                               {
@@ -466,7 +511,7 @@
                 caption="Optional"
                 icon="portrait"
                 active-icon="portrait"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 3"
               >
                 <div class="steps-content">
@@ -474,7 +519,7 @@
                     <a-col class="text-center">
                       <a-form-item>
                         <input
-                          style="display: none;"
+                          style="display: none"
                           ref="fileurl"
                           accept="image/*"
                           type="file"
@@ -486,31 +531,27 @@
                               rules: [
                                 {
                                   required: true,
-                                  message: getLabels(
-                                    'required_id',
-                                    `sentenceCase`
-                                  ),
+                                  message: weblabel.requiredID,
                                 },
                               ],
                             },
                           ]"
                         />
-                        <div style="margin-top: -50px;">
-                          <h1>Prepare your Passport for photo verification</h1>
+                        <div style="margin-top: -50px">
+                          <h1>{{ weblabel.idPhoto }}</h1>
                           <p>
-                            We need a photograph of your passport or
-                            alternatively you may upload the image file
+                            {{ weblabel.idPhotoDesc }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
-                        <div style="margin-top: 40px;">
+                        <div style="margin-top: 40px">
                           <q-btn
                             unelevated
                             rounded
                             @click="getFile"
                             color="primary"
                             label="Upload"
-                            style="width: 200px;"
+                            style="width: 200px"
                           />
                         </div>
                       </a-form-item>
@@ -524,15 +565,13 @@
                 title="Deposit Payment"
                 icon="payment"
                 active-icon="payment"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 4"
               >
                 <div class="steps-content">
                   <a-row :gutter="[16, 8]" v-if="pay == false">
                     <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item
-                        :label="getLabels('deposit_payment', `titleCase`)"
-                      >
+                      <a-form-item :label="weblabel.depositPayment">
                         <h2>
                           <strong>
                             {{ this.currDataPrepare["currency-usage"] }}
@@ -545,12 +584,12 @@
                       <div>
                         <a-form-item
                           label="Deposit Payment Response"
-                          style="margin-top: 10px;"
+                          style="margin-top: 10px"
                         >
                           <a-select
                             v-model="errorCode"
                             default-value="0000"
-                            style="width: 180px;"
+                            style="width: 180px"
                             @change="handleChange"
                           >
                             <a-select-option value="0000">
@@ -575,12 +614,12 @@
                           class="font-weight-bold mt-3 mr-3"
                           type="primary"
                           :disabled="paid || paymentLoading"
-                          @click="payDeposit()"
+                          @click="checkPayment()"
                         >
-                          {{ getLabels("pay", `titleCase`) }}
+                          {{ weblabel.pay }}
                           <q-spinner
                             v-if="paymentLoading"
-                            style="margin-left: 10px;"
+                            style="margin-left: 10px"
                             color="primary"
                             size="12px"
                           />
@@ -590,44 +629,33 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-else>
                     <a-col :span="12" :xl="12" :xs="12">
-                      <a-form-item :label="getLabels('deposit', `titleCase`)">
+                      <a-form-item :label="weblabel.deposit">
                         <h2>
-                          <strong>{{
-                            getLabels("cash_basis", `titleCase`)
-                          }}</strong>
+                          <strong>{{ weblabel.cashBasis }}</strong>
                         </h2>
                       </a-form-item>
                     </a-col>
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          getLabels("deposit_payment_success", `sentenceCase`)
-                        }}
+                      <p style="font-size: 16px; text-align: justify">
+                        {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          getLabels(
-                            "deposit_payment_network_error",
-                            `sentenceCase`
-                          )
-                        }}
+                      <p style="font-size: 16px; text-align: justify">
+                        {{ weblabel.depositPaymentNetworkError }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
-                      <p style="font-size: 16px; text-align: justify;">
-                        {{
-                          getLabels("deposit_payment_ver_error", `sentenceCase`)
-                        }}
+                      <p style="font-size: 16px; text-align: justify">
+                        {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
                     <div v-else>
                       <p>
                         <a-checkbox v-model="pay">
-                          {{ getLabels("term_cash_basis", `titleCase`) }}
+                          {{ weblabel.termCashBasis }}
                         </a-checkbox>
                       </p>
                     </div>
@@ -645,7 +673,7 @@
                         outline
                         color="primary"
                       >
-                        {{ getLabels("prev", `titleCase`) }}
+                        {{ weblabel.prev }}
                       </q-btn>
                     </div>
                     <div v-if="step != steps.length" class="col-6 col-xs-6">
@@ -655,7 +683,7 @@
                         unelevated
                         class="float-right"
                       >
-                        {{ getLabels("next", `titleCase`) }}
+                        {{ weblabel.next }}
                       </q-btn>
                     </div>
                   </div>
@@ -678,7 +706,7 @@
                     v-if="step == 4"
                     html-type="submit"
                     :disabled="!pay"
-                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                    >{{ weblabel.ciNow }}</a-button
                   >
                 </div>
                 <div v-else>
@@ -691,7 +719,7 @@
                     @click="save"
                     v-if="step == 4"
                     html-type="submit"
-                    >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                    >{{ weblabel.ciNow }}</a-button
                   >
                 </div>
               </a-form-item>
@@ -704,6 +732,7 @@
 </template>
 
 <script>
+import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
 import Antd, {
@@ -845,6 +874,7 @@ export default {
       maximumDeposit: "0",
       OverNightDeposit: "0",
       paid: "0",
+      stepTerm: 1,
       TotalData: "",
       defaultCI: "",
       overlappingModal: false,
@@ -859,6 +889,71 @@ export default {
       paidNetworkError: false,
       paidVerError: false,
       errorCode: "",
+      defaultCountry: "",
+      loadingConfirmEmail: false,
+      weblabel: {
+        // webla1
+        information: "",
+        okMessage: "",
+        mciSuccessNotReady: "",
+        reconfirmPhonemail: "",
+        phoneNumber: "",
+        requiredPhone: "",
+        email: "",
+        requiredEmail: "",
+        notValidEmail: "",
+        mciErrorNotReady: "",
+        mciErrorPreauth: "",
+        mciErrorInterface: "",
+        mciErrorPayment: "",
+        tcTitle: "",
+        disagree: "",
+        agree: "",
+        arrival: "",
+        departure: "",
+        bookCode: "",
+        roomNumber: "",
+        guestDetail: "",
+        uploadID: "",
+        depositPayment: "",
+        purposeStay: "",
+        nationality: "",
+        countryOfResidence: "",
+        region: "",
+        requiredProvince: "",
+        vehicleRegident: "",
+        requiredID: "",
+        idPhoto: "",
+        idPhotoDesc: "",
+        pay: "",
+        deposit: "",
+        cashBasis: "",
+        depositPaymentSuccess: "",
+        depositPaymentNetworkError: "",
+        depositPaymentVerError: "",
+        termCashBasis: "",
+        prev: "",
+        next: "",
+        ciNow: "",
+        ciDate: "",
+        coDate: "",
+      },
+      rmShareTooltip: true,
+      afterPayment: false,
+      termSMOOKING: "",
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      policy: "",
+      iconOta: "",
     };
   },
   watch: {
@@ -866,12 +961,11 @@ export default {
       key;
     },
   },
-  created() {    
+  created() {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    console.log('GuestData',this.currDataPrepare);
-    
+    // console.log("GuestData", this.currDataPrepare);
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
@@ -909,10 +1003,14 @@ export default {
     this.currency = this.currDataPrepare["currency-usage"];
     this.term = this.currDataSetting["termENG"];
     this.term1 = this.currDataSetting["termIDN"];
+    this.termSMOOKING = this.currDataSetting["termSMOOKING"];
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
+    this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
+    this.iconOta = this.currDataSetting["BackgroundColor"];
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
+    this.hotelLogo = this.currDataSetting["hotelLogo"];
     this.minimumDeposit = this.currDataSetting["minimumDeposit"];
     this.maximumDeposit = this.currDataSetting["maximumDeposit"];
     this.OverNightDeposit = this.currDataSetting["OverNightDeposit"];
@@ -921,16 +1019,14 @@ export default {
     this.per = this.currDataSetting["per"];
     this.FilterPurposeofStay = this.currDataSetting["FilterPurposeofStay"];
     this.freeParking = this.currDataSetting["freeParking"];
-    if (this.currDataPrepare["purposeofstay"] == "") {
-      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
-        "PurposeofStay"
-      ];
-    }
     this.region = this.currDataSetting["province"];
     this.countries = this.currDataSetting["countries"];
+    this.defaultCountry = this.currDataSetting["defaultCountry"];
     this.wifiAddress = this.currDataSetting["wifiAddress"];
+    this.textOta.color = this.currDataSetting["FontColor"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
+    this.policy = this.currDataSetting["policy"];
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -953,42 +1049,7 @@ export default {
     } else {
       this.terms = this.term1;
     }
-    /* Handle Stepper */
-    if (
-      this.currDataPrepare["step"] == undefined ||
-      this.currDataPrepare["step"] == ""
-    ) {
-      // If not define yet
-      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
-        this.currDataPrepare["step"] = 4;
-        this.termcondition = false;
-      } else {
-        if (this.precheckin) {
-          this.currDataPrepare["step"] = 3;
-          this.termcondition = false;
-        } else {
-          this.currDataPrepare["step"] = 1;
-          this.termcondition = true;
-        }
-      }
-      this.step = this.currDataPrepare["step"];
-    } else {
-      if (this.currDataPrepare["image-flag"] == "0 image id already exist") {
-        this.currDataPrepare["step"] = 4;
-        this.termcondition = false;
-      } else {
-        if (this.precheckin) {
-          this.currDataPrepare["step"] = 3;
-          this.termcondition = false;
-        } else {
-          this.currDataPrepare["step"] = 1;
-          this.termcondition = true;
-        }
-      }
-      this.step = this.currDataPrepare["step"];
-    }
-    this.loading = false;
-    //console.log('setting',this.currDataSetting);
+    // console.log('setting',this.currDataSetting);
     // router.push(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
@@ -1011,6 +1072,7 @@ export default {
     }
     // Handling Callback Payment and Save to Database
     if (this.tempParam.resultCd != null) {
+      this.afterPayment = true;
       if (this.errorCode == "1004") {
         //this.tempParam.resultCd.substring(0, 1)
         /* Payment Gateway Network Error */
@@ -1021,6 +1083,7 @@ export default {
         this.paidNetworkError = true;
         this.paidVerError = false;
       } else {
+        this.currDataPrepare["preAuth-flag"] = true;
         (async () => {
           const data = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1053,6 +1116,7 @@ export default {
             this.paidVerError = false;
             // console.log(this.currDataPrepare);
             // Session Storage Set
+            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
             sessionStorage.setItem(
               "guestData",
               JSON.stringify(this.currDataPrepare)
@@ -1065,11 +1129,239 @@ export default {
         })();
       }
     }
+
+    /* Handle Stepper */
+    // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
+    if (this.precheckin) {
+      if (
+        this.currDataPrepare["guest-email"] == "" ||
+        this.currDataPrepare["guest-phnumber"] == "" ||
+        this.currDataPrepare["purposeofstay"] == "" ||
+        this.currDataPrepare["purposeofstay"] == "_"
+      ) {
+        this.currDataPrepare["step"] = 1;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["guest-nation"] == "" ||
+        this.currDataPrepare["guest-country"] == "" ||
+        (this.currDataPrepare["guest-country"].toLowerCase() == "ina" &&
+          this.currDataPrepare["guest-region"] == "")
+      ) {
+        this.currDataPrepare["step"] = 2;
+        this.termcondition = true;
+      } else if (
+        this.freeParking == true &&
+        this.currDataPrepare["vreg"] == ""
+      ) {
+        this.currDataPrepare["step"] = 2;
+        this.termcondition = true;
+      } else if (
+        this.currDataPrepare["image-flag"] == "0 image id already exist"
+      ) {
+        this.currDataPrepare["step"] = 4;
+        this.termcondition = false;
+      } else {
+        this.currDataPrepare["step"] = 3;
+        this.termcondition = true;
+      }
+      this.step = this.currDataPrepare["step"];
+    } else {
+      // console.log('Not PCI',this.currDataPrepare["preAuth-flag"]);
+      if (
+        this.currDataPrepare["preAuth-flag"] == true ||
+        this.afterPayment == true
+      ) {
+        this.currDataPrepare["step"] = 4;
+        this.termcondition = false;
+      } else {
+        this.currDataPrepare["step"] = 1;
+        this.termcondition = true;
+      }
+      this.step = this.currDataPrepare["step"];
+    }
+    this.loading = false;
+    if (
+      this.currDataPrepare["purposeofstay"] == "" ||
+      this.currDataPrepare["purposeofstay"] == "_"
+    ) {
+      this.currDataPrepare["purposeofstay"] = this.currDataSetting[
+        "PurposeofStay"
+      ];
+    }
+
+    /* Handling Labeling */
+    this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
+    this.weblabel.mciShow = this.findLabel("mci_show", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
+    this.weblabel.mciSuccessNotReady = this.findLabel(
+      "mci_success_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.reconfirmPhonemail = this.findLabel(
+      "reconfirm_phonemail",
+      "sentenceCase"
+    );
+    this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
+    this.weblabel.requiredPhone = this.findLabel("required_phone", "titleCase");
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.requiredEmail = this.findLabel(
+      "required_email",
+      "sentenceCase"
+    );
+    this.weblabel.notValidEmail = this.findLabel(
+      "not_valid_email",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorNotReady = this.findLabel(
+      "mci_error_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorPreauth = this.findLabel(
+      "mci_error_preauth",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorInterface = this.findLabel(
+      "mci_error_interface",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorPayment = this.findLabel(
+      "mci_error_payment",
+      "sentenceCase"
+    );
+    this.weblabel.tcTitle = this.findLabel("t_c", "titleCase");
+    this.weblabel.disagree = this.findLabel("disagree", "titleCase");
+    this.weblabel.agree = this.findLabel("agree", "titleCase");
+    this.weblabel.arrival = this.findLabel("arrival", "titleCase");
+    this.weblabel.departure = this.findLabel("departure", "titleCase");
+    this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+    this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
+    this.weblabel.guestDetail = this.findLabel("guest_detail", "titleCase");
+    this.weblabel.uploadID = this.findLabel("upload_id", "titleCase");
+    this.weblabel.depositPayment = this.findLabel(
+      "deposit_payment",
+      "titleCase"
+    );
+    this.weblabel.purposeStay = this.findLabel("purpose_stay", "titleCase");
+    this.weblabel.nationality = this.findLabel("nationality", "titleCase");
+    this.weblabel.countryOfResidence = this.findLabel(
+      "country_of_residence",
+      "titleCase"
+    );
+    this.weblabel.region = this.findLabel("region", "titleCase");
+    this.weblabel.requiredProvince = this.findLabel(
+      "required_province",
+      "sentenceCase"
+    );
+    this.weblabel.vehicleRegident = this.findLabel(
+      "vehicle_regident",
+      "titleCase"
+    );
+    this.weblabel.requiredID = this.findLabel("required_id", "sentenceCase");
+    this.weblabel.idPhoto = this.findLabel("id_photo", "titleCase");
+    this.weblabel.idPhotoDesc = this.findLabel("id_photo_desc", "titleCase");
+    this.weblabel.pay = this.findLabel("pay", "titleCase");
+    this.weblabel.deposit = this.findLabel("deposit", "titleCase");
+    this.weblabel.cashBasis = this.findLabel("cash_basis", "titleCase");
+    this.weblabel.depositPaymentSuccess = this.findLabel(
+      "deposit_payment_success",
+      "sentenceCase"
+    );
+    this.weblabel.depositPaymentNetworkError = this.findLabel(
+      "deposit_payment_network_error",
+      "sentenceCase"
+    );
+    this.weblabel.depositPaymentVerError = this.findLabel(
+      "deposit_payment_ver_error",
+      "sentenceCase"
+    );
+    this.weblabel.termCashBasis = this.findLabel(
+      "term_cash_basis",
+      "titleCase"
+    );
+    this.weblabel.prev = this.findLabel("prev", "titleCase");
+    this.weblabel.next = this.findLabel("next", "titleCase");
+    this.weblabel.ciNow = this.findLabel("ci_now", "titleCase");
+    this.weblabel.ciDate = this.formatDate(this.currDataPrepare.ci);
+    this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
   },
   methods: {
+    kurang() {
+      this.stepTerm = this.stepTerm - 1;
+    },
+    findLabel(nameKey, used) {
+      // console.log('FindLabel');
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
+      }
+      return fixLabel;
+    },
+    async autoScrollNation() {
+      // console.log('autoScrollNation');
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-nation"] == "") {
+        this.form.setFieldsValue({
+          nationality: this.defaultCountry,
+        });
+        this.currDataPrepare["guest-nation"] = this.defaultCountry;
+      }
+    },
+    async autoScrollCountry() {
+      // console.log('autoScrollCountry');
+      await this.$nextTick();
+      if (this.currDataPrepare["guest-country"] == "") {
+        this.form.setFieldsValue({
+          country: this.defaultCountry,
+        });
+        this.country = this.defaultCountry;
+        this.currDataPrepare["guest-country"] = this.defaultCountry;
+      }
+    },
     resendPreauth() {
+      // console.log('resendPreauth');
       this.preauthModal = false;
       if (this.tempParam.resultCd != null) {
+        this.afterPayment = true;
         if (this.errorCode == "1004") {
           //this.tempParam.resultCd.substring(0, 1)
           /* Payment Gateway Network Error */
@@ -1080,6 +1372,7 @@ export default {
           this.paidNetworkError = true;
           this.paidVerError = false;
         } else {
+          this.currDataPrepare["preAuth-flag"] = true;
           (async () => {
             const data = await ky
               .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1126,10 +1419,12 @@ export default {
       }
     },
     async getFile() {
+      // console.log('getFile');
       await this.$nextTick();
       this.$refs.fileurl.click();
     },
     handleArrayDate(date) {
+      // console.log('handleArrayDate');
       const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
       const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
         2,
@@ -1140,12 +1435,15 @@ export default {
       return dateArray;
     },
     handleChange(value) {
+      // console.log('handleChange');
       this.errorCode = value;
     },
     handleChangeCountry(value) {
+      // console.log('handleChangeCountry');
       this.country = value;
     },
-    isNumber: function (evt) {
+    isNumber(evt) {
+      // console.log('isNumber');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1159,6 +1457,7 @@ export default {
       }
     },
     next() {
+      // console.log('next');
       switch (this.step) {
         case 1:
           const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -1229,6 +1528,7 @@ export default {
       }
     },
     prev() {
+      // console.log('prev');
       switch (this.step) {
         case 4:
           if (!this.precheckin) {
@@ -1259,7 +1559,23 @@ export default {
           break;
       }
     },
+    payDepositDoku() {
+      const MALLID = 1113679; // Set From Database
+      const CHAINMERCHANT = "NA"; // Set From Database
+      const AMOUNT = this.Deposit; // Set From Deposit Other Amount
+      const PURCHASEAMOUNT = this.Deposit; // Set From Deposit Other Amount
+      const TRANSIDMERCHANT = "INVOICE-TEST-157196"; // Set From Database
+      const PAYMENTTYPE = "AUTHORIZATION"; // Authorization for CardVer
+      const SHAREDKEY = "rpT4jeLsWHHK"; // Set From Database
+      const CURRENCY = "360"; // for IDN ISO 3166; Refer to : https://datahub.io/core/country-codes#data
+      const WORDS = CryptoJS.SHA1(
+        AMOUNT.toString() + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY
+      ); // sha1(AMOUNT + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY);
+      const todayPayment = new Date();
+      // console.log(todayPayment);
+    },
     payDeposit() {
+      // console.log('payDeposit');
       this.paymentLoading = true;
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
@@ -1268,7 +1584,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        //console.log(this.ipAddr);
+        // console.log(this.ipAddr);
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1332,15 +1648,15 @@ export default {
             throw new Error("Network response was not ok.");
           })
           .then((data) => {
-            //console.log('after cors',data);
+            // console.log('after cors',data);
             const resp = data.contents.substr(
               data.contents.indexOf("{"),
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            //console.log(this.resReg);
+            // console.log(this.resReg);
             if (this.resReg.data["resultCd"] == "0000") {
-              //console.log(this.resReg);
+              // console.log(this.resReg);
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
@@ -1354,6 +1670,7 @@ export default {
       });
     },
     check() {
+      // console.log('check');
       const token = CryptoJS.SHA256(
         "IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
       );
@@ -1382,9 +1699,11 @@ export default {
         });
     },
     closeModal() {
+      // console.log('closeModal');
       this.paymentModal = false;
     },
     hideAllModal() {
+      // console.log('hideAllModal');
       this.confirmMailModal = false;
       this.termcondition = false;
       this.overlappingModal = false;
@@ -1393,6 +1712,7 @@ export default {
       this.preauthModal = false;
     },
     onFileChange(e) {
+      // console.log('onFileChange');
       const file = e.target.files[0];
       /* Start Handling Images Compression */
       const reader = new FileReader();
@@ -1476,17 +1796,20 @@ export default {
       };
     },
     onKeydown(event) {
+      // console.log('onKeydown');
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
         event.preventDefault();
       }
     },
     scrollToTop() {
+      // console.log('scrollToTop');
       window.scrollTo(0, 0);
       //this.step = 0;
     },
-    checkValidation(caseType){
-      console.log('checkValidation is triggered');
+    checkValidation(caseType) {
+      // console.log('checkValidation');
+      // console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -1498,18 +1821,19 @@ export default {
               },
             },
           })
-          .json();  
-        console.log(parsed);
-        switch(caseType){
+          .json();
+        // console.log(parsed);
+        switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
             const responseStatus = {
               statusNumber: "",
               statusMessage: "",
-            }            
+            };
             responseStatus.statusNumber = responses[0];
             responseStatus.statusMessage = responses[1];
-            if(responseStatus.statusNumber == '1'){ //Reservation Already Check-In!
+            if (responseStatus.statusNumber == "1") {
+              //Reservation Already Check-In!
               // Go To Success Checkin
               Object.assign(this.currDataPrepare, { roomReady: true });
               // Session Storage Set
@@ -1528,11 +1852,19 @@ export default {
                   setting: this.currDataSetting,
                 },
               });
-            }else if(responseStatus.statusNumber == '0'){ //Reservation Not Check-In Yet!
+            } else if (responseStatus.statusNumber == "0") {
+              //Reservation Not Check-In Yet!
               this.handleResCi();
-            }            
+            }
             break;
-          case "2":            
+          case "2":
+            const responsess = parsed.response["paymentFlag"].split(" - ");
+            if (parseInt(responsess[0]) == 0) {
+              //this.payDeposit();
+              this.payDeposit();
+            } else {
+              this.paid = true;
+            }
             break;
           case "3":
             break;
@@ -1542,6 +1874,7 @@ export default {
       })();
     },
     handleResCi() {
+      // console.log('handleResCi');
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
@@ -1566,22 +1899,23 @@ export default {
             },
           })
           .json();
+        // console.log(parsed);
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
-        if (this.responseStatus.statusNumber == "99" || 
-            this.responseStatus.statusNumber == "1" ||
-            this.responseStatus.statusNumber == "2" ||
-            this.responseStatus.statusNumber == "3" ||
-            this.responseStatus.statusNumber == "4" ||
-            this.responseStatus.statusNumber == "5"
-        ){
+        if (
+          this.responseStatus.statusNumber == "99" ||
+          this.responseStatus.statusNumber == "1" ||
+          this.responseStatus.statusNumber == "2" ||
+          this.responseStatus.statusNumber == "3" ||
+          this.responseStatus.statusNumber == "4" ||
+          this.responseStatus.statusNumber == "5"
+        ) {
           // Showing Modal Cannot MCI -> mci_error_not_avail
-        }
-        else if(
-            this.responseStatus.statusNumber == "6" ||
-            this.responseStatus.statusNumber == "7"
-        ){
+        } else if (
+          this.responseStatus.statusNumber == "6" ||
+          this.responseStatus.statusNumber == "7"
+        ) {
           this.confirmMailModal = true;
           this.roomReady = false;
         } else {
@@ -1606,16 +1940,19 @@ export default {
       })();
     },
     save() {
+      // console.log('save');
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
         this.overlappingModal = true;
-      } else {        
-        /* Room is Ready to Check in */   
+      } else {
+        /* Room is Ready to Check in */
         this.checkValidation("1");
       }
     },
     handleYes() {
+      // console.log('handleYes');
+      this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
         this.formresubmit.validateFields(["guest-email"]);
@@ -1632,9 +1969,8 @@ export default {
         this.currDataPrepare[
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
-                
         // Handling Interface WA atau SMS
-        //console.log(data);
+        // console.log(data);
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -1655,7 +1991,7 @@ export default {
           const responses = parsed.response["resultMessage"];
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          //console.log(responses);
+          // console.log(responses);
           if (this.responseStatus.statusNumber == 0) {
             Object.assign(this.currDataPrepare, { roomReady: false });
             // Session Storage Set
@@ -1678,10 +2014,12 @@ export default {
             // Handling Apabila Gagal Simpan ke Table Interface
             this.interfacingModal = true;
           }
+          this.loadingConfirmEmail = false;
         })();
       }
     },
     back() {
+      // console.log('back');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -1689,22 +2027,29 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.muncul = false;
-        this.keluar = false;
-        this.guest = false;
-        this.termcondition = false;
-        this.confirmLoading = false;
-      }, 300);
+      console.log(this.stepTerm);
+      if (this.stepTerm < 2) {
+        this.stepTerm = this.stepTerm + 1;
+      } else {
+        // console.log('handleOk');
+        this.ModalText = "The modal will be closed after two seconds";
+        this.confirmLoading = true;
+        setTimeout(() => {
+          this.visible = false;
+          this.muncul = false;
+          this.keluar = false;
+          this.guest = false;
+          this.termcondition = false;
+          this.confirmLoading = false;
+        }, 300);
+      }
     },
-    moment,
     disagree() {
+      // console.log('disagree');
       window.open(this.location, "_self");
     },
     formatDate(datum) {
+      // console.log('formatDate');
       const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
           ? `0${String(moment(datum, "YYYY-M-DD").date())}`
@@ -1718,37 +2063,44 @@ export default {
       return fixDate;
     },
     handleBack() {
+      // console.log('handleBack');
       window.open(this.location, "_self");
+    },
+    checkPayment() {
+      // console.log('checkPayment');
+      this.checkValidation("2");
+    },
+  },
+  watch: {
+    isIdle(newIdle, oldIdle) {
+      if (newIdle == true || newIdle == "true") {
+        window.open(this.location, "_self");
+      }
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
+    hexAToRGBA() {
+      return (hex) => {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+          c = hex.substring(1).split("");
+          if (c.length == 3) {
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
+          c = "0x" + c.join("");
+          // console.log('thishexa');
+          return (
+            "rgba(" +
+            [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+            ",1)"
+          );
         }
-        return fixLabel;
+        throw new Error("Bad Hex");
       };
+    },
+    isIdle() {
+      return store.state.idleVue.isIdle;
     },
   },
 };

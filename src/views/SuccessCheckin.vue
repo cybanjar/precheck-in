@@ -1,11 +1,84 @@
 <template>
   <div>
-    <div :style="ota" class="row justify-between pt-2">
-      <div class="text-center col-xs-12">
-        <img class="logo_hotel" :src="hotelLogo" />
+    <div v-if="loading">
+      <div
+        style="
+          display: flex;
+          width: 100% !important;
+          height: 100vh;
+          overflow: hidden;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          margin-top: -50px;
+        "
+      >
+        <q-spinner-ball color="red" size="8em" style="" />
       </div>
-      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
-        <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
+    </div>
+    <div v-else>
+      <div :style="ota" class="row justify-between pt-2">
+        <div class="text-center col-xs-12">
+          <img class="logo_hotel" :src="hotelLogo" />
+        </div>
+        <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+          <p :style="textOta" class="mci-hotel">{{ hotelName }}</p>
+        </div>
+      </div>
+      <div class="row justify-around bg-white self-checkin">
+        <div class="text-center">
+          <img v-show="QRshow == true && roomReady == true" :src="url" />
+          <div v-if="roomReady" style="margin-top: 2rem;">
+            <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
+            <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
+            <p>
+              {{ weblabel.wifiPassword }} :
+              {{ wifiPassword }}
+            </p>
+            <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
+
+            <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p v-if="QRshow == false" style="margin-top: 2rem;">
+                  {{ weblabel.mciSuccessWithMaxKeycard }}
+                </p>
+                <p v-else>
+                  {{ weblabel.mciSuccess }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }}
+              <q-spinner-ball
+                color="red"
+                style="margin-left: 10px;"
+                v-if="gobackLoading"
+              />
+            </a-button>
+          </div>
+          <div v-else>
+            <div class="row justify-center q-mt-xl">
+              <div class="col-md-6 col-xs-11">
+                <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
+                <p>{{ weblabel.email }} : {{ email }}</p>
+                <p>
+                  {{ weblabel.mciSuccessNotReady }}
+                </p>
+              </div>
+            </div>
+
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }}
+              <q-spinner-ball
+                color="red"
+                style="margin-left: 10px;"
+                v-if="gobackLoading"
+              />
+            </a-button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
@@ -36,29 +109,27 @@
             </div>
           </div>
 
-          <a-button @click="goBack">{{
-            getLabels("done", `titleCase`)
-          }}</a-button>
-        </div>
-        <div v-else>
-          <div class="row justify-center q-mt-xl">
-            <div class="col-md-6 col-xs-11">
-              <p>
-                {{ getLabels("mci_success_not_ready", `sentenceCase`) }}
-              </p>
-            </div>
-          </div>
-
-          <a-button @click="goBack">{{
-            getLabels("done", `titleCase`)
-          }}</a-button>
-        </div>
-      </div>
-    </div>
+    <!-- Modal MCI Confirm Check-in -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="infoMCIConfim"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button type="primary" @click="backToHome">{{
+          weblabel.no
+        }}</a-button>
+        <a-button type="primary" @click="backToList">{{
+          weblabel.yes
+        }}</a-button>
+      </template>
+      <p>{{ weblabel.mciConfirmCi }}</p>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import store from "@/store/store";
 import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
@@ -103,12 +174,30 @@ export default {
       serverTime: "",
       message: "",
       guestData: {},
+      weblabel: {
+        roomNumber: "",
+        wifiAddress: "",
+        wifiPassword: "",
+        arrangement: "",
+        mciSuccessWithMaxKeycard: "",
+        mciSuccess: "",
+        done: "",
+        phoneNumber: "",
+        email: "",
+        mciSuccessNotReady: "",
+        mciConfirmCi: "",
+        no: "",
+        yes: "",
+      },
+      infoMCIConfim: false,
+      loading: true,
+      gobackLoading: false,
     };
   },
-  mounted() {
+  created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
-    if(this.setup == null || this.guestData == null){
+    if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
       }
@@ -119,7 +208,6 @@ export default {
     // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
-    
     this.hotelLogo = this.setup.hotelLogo;
     this.hotelEndpoint = this.setup.hotelEndpoint;
     this.langID = this.setup.langID;
@@ -136,14 +224,14 @@ export default {
     this.wifiAddress = this.setup.wifiAddress;
     this.wifiPassword = this.setup.wifiPassword;
     // Get Parsing Guest Data
-    this.coDate = this.formatDateFind(this.guestData['co']);    
-    this.bookingcode = this.guestData['resnr'];  
-    this.reslinnr = this.guestData['reslinnr'];
-    this.roomReady = this.guestData['roomReady'];
-    this.roomNumber = this.guestData['zinr'];    
-    this.arrangement = this.guestData['argt-str'];
-    this.email = this.guestData['guest-email'];
-    this.phone = this.guestData['guest-phnumber'];
+    this.coDate = this.formatDateFind(this.guestData["co"]);
+    this.bookingcode = this.guestData["resnr"];
+    this.reslinnr = this.guestData["reslinnr"];
+    this.roomReady = this.guestData["roomReady"];
+    this.roomNumber = this.guestData["zinr"];
+    this.arrangement = this.guestData["argt-str"];
+    this.email = this.guestData["guest-email"];
+    this.phone = this.guestData["guest-phnumber"];
     // Selecting Language
     switch (this.langID.toLowerCase()) {
       case "eng":
@@ -170,26 +258,86 @@ export default {
         })
         .json();
       this.data = parsed.response.keyString;
-      if (parsed.response.keyMaked >= parsed.response.keyAvail) {
+      if (parsed.response.keyAvail <= 0) {
         this.QRshow = false;
       } else {
         this.QRshow = true;
       }
     })();
-    
     // Generate QRCode
-    const success = btoa(this.data);    
-    QRCode.toCanvas(
-      document.getElementById("canvas"),
-      success,
-      { errorCorrectionLevel: "H" },
-      { width: "76", height: "76" }
+    // Labeling
+    this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
+    this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
+    this.weblabel.wifiPassword = this.findLabel(
+      "wifi_password",
+      "sentenceCase"
     );
-    QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      this.url = url.split(",")[1];
-    });
+    this.weblabel.arrangement = this.findLabel("arrangement", "sentenceCase");
+    this.weblabel.mciSuccessWithMaxKeycard = this.findLabel(
+      "mci_success_with_max_keycard",
+      `sentenceCase`
+    );
+    this.weblabel.mciSuccess = this.findLabel("mci_success", "sentenceCase");
+    this.weblabel.done = this.findLabel("done", "titleCase");
+    this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.mciSuccessNotReady = this.findLabel(
+      "mci_success_not_ready",
+      "sentenceCase"
+    );
+    this.weblabel.mciConfirmCi = this.findLabel(
+      "mci_confirm_ci",
+      "sentenceCase"
+    );
+    this.weblabel.yes = this.findLabel("yes", "sentenceCase");
+    this.weblabel.no = this.findLabel("no", "sentenceCase");
   },
   methods: {
+    findLabel(nameKey, used) {
+      let labels = undefined;
+      if (localStorage.getItem("labels") == null) {
+        labels = localStorage.getItem("labels");
+      } else {
+        labels = this.labels;
+      }
+      let fixLabel = "";
+      const locale = localStorage.getItem("locale");
+      const label = this.labels.find((el) => {
+        return el["program-variable"] == nameKey;
+      });
+      if (label === undefined) {
+        fixLabel = "";
+      } else {
+        switch (locale) {
+          case "EN":
+            fixLabel = label["program-label1"];
+            break;
+          case "ID":
+            fixLabel = label["program-label2"];
+            break;
+          default:
+            fixLabel = label["program-label1"];
+            break;
+        }
+        switch (used) {
+          case "titleCase":
+            fixLabel = fixLabel.replace(/\w\S*/g, function (txt) {
+              return txt.charAt(0).toUpperCase() + txt.substr(1);
+            });
+            break;
+          case "sentenceCase":
+            fixLabel = fixLabel.charAt(0).toUpperCase() + fixLabel.slice(1);
+            break;
+          case "upperCase":
+            fixLabel = fixLabel.toUpperCase();
+            break;
+          default:
+            fixLabel = fixLabel;
+            break;
+        }
+      }
+      return fixLabel;
+    },
     formatDate(datum) {
       const dDate = String(moment(datum, "MM/DD/YYYY").date()).padStart(2, "0");
       const dMonth = String(moment(datum, "MM/DD/YYYY").month() + 1).padStart(
@@ -210,104 +358,145 @@ export default {
       const fixDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return fixDate;
     },
+    backToHome() {
+      window.open(this.location, "_self");
+    },
+    backToList() {
+      const mainReservation = JSON.parse(sessionStorage.getItem("listData"));
+      const settings = JSON.parse(sessionStorage.getItem("settings"));
+      router.push({
+        name: "ListCheckIn",
+        params: {
+          guestData: mainReservation,
+          setting: settings,
+        },
+      });
+    },
     goBack() {
-      console.log(this.TotalData);
-      if (this.TotalData == undefined) {
-        window.open(this.location, "_self");
-      } else {
-        if (parseInt(this.TotalData) > 1) {
-          (async () => {
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/findReservation", {
-                json: {
-                  request: {
-                    coDate: this.coDate,
-                    bookCode: this.bookingcode,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: this.serverTime,
-                    groupFlag: "false",
-                  },
-                },
-              })
-              .json();            
-            this.message = data.response["messResult"];          
-            const messResult = this.message.split("-");
-            const messMessage = messResult[1].split(",");
-            switch (messResult[0].trim()) {
-              case "0":
-                // Reservation is Found
-                const reservation = [];
-                
-                /* Handling Multiple Guest to ListCheckin.vue */
-                reservation.push(
-                  data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-                );
-                // Get Total Guest
-                const tempTotal = reservation[0].filter((item, index) => {
-                  return (
-                    item["room-status"] !==
-                    "1 Room Already assign or Overlapping"
-                  );
-                });
-                this.setup.TotalData = tempTotal.length;
-                
-                console.log('SuccessCheckin',{
-                  guestData: reservation[0],
-                  setting: this.setup,
-                });
-                if(tempTotal.length > 1){
-                  router.push({
-                    name: "ListCheckIn",
-                    params: {
-                      guestData: reservation[0],
-                      setting: this.setup,
-                    },
-                  });
-                }else{
-                  window.open(this.location, "_self");
+      this.gobackLoading = true;
+      (async () => {
+        const data = await ky
+          .post(this.hotelEndpoint + "mobileCI/findReservation", {
+            json: {
+              request: {
+                coDate: this.setup.SearchCO,
+                bookCode: this.setup.SearchValue,
+                chName: " ",
+                earlyCI: "false",
+                maxRoom: "1",
+                citime: this.serverTime,
+                groupFlag: "false",
+              },
+            },
+          })
+          .json();
+        this.message = data.response["messResult"];
+        const messResult = this.message.split("-");
+        const messMessage = messResult[1].split(",");
+        this.gobackLoading = false;
+        switch (messResult[0].trim()) {
+          case "0":
+            // Reservation is Found
+            const reservation = [];
+            /* Get Temporary Total Reservation */
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            // Reservation Without Room Sharer (Main Guest Reservation)
+            const mainReservation = reservation[0].filter((item, index) => {
+              if (item["room-sharer"] === true) {
+              } else {
+                return item;
+              }
+            });
+            if (mainReservation.length > 1) {
+              // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
+              const acceptRsv = mainReservation.filter((item, index) => {
+                if (
+                  item["room-status"] == "1 Room Already assign or Overlapping"
+                ) {
+                } else {
+                  return item;
                 }
-                
-                break;  
-              default:
-                break;
+              });
+              this.setup.TotalData = acceptRsv.length;
+              // Reservation Room Share Only
+              const roomShare = reservation[0].filter((item, index) => {
+                return item["room-sharer"] === true;
+              });
+              // Attach Room Share into Main Guest Reservation
+              // Also counting Total Of Checked-in and Waiting List
+              let countCheckedIn = 0;
+              let countWaiting = 0;
+              mainReservation.forEach((item, index) => {
+                Object.assign(item, { rmshare: [] });
+                roomShare.forEach((guest, index) => {
+                  if (item["zinr"] == guest["zinr"]) {
+                    item["rmshare"].push(guest["gast"]);
+                  }
+                });
+                if (item["res-status"] == "1 - Guest Already Checkin") {
+                  // Checked In Guest
+                  countCheckedIn++;
+                } else if (item["ifdata-sent"] == true) {
+                  // Waiting List Guest
+                  countWaiting++;
+                }
+              });
+              if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
+                // Open Modal Question
+                sessionStorage.setItem(
+                  "listData",
+                  JSON.stringify(mainReservation)
+                );
+                sessionStorage.setItem("settings", JSON.stringify(this.setup));
+                this.infoMCIConfim = true;
+              } else {
+                this.backToHome();
+              }
+            } else {
+              this.backToHome();
             }
-          })();
-        } else {
-          window.open(this.location, "_self");
+            break;
+          default:
+            break;
         }
-      }
+      })();
+    },
+    showAnimation() {
+      setTimeout(() => {
+        this.loading = false;
+        /* Generate QR Code */
+
+        const success = btoa(this.data);
+        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then(
+          (err, url) => {
+            if (err) {
+              this.url = err;
+            } else {
+              this.url = url.split(",")[1];
+            }
+          }
+        );
+      }, 1000);
     },
   },
+  watch: {
+    isIdle(newIdle, oldIdle) {
+      if (newIdle == true || newIdle == "true") {
+        window.open(this.location, "_self");
+      }
+      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
+    },
+  },
+  async mounted() {
+    await this.$nextTick();
+    // console.log('mounted is triggered');
+    this.showAnimation();
+  },
   computed: {
-    getLabels() {
-      let fixLabel = "";
-      return (nameKey, used) => {
-        const label = this.labels.find((el) => {
-          return el["program-variable"] == nameKey;
-        });
-        if (label === undefined) {
-          fixLabel = "";
-        } else {
-          if (used === "titleCase") {
-            fixLabel = label[this.programLabel].replace(/\w\S*/g, function (
-              txt
-            ) {
-              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-          } else if (used === "sentenceCase") {
-            fixLabel =
-              label[this.programLabel].charAt(0).toUpperCase() +
-              label[this.programLabel].slice(1);
-          } else if (used === "upperCase") {
-            fixLabel = label[this.programLabel].toUpperCase();
-          } else {
-            fixLabel = label[this.programLabel];
-          }
-        }
-        return fixLabel;
-      };
+    isIdle() {
+      return store.state.idleVue.isIdle;
     },
   },
 };

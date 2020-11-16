@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center" style="margin-top: 10px">
+      <div class="text-center" style="margin-top: 10px;">
         <canvas id="canvas" v-show="flagKiosk"></canvas>
         <p>
           {{ getLabels("book_code", `titleCase`) }} :
@@ -74,6 +74,8 @@ export default {
     };
   },
   mounted() {
+    sessionStorage.setItem("PCI", true);
+    // console.log(this.$route.params);
     this.data = this.$route.params.Data;
     this.flagKiosk = this.$route.params.Param.flagKiosk;
     this.hotelParams = this.$route.params.Param.hotelParams;

@@ -14,9 +14,17 @@ body {
   padding: 0 50px;
 }
 
+<<<<<<< HEAD
 .self_checkin {
   border-radius: 20px 20px 0 0 !important;
   margin-top: -20px !important;
+=======
+.self-checkin {
+  margin-top: -20px;
+  border-radius: 20px 20px 0 0;
+  -webkit-border-radius: 20px 20px 0 0;
+  -moz-border-radius: 20px 20px 0 0;
+>>>>>>> BlackGreymon
   -webkit-transform: translate3d(0, 0, 0);
 }
 
@@ -24,9 +32,24 @@ body {
   font-weight: bold;
 }
 
+<<<<<<< HEAD
+=======
+.mci-size {
+  font-size: 30px;
+}
+
+.titlecolor {
+  color: #606060;
+}
+
+>>>>>>> BlackGreymon
 @media only screen and (min-width: 577px) {
   .mci-hotel {
     font-weight: bold;
     font-size: 20px;
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> BlackGreymon
