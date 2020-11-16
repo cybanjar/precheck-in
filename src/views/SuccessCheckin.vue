@@ -26,7 +26,131 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="text-center">
+        <div class="row mci-success-body" v-if="useKeyStation == false">
+          <div
+            class="col-12 text-center mci-success-padding"
+            style="word-wrap: break-word; margin-top: 1rem"
+          >
+            <!-- Guest Complete Name -->
+            <p>{{ weblabel.guestName }}</p>
+            <h2 class="mci-success-data">
+              {{ guestData["gast"].toUpperCase() }}
+            </h2>
+          </div>
+          <div class="col-12 text-center mci-success-margin">
+            <!-- Room Number -->
+            <p>{{ weblabel.roomNumber }}</p>
+            <h6 class="mci-success-data">{{ guestData["zinr"] }}</h6>
+            <h6 class="mci-h3">{{ guestData["rmtype-str"].toUpperCase() }}</h6>
+          </div>
+          <div
+            class="col-12 mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <!-- Information -->
+            <q-card class="my-card">
+              <q-card-section>
+                <div
+                  class="mci-info"
+                  style="
+                    word-wrap: break-word;
+                    min-width: 20rem !important;
+                    padding-left: 2rem;
+                    padding-top: 0.5rem;
+                    padding-right: 0.5rem;
+                    padding-bottom: 0.5rem;
+                  "
+                >
+                  <!-- Handle Kotak -->
+
+                  <div class="row">
+                    <div class="col-6">{{ weblabel.guests }}</div>
+                    <div
+                      class="col-6"
+                      style="font-weight: bold; padding: 0.2rem 0"
+                    >
+                      2 Adult
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">{{ weblabel.wifiAddress }}</div>
+                    <div
+                      class="col-6"
+                      style="font-weight: bold; padding: 0.2rem 0"
+                    >
+                      SINDATA_FL4
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">{{ weblabel.wifiPassword }}</div>
+                    <div
+                      class="col-6"
+                      style="font-weight: bold; padding: 0.2rem 0"
+                    >
+                      sindata1q2w3e4r5t
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">{{ weblabel.arrival }}</div>
+                    <div
+                      class="col-6"
+                      style="font-weight: bold; padding: 0.2rem 0"
+                    >
+                      14/01/2019 14:10
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">{{ weblabel.departure }}</div>
+                    <div
+                      class="col-6"
+                      style="font-weight: bold; padding-top: 0.2rem"
+                    >
+                      15/01/2019
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center; margin-top: 10px"
+          >
+            <!-- Room Number -->
+            <div>
+              <div>
+                <p style="margin-bottom: 0.5rem">
+                  {{ weblabel.mciIdPassport }}
+                </p>
+              </div>
+              <div class="mci-img">
+                <img alt="guestID" :src="imageID" width="280" />
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center; margin-top: 10px"
+          >
+            <!-- Message -->
+            <p>{{ weblabel.mciSuccessWoKeystation }}</p>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center;"
+          >
+            <a-button @click="goBack" :disabled="gobackLoading">
+              {{ weblabel.done }}
+              <q-spinner-ball
+                color="red"
+                style="margin-left: 10px"
+                v-if="gobackLoading"
+              />
+            </a-button>
+          </div>
+        </div>
+        <div class="text-center" v-else>
           <img v-show="QRshow == true && roomReady == true" :src="url" />
           <div v-if="roomReady" style="margin-top: 2rem">
             <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
@@ -161,15 +285,25 @@ export default {
         mciConfirmCi: "",
         no: "",
         yes: "",
+        mciSuccessWoKeystation: "",
+        guests: "",
+        arrival: "",
+        departure: "",
+        mciIdPassport: "",
+        guestName: "",
       },
       infoMCIConfim: false,
       loading: true,
       gobackLoading: false,
+      imageID: "",
+      Test: "",
+      useKeyStation: false,
     };
   },
   created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
+
     if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
@@ -187,7 +321,7 @@ export default {
     this.ota.backgroundColor = this.setup.BackgroundColor;
     this.textOta.color = this.setup.FontColor;
     this.hotelImage = this.setup.hotelImage;
-    this.hotelName = this.setup.hotelname;
+    this.hotelName = this.setup.hotelName;
     this.ciTime = this.setup.defaultCI;
     this.TotalData = this.setup.TotalData;
     this.location = this.setup.location;
@@ -238,13 +372,29 @@ export default {
       }
     })();
     // Generate QRCode
+
+    // Get Guest Image
+    (async () => {
+      const parsed = await ky
+        .post(this.hotelEndpoint + "mobileCI/loadIDCard", {
+          json: {
+            request: {
+              guestno: this.guestData["gastno"],
+            },
+          },
+        })
+        .json();
+      if (parsed.response.imagedata != null) {
+        this.imageID = "data:image/png;base64," + parsed.response.imagedata;
+      } else {
+        this.imageID = "";
+      }
+    })();
+
     // Labeling
     this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
     this.weblabel.wifiAddress = this.findLabel("wifi_address", "titleCase");
-    this.weblabel.wifiPassword = this.findLabel(
-      "wifi_password",
-      "sentenceCase"
-    );
+    this.weblabel.wifiPassword = this.findLabel("wifi_password", "titleCase");
     this.weblabel.arrangement = this.findLabel("arrangement", "sentenceCase");
     this.weblabel.mciSuccessWithMaxKeycard = this.findLabel(
       "mci_success_with_max_keycard",
@@ -264,6 +414,18 @@ export default {
     );
     this.weblabel.yes = this.findLabel("yes", "sentenceCase");
     this.weblabel.no = this.findLabel("no", "sentenceCase");
+    this.weblabel.guests = this.findLabel("guests", "sentenceCase");
+    this.weblabel.arrival = this.findLabel("arrival", "sentenceCase");
+    this.weblabel.departure = this.findLabel("departure", "sentenceCase");
+    this.weblabel.mciIdPassport = this.findLabel(
+      "mci_id_passport",
+      "sentenceCase"
+    );
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.mciSuccessWoKeystation = this.findLabel(
+      "mci_success_wo_keystation",
+      "sentenceCase"
+    );
   },
   methods: {
     findLabel(nameKey, used) {
@@ -442,6 +604,7 @@ export default {
         /* Generate QR Code */
 
         const success = btoa(this.data);
+        //console.log(this.data, success);
         QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then(
           (err, url) => {
             if (err) {
