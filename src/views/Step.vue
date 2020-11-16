@@ -5,159 +5,158 @@
     </a-spin>
   </div>
   <div v-else>
-    <div class="home">
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="confirmMailModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-          >
-            {{ weblabel.okMessage }}
-            <q-spinner
-              v-if="loadingConfirmEmail"
-              style="margin-left: 10px"
-              color="white"
-              size="12px"
+    <!-- Modal Response Room Status -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="confirmMailModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="handleYes"
+        >
+          {{ weblabel.okMessage }}
+          <q-spinner
+            v-if="loadingConfirmEmail"
+            style="margin-left: 10px"
+            color="white"
+            size="12px"
+          />
+        </a-button>
+      </template>
+      <p>{{ weblabel.mciSuccessNotReady }}</p>
+      <p>{{ weblabel.reconfirmPhonemail }}</p>
+      <div>
+        <a-form layout="vertical" :form="formresubmit">
+          <a-form-item :label="weblabel.phoneNumber">
+            <q-input
+              v-decorator="[
+                'guest-phone',
+                {
+                  initialValue: currDataPrepare['guest-phnumber'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredPhone,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              outlined
+              dense
             />
-          </a-button>
-        </template>
-        <p>{{ weblabel.mciSuccessNotReady }}</p>
-        <p>{{ weblabel.reconfirmPhonemail }}</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="weblabel.phoneNumber">
-              <q-input
-                v-decorator="[
-                  'guest-phone',
-                  {
-                    initialValue: currDataPrepare['guest-phnumber'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredPhone,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                outlined
-                dense
-              />
-            </a-form-item>
-            <a-form-item :label="weblabel.email">
-              <q-input
-                v-decorator="[
-                  'guest-email',
-                  {
-                    initialValue: currDataPrepare['guest-email'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredEmail,
-                      },
-                      {
-                        type: 'email',
-                        message: weblabel.notValidEmail,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                type="email"
-                outlined
-                dense
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
+          </a-form-item>
+          <a-form-item :label="weblabel.email">
+            <q-input
+              v-decorator="[
+                'guest-email',
+                {
+                  initialValue: currDataPrepare['guest-email'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredEmail,
+                    },
+                    {
+                      type: 'email',
+                      message: weblabel.notValidEmail,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              type="email"
+              outlined
+              dense
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
 
-      <!-- Modal For Overlapping -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="overlappingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorNotReady }}</p>
-      </a-modal>
+    <!-- Modal For Overlapping -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="overlappingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorNotReady }}</p>
+    </a-modal>
 
-      <!-- Modal For Network Establish Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="preauthModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="resendPreauth"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPreauth }}</p>
-      </a-modal>
+    <!-- Modal For Network Establish Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="preauthModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="resendPreauth"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPreauth }}</p>
+    </a-modal>
 
-      <!-- Modal For Interface -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="interfacingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorInterface }}</p>
-      </a-modal>
+    <!-- Modal For Interface -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="interfacingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorInterface }}</p>
+    </a-modal>
 
-      <!-- Modal For Payment Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="paymenterrorModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPayment }}</p>
-      </a-modal>
+    <!-- Modal For Payment Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="paymenterrorModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPayment }}</p>
+    </a-modal>
 
-      <!-- Modal For Term And Condition -->
-      <!-- <a-modal
+    <!-- Modal For Term And Condition -->
+    <!-- <a-modal
         :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
@@ -178,214 +177,134 @@
         <p>{{ terms }}</p>
       </a-modal> -->
 
-      <q-dialog v-model="termcondition">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6" v-show="stepTerm === 1">
-              {{ weblabel.tcTitle }}
-            </div>
-            <div class="text-h6" v-show="stepTerm === 2">Privacy Policy</div>
-          </q-card-section>
+    <q-dialog v-model="termcondition">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6" v-show="stepTerm === 1">
+            {{ weblabel.tcTitle }}
+          </div>
+          <div class="text-h6" v-show="stepTerm === 2">Privacy Policy</div>
+        </q-card-section>
 
-          <q-separator />
+        <q-separator />
 
-          <q-card-section style="max-height: 50vh" class="scroll">
-            <p style="white-space: pre-wrap" v-show="stepTerm == 1">
-              {{ terms }}
-            </p>
-            <p style="white-space: pre-wrap" v-show="stepTerm == 1">
-              {{ termSMOOKING }}
-            </p>
-
-            <p
-              style="white-space: pre-wrap"
-              v-show="stepTerm == 2"
-              v-html="policy"
-            ></p>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-actions align="right">
-            <q-btn
-              v-if="stepTerm > 1"
-              flat
-              color="primary"
-              @click="kurang()"
-              label="Back"
-            />
-            <q-btn :label="weblabel.disagree" color="red" @click="disagree" />
-            <q-btn
-              :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
-              color="primary"
-              @click="handleOk"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div
-          class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
-          style="padding-right: 30px"
-        >
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-            :style="information"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-            <span v-if="currDataPrepare['rmshare'].length > 1">
-              <q-chip
-                color="gray"
-                clickable
-                size="sm"
-                text-color="black"
-                icon="supervisor_account"
-                style="margin-top: -3px !important"
-              >
-                Room Sharer
-                <q-menu>
-                  <q-banner style="width: 300px">
-                    <template v-slot:avatar>
-                      <q-icon name="supervisor_account" color="primary" />
-                    </template>
-                    <p
-                      v-for="item in currDataPrepare['rmshare']"
-                      :key="item"
-                      style="margin: 0 !important; text-size: 12px"
-                    >
-                      {{ item }}
-                    </p>
-                  </q-banner>
-                </q-menu>
-              </q-chip>
-            </span>
-          </h6>
-          <h6 v-else class="text-white font-weight-bold" :style="information">
-            {{ this.currDataPrepare["gast"] }}
-            <span v-if="currDataPrepare['rmshare'].length > 1">
-              <q-chip
-                color="gray"
-                clickable
-                size="sm"
-                text-color="black"
-                icon="supervisor_account"
-                style="margin-top: -3px !important"
-              >
-                Room Sharer
-                <q-menu>
-                  <q-banner style="width: 300px">
-                    <template v-slot:avatar>
-                      <q-icon name="supervisor_account" color="primary" />
-                    </template>
-                    <p
-                      v-for="item in currDataPrepare['rmshare']"
-                      :key="item"
-                      style="margin: 0 !important; text-size: 12px"
-                    >
-                      {{ item }}
-                    </p>
-                  </q-banner>
-                </q-menu>
-              </q-chip>
-            </span>
-          </h6>
-
-          <p class="ant-card-meta-description text-white" :style="information">
-            {{ weblabel.arrival }}:
-            <strong>{{ weblabel.ciDate }}</strong>
-            {{ weblabel.departure }}:
-            <strong>{{ weblabel.coDate }}</strong>
-            <br />
-            {{ weblabel.bookCode }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ weblabel.roomNumber }}:
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ terms }}
           </p>
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ termSMOOKING }}
+          </p>
+
+          <p
+            style="white-space: pre-wrap"
+            v-show="stepTerm == 2"
+            v-html="policy"
+          ></p>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn
+            v-if="stepTerm > 1"
+            flat
+            color="primary"
+            @click="kurang()"
+            label="Back"
+          />
+          <q-btn :label="weblabel.disagree" color="red" @click="disagree" />
+          <q-btn
+            :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
+            color="primary"
+            @click="handleOk"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="justify-around bg-white self-checkin">
+      <div class="row">
+        <div class="ml-3 col-md-7 col-xs-12 col-sm-6">
+          <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
+          <p class="font-weight-bold">{{ currDataPrepare["gast"] }}</p>
         </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img class="" :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
+        <div class="col-md-2 col-xs-5 col-sm-6">
+          <p>{{ weblabel.arrival }}</p>
+          <p>{{ weblabel.departure }}</p>
+          <p>{{ weblabel.bookCode }}</p>
+          <p>{{ weblabel.roomNumber }}</p>
+          <p>{{ weblabel.roomShare }}</p>
         </div>
-        <div class="q-ma-md col-md col-md-8 col-xs-12 visible">
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6 v-else class="text-white font-weight-bold">
-            {{ this.currDataPrepare["gast"] }},
-          </h6>
-          <div v-if="currDataPrepare['rmshare'].length > 1">
+        <div class="col-md-2 col-xs-6 col-sm-6">
+          <p>
+            <strong>{{ weblabel.ciDate }}</strong>
+          </p>
+          <p>
+            <strong>{{ weblabel.coDate }}</strong>
+          </p>
+          <p>
+            <strong>{{ this.currDataPrepare.resnr }}</strong>
+          </p>
+          <p>
+            <strong>{{ this.currDataPrepare.zinr }}</strong>
+            <a-tag color="green" style="font-weight: normal !important">{{
+              this.currDataPrepare["rmtype-str"]
+            }}</a-tag>
+          </p>
+          <p>
             <q-chip
-              color="gray"
+              color="primary"
               clickable
-              size="sm"
-              text-color="black"
-              icon="supervisor_account"
+              square
               style="
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                margin-bottom: 5px !important;
+                background: white !important;
+                color: #262728 !important;
+                font-size: 0.6rem !important;
+                border: 1px solid gray;
               "
+              v-if="this.currDataPrepare['rmshare'].length > 0"
             >
-              Room Sharer
+              {{ weblabel.mciShow }}
               <q-menu>
-                <q-banner style="width: 300px">
+                <q-banner>
                   <template v-slot:avatar>
                     <q-icon name="supervisor_account" color="primary" />
                   </template>
                   <p
-                    v-for="item in currDataPrepare['rmshare']"
-                    :key="item"
+                    v-for="rmShare in this.currDataPrepare['rmshare']"
+                    :key="rmShare"
                     style="margin: 0 !important; text-size: 12px"
                   >
-                    {{ item }}
+                    {{ rmShare }}
                   </p>
                 </q-banner>
               </q-menu>
             </q-chip>
-          </div>
-          <p class="ant-card-meta-description text-white">
-            {{ weblabel.arrival }}:
-            <strong>{{ weblabel.ciDate }}</strong>
-            {{ weblabel.departure }}:
-            <strong>{{ weblabel.coDate }}</strong>
-            <br />
-            {{ weblabel.bookCode }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ weblabel.roomNumber }}:
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
           </p>
         </div>
       </div>
+      <hr />
       <div>
         <a-form layout="vertical" :form="form">
-          <h2 v-show="step === 1">
+          <h2 class="text-center" v-show="step === 1">
             {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 2">
+          <h2 class="text-center" v-show="step === 2">
             {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 3">
+          <h2 class="text-center" v-show="step === 3">
             {{ weblabel.uploadID }}
           </h2>
-          <h2 v-show="step === 4">
+          <h2 class="text-center" v-show="step === 4">
             {{ weblabel.depositPayment }}
           </h2>
           <div>
@@ -394,7 +313,6 @@
               flat
               bordered
               ref="stepper"
-              colors.setBrand("#ea580b")
               contracted
               animated
               keep-alive
@@ -403,12 +321,11 @@
                 :name="1"
                 title="Input Guest Detail"
                 icon="person"
-                              color="#ea580b"
+                color="#ea580b"
                 active-icon="person"
                 style="font-size: 3em"
                 :done="step > 1"
               >
-                {{ iconOta }}
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
@@ -1274,6 +1191,9 @@ export default {
 
     /* Handling Labeling */
     this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
+    this.weblabel.mciShow = this.findLabel("mci_show", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
     this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
     this.weblabel.mciSuccessNotReady = this.findLabel(
       "mci_success_not_ready",
