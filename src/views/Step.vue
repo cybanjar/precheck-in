@@ -214,12 +214,7 @@
               @click="kurang()"
               label="Back"
             />
-            <q-btn
-              :label="weblabel.disagree"
-              color="red"
-              @click="disagree"
-              
-            />
+            <q-btn :label="weblabel.disagree" color="red" @click="disagree" />
             <q-btn
               :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
               color="primary"
@@ -399,10 +394,8 @@
               flat
               bordered
               ref="stepper"
+              colors.setBrand("#ea580b")
               contracted
-              done-color="deep-orange"
-              active-color="deep-orange"
-              inactive-color="deep-orange"
               animated
               keep-alive
             >
@@ -410,10 +403,12 @@
                 :name="1"
                 title="Input Guest Detail"
                 icon="person"
+                              color="#ea580b"
                 active-icon="person"
                 style="font-size: 3em"
                 :done="step > 1"
               >
+                {{ iconOta }}
                 <div class="steps-content">
                   <a-row class :gutter="[16, 8]">
                     <a-col :span="5" :xl="5" :xs="24">
@@ -1041,6 +1036,7 @@ export default {
         textAlign: "center",
       },
       policy: "",
+      iconOta: "",
     };
   },
   watch: {
@@ -1094,6 +1090,7 @@ export default {
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
+    this.iconOta = this.currDataSetting["BackgroundColor"];
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
     this.hotelLogo = this.currDataSetting["hotelLogo"];
@@ -2163,6 +2160,25 @@ export default {
     },
   },
   computed: {
+    hexAToRGBA() {
+      return (hex) => {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+          c = hex.substring(1).split("");
+          if (c.length == 3) {
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+          }
+          c = "0x" + c.join("");
+          // console.log('thishexa');
+          return (
+            "rgba(" +
+            [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+            ",1)"
+          );
+        }
+        throw new Error("Bad Hex");
+      };
+    },
     isIdle() {
       return store.state.idleVue.isIdle;
     },
