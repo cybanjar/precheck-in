@@ -1007,7 +1007,6 @@ export default {
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.iconOta.color = this.currDataSetting["BackgroundColor"] + "!important";
     colors.setBrand("primary", this.currDataSetting["BackgroundColor"]);
-    console.log(colors);
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
     this.hotelLogo = this.currDataSetting["hotelLogo"];
