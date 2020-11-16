@@ -232,33 +232,29 @@
       </div>
     </div>
     <div class="justify-around bg-white self-checkin">
-      <div class="row">
-        <div class="ml-3 col-md-7 col-xs-12 col-sm-6">
+      <div class="row q-mx-md">
+        <div class="mt-3 col-md-7 col-xs-12 col-sm-6">
           <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
-          <p class="font-weight-bold">{{ currDataPrepare["gast"] }}</p>
+          <h6 class="font-weight-bold">{{ currDataPrepare["gast"] }}</h6>
         </div>
-        <div class="col-md-2 col-xs-5 col-sm-6">
-          <p>{{ weblabel.arrival }}</p>
-          <p>{{ weblabel.departure }}</p>
+        <div class="mt-3 col-md-2 col-xs-5 col-sm-6">
           <p>{{ weblabel.bookCode }}</p>
+          <p>{{ weblabel.stayPeriod }}</p>
           <p>{{ weblabel.roomNumber }}</p>
           <p>{{ weblabel.roomShare }}</p>
         </div>
-        <div class="col-md-2 col-xs-6 col-sm-6">
-          <p>
-            <strong>{{ weblabel.ciDate }}</strong>
-          </p>
-          <p>
-            <strong>{{ weblabel.coDate }}</strong>
-          </p>
+        <div class="mt-3 col-md-2 col-xs-6 col-sm-6">
           <p>
             <strong>{{ this.currDataPrepare.resnr }}</strong>
           </p>
           <p>
+            <strong>{{ weblabel.ciDate }} - {{ weblabel.coDate }}</strong>
+          </p>
+          <p>
             <strong>{{ this.currDataPrepare.zinr }}</strong>
-            <a-tag color="green" style="font-weight: normal !important">{{
+            <!-- <a-tag color="green" style="font-weight: normal !important">{{
               this.currDataPrepare["rmtype-str"]
-            }}</a-tag>
+            }}</a-tag> -->
           </p>
           <p>
             <q-chip
@@ -292,8 +288,8 @@
           </p>
         </div>
       </div>
-      <hr />
-      <div>
+      <q-separator inset />
+      <div class="q-mx-md">
         <a-form layout="vertical" :form="form">
           <h2 class="text-center" v-show="step === 1">
             {{ weblabel.guestDetail }}
@@ -1293,6 +1289,7 @@ export default {
     this.weblabel.ciNow = this.findLabel("ci_now", "titleCase");
     this.weblabel.ciDate = this.formatDate(this.currDataPrepare.ci);
     this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
+    this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
   },
   methods: {
     kurang() {
