@@ -309,7 +309,6 @@
               flat
               bordered
               ref="stepper"
-              :style="iconOta"
               contracted
               animated
               keep-alive
@@ -606,9 +605,9 @@
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
-                        <a-button
+                        <q-btn
                           class="font-weight-bold mt-3 mr-3"
-                          type="primary"
+                          color="primary"
                           :disabled="paid || paymentLoading"
                           @click="checkPayment()"
                         >
@@ -619,7 +618,7 @@
                             color="primary"
                             size="12px"
                           />
-                        </a-button>
+                        </q-btn>
                       </div>
                     </a-col>
                   </a-row>
@@ -634,13 +633,7 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p
-                        style="
-                          font-size: 16px;
-                          text-align: justify;
-                          color: rgba(0, 0, 0, 0.85);
-                        "
-                      >
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
@@ -737,6 +730,7 @@
 import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
+import { colors } from "quasar";
 import Antd, {
   Row,
   Col,
@@ -1012,6 +1006,8 @@ export default {
     this.information.color = this.currDataSetting["FontColor"];
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.iconOta.color = this.currDataSetting["BackgroundColor"] + "!important";
+    colors.setBrand("primary", this.currDataSetting["BackgroundColor"]);
+    console.log(colors);
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
     this.hotelLogo = this.currDataSetting["hotelLogo"];
