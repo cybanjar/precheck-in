@@ -313,6 +313,7 @@
               flat
               bordered
               ref="stepper"
+              :style="iconOta"
               contracted
               animated
               keep-alive
@@ -321,7 +322,6 @@
                 :name="1"
                 title="Input Guest Detail"
                 icon="person"
-                color="#ea580b"
                 active-icon="person"
                 style="font-size: 3em"
                 :done="step > 1"
@@ -638,7 +638,13 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify">
+                      <p
+                        style="
+                          font-size: 16px;
+                          text-align: justify;
+                          color: rgba(0, 0, 0, 0.85);
+                        "
+                      >
                         {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
@@ -953,7 +959,9 @@ export default {
         textAlign: "center",
       },
       policy: "",
-      iconOta: "",
+      iconOta: {
+        color: "",
+      },
     };
   },
   watch: {
@@ -1007,7 +1015,7 @@ export default {
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
-    this.iconOta = this.currDataSetting["BackgroundColor"];
+    this.iconOta.color = this.currDataSetting["BackgroundColor"] + "!important";
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
     this.hotelLogo = this.currDataSetting["hotelLogo"];
