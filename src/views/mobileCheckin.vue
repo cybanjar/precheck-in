@@ -1617,10 +1617,6 @@ export default {
             this.confirmLoading = false;
             this.$message.error(error.toString());
           }
-          this.confirmLoading = false;
-          this.hideMCISearchModal();
-          /* Reset Form */
-          this.resetForm();
         })();
       }
     },

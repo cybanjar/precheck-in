@@ -81,33 +81,6 @@
         </div>
       </div>
     </div>
-    <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
-        <canvas v-show="roomReady && QRshow" id="canvas"></canvas>
-        <div v-if="roomReady">
-          <p>{{ getLabels("room_number", `titleCase`) }} : {{ roomNumber }}</p>
-          <p>
-            {{ getLabels("wifi_address", `titleCase`) }} : {{ wifiAddress }}
-          </p>
-          <p>
-            {{ getLabels("wifi_password", `sentenceCase`) }} :
-            {{ wifiPassword }}
-          </p>
-          <p>
-            {{ getLabels("arrangement", `sentenceCase`) }} : {{ arrangement }}
-          </p>
-
-          <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-          <div class="row justify-center q-mt-xl">
-            <div class="col-md-6 col-xs-11">
-              <p v-if="!QRshow">
-                {{ getLabels("mci_success_with_max_keycard", `sentenceCase`) }}
-              </p>
-              <p v-else>
-                {{ getLabels("mci_success", `sentenceCase`) }}
-              </p>
-            </div>
-          </div>
 
     <!-- Modal MCI Confirm Check-in -->
     <a-modal

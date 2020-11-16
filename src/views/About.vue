@@ -873,23 +873,6 @@ export default {
         this.country = this.defaultCountry;
         this.currDataPrepare["guest-country"] = this.defaultCountry;
       }
-      this.form.setFieldsValue({
-        flight: "",
-      });
-      this.form.setFieldsValue({
-        purpose: this.$route.params.id["setup"]["06"],
-      });
-      /* Doesnt Use V-Decorator */
-      this.hour = this.$route.params.id["setup"]["11"];
-      this.showPrice = false;
-      this.room = "";
-      this.bed = "";
-      this.floor = "";
-      this.text = "";
-      this.agree = false;
-      this.country = this.currDataPrepare["guest-country"];
-      /* Go To Next Guest */
-      this.counter += 1;
     },
   },
   computed: {
