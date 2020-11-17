@@ -5,7 +5,7 @@
     </h1>
     <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Features" style="width: 100%">
+        <a-card hoverable title="Features" style="width: 100%;">
           <a slot="extra">
             <a-icon type="snippets" />
           </a>
@@ -33,7 +33,7 @@
             <a-form-item label="Default Purpose of Stay">
               <a-select
                 default-value="leisure"
-                style="width: 100%"
+                style="width: 100%;"
                 @change="handlePurpose"
               >
                 <a-select-option value="leisure">Leisure</a-select-option>
@@ -121,7 +121,7 @@
         </a-row>
       </a-modal>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Request" style="width: 100%">
+        <a-card hoverable title="Request" style="width: 100%;">
           <a slot="extra">
             <a-icon type="lock" />
           </a>
@@ -182,7 +182,7 @@
               </a-form-item>
               <a-form-item label="Pickup Rate">
                 <a-input-number
-                  style="width: 100%"
+                  style="width: 100%;"
                   v-model="perPax"
                   :formatter="
                     (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -205,7 +205,7 @@
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
         <a-card
-          style="width: 100%"
+          style="width: 100%;"
           title="Theme"
           :tab-list="tabList"
           hoverable
@@ -232,13 +232,13 @@
                 <a-icon
                   slot="prefix"
                   type="bg-colors"
-                  style="color: rgba(0, 0, 0, 0.25)"
+                  style="color: rgba(0, 0, 0, 0.25);"
                 />
               </a-input>
             </a-form-item>
             <a-form-item v-else>
               <slider-picker
-                style="width: 300px"
+                style="width: 300px;"
                 class="vc-slider"
                 v-model="info.backgroundColor"
               />
@@ -260,13 +260,13 @@
                 <a-icon
                   slot="prefix"
                   type="bg-colors"
-                  style="color: rgba(0, 0, 0, 0.25)"
+                  style="color: rgba(0, 0, 0, 0.25);"
                 />
               </a-input>
             </a-form-item>
             <a-form-item v-else>
               <slider-picker
-                style="width: 300px"
+                style="width: 300px;"
                 class="vc-slider"
                 v-model="info.foregroundColor"
               />
@@ -279,7 +279,7 @@
 
     <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Deposit" style="width: 100%">
+        <a-card hoverable title="Deposit" style="width: 100%;">
           <a slot="extra">
             <a-icon type="wallet" />
           </a>
@@ -299,7 +299,7 @@
             </a-form-item>
             <a-form-item label="Min Deposit Per Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="minDeposit"
                 :formatter="
                   (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -310,7 +310,7 @@
             </a-form-item>
             <a-form-item label="Over One Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="overDeposit"
                 :formatter="
                   (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -321,7 +321,7 @@
             </a-form-item>
             <a-form-item label="Over One Night">
               <a-input-number
-                style="width: 100%"
+                style="width: 100%;"
                 v-model="maxDeposit"
                 :formatter="
                   (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -334,7 +334,7 @@
         </a-card>
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Wifi Access" style="width: 100%">
+        <a-card hoverable title="Wifi Access" style="width: 100%;">
           <a slot="extra">
             <a-icon type="wifi" />
           </a>
@@ -364,7 +364,7 @@
         </a-card>
       </a-col>
       <a-col :span="8" :lg="8" :xs="24">
-        <a-card hoverable title="Setup URL" style="width: 100%">
+        <a-card hoverable title="Setup URL" style="width: 100%;">
           <a slot="extra">
             <a-icon type="deployment-unit" />
           </a>
@@ -391,7 +391,7 @@
 
     <a-row class="ml-3 mr-3" :gutter="[16, 8]">
       <a-col :span="24" :lg="24" :xs="24">
-        <a-card hoverable title="Term and Condition" style="width: 100%">
+        <a-card hoverable title="Term and Condition" style="width: 100%;">
           <a slot="extra">
             <a-icon type="safety-certificate" />
           </a>

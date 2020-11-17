@@ -19,13 +19,13 @@
             <a-icon
               slot="prefix"
               type="bg-colors"
-              style="color: rgba(0, 0, 0, 0.25)"
+              style="color: rgba(0, 0, 0, 0.25);"
             />
           </a-input>
         </a-form-item>
         <a-form-item v-else>
           <slider-picker
-            style="width: 300px"
+            style="width: 300px;"
             class="vc-slider"
             v-model="info.backgroundColor"
           />
@@ -118,13 +118,13 @@
             <a-icon
               slot="prefix"
               type="bg-colors"
-              style="color: rgba(0, 0, 0, 0.25)"
+              style="color: rgba(0, 0, 0, 0.25);"
             />
           </a-input>
         </a-form-item>
         <a-form-item v-else>
           <slider-picker
-            style="width: 300px"
+            style="width: 300px;"
             class="vc-slider"
             v-model="info.foregroundColor"
           />

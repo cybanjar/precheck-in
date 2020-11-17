@@ -6,7 +6,7 @@
       v-model="setRegion"
       default-value="DKI Jakarta"
       show-search
-      style="width: 200px"
+      style="width: 200px;"
       @change="handleChangeProvince"
     >
       <a-select-option
@@ -17,7 +17,7 @@
       >
     </a-select>
 
-    <a-select show-search style="width: 200px">
+    <a-select show-search style="width: 200px;">
       <a-select-option
         v-for="(item, key) in filteredCities"
         :key="key"
