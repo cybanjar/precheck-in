@@ -643,6 +643,7 @@ export default {
       isMobile: false,
       termSMOOKING: "",
       policy: "",
+      kiosCheckin: false,
     };
   },
   created() {
@@ -897,6 +898,11 @@ export default {
         return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
+      const tempKiosCheckin = this.tempsetup.filter((item, index) => {
+        //  FLAG KIOSK CHECKIN USAGE
+        return item.number1 === 8 && item.number2 === 10;
+      });
+      this.kiosCheckin = tempKiosCheckin[0]["setupflag"];
       const tempLogo = this.tempsetup.filter((item, index) => {
         //  Logo Hotel
         return item.number1 === 7 && item.number2 === 6;
@@ -989,6 +995,7 @@ export default {
       obj["defaultCountry"] = this.defaultCountry;
       obj["termSMOOKING"] = this.termSMOOKING;
       obj["policy"] = this.policy;
+      obj["kiosCheckin"] = this.kiosCheckin;
       this.setup.push(obj);
       //End Request Set Up
       // Hotel System Date

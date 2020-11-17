@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="row mci-success-body" v-if="useKeyStation == false">
+        <div class="row mci-success-body" v-if="useKeyStation == true">
           <div
             class="col-12 text-center mci-success-padding"
             style="word-wrap: break-word; margin-top: 1rem"
@@ -316,6 +316,7 @@ export default {
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
     this.hotelLogo = this.setup.hotelLogo;
+    this.useKeyStation = this.setup.kiosCheckin;
     this.hotelEndpoint = this.setup.hotelEndpoint;
     this.langID = this.setup.langID;
     this.ota.backgroundColor = this.setup.BackgroundColor;
