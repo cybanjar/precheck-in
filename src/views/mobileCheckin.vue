@@ -21,7 +21,7 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right: -15px">
+      <div class="col-xs-4" style="margin-right: -15px;">
         <q-select
           class="float-right"
           borderless
@@ -37,7 +37,7 @@
             <q-chip
               :style="textOta"
               class="q-ma-none"
-              style="margin-right: -20px"
+              style="margin-right: -20px;"
             >
               {{ scope.opt }}
             </q-chip>
@@ -70,7 +70,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px"
+        style="margin-bottom: 10px; margin-top: 20px;"
       >
         <q-icon
           @click="showModalBookingCode"
@@ -155,7 +155,7 @@
       </div>
       <div
         :class="handleClassIconCenter()"
-        style="margin-bottom: 10px; margin-top: 20px"
+        style="margin-bottom: 10px; margin-top: 20px;"
       >
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
         <p class="mt-3">{{ weblabel.iconName }}</p>
@@ -234,7 +234,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px"
+        style="margin-bottom: 10px; margin-top: 20px;"
       >
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
         <p class="mt-3">{{ weblabel.email }}</p>
@@ -315,7 +315,7 @@
       <div
         :class="handleClassIcon()"
         v-if="licenseMembership"
-        style="margin-bottom: 10px; margin-top: 20px"
+        style="margin-bottom: 10px; margin-top: 20px;"
       >
         <q-icon
           @click="showModalMembershipID"
@@ -1677,11 +1677,11 @@ export default {
     },
     showAnimation() {
       if (localStorage.getItem("labels") == null) {
-        this.timer = 6000;
+        this.timer = 7000;
       } else {
-        this.timer = 4000;
+        this.timer = 5000;
       }
-      setTimeout(() => {
+      setTimeout(() => {                
         this.loading = false;
         // console.log("setTimeout is Triggered", this.timer);
       }, this.timer);
