@@ -81,7 +81,7 @@
               <div class="row">
                 <div class="col-6">{{ weblabel.arrival }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
-                  {{ checkInDate }} {{timeNow}}
+                  {{ checkInDate }} {{ timeNow }}
                 </div>
               </div>
               <div class="row">
@@ -337,7 +337,7 @@ export default {
     this.wifiAddress = this.setup.wifiAddress;
     this.wifiPassword = this.setup.wifiPassword;
     // Get Parsing Guest Data
-    this.timeNow = moment().format('h:mm');
+    this.timeNow = moment().format("h:mm");
     this.coDate = this.formatDateFind(this.guestData["co"]);
     this.checkOutDate = this.formatDate(this.guestData["co"]);
     this.checkInDate = this.formatDate(this.guestData["ci"]);

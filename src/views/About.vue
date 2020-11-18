@@ -38,7 +38,7 @@
           </p>
           <p>
             <!-- <strong>{{ this.currDataPrepare }}</strong> -->
-            <a-tag color="green" style="font-weight: normal !important;">{{
+            <a-tag color="green" style="font-weight: normal !important">{{
               this.currDataPrepare["argt-code"]
             }}</a-tag>
           </p>
@@ -64,7 +64,7 @@
                   <p
                     v-for="rmShare in this.currDataPrepare['rmshare']"
                     :key="rmShare"
-                    style="margin: 0 !important; text-size: 12px;"
+                    style="margin: 0 !important; text-size: 12px"
                   >
                     {{ rmShare }}
                   </p>
