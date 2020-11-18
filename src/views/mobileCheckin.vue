@@ -21,7 +21,7 @@
       <div class="text-center col-xs-4">
         <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-xs-4" style="margin-right: -15px;">
+      <div class="col-xs-4" style="margin-right: -15px">
         <q-select
           class="float-right"
           borderless
@@ -37,7 +37,7 @@
             <q-chip
               :style="textOta"
               class="q-ma-none"
-              style="margin-right: -20px;"
+              style="margin-right: -20px"
             >
               {{ scope.opt }}
             </q-chip>
@@ -59,7 +59,7 @@
         <h4
           class="text-uppercase font-weight-bold q-mt-md q-mb-md mci-size titlecolor"
         >
-          Online Check-in
+          {{ weblabel.vhpSelfCheckIn }}
         </h4>
         <h5 class="titlecolor">
           <b>{{ weblabel.findRsv }}</b>
@@ -70,7 +70,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon
           @click="showModalBookingCode"
@@ -155,7 +155,7 @@
       </div>
       <div
         :class="handleClassIconCenter()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon @click="showModalGuestName" name="people" :style="iconOta" />
         <p class="mt-3">{{ weblabel.iconName }}</p>
@@ -234,7 +234,7 @@
       </div>
       <div
         :class="handleClassIcon()"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon @click="showModalEmailAddress" name="email" :style="iconOta" />
         <p class="mt-3">{{ weblabel.email }}</p>
@@ -315,7 +315,7 @@
       <div
         :class="handleClassIcon()"
         v-if="licenseMembership"
-        style="margin-bottom: 10px; margin-top: 20px;"
+        style="margin-bottom: 10px; margin-top: 20px"
       >
         <q-icon
           @click="showModalMembershipID"
@@ -616,6 +616,7 @@ export default {
       },
       weblabel: {
         findRsv: "",
+        vhpSelfCheckIn: "",
         chooseOption: "",
         bookCode: "",
         cancel: "",
@@ -1092,6 +1093,10 @@ export default {
       /* Handling Locale */
       /* Set Variable Label */
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.vhpSelfCheckIn = this.findLabel(
+        "vhp_self_checkIn",
+        "titleCase"
+      );
       this.weblabel.chooseOption = this.findLabel(
         "choose_option",
         "sentenceCase"
@@ -1179,6 +1184,10 @@ export default {
     resetLabel() {
       // console.log('resetLabel');
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.vhpSelfCheckIn = this.findLabel(
+        "vhp_self_checkIn",
+        "titleCase"
+      );
       this.weblabel.chooseOption = this.findLabel(
         "choose_option",
         "sentenceCase"
@@ -1681,7 +1690,7 @@ export default {
       } else {
         this.timer = 5000;
       }
-      setTimeout(() => {                
+      setTimeout(() => {
         this.loading = false;
         // console.log("setTimeout is Triggered", this.timer);
       }, this.timer);
