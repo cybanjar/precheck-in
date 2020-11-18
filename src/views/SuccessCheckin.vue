@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="row mci-success-body" v-if="setup.kiosCheckin == false">
+        <div class="row mci-success-body" v-if="setup.kiosCheckin == true">
           <div
             class="col-12 text-center mci-success-padding"
             style="word-wrap: break-word"
@@ -124,11 +124,19 @@
                   {{ weblabel.mciIdPassport }}
                 </p>
               </div>
+              {{imageID}}
               <div class="mci-img">
                 <img alt="guestID" :src="imageID" width="280" />
               </div>
             </div>
           </div>
+
+          <q-icon
+            name="arrow_circle_down"
+            class="col-12 text-orange text-center mci-success-margin"
+            style="font-size: 5em; display: flex; justify-content: center"
+          />
+
           <div
             class="col-12 text-center mci-success-margin"
             style="display: flex; justify-content: center; margin-top: 10px"
@@ -138,6 +146,12 @@
             <p v-else>{{ weblabel.mciSuccessNotReady }}</p>
             <p></p>
           </div>
+
+          <img
+            src="../assets/frontdesk.png"
+            class="col-12 text-center mci-success-margin"
+            width="100"
+          />
           <div
             class="col-12 text-center mci-success-margin"
             style="display: flex; justify-content: center"
@@ -395,6 +409,7 @@ export default {
           },
         })
         .json();
+        console.log(parsed,"lol");
       if (parsed.response.imagedata != null) {
         this.imageID = "data:image/png;base64," + parsed.response.imagedata;
       } else {
