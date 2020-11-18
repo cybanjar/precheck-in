@@ -1162,7 +1162,7 @@ export default {
       /** Handle DOKU */
       if(this.tempParam.statuscode == '0000'){        
         this.currDataPrepare["preAuth-flag"] = true;
-        console.log('data',this.hotelEndpoint + "mobileCI/resCI");
+        // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
         (async () => {
           const data = await ky
             .post(this.hotelEndpoint + "mobileCI/resCI", {
@@ -1503,11 +1503,11 @@ export default {
       if (this.tempParam.statuscode != null) {
         this.afterPayment = true;
         /** Handle DOKU */
-        console.log('statusCode',this.tempParam.statuscode);
+        // console.log('statusCode',this.tempParam.statuscode);
         if(this.tempParam.statuscode == '0000'){
           this.currDataPrepare["preAuth-flag"] = true;
           (async () => {
-            console.log('CallBack',this.callbackParam);
+            // console.log('CallBack',this.callbackParam);
             const data = await ky              
               .post(this.hotelEndpoint + "mobileCI/resCI", {
                 json: {
@@ -2238,7 +2238,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      console.log(this.stepTerm);
+      // console.log(this.stepTerm);
       if (this.stepTerm < 2) {
         this.stepTerm = this.stepTerm + 1;
       } else {

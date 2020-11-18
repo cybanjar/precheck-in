@@ -299,7 +299,7 @@ export default {
           "col-12 content-guestname content-guestname-space";
       }
       const joinZinr = item["zinr"] + item["rmtype-str"];
-      console.log(item["gast"], joinZinr, joinZinr.length);
+      // console.log(item["gast"], joinZinr, joinZinr.length);
       if (joinZinr.length >= 25 && this.isMobile) {
         this.zinrClass = "col-8 guestcard-item-text zinrMinHeight";
       }
@@ -308,7 +308,7 @@ export default {
     });
     this.guestData = tempData;
     this.setup = setting;
-    console.log(this.guestData, this.setup);
+    // console.log(this.guestData, this.setup);
     /* Do Sorting For Guest Data */
     const guestNotMCI = [];
     const guestWaiting = [];
@@ -402,7 +402,7 @@ export default {
   methods: {
     handleStatus(item) {
       const roomStatus = item["room-status"].split(" ")[0];
-      console.log(item["gast"], roomStatus);
+      // console.log(item["gast"], roomStatus);
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
         return item["guestStatus"];
