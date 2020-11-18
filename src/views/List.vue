@@ -9,12 +9,12 @@
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
-        <h4 class="mt-3 text-center">
+      <div class="text-center col-12">
+        <h1 class="mt-3 text-center">
           {{ getLabels("guest_list", `titleCase`) }}
-        </h4>
+        </h1>
       </div>
-      <div class="listGuest row items-center q-col-gutter-md">
+      <div class="listGuest row items-center q-col-gutter-md col-12">
         <div
           v-for="item in data"
           :key="item['guest-lname']"
@@ -133,14 +133,26 @@
         </div>
       </div>
       <!-- <router-link :to="{ name: 'Home', params: { id: selectedData } }"> -->
-      <a-button
+      <div class="row guest-list-button">
+        <div class="col-6 button-item-right">
+          <a-button
+            class="fixed-bottom-right mr-3 float-right"
+            type="primary"
+            size="large"
+            :disabled="selectedData == 0 || selectedData == undefined"
+            @click="send"
+            >{{ getLabels("next", `titleCase`) }}</a-button
+          >
+        </div>
+      </div>
+      <!-- <a-button
         class="fixed-bottom-right mr-3 float-right"
         type="primary"
         size="large"
         :disabled="selectedData == 0 || selectedData == undefined"
         @click="send"
         >{{ getLabels("next", `titleCase`) }}</a-button
-      >
+      > -->
       <!-- </router-link> -->
     </div>
   </div>
