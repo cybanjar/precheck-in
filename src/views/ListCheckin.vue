@@ -601,7 +601,7 @@ export default {
     refreshStatus() {
       this.informationQueue = false;
     },
-    send() {
+    send() {      
       /*
       if (
         this.selectedData["ifdata-sent"] == true &&
@@ -623,6 +623,7 @@ export default {
       sessionStorage.setItem("listData", JSON.stringify(this.guestData));
       sessionStorage.setItem("settings", JSON.stringify(this.setup));
       const resstatus = this.selectedData["res-status"].split(" - ");
+      const roomStatus = this.selectedData["room-status"].split(" ")[0];
       if (parseInt(resstatus[0]) == 1) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: true });
@@ -636,7 +637,8 @@ export default {
         });
       } else if (
         this.selectedData["ifdata-sent"] == true &&
-        this.selectedData["res-status"] != "1 - Guest Already Checkin"
+        this.selectedData["res-status"] != "1 - Guest Already Checkin" &&
+        roomStatus != 0
       ) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: false });

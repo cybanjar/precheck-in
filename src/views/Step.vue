@@ -1,7 +1,7 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
   <div v-else>
@@ -12,9 +12,20 @@
       :confirm-loading="confirmLoading"
       :closable="false"
     >
-      <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 1rem;">
-        <img :src="require('@/assets/vhpkiosk.png')" alt="logovhpkiosk" width="200"/>
-      </div>      
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 1rem;
+        "
+      >
+        <img
+          :src="require('@/assets/vhpkiosk.png')"
+          alt="logovhpkiosk"
+          width="200"
+        />
+      </div>
       <template slot="footer">
         <a-button
           key="submit"
@@ -25,7 +36,7 @@
           {{ weblabel.okMessage }}
           <q-spinner
             v-if="loadingConfirmEmail"
-            style="margin-left: 10px;"
+            style="margin-left: 10px"
             color="white"
             size="12px"
           />
@@ -33,7 +44,7 @@
       </template>
       <p>{{ weblabel.mciSuccessNotReady }}</p>
       <p>{{ weblabel.reconfirmPhonemail }}</p>
-      <div>        
+      <div>
         <a-form layout="vertical" :form="formresubmit">
           <a-form-item :label="weblabel.phoneNumber">
             <q-input
@@ -191,16 +202,16 @@
 
         <q-separator />
 
-        <q-card-section style="max-height: 50vh;" class="scroll">
-          <p style="white-space: pre-wrap;" v-show="stepTerm == 1">
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
             {{ terms }}
           </p>
-          <p style="white-space: pre-wrap;" v-show="stepTerm == 1">
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
             {{ termSMOOKING }}
           </p>
 
           <p
-            style="white-space: pre-wrap;"
+            style="white-space: pre-wrap"
             v-show="stepTerm == 2"
             v-html="policy"
           ></p>
@@ -208,7 +219,7 @@
 
         <q-separator />
 
-        <q-card-actions style="display: flex; justify-content: space-between;">
+        <q-card-actions style="display: flex; justify-content: space-between">
           <div>
             <q-btn
               v-if="stepTerm > 1"
@@ -219,13 +230,14 @@
             />
           </div>
           <div>
-            <q-btn :label="weblabel.disagree" color="red" @click="disagree" style="margin-right: 5px;"/>
             <q-btn
-              :label="weblabel.agree"
-              color="primary"
-              @click="handleOk"
+              :label="weblabel.disagree"
+              color="red"
+              @click="disagree"
+              style="margin-right: 5px"
             />
-          </div>                    
+            <q-btn :label="weblabel.agree" color="primary" @click="handleOk" />
+          </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -271,17 +283,25 @@
             </div>
             <div class="col-8">
               <p>
-                <span style="margin-right: 3px !important;"><strong>{{ currDataPrepare.zinr }}</strong></span>
+                <span style="margin-right: 3px !important"
+                  ><strong>{{ currDataPrepare.zinr }}</strong></span
+                >
                 <a-tag
                   v-if="isMobile"
                   color="green"
-                  style="font-weight: normal !important; margin-left: 0 !important;"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
                   >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
                 >
                 <a-tag
                   v-else
                   color="green"
-                  style="font-weight: normal !important; margin-left: 0 !important;"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
                   >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
                 >
               </p>
@@ -314,7 +334,7 @@
                       <p
                         v-for="rmShare in this.currDataPrepare['rmshare']"
                         :key="rmShare"
-                        style="margin: 0 !important; text-size: 12px;"
+                        style="margin: 0 !important; text-size: 12px"
                       >
                         {{ rmShare }}
                       </p>
@@ -323,7 +343,7 @@
                 </q-chip>
               </p>
             </div>
-          </div>                                      
+          </div>
         </div>
       </div>
       <q-separator inset />
@@ -356,7 +376,7 @@
                 title="Input Guest Detail"
                 icon="person"
                 active-icon="person"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 1"
               >
                 <div class="steps-content">
@@ -439,7 +459,7 @@
                 title="Input Address"
                 icon="room"
                 active-icon="room"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 2"
               >
                 <div class="steps-content">
@@ -544,7 +564,7 @@
                 caption="Optional"
                 icon="portrait"
                 active-icon="portrait"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 3"
               >
                 <div class="steps-content">
@@ -552,7 +572,7 @@
                     <a-col class="text-center">
                       <a-form-item>
                         <input
-                          style="display: none;"
+                          style="display: none"
                           ref="fileurl"
                           accept="image/*"
                           type="file"
@@ -570,21 +590,21 @@
                             },
                           ]"
                         />
-                        <div style="margin-top: -50px;">
+                        <div style="margin-top: -50px">
                           <h1>{{ weblabel.idPhoto }}</h1>
                           <p>
                             {{ weblabel.idPhotoDesc }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
-                        <div style="margin-top: 40px;">
+                        <div style="margin-top: 40px">
                           <q-btn
                             unelevated
                             rounded
                             @click="getFile"
                             color="primary"
                             label="Upload"
-                            style="width: 200px;"
+                            style="width: 200px"
                           />
                         </div>
                       </a-form-item>
@@ -598,7 +618,7 @@
                 title="Deposit Payment"
                 icon="payment"
                 active-icon="payment"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 4"
               >
                 <div class="steps-content">
@@ -613,7 +633,7 @@
                             }}
                           </strong>
                         </h2>
-                      </a-form-item>                      
+                      </a-form-item>
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
@@ -631,23 +651,91 @@
                             size="12px"
                           />
                         </q-btn> -->
-                        <q-form action="https://staging.doku.com/Suite/Receive" method="post" ref="formDoku">
-                          <q-input name="AMOUNT" :value="dokuData.amount" style="display: none;" />
-                          <q-input name="BASKET" :value="dokuData.basket" style="display: none;" />
-                          <q-input name="CHAINMERCHANT" :value="dokuData.chainMerchant" style="display: none;" />
-                          <q-input name="CURRENCY" :value="dokuData.currency" style="display: none;" />
-                          <q-input name="EMAIL" :value="dokuData.email" style="display: none;" />
-                          <q-input name="MALLID" :value="dokuData.mallid" style="display: none;" />
-                          <q-input name="NAME" :value="dokuData.name" style="display: none;" />
-                          <q-input name="PAYMENTTYPE" :value="dokuData.paymentType" style="display: none;" />
-                          <q-input name="PURCHASEAMOUNT" :value="dokuData. purchaseAmount" style="display: none;" />
-                          <q-input name="PURCHASECURRENCY" :value="dokuData.purchaseCurrency" style="display: none;" />
-                          <q-input name="REQUESTDATETIME" :value="dokuData.requestDatetime" style="display: none;" />
-                          <q-input name="SESSIONID" :value="dokuData.sessionID" style="display: none;" />
-                          <q-input name="TRANSIDMERCHANT" :value="dokuData.transIDMerchant" style="display: none;" />
-                          <q-input name="WORDS" :value="dokuData.words" style="display: none;" />
-                          <q-input name="PAYMENTCHANNEL" :value="dokuData.paymentChannel" style="display: none;" />
-                          <q-input name="MOBILEPHONE" :value="dokuData.mobilePhone" style="display: none;" />
+                        <q-form
+                          action="https://staging.doku.com/Suite/Receive"
+                          method="post"
+                          ref="formDoku"
+                        >
+                          <q-input
+                            name="AMOUNT"
+                            :value="dokuData.amount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="BASKET"
+                            :value="dokuData.basket"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CHAINMERCHANT"
+                            :value="dokuData.chainMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CURRENCY"
+                            :value="dokuData.currency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="EMAIL"
+                            :value="dokuData.email"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MALLID"
+                            :value="dokuData.mallid"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="NAME"
+                            :value="dokuData.name"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTTYPE"
+                            :value="dokuData.paymentType"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASEAMOUNT"
+                            :value="dokuData.purchaseAmount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASECURRENCY"
+                            :value="dokuData.purchaseCurrency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="REQUESTDATETIME"
+                            :value="dokuData.requestDatetime"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="SESSIONID"
+                            :value="dokuData.sessionID"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="TRANSIDMERCHANT"
+                            :value="dokuData.transIDMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="WORDS"
+                            :value="dokuData.words"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTCHANNEL"
+                            :value="dokuData.paymentChannel"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MOBILEPHONE"
+                            :value="dokuData.mobilePhone"
+                            style="display: none"
+                          />
                           <q-btn
                             class="font-weight-bold mt-3 mr-3"
                             type="submit"
@@ -658,7 +746,7 @@
                             {{ weblabel.pay }}
                             <q-spinner
                               v-if="paymentLoading"
-                              style="margin-left: 10px;"
+                              style="margin-left: 10px"
                               color="primary"
                               size="12px"
                             />
@@ -678,17 +766,17 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentNetworkError }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
@@ -932,12 +1020,12 @@ export default {
       errorCode: "",
       defaultCountry: "",
       loadingConfirmEmail: false,
-      dokuData:{
+      dokuData: {
         amount: "",
         sharedKey: "rpT4jeLsWHHK",
         mallid: "11133679",
         basket: "",
-        chainMerchant: "NA",        
+        chainMerchant: "NA",
         email: "",
         name: "",
         paymentType: "AUTHORIZATION",
@@ -1151,16 +1239,16 @@ export default {
     // DOKU First Param
     this.dokuData.amount = `${this.Deposit}.00`;
     this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
-    this.dokuData.email = this.currDataPrepare['guest-email']; 
-    this.dokuData.name = this.currDataPrepare['gast'].replace(/,/g, '');
+    this.dokuData.email = this.currDataPrepare["guest-email"];
+    this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
     this.dokuData.purchaseAmount = `${this.Deposit}.00`;
-    this.dokuData.mobilePhone = this.currDataPrepare['guest-phnumber'];
+    this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
 
     // Handling Callback Payment and Save to Database
     if (this.tempParam.statuscode != null) {
       this.afterPayment = true;
       /** Handle DOKU */
-      if(this.tempParam.statuscode == '0000'){        
+      if (this.tempParam.statuscode == "0000") {
         this.currDataPrepare["preAuth-flag"] = true;
         // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
         (async () => {
@@ -1206,7 +1294,7 @@ export default {
             );
           }
         })();
-      }else{
+      } else {
         this.paidNetworkError = false;
         this.paidVerError = true;
       }
@@ -1504,11 +1592,11 @@ export default {
         this.afterPayment = true;
         /** Handle DOKU */
         // console.log('statusCode',this.tempParam.statuscode);
-        if(this.tempParam.statuscode == '0000'){
+        if (this.tempParam.statuscode == "0000") {
           this.currDataPrepare["preAuth-flag"] = true;
           (async () => {
             // console.log('CallBack',this.callbackParam);
-            const data = await ky              
+            const data = await ky
               .post(this.hotelEndpoint + "mobileCI/resCI", {
                 json: {
                   request: {
@@ -1550,7 +1638,7 @@ export default {
               );
             }
           })();
-        }else{
+        } else {
           this.paidNetworkError = false;
           this.paidVerError = true;
         }
@@ -1754,29 +1842,29 @@ export default {
           break;
       }
     },
-    async handleDokuPayment(){
+    async handleDokuPayment() {
       await this.$nextTick();
-      sessionStorage.setItem(
-        "guestData",
-        JSON.stringify(this.currDataPrepare)
-      );
-      sessionStorage.setItem(
-        "settings",
-        JSON.stringify(this.currDataSetting)
-      );
+      sessionStorage.setItem("guestData", JSON.stringify(this.currDataPrepare));
+      sessionStorage.setItem("settings", JSON.stringify(this.currDataSetting));
       sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
 
       // Get Latest Data
       this.dokuData.amount = `${this.Deposit}.00`;
       this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
-      this.dokuData.email = this.currDataPrepare['guest-email']; 
-      this.dokuData.name = this.currDataPrepare['gast'].replace(/,/g, '');
+      this.dokuData.email = this.currDataPrepare["guest-email"];
+      this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
       this.dokuData.purchaseAmount = `${this.Deposit}.00`;
-      this.dokuData.mobilePhone = this.currDataPrepare['guest-phnumber'];
+      this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
       this.dokuData.requestDatetime = moment().format("YYYYMMDDHHmmss");
-      this.dokuData.transIDMerchant = this.pad(this.currDataPrepare.resnr, 7) + moment().format("DDMMYYYYHHmmss");
-      this.dokuData.words = CryptoJS.SHA1(`${this.dokuData.amount}${this.dokuData.mallid}${this.dokuData.sharedKey}${this.dokuData.transIDMerchant}`).toString();
-      this.dokuData.sessionID = CryptoJS.SHA1(this.dokuData.transIDMerchant).toString();
+      this.dokuData.transIDMerchant =
+        this.pad(this.currDataPrepare.resnr, 7) +
+        moment().format("DDMMYYYYHHmmss");
+      this.dokuData.words = CryptoJS.SHA1(
+        `${this.dokuData.amount}${this.dokuData.mallid}${this.dokuData.sharedKey}${this.dokuData.transIDMerchant}`
+      ).toString();
+      this.dokuData.sessionID = CryptoJS.SHA1(
+        this.dokuData.transIDMerchant
+      ).toString();
       this.$refs.formDoku.submit();
     },
     pad(num, size) {
