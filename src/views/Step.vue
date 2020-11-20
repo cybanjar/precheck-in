@@ -1135,7 +1135,7 @@ export default {
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
-        this.callbackParam = location.search.substring(1);
+        //this.callbackParam = location.search.substring(1);
         location.search
           .split("&")
           .toString()
@@ -1148,7 +1148,10 @@ export default {
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(this.tempParam, { [objProperty]: objValue });
+            this.callbackParam += `&${objProperty}=${objValue}`;
           });
+        this.callbackParam = this.callbackParam.substring(1);
+        // console.log(this.tempParam,this.callbackParam);
       }
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
@@ -1243,12 +1246,11 @@ export default {
     this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
     this.dokuData.purchaseAmount = `${this.Deposit}.00`;
     this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
-
     // Handling Callback Payment and Save to Database
-    if (this.tempParam.statuscode != null) {
+    if (this.tempParam.RESPONSECODE != null) {
       this.afterPayment = true;
       /** Handle DOKU */
-      if (this.tempParam.statuscode == "0000") {
+      if (this.tempParam.RESPONSECODE == "0000") {
         this.currDataPrepare["preAuth-flag"] = true;
         // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
         (async () => {
@@ -1298,7 +1300,6 @@ export default {
         this.paidNetworkError = false;
         this.paidVerError = true;
       }
-
       /** Handle Nicepay */
       /*
       if (this.errorCode == "1004") {
@@ -1356,7 +1357,6 @@ export default {
       }
       */
     }
-
     /* Handle Stepper */
     // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
     if (this.precheckin) {
@@ -1415,7 +1415,6 @@ export default {
         "PurposeofStay"
       ];
     }
-
     /* Handling Labeling */
     this.weblabel.information = this.findLabel("information", "titleCase");
     this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
@@ -1588,11 +1587,11 @@ export default {
     resendPreauth() {
       // console.log('resendPreauth');
       this.preauthModal = false;
-      if (this.tempParam.statuscode != null) {
+      if (this.tempParam.RESPONSECODE != null) {
         this.afterPayment = true;
         /** Handle DOKU */
         // console.log('statusCode',this.tempParam.statuscode);
-        if (this.tempParam.statuscode == "0000") {
+        if (this.tempParam.RESPONSECODE == "0000") {
           this.currDataPrepare["preAuth-flag"] = true;
           (async () => {
             // console.log('CallBack',this.callbackParam);
@@ -1642,7 +1641,6 @@ export default {
           this.paidNetworkError = false;
           this.paidVerError = true;
         }
-
         /** Handle Nicepay */
         /*
         if (this.errorCode == "1004") {
@@ -1847,7 +1845,6 @@ export default {
       sessionStorage.setItem("guestData", JSON.stringify(this.currDataPrepare));
       sessionStorage.setItem("settings", JSON.stringify(this.currDataSetting));
       sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
-
       // Get Latest Data
       this.dokuData.amount = `${this.Deposit}.00`;
       this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;

@@ -20,6 +20,7 @@
     "qrcode": "^1.4.4",
     "quasar": "^1.14.1",
     "querystring": "^0.2.0",
+    "viewerjs": "^1.8.0",
     "vue": "^2.6.11",
     "vue-color": "^2.7.1",
     "vue-cookies": "^1.7.4",

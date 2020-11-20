@@ -1,6 +1,7 @@
 import Vue from "vue";
 
 import "quasar/dist/quasar.css";
+import "viewerjs/dist/viewer.css";
 import "@quasar/extras/material-icons/material-icons.css";
 import {
   Quasar,

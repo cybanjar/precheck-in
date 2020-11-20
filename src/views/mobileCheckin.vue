@@ -942,15 +942,12 @@ export default {
         return item.number1 === 9 && item.number2 === 8;
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
-
       this.policy = privacyPolicy.responses["0"].policy;
-
       const tempSMOOKING = this.tempsetup.filter((item, index) => {
         //  condition SMOOKING
         return item.number1 === 6 && item.number2 === 3;
       });
       this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
