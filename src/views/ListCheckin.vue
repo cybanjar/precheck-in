@@ -601,7 +601,7 @@ export default {
     refreshStatus() {
       this.informationQueue = false;
     },
-    send() {      
+    send() {
       /*
       if (
         this.selectedData["ifdata-sent"] == true &&

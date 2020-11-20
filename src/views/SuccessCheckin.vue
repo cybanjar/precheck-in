@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row justify-around bg-white self-checkin">
-        <div class="row mci-success-body" v-if="setup.kiosCheckin == true">
+        <div class="row mci-success-body" v-if="setup.kiosCheckin == false">
           <div
             class="col-12 text-center mci-success-padding"
             style="word-wrap: break-word"
@@ -124,99 +124,308 @@
                   {{ weblabel.mciIdPassport }}
                 </p>
               </div>
-              {{imageID}}
               <div class="mci-img">
-                <img alt="guestID" :src="imageID" width="280" />
+                <img
+                  alt="guestID"
+                  :src="imageID"
+                  width="280"
+                  id="imgID"
+                  @click="showImage()"
+                />
               </div>
             </div>
           </div>
-
-          <q-icon
-            name="arrow_circle_down"
-            class="col-12 text-orange text-center mci-success-margin"
-            style="font-size: 5em; display: flex; justify-content: center"
-          />
-
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <span
+              class="borderStyle"
+              style="height: 50px; border-top: 0.5px solid lightgray"
+            ></span>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <img
+              src="../assets/char7.svg"
+              style="height: 250px"
+              v-if="roomReady"
+            />
+            <img
+              src="../assets/app-user-colour.svg"
+              style="height: 250px"
+              v-else
+            />
+          </div>
           <div
             class="col-12 text-center mci-success-margin"
             style="display: flex; justify-content: center; margin-top: 10px"
           >
             <!-- Message -->
-            <p v-if="roomReady">{{ weblabel.mciSuccessWoKeystation }}</p>
-            <p v-else>{{ weblabel.mciSuccessNotReady }}</p>
-            <p></p>
+            <div v-if="roomReady">
+              <p style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px">
+                {{ weblabel.mciSuccessWoKeyMsg[0] }}
+              </p>
+              <p style="font-size: 1.3em; font-weight: 600">
+                {{ weblabel.mciSuccessWoKeyMsg[1] }}
+              </p>
+            </div>
+            <div v-else>
+              <p style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px">
+                {{ weblabel.mciSuccessNotReadyMsg[0] }}
+              </p>
+              <p style="font-size: 1.3em; font-weight: 600; margin-bottom: 1px">
+                {{ weblabel.mciSuccessNotReadyMsg[1] }}
+              </p>
+              <p style="font-size: 1.2em; font-weight: 400">
+                {{ weblabel.mciSuccessNotReadyMsg[2] }}
+              </p>
+            </div>
           </div>
-
-          <img
-            src="../assets/frontdesk.png"
-            class="col-12 text-center mci-success-margin"
-            width="100"
-          />
           <div
             class="col-12 text-center mci-success-margin"
             style="display: flex; justify-content: center"
           >
-            <a-button @click="goBack" :disabled="gobackLoading">
+            <q-btn
+              @click="goBack"
+              color="primary"
+              :disabled="gobackLoading"
+              style="width: 200px"
+            >
               {{ weblabel.done }}
               <q-spinner-ball
-                color="red"
-                style="margin-left: 10px"
+                color="white"
+                style="
+                  margin-left: 10px;
+                  float: right;
+                  position: absolute;
+                  right: 10px;
+                "
                 v-if="gobackLoading"
               />
-            </a-button>
+            </q-btn>
           </div>
         </div>
-        <div class="text-center" v-else>
-          <img v-show="QRshow == true && roomReady == true" :src="url" />
-          <div v-if="roomReady" style="margin-top: 2rem">
-            <p>{{ weblabel.roomNumber }} : {{ roomNumber }}</p>
-            <p>{{ weblabel.wifiAddress }} : {{ wifiAddress }}</p>
-            <p>
-              {{ weblabel.wifiPassword }} :
-              {{ wifiPassword }}
-            </p>
-            <p>{{ weblabel.arrangement }} : {{ arrangement }}</p>
-
-            <!-- <p>Thank you for using our online check-in. Please save the QR code above for your check-in in the hotel.</p> -->
-            <div class="row justify-center q-mt-xl">
-              <div class="col-md-6 col-xs-11">
-                <p v-if="QRshow == false" style="margin-top: 2rem">
-                  {{ weblabel.mciSuccessWithMaxKeycard }}
-                </p>
-                <p v-else>
-                  {{ weblabel.mciSuccess }}
-                </p>
-              </div>
-            </div>
-
-            <a-button @click="goBack" :disabled="gobackLoading">
-              {{ weblabel.done }}
-              <q-spinner-ball
-                color="red"
-                style="margin-left: 10px"
-                v-if="gobackLoading"
-              />
-            </a-button>
+        <!-- KeyStation True -->
+        <div class="row mci-success-body" v-else>
+          <div
+            class="col-12 mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <img v-show="QRshow == true && roomReady == true" :src="url" />
           </div>
-          <div v-else>
-            <div class="row justify-center q-mt-xl">
-              <div class="col-md-6 col-xs-11">
-                <p>{{ weblabel.phoneNumber }} : {{ phone }}</p>
-                <p>{{ weblabel.email }} : {{ email }}</p>
-                <p>
-                  {{ weblabel.mciSuccessNotReady }}
+          <div class="col-12 text-center mci-success-margin">
+            <!-- Room Number -->
+            <p>{{ weblabel.roomNumber }}</p>
+            <h2 class="mci-success-data">{{ guestData["zinr"] }}</h2>
+            <h4 class="mci-h3">{{ guestData["rmtype-str"].toUpperCase() }}</h4>
+          </div>
+          <div
+            class="col-12 mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <!-- Information -->
+            <div
+              class="mci-info"
+              style="
+                word-wrap: break-word;
+                min-width: 20rem !important;
+                padding-left: 2rem;
+                padding-top: 0.5rem;
+                padding-right: 0.5rem;
+                padding-bottom: 0.5rem;
+              "
+            >
+              <!-- Handle Kotak -->
+              <div class="row">
+                <div class="col-6">{{ weblabel.guests }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ adult }} {{ weblabel.adult }}
+                </div>
+              </div>
+              <div class="row" v-show="roomReady">
+                <div class="col-6">{{ weblabel.wifiAddress }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ wifiAddress }}
+                </div>
+              </div>
+              <div class="row" v-show="roomReady">
+                <div class="col-6">{{ weblabel.wifiPassword }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ wifiPassword }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">{{ weblabel.arrival }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ checkInDate }} {{ timeNow }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">{{ weblabel.departure }}</div>
+                <div
+                  class="col-6"
+                  style="font-weight: bold; padding-top: 0.2rem"
+                >
+                  {{ checkOutDate }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">{{ weblabel.package }}</div>
+                <div
+                  class="col-6"
+                  style="font-weight: bold; padding-top: 0.2rem"
+                >
+                  {{ arrangement }}
+                </div>
+              </div>
+              <div class="row" v-show="!roomReady">
+                <div class="col-6">{{ weblabel.phoneNumber }}</div>
+                <div
+                  class="col-6"
+                  style="font-weight: bold; padding-top: 0.2rem"
+                >
+                  {{ phone }}
+                </div>
+              </div>
+              <div class="row" v-show="!roomReady">
+                <div class="col-6">{{ weblabel.email }}</div>
+                <div
+                  class="col-6"
+                  style="font-weight: bold; padding-top: 0.2rem"
+                >
+                  {{ email }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <span
+              class="borderStyle"
+              style="height: 50px; border-top: 0.5px solid lightgray"
+            ></span>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center"
+          >
+            <div v-if="!QRshow">
+              <img
+                src="../assets/char7.svg"
+                style="height: 250px"
+                v-if="roomReady"
+              />
+              <img
+                src="../assets/app-user-colour.svg"
+                style="height: 250px"
+                v-else
+              />
+            </div>
+            <div v-else>
+              <img
+                src="../assets/holding-phone-colour.svg"
+                style="height: 250px"
+                v-if="roomReady"
+              />
+              <img
+                src="../assets/app-user-colour.svg"
+                style="height: 250px"
+                v-else
+              />
+            </div>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center; margin-top: 10px"
+          >
+            <!-- Message -->
+            <div v-if="roomReady">
+              <div v-if="QRshow == false" style="margin-top: 2rem">
+                <p
+                  style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px"
+                >
+                  {{ weblabel.mciSuccessMaxKeyMsg[0] }}
+                </p>
+                <p
+                  style="font-size: 1.3em; font-weight: 600; margin-bottom: 1px"
+                >
+                  {{ weblabel.mciSuccessMaxKeyMsg[1] }}
+                </p>
+                <p style="font-size: 1.2em; font-weight: 400">
+                  {{ weblabel.mciSuccessMaxKeyMsg[2] }}
+                </p>
+              </div>
+              <div v-else>
+                <p
+                  style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px"
+                >
+                  {{ weblabel.mciSuccessMsg[0] }}
+                </p>
+                <p
+                  style="font-size: 1.3em; font-weight: 600; margin-bottom: 1px"
+                >
+                  {{ weblabel.mciSuccessMsg[1] }}
+                </p>
+                <p style="font-size: 1.2em; font-weight: 400">
+                  {{ weblabel.mciSuccessMsg[2] }}
                 </p>
               </div>
             </div>
-
-            <a-button @click="goBack" :disabled="gobackLoading">
+            <div v-else>
+              <div class="row justify-center">
+                <div>
+                  <p
+                    style="
+                      font-size: 1.2em;
+                      font-weight: 400;
+                      margin-bottom: 1px;
+                    "
+                  >
+                    {{ weblabel.mciSuccessNotReadyMsg[0] }}
+                  </p>
+                  <p
+                    style="
+                      font-size: 1.3em;
+                      font-weight: 600;
+                      margin-bottom: 1px;
+                    "
+                  >
+                    {{ weblabel.mciSuccessNotReadyMsg[1] }}
+                  </p>
+                  <p style="font-size: 1.2em; font-weight: 400">
+                    {{ weblabel.mciSuccessNotReadyMsg[2] }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-12 text-center mci-success-margin"
+            style="display: flex; justify-content: center; margin-top: 10px"
+          >
+            <q-btn
+              @click="goBack"
+              color="primary"
+              :disabled="gobackLoading"
+              style="width: 200px"
+            >
               {{ weblabel.done }}
               <q-spinner-ball
-                color="red"
-                style="margin-left: 10px"
+                color="white"
+                style="
+                  margin-left: 10px;
+                  float: right;
+                  position: absolute;
+                  right: 10px;
+                "
                 v-if="gobackLoading"
               />
-            </a-button>
+            </q-btn>
           </div>
         </div>
       </div>
@@ -242,11 +451,13 @@
 </template>
 
 <script>
+import "viewerjs/dist/viewer.css";
 import store from "@/store/store";
 import QRCode from "qrcode";
 import ky from "ky";
 import moment from "moment";
 import router from "../router";
+import Viewer from "viewerjs";
 export default {
   data() {
     return {
@@ -308,6 +519,11 @@ export default {
         mciIdPassport: "",
         guestName: "",
         adult: "",
+        mciSuccessMsg: [],
+        mciSuccessNotReadyMsg: [],
+        mciSuccessMaxKeyMsg: [],
+        mciSuccessWoKeyMsg: [],
+        package: "",
       },
       infoMCIConfim: false,
       loading: true,
@@ -323,7 +539,6 @@ export default {
   created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
-
     if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
@@ -351,7 +566,7 @@ export default {
     this.wifiAddress = this.setup.wifiAddress;
     this.wifiPassword = this.setup.wifiPassword;
     // Get Parsing Guest Data
-    this.timeNow = moment().format("h:mm");
+    this.timeNow = moment().format("HH:mm");
     this.coDate = this.formatDateFind(this.guestData["co"]);
     this.checkOutDate = this.formatDate(this.guestData["co"]);
     this.checkInDate = this.formatDate(this.guestData["ci"]);
@@ -375,7 +590,6 @@ export default {
         this.programLabel = "program-label1";
         break;
     }
-
     // Check Validation of Keycard
     (async () => {
       const parsed = await ky
@@ -397,7 +611,6 @@ export default {
       }
     })();
     // Generate QRCode
-
     // Get Guest Image
     (async () => {
       const parsed = await ky
@@ -409,14 +622,13 @@ export default {
           },
         })
         .json();
-        console.log(parsed,"lol");
+      // console.log(parsed, "lol");
       if (parsed.response.imagedata != null) {
         this.imageID = "data:image/png;base64," + parsed.response.imagedata;
       } else {
         this.imageID = "";
       }
     })();
-
     // Labeling
     this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
     this.weblabel.adult = this.findLabel("adult", "titleCase");
@@ -431,6 +643,7 @@ export default {
     this.weblabel.done = this.findLabel("done", "titleCase");
     this.weblabel.phoneNumber = this.findLabel("phone_number", "titleCase");
     this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.package = this.findLabel("package", "titleCase");
     this.weblabel.mciSuccessNotReady = this.findLabel(
       "mci_success_not_ready",
       "sentenceCase"
@@ -452,6 +665,36 @@ export default {
     this.weblabel.mciSuccessWoKeystation = this.findLabel(
       "mci_success_wo_keystation",
       "sentenceCase"
+    );
+    this.weblabel.mciSuccessWoKeyMsg.push(
+      this.weblabel.mciSuccessWoKeystation.split(".")[0].trim()
+    );
+    this.weblabel.mciSuccessWoKeyMsg.push(
+      this.weblabel.mciSuccessWoKeystation.split(".")[1].trim()
+    );
+    this.weblabel.mciSuccessNotReadyMsg.push(
+      this.weblabel.mciSuccessNotReady.split(".")[0].trim()
+    );
+    this.weblabel.mciSuccessNotReadyMsg.push(
+      this.weblabel.mciSuccessNotReady.split(".")[1].trim()
+    );
+    this.weblabel.mciSuccessNotReadyMsg.push(
+      this.weblabel.mciSuccessNotReady.split(".")[2].trim()
+    );
+    this.weblabel.mciSuccessMaxKeyMsg.push(
+      this.weblabel.mciSuccessWithMaxKeycard.split(".")[0].trim()
+    );
+    this.weblabel.mciSuccessMaxKeyMsg.push(
+      this.weblabel.mciSuccessWithMaxKeycard.split(".")[1].trim()
+    );
+    this.weblabel.mciSuccessMaxKeyMsg.push(
+      this.weblabel.mciSuccessWithMaxKeycard.split(".")[2].trim()
+    );
+    this.weblabel.mciSuccessMsg.push(
+      this.weblabel.mciSuccess.split(".")[0].trim()
+    );
+    this.weblabel.mciSuccessMsg.push(
+      this.weblabel.mciSuccess.split(".")[1].trim()
     );
   },
   methods: {
@@ -499,6 +742,16 @@ export default {
         }
       }
       return fixLabel;
+    },
+    showImage() {
+      const viewer = new Viewer(document.getElementById("imgID"), {
+        inline: false,
+        viewed() {
+          viewer.zoomTo(1);
+        },
+      });
+      viewer.destroy();
+      viewer.show();
     },
     formatDate(datum) {
       const dDate =
@@ -632,9 +885,8 @@ export default {
       setTimeout(() => {
         this.loading = false;
         /* Generate QR Code */
-
         const success = btoa(this.data);
-        //console.log(this.data, success);
+        // console.log(this.data, success);
         QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then(
           (err, url) => {
             if (err) {
@@ -644,7 +896,7 @@ export default {
             }
           }
         );
-      }, 1000);
+      }, 2000);
     },
   },
   watch: {
