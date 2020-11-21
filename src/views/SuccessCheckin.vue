@@ -887,7 +887,7 @@ export default {
         /* Generate QR Code */
         const success = btoa(this.data);
         // console.log(this.data, success);
-        QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then(
+        QRCode.toDataURL(this.data, { errorCorrectionLevel: "H" }).then(
           (err, url) => {
             if (err) {
               this.url = err;

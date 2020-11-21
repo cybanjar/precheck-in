@@ -792,6 +792,7 @@ export default {
           },
         })
         .json();
+      // console.log('setup',setup);
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
@@ -823,6 +824,8 @@ export default {
         return item.number1 === 6 && item.number2 === 1;
       });
       this.termENG = tempTermENG[0]["setupvalue"];
+      // console.log('termEng di atas',this.termENG, tempTermENG);
+
       const tempTermIDN = this.tempsetup.filter((item, index) => {
         // Term IDN
         return item.number1 === 6 && item.number2 === 2;
@@ -995,6 +998,7 @@ export default {
       obj["policy"] = this.policy;
       obj["kiosCheckin"] = this.kiosCheckin;
       this.setup.push(obj);
+      // console.log(this.setup);
       //End Request Set Up
       // Hotel System Date
       const systemDateObj = this.tempsetup.filter((item, index) => {
@@ -1563,7 +1567,7 @@ export default {
                         },
                       });
                     } else {
-                      this.handleSingleGuest(rsvFix[0]);
+                      this.handleSingleGuest(rsvFix[0], this.setup[0]);
                     }
                   }
                 } else {
