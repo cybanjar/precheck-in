@@ -642,28 +642,6 @@
                           color="primary"
                           :disabled="paid || paymentLoading"
                           @click="checkPayment()"
-                        >-->
-                        <q-form action="https://staging.doku.com/Suite/Receive" method="post">
-                          <q-input name="AMOUNT" :value="Deposit + '.00'" style="display: none;" />
-                          <q-input name="BASKET" :value="'Deposit,' + Deposit + '.00,1,' + Deposit + '.00'" style="display: none;" />
-                          <q-input name="CHAINMERCHANT" value="0" style="display: none;" />
-                          <q-input name="CURRENCY" value="360" style="display: none;" />
-                          <q-input name="EMAIL" :value="email" style="display: none;" />
-                          <q-input name="MALLID" value="11133679" style="display: none;" />
-                          <q-input name="NAME" :value="currDataPrepare['gast'].replace(/,/g, '')" style="display: none;" />
-                          <q-input name="PAYMENTTYPE" value="AUTHORIZATION" style="display: none;" />
-                          <q-input name="PURCHASEAMOUNT" :value="Deposit + '.00'" style="display: none;" />
-                          <q-input name="PURCHASECURRENCY" value="360" style="display: none;" />
-                          <q-input name="REQUESTDATETIME" :value="requestdatetime" style="display: none;" />
-                          <q-input name="SESSIONID" :value="words" style="display: none;" />
-                          <q-input name="TRANSIDMERCHANT" :value="trxID" style="display: none;" />
-                          <q-input name="WORDS" :value="words" style="display: none;" />
-                          <q-input name="PAYMENTCHANNEL" value="15" style="display: none;" />
-                          <q-input name="MOBILEPHONE" :value="mobilephone" style="display: none;" />
-                        <q-btn
-                          class="font-weight-bold mt-3 mr-3"
-                          type="submit"
-                          :disabled="paid || paymentLoading"
                         >
                           {{ weblabel.pay }}
                           <q-spinner
@@ -1823,17 +1801,6 @@ export default {
               this.$refs.stepper.next();
             }
           }
-          // preparing data for payment gateway
-          this.email = this.form.getFieldValue(["email"][0]);
-          this.mobilephone = this.form.getFieldValue(["phone"][0]);
-          this.requestdatetime = moment().format("YYYYMMDDHHmmss");
-          this.trxID = this.pad(this.currDataPrepare.resnr, 7) + moment().format("DDMMYYYYHHmmss");
-          this.words = CryptoJS.SHA1(
-          this.Deposit + '.00' +
-          "11133679" +
-          "rpT4jeLsWHHK" +
-          this.trxID
-          ).toString();
           break;
         case 3:
           if (this.form.getFieldValue(["url"][0]) == "") {
@@ -2405,65 +2372,6 @@ export default {
     checkPayment() {
       // console.log('checkPayment');
       this.checkValidation("2");
-    },
-    payDoku() {
-      const words = CryptoJS.SHA1(
-        this.Deposit + '.00' +
-        "11133679" +
-        "rpT4jeLsWHHK" +
-        "TRX202011091007"
-      );
-      const datas = new FormData();
-      datas.append('MALLID', '11133679');
-      datas.append('CHAINMERCHANT', '0');
-      datas.append('AMOUNT', this.Deposit + '.00');
-      datas.append('PURCHASEAMOUNT', this.Deposit + '.00');
-      datas.append('TRANSIDMERCHANT', 'TRX202011091007');
-      datas.append('PAYMENTTYPE', 'AUTHORIZATION');
-      datas.append('WORDS', words.toString());
-      datas.append('REQUESTDATETIME', moment().format("YYYYMMDDHHmmss"));
-      datas.append('CURRENCY', '360');
-      datas.append('PURCHASECURRENCY', '360');
-      datas.append('SESSIONID', words.toString());
-      datas.append('NAME', this.currDataPrepare["gast"]);
-      datas.append('EMAIL', this.currDataPrepare["guest-email"]);
-      datas.append('BASKET', 'Deposit,' + this.Deposit + '.00' + ',1,' + this.Deposit + '.00');
-      const opts = {
-        MALLID: 11133679,
-        CHAINMERCHANT: 0,
-        AMOUNT: this.Deposit + '.00',
-        PURCHASEAMOUNT: this.Deposit + '.00',
-        TRANSIDMERCHANT: 'TRX202011091007',
-        PAYMENTTYPE: 'AUTHORIZATION',
-        WORDS: words.toString(),
-        REQUESTDATETIME: moment().format("YYYYMMDDHHmmss"),
-        CURRENCY: 360,
-        PURCHASECURRENCY: 360,
-        SESSIONID: words.toString(),
-        NAME: this.currDataPrepare["gast"],
-        EMAIL: this.currDataPrepare["guest-email"],
-        BASKET: 'Deposit,' + this.Deposit + '.00' + ',1,' + this.Deposit + '.00',
-      };
-      fetch('https://api.allorigins.win/get?url=https://staging.doku.com/Suite/Receive', {
-        method: 'post',
-        redirect: "follow",
-        headers:{
-          'Content-Type': 'multipart/form-data'
-        },
-        body: JSON.stringify(opts)
-        // body: opts
-      }).then(function(response) {
-        return response.text();
-      }).then(function(data) {
-        console.log(data);
-      }).catch(function(error) {
-        console.log(error);
-      });
-    },
-    pad(num, size) {
-    num = num.toString();
-    while (num.length < size) num = "0" + num;
-    return num;
     },
   },
   watch: {
