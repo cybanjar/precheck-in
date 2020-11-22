@@ -1,181 +1,176 @@
 <template>
   <div class="spin-load-table" v-if="loading">
     <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px;" spin />
+      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
     </a-spin>
   </div>
   <div v-else>
-    <div class="home">
-    <q-form action="/step" method="post">
-      <q-input name="RESULTMSG" style="display: none;" />
-      <!--<q-input name="BASKET" value="Deposit,300000.00,1,300000.00" style="display: none;" />
-      <q-input name="CHAINMERCHANT" value="0" style="display: none;" />
-      <q-input name="CURRENCY" value="360" style="display: none;" />
-      <q-input name="EMAIL" value="michael_yohannes@sindata.net" style="display: none;" />
-      <q-input name="MALLID" value="11133679" style="display: none;" />
-      <q-input name="NAME" value="Aa Ngurah Jayalantara,  MR" style="display: none;" />
-      <q-input name="PAYMENTTYPE" value="AUTHORIZATION" style="display: none;" />
-      <q-input name="PURCHASEAMOUNT" value="300000.00" style="display: none;" />
-      <q-input name="PURCHASECURRENCY" value="360" style="display: none;" />
-      <q-input name="REQUESTDATETIME" value="20201111151207" style="display: none;" />
-      <q-input name="SESSIONID" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
-      <q-input name="TRANSIDMERCHANT" value="TRX202011091007" style="display: none;" />
-      <q-input name="WORDS" value="741bf17593d56f99d9b79f4765af92be5b2e28ee" style="display: none;" />
-      <q-input name="PAYMENTCHANNEL" value="15" style="display: none;" />
-      <q-input name="MOBILEPHONE" value="335235" style="display: none;" />-->
-    </q-form>
-      <!-- Modal Response Room Status -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="confirmMailModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
+    <!-- Modal Response Room Status -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="confirmMailModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 1rem;
+        "
       >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="handleYes"
-          >
-            {{ weblabel.okMessage }}
-            <q-spinner
-              v-if="loadingConfirmEmail"
-              style="margin-left: 10px;"
-              color="white"
-              size="12px"
+        <img
+          :src="require('@/assets/vhpkiosk.png')"
+          alt="logovhpkiosk"
+          width="200"
+        />
+      </div>
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="handleYes"
+        >
+          {{ weblabel.okMessage }}
+          <q-spinner
+            v-if="loadingConfirmEmail"
+            style="margin-left: 10px"
+            color="white"
+            size="12px"
+          />
+        </a-button>
+      </template>
+      <p>{{ weblabel.mciSuccessNotReady }}</p>
+      <p>{{ weblabel.reconfirmPhonemail }}</p>
+      <div>
+        <a-form layout="vertical" :form="formresubmit">
+          <a-form-item :label="weblabel.phoneNumber">
+            <q-input
+              v-decorator="[
+                'guest-phone',
+                {
+                  initialValue: currDataPrepare['guest-phnumber'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredPhone,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              outlined
+              dense
             />
-          </a-button>
-        </template>
-        <p>{{ weblabel.mciSuccessNotReady }}</p>
-        <p>{{ weblabel.reconfirmPhonemail }}</p>
-        <div>
-          <a-form layout="vertical" :form="formresubmit">
-            <a-form-item :label="weblabel.phoneNumber">
-              <q-input
-                v-decorator="[
-                  'guest-phone',
-                  {
-                    initialValue: currDataPrepare['guest-phnumber'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredPhone,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                outlined
-                dense
-              />
-            </a-form-item>
-            <a-form-item :label="weblabel.email">
-              <q-input
-                v-decorator="[
-                  'guest-email',
-                  {
-                    initialValue: currDataPrepare['guest-email'],
-                    rules: [
-                      {
-                        required: true,
-                        message: weblabel.requiredEmail,
-                      },
-                      {
-                        type: 'email',
-                        message: weblabel.notValidEmail,
-                      },
-                    ],
-                  },
-                ]"
-                class="ant-input-h"
-                type="email"
-                outlined
-                dense
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-      </a-modal>
+          </a-form-item>
+          <a-form-item :label="weblabel.email">
+            <q-input
+              v-decorator="[
+                'guest-email',
+                {
+                  initialValue: currDataPrepare['guest-email'],
+                  rules: [
+                    {
+                      required: true,
+                      message: weblabel.requiredEmail,
+                    },
+                    {
+                      type: 'email',
+                      message: weblabel.notValidEmail,
+                    },
+                  ],
+                },
+              ]"
+              class="ant-input-h"
+              type="email"
+              outlined
+              dense
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
 
-      <!-- Modal For Overlapping -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="overlappingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorNotReady }}</p>
-      </a-modal>
+    <!-- Modal For Overlapping -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="overlappingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorNotReady }}</p>
+    </a-modal>
 
-      <!-- Modal For Network Establish Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="preauthModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="resendPreauth"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPreauth }}</p>
-      </a-modal>
+    <!-- Modal For Network Establish Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="preauthModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="resendPreauth"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPreauth }}</p>
+    </a-modal>
 
-      <!-- Modal For Interface -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="interfacingModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorInterface }}</p>
-      </a-modal>
+    <!-- Modal For Interface -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="interfacingModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorInterface }}</p>
+    </a-modal>
 
-      <!-- Modal For Payment Error -->
-      <a-modal
-        :title="weblabel.information"
-        :visible="paymenterrorModal"
-        :confirm-loading="confirmLoading"
-        :closable="false"
-      >
-        <template slot="footer">
-          <a-button
-            key="submit"
-            type="primary"
-            :loading="loading"
-            @click="hideAllModal"
-            >{{ weblabel.okMessage }}</a-button
-          >
-        </template>
-        <p>{{ weblabel.mciErrorPayment }}</p>
-      </a-modal>
+    <!-- Modal For Payment Error -->
+    <a-modal
+      :title="weblabel.information"
+      :visible="paymenterrorModal"
+      :confirm-loading="confirmLoading"
+      :closable="false"
+    >
+      <template slot="footer">
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="loading"
+          @click="hideAllModal"
+          >{{ weblabel.okMessage }}</a-button
+        >
+      </template>
+      <p>{{ weblabel.mciErrorPayment }}</p>
+    </a-modal>
 
-      <!-- Modal For Term And Condition -->
-      <!-- <a-modal
+    <!-- Modal For Term And Condition -->
+    <!-- <a-modal
         :title="weblabel.tcTitle"
         :visible="termcondition"
         :confirm-loading="confirmLoading"
@@ -196,199 +191,174 @@
         <p>{{ terms }}</p>
       </a-modal> -->
 
-      <q-dialog v-model="termcondition">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">{{ weblabel.tcTitle }}</div>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-section style="max-height: 50vh;" class="scroll">
-            <p>{{ terms }}</p>
-            <p>{{ termSMOOKING }}</p>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-actions align="right">
-            <q-btn
-              flat
-              :label="weblabel.disagree"
-              color="primary"
-              @click="disagree"
-            /><q-btn
-              flat
-              :label="weblabel.agree"
-              color="primary"
-              @click="handleOk"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <h5 class="text-black text-center font-weight-bold visible">
-        ONLINE CHECK-IN
-      </h5>
-      <div class="row justify-between" :style="information">
-        <div
-          class="q-ma-md col-md col-md-8 col-xs-12 invisibles"
-          style="padding-right: 30px;"
-        >
-          <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-            :style="information"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-            <span v-if="currDataPrepare['rmshare'].length > 1">
-              <q-chip
-                color="gray"
-                clickable
-                size="sm"
-                text-color="black"
-                icon="supervisor_account"
-                style="margin-top: -3px !important;"
-              >
-                Room Sharer
-                <q-menu>
-                  <q-banner style="width: 300px;">
-                    <template v-slot:avatar>
-                      <q-icon name="supervisor_account" color="primary" />
-                    </template>
-                    <p
-                      v-for="item in currDataPrepare['rmshare']"
-                      :key="item"
-                      style="margin: 0 !important; text-size: 12px;"
-                    >
-                      {{ item }}
-                    </p>
-                  </q-banner>
-                </q-menu>
-              </q-chip>
-            </span>
-          </h6>
-          <h6 v-else class="text-white font-weight-bold" :style="information">
-            {{ this.currDataPrepare["gast"] }}
-            <span v-if="currDataPrepare['rmshare'].length > 1">
-              <q-chip
-                color="gray"
-                clickable
-                size="sm"
-                text-color="black"
-                icon="supervisor_account"
-                style="margin-top: -3px !important;"
-              >
-                Room Sharer
-                <q-menu>
-                  <q-banner style="width: 300px;">
-                    <template v-slot:avatar>
-                      <q-icon name="supervisor_account" color="primary" />
-                    </template>
-                    <p
-                      v-for="item in currDataPrepare['rmshare']"
-                      :key="item"
-                      style="margin: 0 !important; text-size: 12px;"
-                    >
-                      {{ item }}
-                    </p>
-                  </q-banner>
-                </q-menu>
-              </q-chip>
-            </span>
-          </h6>
-
-          <p class="ant-card-meta-description text-white" :style="information">
-            {{ weblabel.arrival }}:
-            <strong>{{ weblabel.ciDate }}</strong>
-            {{ weblabel.departure }}:
-            <strong>{{ weblabel.coDate }}</strong>
-            <br />
-            {{ weblabel.bookCode }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ weblabel.roomNumber }}:
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
-          </p>
-        </div>
-        <div class="col-md col-md-3 col-xs-12">
-          <q-card flat>
-            <q-img class="" :src="gambar">
-              <div
-                class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-              >
-                {{ hotelname }}
-              </div>
-            </q-img>
-          </q-card>
-        </div>
-        <div class="q-ma-md col-md col-md-8 col-xs-12 visible">
-          <h6
-            v-if="currDataPrepare['guest-member-name'] !== ''"
-            class="text-white font-weight-bold"
-          >
-            {{ this.currDataPrepare["gast"] }}
-            {{ currDataPrepare["guest-member-name"] }}
-          </h6>
-          <h6 v-else class="text-white font-weight-bold">
-            {{ this.currDataPrepare["gast"] }},
-          </h6>
-          <div v-if="currDataPrepare['rmshare'].length > 1">
-            <q-chip
-              color="gray"
-              clickable
-              size="sm"
-              text-color="black"
-              icon="supervisor_account"
-              style="
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                margin-bottom: 5px !important;
-              "
-            >
-              Room Sharer
-              <q-menu>
-                <q-banner style="width: 300px;">
-                  <template v-slot:avatar>
-                    <q-icon name="supervisor_account" color="primary" />
-                  </template>
-                  <p
-                    v-for="item in currDataPrepare['rmshare']"
-                    :key="item"
-                    style="margin: 0 !important; text-size: 12px;"
-                  >
-                    {{ item }}
-                  </p>
-                </q-banner>
-              </q-menu>
-            </q-chip>
+    <q-dialog v-model="termcondition">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6" v-show="stepTerm === 1">
+            {{ weblabel.tcTitle }}
           </div>
-          <p class="ant-card-meta-description text-white">
-            {{ weblabel.arrival }}:
-            <strong>{{ weblabel.ciDate }}</strong>
-            {{ weblabel.departure }}:
-            <strong>{{ weblabel.coDate }}</strong>
-            <br />
-            {{ weblabel.bookCode }}:
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-            {{ weblabel.roomNumber }}:
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
+          <div class="text-h6" v-show="stepTerm === 2">Privacy Policy</div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ terms }}
           </p>
+          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
+            {{ termSMOOKING }}
+          </p>
+
+          <p
+            style="white-space: pre-wrap"
+            v-show="stepTerm == 2"
+            v-html="policy"
+          ></p>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions style="display: flex; justify-content: space-between">
+          <div>
+            <q-btn
+              v-if="stepTerm > 1"
+              flat
+              color="primary"
+              @click="kurang()"
+              label="Back"
+            />
+          </div>
+          <div>
+            <q-btn
+              :label="weblabel.disagree"
+              color="red"
+              @click="disagree"
+              style="margin-right: 5px"
+            />
+            <q-btn :label="weblabel.agree" color="primary" @click="handleOk" />
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
+      </div>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
+      </div>
+    </div>
+    <div class="justify-around bg-white self-checkin">
+      <div class="row q-mx-md">
+        <div class="mt-3 col-md-7 col-xs-12 col-sm-6">
+          <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
+          <h6 class="font-weight-bold">{{ currDataPrepare["gast"] }}</h6>
+        </div>
+        <div class="mt-3 col-md-5 col-xs-12 col-sm-6">
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.bookCode }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <strong>{{ this.currDataPrepare.resnr }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.stayPeriod }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <strong>{{ weblabel.ciDate }} - {{ weblabel.coDate }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.roomNumber }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <span style="margin-right: 3px !important"
+                  ><strong>{{ currDataPrepare.zinr }}</strong></span
+                >
+                <a-tag
+                  v-if="isMobile"
+                  color="green"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
+                  >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
+                >
+                <a-tag
+                  v-else
+                  color="green"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
+                  >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
+                >
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.roomShare }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <q-chip
+                  color="primary"
+                  clickable
+                  square
+                  style="
+                    background: white !important;
+                    color: #262728 !important;
+                    font-size: 0.6rem !important;
+                    border: 1px solid gray;
+                  "
+                  v-if="this.currDataPrepare['rmshare'].length > 0"
+                >
+                  {{ weblabel.mciShow }}
+                  <q-menu>
+                    <q-banner>
+                      <template v-slot:avatar>
+                        <q-icon name="supervisor_account" color="primary" />
+                      </template>
+                      <p
+                        v-for="rmShare in this.currDataPrepare['rmshare']"
+                        :key="rmShare"
+                        style="margin: 0 !important; text-size: 12px"
+                      >
+                        {{ rmShare }}
+                      </p>
+                    </q-banner>
+                  </q-menu>
+                </q-chip>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+      <q-separator inset />
+      <div class="q-mx-md">
         <a-form layout="vertical" :form="form">
-          <h2 v-show="step === 1">
+          <h2 class="text-center" v-show="step === 1">
             {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 2">
+          <h2 class="text-center" v-show="step === 2">
             {{ weblabel.guestDetail }}
           </h2>
-          <h2 v-show="step === 3">
+          <h2 class="text-center" v-show="step === 3">
             {{ weblabel.uploadID }}
           </h2>
-          <h2 v-show="step === 4">
+          <h2 class="text-center" v-show="step === 4">
             {{ weblabel.depositPayment }}
           </h2>
           <div>
@@ -398,7 +368,6 @@
               bordered
               ref="stepper"
               contracted
-              color="primary"
               animated
               keep-alive
             >
@@ -407,7 +376,7 @@
                 title="Input Guest Detail"
                 icon="person"
                 active-icon="person"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 1"
               >
                 <div class="steps-content">
@@ -490,7 +459,7 @@
                 title="Input Address"
                 icon="room"
                 active-icon="room"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 2"
               >
                 <div class="steps-content">
@@ -595,7 +564,7 @@
                 caption="Optional"
                 icon="portrait"
                 active-icon="portrait"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 3"
               >
                 <div class="steps-content">
@@ -603,7 +572,7 @@
                     <a-col class="text-center">
                       <a-form-item>
                         <input
-                          style="display: none;"
+                          style="display: none"
                           ref="fileurl"
                           accept="image/*"
                           type="file"
@@ -621,21 +590,21 @@
                             },
                           ]"
                         />
-                        <div style="margin-top: -50px;">
+                        <div style="margin-top: -50px">
                           <h1>{{ weblabel.idPhoto }}</h1>
                           <p>
                             {{ weblabel.idPhotoDesc }}
                           </p>
                         </div>
                         <img class="preview" v-if="url" :src="url" />
-                        <div style="margin-top: 40px;">
+                        <div style="margin-top: 40px">
                           <q-btn
                             unelevated
                             rounded
                             @click="getFile"
                             color="primary"
                             label="Upload"
-                            style="width: 200px;"
+                            style="width: 200px"
                           />
                         </div>
                       </a-form-item>
@@ -649,7 +618,7 @@
                 title="Deposit Payment"
                 icon="payment"
                 active-icon="payment"
-                style="font-size: 3em;"
+                style="font-size: 3em"
                 :done="step > 4"
               >
                 <div class="steps-content">
@@ -665,38 +634,12 @@
                           </strong>
                         </h2>
                       </a-form-item>
-                      <div>
-                        <a-form-item
-                          label="Deposit Payment Response"
-                          style="margin-top: 10px;"
-                        >
-                          <a-select
-                            v-model="errorCode"
-                            default-value="0000"
-                            style="width: 180px;"
-                            @change="handleChange"
-                          >
-                            <a-select-option value="0000">
-                              Success
-                            </a-select-option>
-                            <a-select-option value="1004">
-                              Connection timeout
-                            </a-select-option>
-                            <a-select-option value="9002">
-                              Server is busy
-                            </a-select-option>
-                            <a-select-option value="8021">
-                              Card authorization error
-                            </a-select-option>
-                          </a-select>
-                        </a-form-item>
-                      </div>
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
-                        <!--<a-button
+                        <!-- <q-btn
                           class="font-weight-bold mt-3 mr-3"
-                          type="primary"
+                          color="primary"
                           :disabled="paid || paymentLoading"
                           @click="checkPayment()"
                         >-->
@@ -729,7 +672,107 @@
                             color="primary"
                             size="12px"
                           />
-                        </q-btn>
+                        </q-btn> -->
+                        <q-form
+                          action="https://staging.doku.com/Suite/Receive"
+                          method="post"
+                          ref="formDoku"
+                        >
+                          <q-input
+                            name="AMOUNT"
+                            :value="dokuData.amount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="BASKET"
+                            :value="dokuData.basket"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CHAINMERCHANT"
+                            :value="dokuData.chainMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CURRENCY"
+                            :value="dokuData.currency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="EMAIL"
+                            :value="dokuData.email"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MALLID"
+                            :value="dokuData.mallid"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="NAME"
+                            :value="dokuData.name"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTTYPE"
+                            :value="dokuData.paymentType"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASEAMOUNT"
+                            :value="dokuData.purchaseAmount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASECURRENCY"
+                            :value="dokuData.purchaseCurrency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="REQUESTDATETIME"
+                            :value="dokuData.requestDatetime"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="SESSIONID"
+                            :value="dokuData.sessionID"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="TRANSIDMERCHANT"
+                            :value="dokuData.transIDMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="WORDS"
+                            :value="dokuData.words"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTCHANNEL"
+                            :value="dokuData.paymentChannel"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MOBILEPHONE"
+                            :value="dokuData.mobilePhone"
+                            style="display: none"
+                          />
+                          <q-btn
+                            class="font-weight-bold mt-3 mr-3"
+                            type="submit"
+                            color="primary"
+                            @click="handleDokuPayment"
+                            :disabled="paid || paymentLoading"
+                          >
+                            {{ weblabel.pay }}
+                            <q-spinner
+                              v-if="paymentLoading"
+                              style="margin-left: 10px"
+                              color="primary"
+                              size="12px"
+                            />
+                          </q-btn>
                         </q-form>
                       </div>
                     </a-col>
@@ -745,17 +788,17 @@
                   </a-row>
                   <a-row :gutter="[16, 8]" v-show="(skipDeposit = true)">
                     <div v-if="paid">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentSuccess }}
                       </p>
                     </div>
                     <div v-else-if="paidNetworkError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentNetworkError }}
                       </p>
                     </div>
                     <div v-else-if="paidVerError">
-                      <p style="font-size: 16px; text-align: justify;">
+                      <p style="font-size: 16px; text-align: justify">
                         {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
@@ -842,6 +885,7 @@
 import store from "@/store/store";
 import router from "../router";
 import Vue from "vue";
+import { colors } from "quasar";
 import Antd, {
   Row,
   Col,
@@ -981,6 +1025,7 @@ export default {
       maximumDeposit: "0",
       OverNightDeposit: "0",
       paid: "0",
+      stepTerm: 1,
       TotalData: "",
       defaultCI: "",
       overlappingModal: false,
@@ -997,6 +1042,25 @@ export default {
       errorCode: "",
       defaultCountry: "",
       loadingConfirmEmail: false,
+      dokuData: {
+        amount: "",
+        sharedKey: "rpT4jeLsWHHK",
+        mallid: "11133679",
+        basket: "",
+        chainMerchant: "NA",
+        email: "",
+        name: "",
+        paymentType: "AUTHORIZATION",
+        purchaseAmount: "",
+        purchaseCurrency: "360",
+        currency: "360",
+        requestDatetime: "",
+        sessionID: "",
+        transIDMerchant: "",
+        words: "",
+        paymentChannel: "15",
+        mobilePhone: "",
+      },
       weblabel: {
         // webla1
         information: "",
@@ -1048,10 +1112,22 @@ export default {
       afterPayment: false,
       termSMOOKING: "",
       conditionSMOOKING: false,
-      trxID: "",
-      mobilephone: "",
-      requestdatetime: "",
-      words: "",
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
+      policy: "",
+      iconOta: {
+        color: "",
+      },
+      isMobile: false,
     };
   },
   watch: {
@@ -1064,12 +1140,32 @@ export default {
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
     // console.log("GuestData", this.currDataPrepare);
+    // Detect Mobile Device
+    if (
+      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
+        navigator.userAgent
+      ) ||
+      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| ||a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+        navigator.userAgent.substr(0, 4)
+      )
+    ) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
-        this.callbackParam = location.search.substring(1);
-        location.search
+        //this.callbackParam = location.search.substring(1);
+        let parameter = decodeURIComponent(location.search.substring(1));
+        parameter = parameter.replaceAll(" ", "+");
+
+        const passphrase = "System@1016";
+        const bytes = CryptoJS.AES.decrypt(parameter, passphrase);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        originalText
           .split("&")
           .toString()
           .substr(1)
@@ -1081,7 +1177,10 @@ export default {
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(this.tempParam, { [objProperty]: objValue });
+            this.callbackParam += `&${objProperty}=${objValue}`;
           });
+        this.callbackParam = this.callbackParam.substring(1);
+        // console.log(this.tempParam,this.callbackParam);
       }
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
@@ -1102,11 +1201,14 @@ export default {
     this.term = this.currDataSetting["termENG"];
     this.term1 = this.currDataSetting["termIDN"];
     this.termSMOOKING = this.currDataSetting["termSMOOKING"];
-    this.conditionSMOOKING = this.currDataSetting["conditionSMOOKING"];
     this.information.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.information.color = this.currDataSetting["FontColor"];
+    this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
+    this.iconOta.color = this.currDataSetting["BackgroundColor"] + "!important";
+    colors.setBrand("primary", this.currDataSetting["BackgroundColor"]);
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
+    this.hotelLogo = this.currDataSetting["hotelLogo"];
     this.minimumDeposit = this.currDataSetting["minimumDeposit"];
     this.maximumDeposit = this.currDataSetting["maximumDeposit"];
     this.OverNightDeposit = this.currDataSetting["OverNightDeposit"];
@@ -1119,8 +1221,10 @@ export default {
     this.countries = this.currDataSetting["countries"];
     this.defaultCountry = this.currDataSetting["defaultCountry"];
     this.wifiAddress = this.currDataSetting["wifiAddress"];
+    this.textOta.color = this.currDataSetting["FontColor"];
     this.wifiPassword = this.currDataSetting["wifiPassword"];
     this.langID = this.currDataSetting["langID"];
+    this.policy = this.currDataSetting["policy"];
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -1143,7 +1247,6 @@ export default {
     } else {
       this.terms = this.term1;
     }
-
     // console.log('setting',this.currDataSetting);
     // router.push(this.location);
     /* Handling Deposit Other Value */
@@ -1165,16 +1268,74 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
+    // DOKU First Param
+    this.dokuData.amount = `${this.Deposit}.00`;
+    this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
+    this.dokuData.email = this.currDataPrepare["guest-email"];
+    this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
+    this.dokuData.purchaseAmount = `${this.Deposit}.00`;
+    this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
     // Handling Callback Payment and Save to Database
-    if (this.tempParam.resultCd != null) {
+    if (this.tempParam.RESPONSECODE != null) {
       this.afterPayment = true;
+      /** Handle DOKU */
+      if (this.tempParam.RESPONSECODE == "0000") {
+        this.currDataPrepare["preAuth-flag"] = true;
+        // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();
+      } else {
+        this.paidNetworkError = false;
+        this.paidVerError = true;
+      }
+      /** Handle Nicepay */
+      /*
       if (this.errorCode == "1004") {
-        //this.tempParam.resultCd.substring(0, 1)
-        /* Payment Gateway Network Error */
+        //this.tempParam.resultCd.substring(0, 1)        
         this.paidNetworkError = true;
         this.paidVerError = false;
-      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-        /* Payment Gateway Network Error */
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
         this.paidNetworkError = true;
         this.paidVerError = false;
       } else {
@@ -1223,8 +1384,8 @@ export default {
           }
         })();
       }
+      */
     }
-
     /* Handle Stepper */
     // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
     if (this.precheckin) {
@@ -1283,9 +1444,11 @@ export default {
         "PurposeofStay"
       ];
     }
-
     /* Handling Labeling */
     this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
+    this.weblabel.mciShow = this.findLabel("mci_show", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
     this.weblabel.okMessage = this.findLabel("ok_message", "upperCase");
     this.weblabel.mciSuccessNotReady = this.findLabel(
       "mci_success_not_ready",
@@ -1377,8 +1540,12 @@ export default {
     this.weblabel.ciNow = this.findLabel("ci_now", "titleCase");
     this.weblabel.ciDate = this.formatDate(this.currDataPrepare.ci);
     this.weblabel.coDate = this.formatDate(this.currDataPrepare.co);
+    this.weblabel.stayPeriod = this.findLabel("stay_period", "titleCase");
   },
   methods: {
+    kurang() {
+      this.stepTerm = this.stepTerm - 1;
+    },
     findLabel(nameKey, used) {
       // console.log('FindLabel');
       let labels = undefined;
@@ -1449,15 +1616,67 @@ export default {
     resendPreauth() {
       // console.log('resendPreauth');
       this.preauthModal = false;
-      if (this.tempParam.resultCd != null) {
+      if (this.tempParam.RESPONSECODE != null) {
         this.afterPayment = true;
+        /** Handle DOKU */
+        // console.log('statusCode',this.tempParam.statuscode);
+        if (this.tempParam.RESPONSECODE == "0000") {
+          this.currDataPrepare["preAuth-flag"] = true;
+          (async () => {
+            // console.log('CallBack',this.callbackParam);
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare["resnr"],
+                    rsvlineNumber: this.currDataPrepare["reslinnr"],
+                    userInit: "MC",
+                    newRoomno: "",
+                    purposeOfStay: "",
+                    email: "",
+                    guestPhnumber: "",
+                    guestNation: "",
+                    guestCountry: "",
+                    guestRegion: "",
+                    base64image: "",
+                    vehicleNumber: "",
+                    preAuthString: this.callbackParam,
+                  },
+                },
+              })
+              .json();
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+              // console.log(this.currDataPrepare);
+              // Session Storage Set
+              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
+          })();
+        } else {
+          this.paidNetworkError = false;
+          this.paidVerError = true;
+        }
+        /** Handle Nicepay */
+        /*
         if (this.errorCode == "1004") {
-          //this.tempParam.resultCd.substring(0, 1)
-          /* Payment Gateway Network Error */
+          //this.tempParam.resultCd.substring(0, 1)        
           this.paidNetworkError = true;
           this.paidVerError = false;
-        } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-          /* Payment Gateway Network Error */
+        } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
           this.paidNetworkError = true;
           this.paidVerError = false;
         } else {
@@ -1494,6 +1713,7 @@ export default {
               this.paidVerError = false;
               // console.log(this.currDataPrepare);
               // Session Storage Set
+              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
               sessionStorage.setItem(
                 "guestData",
                 JSON.stringify(this.currDataPrepare)
@@ -1505,6 +1725,7 @@ export default {
             }
           })();
         }
+        */
       }
     },
     async getFile() {
@@ -1659,22 +1880,37 @@ export default {
           break;
       }
     },
-    payDepositDoku() {
-      const MALLID = 1113679; // Set From Database
-      const CHAINMERCHANT = "NA"; // Set From Database
-      const AMOUNT = this.Deposit; // Set From Deposit Other Amount
-      const PURCHASEAMOUNT = this.Deposit; // Set From Deposit Other Amount
-      const TRANSIDMERCHANT = "INVOICE-TEST-157196"; // Set From Database
-      const PAYMENTTYPE = "AUTHORIZATION"; // Authorization for CardVer
-      const SHAREDKEY = "rpT4jeLsWHHK"; // Set From Database
-      const CURRENCY = "360"; // for IDN ISO 3166; Refer to : https://datahub.io/core/country-codes#data
-      const WORDS = CryptoJS.SHA1(
-        AMOUNT.toString() + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY
-      ); // sha1(AMOUNT + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY);
-      const todayPayment = new Date();
-      // console.log(todayPayment);
+    async handleDokuPayment() {
+      await this.$nextTick();
+      sessionStorage.setItem("guestData", JSON.stringify(this.currDataPrepare));
+      sessionStorage.setItem("settings", JSON.stringify(this.currDataSetting));
+      sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
+      // Get Latest Data
+      this.dokuData.amount = `${this.Deposit}.00`;
+      this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
+      this.dokuData.email = this.currDataPrepare["guest-email"];
+      this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
+      this.dokuData.purchaseAmount = `${this.Deposit}.00`;
+      this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
+      this.dokuData.requestDatetime = moment().format("YYYYMMDDHHmmss");
+      this.dokuData.transIDMerchant =
+        this.pad(this.currDataPrepare.resnr, 7) +
+        moment().format("DDMMYYYYHHmmss");
+      this.dokuData.words = CryptoJS.SHA1(
+        `${this.dokuData.amount}${this.dokuData.mallid}${this.dokuData.sharedKey}${this.dokuData.transIDMerchant}`
+      ).toString();
+      this.dokuData.sessionID = CryptoJS.SHA1(
+        this.dokuData.transIDMerchant
+      ).toString();
+      this.$refs.formDoku.submit();
+    },
+    pad(num, size) {
+      num = num.toString();
+      while (num.length < size) num = "0" + num;
+      return num;
     },
     payDeposit() {
+      // NICEPAY
       // console.log('payDeposit');
       this.paymentLoading = true;
       async function getIP() {
@@ -2127,17 +2363,22 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      // console.log('handleOk');
-      this.ModalText = "The modal will be closed after two seconds";
-      this.confirmLoading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.muncul = false;
-        this.keluar = false;
-        this.guest = false;
-        this.termcondition = false;
-        this.confirmLoading = false;
-      }, 300);
+      // console.log(this.stepTerm);
+      if (this.stepTerm < 2) {
+        this.stepTerm = this.stepTerm + 1;
+      } else {
+        // console.log('handleOk');
+        this.ModalText = "The modal will be closed after two seconds";
+        this.confirmLoading = true;
+        setTimeout(() => {
+          this.visible = false;
+          this.muncul = false;
+          this.keluar = false;
+          this.guest = false;
+          this.termcondition = false;
+          this.confirmLoading = false;
+        }, 300);
+      }
     },
     disagree() {
       // console.log('disagree');
@@ -2234,6 +2475,25 @@ export default {
     },
   },
   computed: {
+    hexAToRGBA() {
+      return (hex) => {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+          c = hex.substring(1).split("");
+          if (c.length == 3) {
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+          }
+          c = "0x" + c.join("");
+          // console.log('thishexa');
+          return (
+            "rgba(" +
+            [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+            ",1)"
+          );
+        }
+        throw new Error("Bad Hex");
+      };
+    },
     isIdle() {
       return store.state.idleVue.isIdle;
     },

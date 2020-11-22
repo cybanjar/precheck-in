@@ -1,440 +1,434 @@
 <template>
-  <div class="home">
-    <h5 class="text-black text-center font-weight-bold visible">
-      ONLINE CHECK-IN
-    </h5>
-    <div class="row justify-between" :style="information">
-      <div class="q-ma-md col-md col-md-5 col-xs-12 invisibles">
-        <h5 class="text-white font-weight-bold">ONLINE CHECK-IN</h5>
-        <h6
-          v-if="currDataPrepare['room-sharer'] !== ''"
-          class="text-white font-weight-bold"
-          :style="information"
-        >
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }} |
-          {{ currDataPrepare["room-sharer"] }}
-        </h6>
-        <h6
-          v-else-if="currDataPrepare['accompaying-guest'] != ''"
-          class="text-white font-weight-bold"
-          :style="information"
-        >
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }} |
-          {{ currDataPrepare["accompaying-guest"] }}
-        </h6>
-        <h6 v-else class="text-white font-weight-bold" :style="information">
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }}
-        </h6>
-        <p class="ant-card-meta-description text-white" :style="information">
-          {{ getLabels("arrival", `titleCase`) }}:
-          <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-          {{ getLabels("departure", `titleCase`) }}:
-          <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-          <br />
-          {{ getLabels("book_code", `titleCase`) }}:
-          <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-        </p>
+  <div>
+    <div :style="ota" class="row justify-between pt-2">
+      <div class="text-center col-xs-12">
+        <img class="logo_hotel" :src="hotelLogo" />
       </div>
-      <div class="col-md col-md-3 col-xs-12">
-        <q-card flat>
-          <q-img class="" :src="gambar">
-            <div
-              class="absolute-bottom font-weight-bold text-subtitle2 text-center"
-            >
-              {{ hotelname }}
-            </div>
-          </q-img>
-        </q-card>
-      </div>
-      <div class="q-ma-md col-md col-md-5 col-xs-12 visible">
-        <h6
-          v-if="currDataPrepare['room-sharer'] !== ''"
-          class="text-white font-weight-bold"
-        >
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }} |
-          {{ currDataPrepare["room-sharer"] }}
-        </h6>
-        <h6
-          v-else-if="currDataPrepare['accompaying-guest'] != ''"
-          class="text-white font-weight-bold"
-        >
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }} |
-          {{ currDataPrepare["accompaying-guest"] }}
-        </h6>
-        <h6 v-else class="text-white font-weight-bold">
-          {{ currDataPrepare["guest-fname"] }}
-          {{ currDataPrepare["guest-lname"] }},
-          {{ currDataPrepare["guest-pname"] }}
-        </h6>
-        <p class="ant-card-meta-description text-white">
-          {{ getLabels("arrival", `titleCase`) }}:
-          <strong>{{ formatDate(currDataPrepare.arrive) }}</strong>
-          {{ getLabels("departure", `titleCase`) }}:
-          <strong>{{ formatDate(currDataPrepare.depart) }}</strong>
-          <br />
-          {{ getLabels("book_code", `titleCase`) }}:
-          <strong>{{ currDataPrepare["rsv-number"] }}</strong>
-        </p>
+      <div class="col-xs-12 text-center q-mb-lg q-mt-sm">
+        <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
       </div>
     </div>
-
-    <div>
-      <a-form layout="vertical" :form="form" @submit="handleSubmit">
-        <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
-          <a-card class="header-card">
-            <a-row>
-              <a-col :span="23" :xl="23" :xs="23">
-                <p class="header-group">
-                  {{ getLabels("arrival", `titleCase`) }}
-                </p>
-              </a-col>
-            </a-row>
-          </a-card>
-        </a-row>
-        <a-row class="ml-3" :gutter="16">
-          <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
-            <a-form-item
-              layout="vertical"
-              :label="getLabels('eta', `titleCase`)"
+    <div class="justify-around bg-white self-checkin">
+      <div class="row q-mx-md">
+        <div class="mt-3 col-md-7 col-xs-12 col-sm-6">
+          <div class="col-4 label-guestname">
+            {{ getLabels("guest_name", "titleCase") }}
+          </div>
+          <h6 class="font-weight-bold">
+            {{ this.currDataPrepare["guest-fname"] }}
+            {{ this.currDataPrepare["guest-lname"] }},
+            {{ this.currDataPrepare["guest-pname"] }}
+          </h6>
+        </div>
+        <div class="mt-3 col-md-2 col-xs-5 col-sm-6">
+          <p>{{ getLabels("book_code", "titleCase") }}</p>
+          <p>{{ getLabels("stay_period", "titleCase") }}</p>
+          <br />
+          <p>{{ getLabels("room_share", "titleCase") }}</p>
+        </div>
+        <div class="mt-3 col-md-2 col-xs-6 col-sm-6">
+          <p>
+            <strong>{{ this.currDataPrepare["rsv-number"] }}</strong>
+          </p>
+          <p>
+            <strong
+              >{{ formatDate(currDataPrepare.arrive) }} -
+              {{ formatDate(currDataPrepare.depart) }}</strong
             >
-              <q-input
-                v-model="hour"
-                class="inputTime"
-                @click="$refs.qDateProxy.show()"
-                outlined
-                dense
-                readonly
-              >
-                <template v-slot:append>
-                  <q-icon name="schedule" class="cursor_pointer">
-                    <q-popup-proxy
-                      ref="qDateProxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-time
-                        v-model="hour"
-                        mask="HH:mm"
-                        :minute-options="[0, 30]"
-                        format24h
-                        @input="$refs.qDateProxy.hide()"
-                      >
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </a-form-item>
-          </a-col>
-          <a-col
-            :span="4"
-            :xl="6"
-            :lg="5"
-            :md="6"
-            :xs="24"
-            v-show="showPickupRequest"
-          >
-            <a-form-item :label="getLabels('request', `titleCase`)">
-              <a-checkbox :checked="showPrice" v-model="showPrice">{{
-                getLabels("pick_req", `titleCase`)
-              }}</a-checkbox>
-            </a-form-item>
-          </a-col>
-          <a-col
-            :span="4"
-            :xl="4"
-            :lg="5"
-            :md="5"
-            :xs="24"
-            v-show="showPickupRequest"
-          >
-            <a-form-item :label="getLabels('price', 'titleCase')">
-              <label v-decorator="['currency', { initialValue: money }]">
-                {{ nilai === 3 ? "" : currency }}
-                {{
-                  nilai === 3
-                    ? " "
-                    : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
-                }}
-              </label>
-              <span>/ {{ per }}</span>
-            </a-form-item>
-          </a-col>
-          <a-col
-            v-show="showPrice && showPickupRequest"
-            :span="8"
-            :xl="8"
-            :lg="8"
-            :md="7"
-            :xs="24"
-          >
-            <a-form-item :label="getLabels('pick_detail', 'titleCase')">
-              <a-input
-                class="ant-input-h"
-                v-decorator="[
-                  'flight',
-                  { rules: [{ required: showPrice == true ? true : false }] },
-                ]"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="ml-3" :gutter="16">
-          <a-col>
-            <a-form-item :label="getLabels('room_pref', 'titleCase')">
-              <a-radio-group
-                v-model="room"
-                name="radioGroup"
-                v-show="showSmoking"
-                @change="Room"
-              >
-                <a-radio value="NonSmoking">
-                  <span class="font-weight-normal">
-                    {{ getLabels("non_smoking", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-                <a-radio value="Smoking">
-                  <span class="font-weight-normal">
-                    {{ getLabels("smoking", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label>
-              <a-radio-group
-                v-model="floor"
-                name="radioGroup"
-                v-show="showFloor"
-                @change="Floor"
-              >
-                <a-radio value="LowerFloor">
-                  <span class="font-weight-normal">
-                    {{ getLabels("lower_floor", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-                <a-radio value="HigherFloor">
-                  <span class="font-weight-normal">
-                    {{ getLabels("higher_floor", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item label>
-              <a-radio-group
-                name="radioGroup"
-                v-model="bed"
-                v-show="showBed"
-                @change="Bed"
-              >
-                <a-radio value="OneBigBed">
-                  <span class="font-weight-normal">
-                    {{ getLabels("one_big_bed", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-                <a-radio value="TwoSingleBeds">
-                  <span class="font-weight-normal">
-                    {{ getLabels("two_single_beds", `sentenceCase`) }}
-                  </span>
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
-            <a-form-item :label="getLabels('special_request', `titleCase`)">
-              <a-textarea :rows="4" :max-length="max" v-model="text" />
-            </a-form-item>
-          </a-col>
-          <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
-            <span v-text="text.length + '/' + max"></span>
-          </a-col>
-        </a-row>
-
-        <a-row class="ml-4 mr-3 mb-3">
-          <a-card class="header-card">
-            <a-row>
-              <a-col :span="23" :xl="23" :xs="23">
-                <p class="header-group">
-                  {{ getLabels("guest_detail", `titleCase`) }}
-                </p>
-              </a-col>
-            </a-row>
-          </a-card>
-        </a-row>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col v-if="email != ''" :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
-                class="ant-input-h"
-                v-decorator="[
-                  'email',
-                  {
-                    initialValue: email,
-                    rules: [{ message: 'Please input your email' }],
-                  },
-                ]"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <span>{{ currDataPrepare["guest-email"] }}</span>
-            <a-form-item :label="getLabels('email', `titleCase`)">
-              <a-input
-                class="ant-input-h"
-                v-decorator="[
-                  'email',
-                  {
-                    initialValue: email,
-                    rules: [
-                      {
-                        required: true,
-                        message: getLabels('required_email', `titleCase`),
-                      },
-                      {
-                        type: 'email',
-                        message: getLabels('not_valid_email', `sentenceCase`),
-                      },
-                    ],
-                  },
-                ]"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <a-form-item :label="getLabels('phone_number', `titleCase`)">
-              <q-input
-                v-decorator="[
-                  'phone',
-                  {
-                    initialValue: phone,
-                    rules: [
-                      {
-                        required: true,
-                        message: getLabels('required_phone'),
-                      },
-                    ],
-                  },
-                ]"
-                outlined
-                dense
-                mask="################"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
-            <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
-              <a-select
-                v-decorator="[
-                  'purpose',
-                  { initialValue: purpose, rules: [{ required: true }] },
-                ]"
-              >
-                <a-select-option
-                  v-for="item in FilterPurposeofStay"
-                  :key="item.setupvalue"
-                  :value="item.setupvalue"
-                  >{{
-                    getLabels(item.setupvalue.toLowerCase(), "titleCase")
-                  }}</a-select-option
-                >
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <a-form-item :label="getLabels('nationality', `titleCase`)">
-              <a-select
-                @focus="autoScrollNation"
-                v-decorator="[
-                  'nationality',
-                  {
-                    initialValue: currDataPrepare['guest-doc-nation'],
-                    rules: [{ required: true }],
-                  },
-                ]"
-                @change="Nationality"
-              >
-                <a-select-option
-                  v-for="item in FilterCountry"
-                  :key="item['descr']"
-                  :value="item['descr']"
-                  >{{ item.setupvalue }}</a-select-option
-                >
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <a-form-item
-              :label="getLabels('country_of_residence', `titleCase`)"
-            >
-              <a-select
-                @focus="autoScrollCountry"
-                @change="handleChangeCountry"
-                v-decorator="[
-                  'country',
-                  {
-                    initialValue: currDataPrepare['guest-country'],
-                    rules: [{ required: true }],
-                  },
-                ]"
-              >
-                <a-select-option
-                  v-for="item in FilterCountry"
-                  :key="item['descr']"
-                  :value="item['descr']"
-                  >{{ item.setupvalue }}</a-select-option
-                >
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-            <div
-              v-if="
-                country === 'INA' ||
-                country === 'ina' ||
-                country === '' ||
-                country === ' '
+          </p>
+          <p>
+            <!-- <strong>{{ this.currDataPrepare }}</strong> -->
+            <a-tag color="green" style="font-weight: normal !important">{{
+              this.currDataPrepare["argt-code"]
+            }}</a-tag>
+          </p>
+          <p>
+            <q-chip
+              color="primary"
+              clickable
+              square
+              style="
+                background: white !important;
+                color: #262728 !important;
+                font-size: 0.6rem !important;
+                border: 1px solid gray;
               "
+              v-if="this.currDataPrepare['rmshare'].length > 0"
             >
-              <a-form-item :label="getLabels('region', `titleCase`)">
+              {{ getLabels("mci_show", "titleCase") }}
+              <q-menu>
+                <q-banner>
+                  <template v-slot:avatar>
+                    <q-icon name="supervisor_account" color="primary" />
+                  </template>
+                  <p
+                    v-for="rmShare in this.currDataPrepare['rmshare']"
+                    :key="rmShare"
+                    style="margin: 0 !important; text-size: 12px"
+                  >
+                    {{ rmShare }}
+                  </p>
+                </q-banner>
+              </q-menu>
+            </q-chip>
+          </p>
+        </div>
+      </div>
+      <q-separator inset />
+      <div>
+        <a-form layout="vertical" :form="form" @submit="handleSubmit">
+          <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
+            <a-card class="header-card">
+              <a-row>
+                <a-col :span="23" :xl="23" :xs="23">
+                  <p class="header-group">
+                    {{ getLabels("arrival", `titleCase`) }}
+                  </p>
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-row>
+          <a-row class="ml-3" :gutter="16">
+            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
+              <a-form-item
+                layout="vertical"
+                :label="getLabels('eta', `titleCase`)"
+              >
+                <q-input
+                  v-model="hour"
+                  class="inputTime"
+                  @click="$refs.qDateProxy.show()"
+                  outlined
+                  dense
+                  readonly
+                >
+                  <template v-slot:append>
+                    <q-icon name="schedule" class="cursor_pointer">
+                      <q-popup-proxy
+                        ref="qDateProxy"
+                        transition-show="scale"
+                        transition-hide="scale"
+                      >
+                        <q-time
+                          v-model="hour"
+                          mask="HH:mm"
+                          :minute-options="[0, 30]"
+                          format24h
+                          @input="$refs.qDateProxy.hide()"
+                        >
+                        </q-time>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </a-form-item>
+            </a-col>
+            <a-col
+              :span="4"
+              :xl="6"
+              :lg="5"
+              :md="6"
+              :xs="24"
+              v-show="showPickupRequest"
+            >
+              <a-form-item :label="getLabels('request', `titleCase`)">
+                <a-checkbox :checked="showPrice" v-model="showPrice">{{
+                  getLabels("pick_req", `titleCase`)
+                }}</a-checkbox>
+              </a-form-item>
+            </a-col>
+            <a-col
+              :span="4"
+              :xl="4"
+              :lg="5"
+              :md="5"
+              :xs="24"
+              v-show="showPickupRequest"
+            >
+              <a-form-item :label="getLabels('price', 'titleCase')">
+                <label v-decorator="['currency', { initialValue: money }]">
+                  {{ nilai === 3 ? "" : currency }}
+                  {{
+                    nilai === 3
+                      ? " "
+                      : `${money}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " "
+                  }}
+                </label>
+                <span>/ {{ per }}</span>
+              </a-form-item>
+            </a-col>
+            <a-col
+              v-show="showPrice && showPickupRequest"
+              :span="8"
+              :xl="8"
+              :lg="8"
+              :md="7"
+              :xs="24"
+            >
+              <a-form-item :label="getLabels('pick_detail', 'titleCase')">
+                <a-input
+                  class="ant-input-h"
+                  v-decorator="[
+                    'flight',
+                    { rules: [{ required: showPrice == true ? true : false }] },
+                  ]"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="16">
+            <a-col>
+              <a-form-item :label="getLabels('room_pref', 'titleCase')">
+                <a-radio-group
+                  v-model="room"
+                  name="radioGroup"
+                  v-show="showSmoking"
+                  @change="Room"
+                >
+                  <a-radio value="NonSmoking">
+                    <span class="font-weight-normal">
+                      {{ getLabels("non_smoking", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                  <a-radio value="Smoking">
+                    <span class="font-weight-normal">
+                      {{ getLabels("smoking", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label>
+                <a-radio-group
+                  v-model="floor"
+                  name="radioGroup"
+                  v-show="showFloor"
+                  @change="Floor"
+                >
+                  <a-radio value="LowerFloor">
+                    <span class="font-weight-normal">
+                      {{ getLabels("lower_floor", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                  <a-radio value="HigherFloor">
+                    <span class="font-weight-normal">
+                      {{ getLabels("higher_floor", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label>
+                <a-radio-group
+                  name="radioGroup"
+                  v-model="bed"
+                  v-show="showBed"
+                  @change="Bed"
+                >
+                  <a-radio value="OneBigBed">
+                    <span class="font-weight-normal">
+                      {{ getLabels("one_big_bed", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                  <a-radio value="TwoSingleBeds">
+                    <span class="font-weight-normal">
+                      {{ getLabels("two_single_beds", `sentenceCase`) }}
+                    </span>
+                  </a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
+              <a-form-item :label="getLabels('special_request', `titleCase`)">
+                <a-textarea :rows="4" :max-length="max" v-model="text" />
+              </a-form-item>
+            </a-col>
+            <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
+              <span v-text="text.length + '/' + max"></span>
+            </a-col>
+          </a-row>
+
+          <a-row class="ml-4 mr-3 mb-3">
+            <a-card class="header-card">
+              <a-row>
+                <a-col :span="23" :xl="23" :xs="23">
+                  <p class="header-group">
+                    {{ getLabels("guest_detail", `titleCase`) }}
+                  </p>
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col
+              v-if="email != ''"
+              :span="5"
+              :xl="5"
+              :lg="7"
+              :md="10"
+              :xs="24"
+            >
+              <a-form-item :label="getLabels('email', `titleCase`)">
+                <a-input
+                  class="ant-input-h"
+                  v-decorator="[
+                    'email',
+                    {
+                      initialValue: email,
+                      rules: [{ message: 'Please input your email' }],
+                    },
+                  ]"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <span>{{ currDataPrepare["guest-email"] }}</span>
+              <a-form-item :label="getLabels('email', `titleCase`)">
+                <a-input
+                  class="ant-input-h"
+                  v-decorator="[
+                    'email',
+                    {
+                      initialValue: email,
+                      rules: [
+                        {
+                          required: true,
+                          message: getLabels('required_email', `titleCase`),
+                        },
+                        {
+                          type: 'email',
+                          message: getLabels('not_valid_email', `sentenceCase`),
+                        },
+                      ],
+                    },
+                  ]"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <a-form-item :label="getLabels('phone_number', `titleCase`)">
+                <q-input
+                  v-decorator="[
+                    'phone',
+                    {
+                      initialValue: phone,
+                      rules: [
+                        {
+                          required: true,
+                          message: getLabels('required_phone'),
+                        },
+                      ],
+                    },
+                  ]"
+                  outlined
+                  dense
+                  mask="################"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
+              <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
                 <a-select
                   v-decorator="[
-                    'region',
+                    'purpose',
+                    { initialValue: purpose, rules: [{ required: true }] },
+                  ]"
+                >
+                  <a-select-option
+                    v-for="item in FilterPurposeofStay"
+                    :key="item.setupvalue"
+                    :value="item.setupvalue"
+                    >{{
+                      getLabels(item.setupvalue.toLowerCase(), "titleCase")
+                    }}</a-select-option
+                  >
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <a-form-item :label="getLabels('nationality', `titleCase`)">
+                <a-select
+                  @focus="autoScrollNation"
+                  v-decorator="[
+                    'nationality',
                     {
-                      initialValue: currDataPrepare['guest-prov'],
+                      initialValue: currDataPrepare['guest-doc-nation'],
                       rules: [{ required: true }],
                     },
                   ]"
-                  @change="handleChangeRegion"
+                  @change="Nationality"
                 >
                   <a-select-option
-                    v-for="item in filteredProvince"
+                    v-for="item in FilterCountry"
                     :key="item['descr']"
                     :value="item['descr']"
                     >{{ item.setupvalue }}</a-select-option
                   >
                 </a-select>
               </a-form-item>
-            </div>
-            <!--<div v-else>
+            </a-col>
+          </a-row>
+
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <a-form-item
+                :label="getLabels('country_of_residence', `titleCase`)"
+              >
+                <a-select
+                  @focus="autoScrollCountry"
+                  @change="handleChangeCountry"
+                  v-decorator="[
+                    'country',
+                    {
+                      initialValue: currDataPrepare['guest-country'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
+                >
+                  <a-select-option
+                    v-for="item in FilterCountry"
+                    :key="item['descr']"
+                    :value="item['descr']"
+                    >{{ item.setupvalue }}</a-select-option
+                  >
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+              <div
+                v-if="
+                  country === 'INA' ||
+                  country === 'ina' ||
+                  country === '' ||
+                  country === ' '
+                "
+              >
+                <a-form-item :label="getLabels('region', `titleCase`)">
+                  <a-select
+                    v-decorator="[
+                      'region',
+                      {
+                        initialValue: currDataPrepare['guest-prov'],
+                        rules: [{ required: true }],
+                      },
+                    ]"
+                    @change="handleChangeRegion"
+                  >
+                    <a-select-option
+                      v-for="item in filteredProvince"
+                      :key="item['descr']"
+                      :value="item['descr']"
+                      >{{ item.setupvalue }}</a-select-option
+                    >
+                  </a-select>
+                </a-form-item>
+              </div>
+              <!--<div v-else>
                 <a-form-item :label="getLabels('state', `titleCase`)">
                   <a-input
                     class="ant-input-h"
@@ -448,50 +442,53 @@
                   />
                 </a-form-item>
               </div>-->
-          </a-col>
-        </a-row>
+            </a-col>
+          </a-row>
 
-        <!-- Address -->
-        <a-row class="ml-3 mb-3" :gutter="[16, 8]">
-          <a-col :span="1" :xl="1" :xs="2">
-            <a-checkbox v-model="agree" />
-          </a-col>
-          <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
-            {{ getLabels("pci_tc", `sentenceCase`) }}
-            <a @click="showModalTerm">{{ getLabels("t_c", `sentenceCase`) }}</a>
-            {{ hotelname }}.
-          </a-col>
-          <a-modal
-            :title="getLabels('t_c', `titleCase`)"
-            :visible="visibleTerm"
-            :confirm-loading="confirmLoadingTerm"
-            :closable="false"
-          >
-            <template slot="footer">
-              <a-button key="submit" type="primary" @click="handleOkTerm">{{
-                getLabels("close", `sentenceCase`)
-              }}</a-button>
-            </template>
-            <p>{{ term }}</p>
-          </a-modal>
-        </a-row>
-        <a-row class="ml-3" :gutter="[16, 8]">
-          <a-col :span="4" :xl="4" :lg="7" :xs="24">
-            <a-form-item>
-              <a-button
-                :xl="12"
-                class="font-weight-bold mt-3"
-                type="primary"
-                block
-                size="large"
-                :disabled="!agree"
-                html-type="submit"
-                >{{ getLabels("ci_now", `titleCase`) }}</a-button
-              >
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
+          <!-- Address -->
+          <a-row class="ml-3 mb-3" :gutter="[16, 8]">
+            <a-col :span="1" :xl="1" :xs="2">
+              <a-checkbox v-model="agree" />
+            </a-col>
+            <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
+              {{ getLabels("pci_tc", `sentenceCase`) }}
+              <a @click="showModalTerm">{{
+                getLabels("t_c", `sentenceCase`)
+              }}</a>
+              {{ hotelname }}.
+            </a-col>
+            <a-modal
+              :title="getLabels('t_c', `titleCase`)"
+              :visible="visibleTerm"
+              :confirm-loading="confirmLoadingTerm"
+              :closable="false"
+            >
+              <template slot="footer">
+                <a-button key="submit" type="primary" @click="handleOkTerm">{{
+                  getLabels("close", `sentenceCase`)
+                }}</a-button>
+              </template>
+              <p>{{ term }}</p>
+            </a-modal>
+          </a-row>
+          <a-row class="ml-3" :gutter="[16, 8]">
+            <a-col :span="4" :xl="4" :lg="7" :xs="24">
+              <a-form-item>
+                <a-button
+                  :xl="12"
+                  class="font-weight-bold mt-3"
+                  type="primary"
+                  block
+                  size="large"
+                  :disabled="!agree"
+                  html-type="submit"
+                  >{{ getLabels("ci_now", `titleCase`) }}</a-button
+                >
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
     </div>
   </div>
 </template>
@@ -625,10 +622,20 @@ export default {
       hotelLogo: "",
       id: [],
       defaultCountry: "",
+      textOta: {
+        color: "",
+        backgroundColor: "transparent",
+      },
+      ota: {
+        backgroundColor: "",
+        width: "100%",
+        // height: "100vh",
+        overflowX: "hidden",
+        textAlign: "center",
+      },
     };
   },
   created() {
-    // console.log(this.$route.params);
     if (sessionStorage.getItem("PCI") == "true") {
       window.open(
         JSON.parse(sessionStorage.getItem("saveSetting")).location,
@@ -659,6 +666,8 @@ export default {
     this.langID = this.$route.params.Param["langID"];
     this.checkInTIme = this.$route.params.Param["checkInTIme"];
     this.hotelLogo = this.$route.params.Param["hotelLogo"];
+    this.textOta.color = this.$route.params.Param["Font"];
+    this.ota.backgroundColor = this.$route.params.Param["Background"];
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
