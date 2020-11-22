@@ -1136,7 +1136,14 @@ export default {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
         //this.callbackParam = location.search.substring(1);
-        location.search
+        let parameter = decodeURIComponent(location.search.substring(1));
+        parameter = parameter.replaceAll(" ", "+");
+
+        const passphrase = "System@1016";
+        const bytes = CryptoJS.AES.decrypt(parameter, passphrase);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        originalText
           .split("&")
           .toString()
           .substr(1)
