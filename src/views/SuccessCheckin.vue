@@ -149,7 +149,7 @@
             style="display: flex; justify-content: center"
           >
             <img
-              src="../assets/char7.svg"
+              src="../assets/FrontDesk.svg"
               style="height: 250px"
               v-if="roomReady"
             />
