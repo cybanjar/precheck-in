@@ -12,6 +12,20 @@
       :confirm-loading="confirmLoading"
       :closable="false"
     >
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 1rem;
+        "
+      >
+        <img
+          :src="require('@/assets/vhpkiosk.png')"
+          alt="logovhpkiosk"
+          width="200"
+        />
+      </div>
       <template slot="footer">
         <a-button
           key="submit"
@@ -205,20 +219,25 @@
 
         <q-separator />
 
-        <q-card-actions align="right">
-          <q-btn
-            v-if="stepTerm > 1"
-            flat
-            color="primary"
-            @click="kurang()"
-            label="Back"
-          />
-          <q-btn :label="weblabel.disagree" color="red" @click="disagree" />
-          <q-btn
-            :label="stepTerm === 2 ? weblabel.agree : 'Continue'"
-            color="primary"
-            @click="handleOk"
-          />
+        <q-card-actions style="display: flex; justify-content: space-between">
+          <div>
+            <q-btn
+              v-if="stepTerm > 1"
+              flat
+              color="primary"
+              @click="kurang()"
+              label="Back"
+            />
+          </div>
+          <div>
+            <q-btn
+              :label="weblabel.disagree"
+              color="red"
+              @click="disagree"
+              style="margin-right: 5px"
+            />
+            <q-btn :label="weblabel.agree" color="primary" @click="handleOk" />
+          </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -237,55 +256,94 @@
           <div class="col-4 label-guestname">{{ weblabel.guestName }}</div>
           <h6 class="font-weight-bold">{{ currDataPrepare["gast"] }}</h6>
         </div>
-        <div class="mt-3 col-md-2 col-xs-5 col-sm-6">
-          <p>{{ weblabel.bookCode }}</p>
-          <p>{{ weblabel.stayPeriod }}</p>
-          <p>{{ weblabel.roomNumber }}</p>
-          <p>{{ weblabel.roomShare }}</p>
-        </div>
-        <div class="mt-3 col-md-2 col-xs-6 col-sm-6">
-          <p>
-            <strong>{{ this.currDataPrepare.resnr }}</strong>
-          </p>
-          <p>
-            <strong>{{ weblabel.ciDate }} - {{ weblabel.coDate }}</strong>
-          </p>
-          <p>
-            <strong>{{ this.currDataPrepare.zinr }}</strong>
-            <!-- <a-tag color="green" style="font-weight: normal !important">{{
-              this.currDataPrepare["rmtype-str"]
-            }}</a-tag> -->
-          </p>
-          <p>
-            <q-chip
-              color="primary"
-              clickable
-              square
-              style="
-                background: white !important;
-                color: #262728 !important;
-                font-size: 0.6rem !important;
-                border: 1px solid gray;
-              "
-              v-if="this.currDataPrepare['rmshare'].length > 0"
-            >
-              {{ weblabel.mciShow }}
-              <q-menu>
-                <q-banner>
-                  <template v-slot:avatar>
-                    <q-icon name="supervisor_account" color="primary" />
-                  </template>
-                  <p
-                    v-for="rmShare in this.currDataPrepare['rmshare']"
-                    :key="rmShare"
-                    style="margin: 0 !important; text-size: 12px"
-                  >
-                    {{ rmShare }}
-                  </p>
-                </q-banner>
-              </q-menu>
-            </q-chip>
-          </p>
+        <div class="mt-3 col-md-5 col-xs-12 col-sm-6">
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.bookCode }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <strong>{{ this.currDataPrepare.resnr }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.stayPeriod }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <strong>{{ weblabel.ciDate }} - {{ weblabel.coDate }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.roomNumber }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <span style="margin-right: 3px !important"
+                  ><strong>{{ currDataPrepare.zinr }}</strong></span
+                >
+                <a-tag
+                  v-if="isMobile"
+                  color="green"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
+                  >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
+                >
+                <a-tag
+                  v-else
+                  color="green"
+                  style="
+                    font-weight: normal !important;
+                    margin-left: 0 !important;
+                  "
+                  >{{ this.currDataPrepare["rmtype-str"] }}</a-tag
+                >
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p>{{ weblabel.roomShare }}</p>
+            </div>
+            <div class="col-8">
+              <p>
+                <q-chip
+                  color="primary"
+                  clickable
+                  square
+                  style="
+                    background: white !important;
+                    color: #262728 !important;
+                    font-size: 0.6rem !important;
+                    border: 1px solid gray;
+                  "
+                  v-if="this.currDataPrepare['rmshare'].length > 0"
+                >
+                  {{ weblabel.mciShow }}
+                  <q-menu>
+                    <q-banner>
+                      <template v-slot:avatar>
+                        <q-icon name="supervisor_account" color="primary" />
+                      </template>
+                      <p
+                        v-for="rmShare in this.currDataPrepare['rmshare']"
+                        :key="rmShare"
+                        style="margin: 0 !important; text-size: 12px"
+                      >
+                        {{ rmShare }}
+                      </p>
+                    </q-banner>
+                  </q-menu>
+                </q-chip>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <q-separator inset />
@@ -576,36 +634,10 @@
                           </strong>
                         </h2>
                       </a-form-item>
-                      <div>
-                        <a-form-item
-                          label="Deposit Payment Response"
-                          style="margin-top: 10px"
-                        >
-                          <a-select
-                            v-model="errorCode"
-                            default-value="0000"
-                            style="width: 180px"
-                            @change="handleChange"
-                          >
-                            <a-select-option value="0000">
-                              Success
-                            </a-select-option>
-                            <a-select-option value="1004">
-                              Connection timeout
-                            </a-select-option>
-                            <a-select-option value="9002">
-                              Server is busy
-                            </a-select-option>
-                            <a-select-option value="8021">
-                              Card authorization error
-                            </a-select-option>
-                          </a-select>
-                        </a-form-item>
-                      </div>
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
-                        <q-btn
+                        <!-- <q-btn
                           class="font-weight-bold mt-3 mr-3"
                           color="primary"
                           :disabled="paid || paymentLoading"
@@ -614,11 +646,112 @@
                           {{ weblabel.pay }}
                           <q-spinner
                             v-if="paymentLoading"
-                            style="margin-left: 10px"
+                            style="margin-left: 10px;"
                             color="primary"
                             size="12px"
                           />
-                        </q-btn>
+                        </q-btn> -->
+                        <q-form
+                          action="https://staging.doku.com/Suite/Receive"
+                          method="post"
+                          ref="formDoku"
+                        >
+                          <q-input
+                            name="AMOUNT"
+                            :value="dokuData.amount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="BASKET"
+                            :value="dokuData.basket"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CHAINMERCHANT"
+                            :value="dokuData.chainMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="CURRENCY"
+                            :value="dokuData.currency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="EMAIL"
+                            :value="dokuData.email"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MALLID"
+                            :value="dokuData.mallid"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="NAME"
+                            :value="dokuData.name"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTTYPE"
+                            :value="dokuData.paymentType"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASEAMOUNT"
+                            :value="dokuData.purchaseAmount"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PURCHASECURRENCY"
+                            :value="dokuData.purchaseCurrency"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="REQUESTDATETIME"
+                            :value="dokuData.requestDatetime"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="SESSIONID"
+                            :value="dokuData.sessionID"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="TRANSIDMERCHANT"
+                            :value="dokuData.transIDMerchant"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="WORDS"
+                            :value="dokuData.words"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="PAYMENTCHANNEL"
+                            :value="dokuData.paymentChannel"
+                            style="display: none"
+                          />
+                          <q-input
+                            name="MOBILEPHONE"
+                            :value="dokuData.mobilePhone"
+                            style="display: none"
+                          />
+                          <q-btn
+                            class="font-weight-bold mt-3 mr-3"
+                            type="submit"
+                            color="primary"
+                            @click="handleDokuPayment"
+                            :disabled="paid || paymentLoading"
+                          >
+                            {{ weblabel.pay }}
+                            <q-spinner
+                              v-if="paymentLoading"
+                              style="margin-left: 10px"
+                              color="primary"
+                              size="12px"
+                            />
+                          </q-btn>
+                        </q-form>
                       </div>
                     </a-col>
                   </a-row>
@@ -887,6 +1020,25 @@ export default {
       errorCode: "",
       defaultCountry: "",
       loadingConfirmEmail: false,
+      dokuData: {
+        amount: "",
+        sharedKey: "rpT4jeLsWHHK",
+        mallid: "11133679",
+        basket: "",
+        chainMerchant: "NA",
+        email: "",
+        name: "",
+        paymentType: "AUTHORIZATION",
+        purchaseAmount: "",
+        purchaseCurrency: "360",
+        currency: "360",
+        requestDatetime: "",
+        sessionID: "",
+        transIDMerchant: "",
+        words: "",
+        paymentChannel: "15",
+        mobilePhone: "",
+      },
       weblabel: {
         // webla1
         information: "",
@@ -937,6 +1089,7 @@ export default {
       rmShareTooltip: true,
       afterPayment: false,
       termSMOOKING: "",
+      conditionSMOOKING: false,
       textOta: {
         color: "",
         backgroundColor: "transparent",
@@ -952,6 +1105,7 @@ export default {
       iconOta: {
         color: "",
       },
+      isMobile: false,
     };
   },
   watch: {
@@ -964,12 +1118,32 @@ export default {
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
     // console.log("GuestData", this.currDataPrepare);
+    // Detect Mobile Device
+    if (
+      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
+        navigator.userAgent
+      ) ||
+      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| ||a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+        navigator.userAgent.substr(0, 4)
+      )
+    ) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
       if (location.search.substring(1) != undefined) {
         // For Handling Payment Callback
-        this.callbackParam = location.search.substring(1);
-        location.search
+        //this.callbackParam = location.search.substring(1);
+        let parameter = decodeURIComponent(location.search.substring(1));
+        parameter = parameter.replaceAll(" ", "+");
+
+        const passphrase = "System@1016";
+        const bytes = CryptoJS.AES.decrypt(parameter, passphrase);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        originalText
           .split("&")
           .toString()
           .substr(1)
@@ -981,7 +1155,10 @@ export default {
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(this.tempParam, { [objProperty]: objValue });
+            this.callbackParam += `&${objProperty}=${objValue}`;
           });
+        this.callbackParam = this.callbackParam.substring(1);
+        // console.log(this.tempParam,this.callbackParam);
       }
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
@@ -1007,7 +1184,6 @@ export default {
     this.ota.backgroundColor = this.currDataSetting["BackgroundColor"];
     this.iconOta.color = this.currDataSetting["BackgroundColor"] + "!important";
     colors.setBrand("primary", this.currDataSetting["BackgroundColor"]);
-    console.log(colors);
     this.gambar = this.currDataSetting["hotelImage"];
     this.hotelname = this.currDataSetting["hotelName"];
     this.hotelLogo = this.currDataSetting["hotelLogo"];
@@ -1030,12 +1206,15 @@ export default {
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
+        this.policy = this.currDataSetting["policy"];
         break;
       case "idn":
         this.programLabel = "program-label2";
+        this.policy = this.currDataSetting["policeTrans"];
         break;
       default:
         this.programLabel = "program-label1";
+        this.policy = this.currDataSetting["policy"];
         break;
     }
     this.hotelEndpoint = this.currDataSetting["hotelEndpoint"];
@@ -1070,16 +1249,74 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
+    // DOKU First Param
+    this.dokuData.amount = `${this.Deposit}.00`;
+    this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
+    this.dokuData.email = this.currDataPrepare["guest-email"];
+    this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
+    this.dokuData.purchaseAmount = `${this.Deposit}.00`;
+    this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
     // Handling Callback Payment and Save to Database
-    if (this.tempParam.resultCd != null) {
+    if (this.tempParam.RESPONSECODE != null) {
       this.afterPayment = true;
+      /** Handle DOKU */
+      if (this.tempParam.RESPONSECODE == "0000") {
+        this.currDataPrepare["preAuth-flag"] = true;
+        // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/resCI", {
+              json: {
+                request: {
+                  rsvNumber: this.currDataPrepare["resnr"],
+                  rsvlineNumber: this.currDataPrepare["reslinnr"],
+                  userInit: "MC",
+                  newRoomno: "",
+                  purposeOfStay: "",
+                  email: "",
+                  guestPhnumber: "",
+                  guestNation: "",
+                  guestCountry: "",
+                  guestRegion: "",
+                  base64image: "",
+                  vehicleNumber: "",
+                  preAuthString: this.callbackParam,
+                },
+              },
+            })
+            .json();
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
+        })();
+      } else {
+        this.paidNetworkError = false;
+        this.paidVerError = true;
+      }
+      /** Handle Nicepay */
+      /*
       if (this.errorCode == "1004") {
-        //this.tempParam.resultCd.substring(0, 1)
-        /* Payment Gateway Network Error */
+        //this.tempParam.resultCd.substring(0, 1)        
         this.paidNetworkError = true;
         this.paidVerError = false;
-      } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-        /* Payment Gateway Network Error */
+      } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
         this.paidNetworkError = true;
         this.paidVerError = false;
       } else {
@@ -1128,8 +1365,8 @@ export default {
           }
         })();
       }
+      */
     }
-
     /* Handle Stepper */
     // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
     if (this.precheckin) {
@@ -1188,7 +1425,6 @@ export default {
         "PurposeofStay"
       ];
     }
-
     /* Handling Labeling */
     this.weblabel.information = this.findLabel("information", "titleCase");
     this.weblabel.roomShare = this.findLabel("room_share", "titleCase");
@@ -1361,15 +1597,67 @@ export default {
     resendPreauth() {
       // console.log('resendPreauth');
       this.preauthModal = false;
-      if (this.tempParam.resultCd != null) {
+      if (this.tempParam.RESPONSECODE != null) {
         this.afterPayment = true;
+        /** Handle DOKU */
+        // console.log('statusCode',this.tempParam.statuscode);
+        if (this.tempParam.RESPONSECODE == "0000") {
+          this.currDataPrepare["preAuth-flag"] = true;
+          (async () => {
+            // console.log('CallBack',this.callbackParam);
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare["resnr"],
+                    rsvlineNumber: this.currDataPrepare["reslinnr"],
+                    userInit: "MC",
+                    newRoomno: "",
+                    purposeOfStay: "",
+                    email: "",
+                    guestPhnumber: "",
+                    guestNation: "",
+                    guestCountry: "",
+                    guestRegion: "",
+                    base64image: "",
+                    vehicleNumber: "",
+                    preAuthString: this.callbackParam,
+                  },
+                },
+              })
+              .json();
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+              // console.log(this.currDataPrepare);
+              // Session Storage Set
+              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
+          })();
+        } else {
+          this.paidNetworkError = false;
+          this.paidVerError = true;
+        }
+        /** Handle Nicepay */
+        /*
         if (this.errorCode == "1004") {
-          //this.tempParam.resultCd.substring(0, 1)
-          /* Payment Gateway Network Error */
+          //this.tempParam.resultCd.substring(0, 1)        
           this.paidNetworkError = true;
           this.paidVerError = false;
-        } else if (this.errorCode == "9002" || this.errorCode == "8021") {
-          /* Payment Gateway Network Error */
+        } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
           this.paidNetworkError = true;
           this.paidVerError = false;
         } else {
@@ -1406,6 +1694,7 @@ export default {
               this.paidVerError = false;
               // console.log(this.currDataPrepare);
               // Session Storage Set
+              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
               sessionStorage.setItem(
                 "guestData",
                 JSON.stringify(this.currDataPrepare)
@@ -1417,6 +1706,7 @@ export default {
             }
           })();
         }
+        */
       }
     },
     async getFile() {
@@ -1560,22 +1850,37 @@ export default {
           break;
       }
     },
-    payDepositDoku() {
-      const MALLID = 1113679; // Set From Database
-      const CHAINMERCHANT = "NA"; // Set From Database
-      const AMOUNT = this.Deposit; // Set From Deposit Other Amount
-      const PURCHASEAMOUNT = this.Deposit; // Set From Deposit Other Amount
-      const TRANSIDMERCHANT = "INVOICE-TEST-157196"; // Set From Database
-      const PAYMENTTYPE = "AUTHORIZATION"; // Authorization for CardVer
-      const SHAREDKEY = "rpT4jeLsWHHK"; // Set From Database
-      const CURRENCY = "360"; // for IDN ISO 3166; Refer to : https://datahub.io/core/country-codes#data
-      const WORDS = CryptoJS.SHA1(
-        AMOUNT.toString() + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY
-      ); // sha1(AMOUNT + MALLID + SHAREDKEY + TRANSIDMERCHANT + CURRENCY);
-      const todayPayment = new Date();
-      // console.log(todayPayment);
+    async handleDokuPayment() {
+      await this.$nextTick();
+      sessionStorage.setItem("guestData", JSON.stringify(this.currDataPrepare));
+      sessionStorage.setItem("settings", JSON.stringify(this.currDataSetting));
+      sessionStorage.setItem("errorCode", JSON.stringify(this.errorCode));
+      // Get Latest Data
+      this.dokuData.amount = `${this.Deposit}.00`;
+      this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
+      this.dokuData.email = this.currDataPrepare["guest-email"];
+      this.dokuData.name = this.currDataPrepare["gast"].replace(/,/g, "");
+      this.dokuData.purchaseAmount = `${this.Deposit}.00`;
+      this.dokuData.mobilePhone = this.currDataPrepare["guest-phnumber"];
+      this.dokuData.requestDatetime = moment().format("YYYYMMDDHHmmss");
+      this.dokuData.transIDMerchant =
+        this.pad(this.currDataPrepare.resnr, 7) +
+        moment().format("DDMMYYYYHHmmss");
+      this.dokuData.words = CryptoJS.SHA1(
+        `${this.dokuData.amount}${this.dokuData.mallid}${this.dokuData.sharedKey}${this.dokuData.transIDMerchant}`
+      ).toString();
+      this.dokuData.sessionID = CryptoJS.SHA1(
+        this.dokuData.transIDMerchant
+      ).toString();
+      this.$refs.formDoku.submit();
+    },
+    pad(num, size) {
+      num = num.toString();
+      while (num.length < size) num = "0" + num;
+      return num;
     },
     payDeposit() {
+      // NICEPAY
       // console.log('payDeposit');
       this.paymentLoading = true;
       async function getIP() {
@@ -2028,7 +2333,7 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      console.log(this.stepTerm);
+      // console.log(this.stepTerm);
       if (this.stepTerm < 2) {
         this.stepTerm = this.stepTerm + 1;
       } else {

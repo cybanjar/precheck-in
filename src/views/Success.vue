@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center" style="margin-top: 10px;">
+      <div class="text-center" style="margin-top: 10px">
         <canvas id="canvas" v-show="flagKiosk"></canvas>
         <p>
           {{ getLabels("book_code", `titleCase`) }} :

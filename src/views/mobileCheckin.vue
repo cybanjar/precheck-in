@@ -59,7 +59,7 @@
         <h4
           class="text-uppercase font-weight-bold q-mt-md q-mb-md mci-size titlecolor"
         >
-          Online Check-in
+          {{ weblabel.vhpSelfCheckIn }}
         </h4>
         <h5 class="titlecolor">
           <b>{{ weblabel.findRsv }}</b>
@@ -616,6 +616,7 @@ export default {
       },
       weblabel: {
         findRsv: "",
+        vhpSelfCheckIn: "",
         chooseOption: "",
         bookCode: "",
         cancel: "",
@@ -643,6 +644,8 @@ export default {
       isMobile: false,
       termSMOOKING: "",
       policy: "",
+      policeTrans: "",
+      kiosCheckin: false,
     };
   },
   created() {
@@ -790,6 +793,7 @@ export default {
           },
         })
         .json();
+      // console.log('setup',setup);
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
@@ -821,6 +825,8 @@ export default {
         return item.number1 === 6 && item.number2 === 1;
       });
       this.termENG = tempTermENG[0]["setupvalue"];
+      // console.log('termEng di atas',this.termENG, tempTermENG);
+
       const tempTermIDN = this.tempsetup.filter((item, index) => {
         // Term IDN
         return item.number1 === 6 && item.number2 === 2;
@@ -897,6 +903,11 @@ export default {
         return item.number1 === 7 && item.number2 === 1;
       });
       this.hotelImage = tempImage[0]["setupvalue"];
+      const tempKiosCheckin = this.tempsetup.filter((item, index) => {
+        //  FLAG KIOSK CHECKIN USAGE
+        return item.number1 === 8 && item.number2 === 10;
+      });
+      this.kiosCheckin = tempKiosCheckin[0]["setupflag"];
       const tempLogo = this.tempsetup.filter((item, index) => {
         //  Logo Hotel
         return item.number1 === 7 && item.number2 === 6;
@@ -935,15 +946,13 @@ export default {
         return item.number1 === 9 && item.number2 === 8;
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
-
       this.policy = privacyPolicy.responses["0"].policy;
-
+      this.policeTrans = privacyPolicy.responses["0"].policeTrans;
       const tempSMOOKING = this.tempsetup.filter((item, index) => {
         //  condition SMOOKING
         return item.number1 === 6 && item.number2 === 3;
       });
       this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
-
       const tempServer = this.tempsetup.filter((item, index) => {
         //  Server Time
         return (
@@ -989,7 +998,10 @@ export default {
       obj["defaultCountry"] = this.defaultCountry;
       obj["termSMOOKING"] = this.termSMOOKING;
       obj["policy"] = this.policy;
+      obj["policeTrans"] = this.policeTrans;
+      obj["kiosCheckin"] = this.kiosCheckin;
       this.setup.push(obj);
+      // console.log(this.setup);
       //End Request Set Up
       // Hotel System Date
       const systemDateObj = this.tempsetup.filter((item, index) => {
@@ -1085,6 +1097,10 @@ export default {
       /* Handling Locale */
       /* Set Variable Label */
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.vhpSelfCheckIn = this.findLabel(
+        "vhp_self_checkIn",
+        "titleCase"
+      );
       this.weblabel.chooseOption = this.findLabel(
         "choose_option",
         "sentenceCase"
@@ -1172,6 +1188,10 @@ export default {
     resetLabel() {
       // console.log('resetLabel');
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+      this.weblabel.vhpSelfCheckIn = this.findLabel(
+        "vhp_self_checkIn",
+        "titleCase"
+      );
       this.weblabel.chooseOption = this.findLabel(
         "choose_option",
         "sentenceCase"
@@ -1550,7 +1570,7 @@ export default {
                         },
                       });
                     } else {
-                      this.handleSingleGuest(rsvFix[0]);
+                      this.handleSingleGuest(rsvFix[0], this.setup[0]);
                     }
                   }
                 } else {
@@ -1670,9 +1690,9 @@ export default {
     },
     showAnimation() {
       if (localStorage.getItem("labels") == null) {
-        this.timer = 6000;
+        this.timer = 7000;
       } else {
-        this.timer = 4000;
+        this.timer = 5000;
       }
       setTimeout(() => {
         this.loading = false;

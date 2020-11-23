@@ -45,12 +45,12 @@
       </div>
     </div>
     <div class="row justify-around bg-white self-checkin">
-      <div class="text-center">
+      <div class="text-center col-12">
         <h1 class="mt-3 text-center">
           {{ weblabel.guestList }}
         </h1>
       </div>
-      <div class="listGuest row items-center q-col-gutter-md">
+      <div class="listGuest row items-center q-col-gutter-md col-12">
         <div
           v-for="guest in guestData"
           :key="guest['gast']"
@@ -63,11 +63,11 @@
             @click="select(guest)"
           >
             <q-card-section class="row">
-              <div class="col-12 row" style="margin-bottom: 5px;">
-                <div class="col-4 label-guestname">
+              <div class="col-12 row" style="margin-bottom: 5px">
+                <div class="col-5 label-guestname">
                   {{ weblabel.guestName }}
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                   <q-chip
                     size="18px"
                     outline
@@ -105,13 +105,11 @@
                 <div class="col-4">
                   {{ weblabel.roomNumber }}
                 </div>
-                <div class="col-8 guestcard-item-text">
+                <div :class="zinrClass">
                   {{ guest["zinr"] }}
-                  <a-tag
-                    color="green"
-                    style="font-weight: normal !important;"
-                    >{{ guest["rmtype-str"] }}</a-tag
-                  >
+                  <a-tag color="green" style="font-weight: normal !important">{{
+                    guest["rmtype-str"]
+                  }}</a-tag>
                 </div>
               </div>
               <div class="row guestcard-peritem">
@@ -156,7 +154,7 @@
                         <p
                           v-for="rmShare in guest['rmshare']"
                           :key="rmShare"
-                          style="margin: 0 !important; text-size: 12px;"
+                          style="margin: 0 !important; text-size: 12px"
                         >
                           {{ rmShare }}
                         </p>
@@ -232,6 +230,7 @@ export default {
         mciConfirmStatus: "",
         statusCi: "",
         statusQueue: "",
+        statusReadyCI: "",
         notCheckedInYet: "",
         stayPeriod: "",
         guests: "",
@@ -256,6 +255,7 @@ export default {
       },
       hotelLogo: "",
       guestNameClass: "col-12 content-guestname",
+      zinrClass: "col-8 guestcard-item-text",
     };
   },
   created() {
@@ -298,11 +298,17 @@ export default {
         this.guestNameClass =
           "col-12 content-guestname content-guestname-space";
       }
+      const joinZinr = item["zinr"] + item["rmtype-str"];
+      // console.log(item["gast"], joinZinr, joinZinr.length);
+      if (joinZinr.length >= 25 && this.isMobile) {
+        this.zinrClass = "col-8 guestcard-item-text zinrMinHeight";
+      }
       Object.assign(item, { ispopup: false });
       Object.assign(item, { guestStatus: "" });
     });
     this.guestData = tempData;
     this.setup = setting;
+    // console.log(this.guestData, this.setup);
     /* Do Sorting For Guest Data */
     const guestNotMCI = [];
     const guestWaiting = [];
@@ -388,14 +394,23 @@ export default {
       "titleCase"
     );
     this.weblabel.mciShow = this.findLabel("mci_show", "titleCase");
+    this.weblabel.statusReadyCI = this.findLabel(
+      "status_ready_ci",
+      "titleCase"
+    );
   },
   methods: {
     handleStatus(item) {
+      const roomStatus = item["room-status"].split(" ")[0];
+      // console.log(item["gast"], roomStatus);
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
         return item["guestStatus"];
-      } else if (item["ifdata-sent"] == true) {
+      } else if (item["ifdata-sent"] == true && roomStatus != 0) {
         item["guestStatus"] = this.weblabel.statusQueue;
+        return item["guestStatus"];
+      } else if (item["ifdata-sent"] == true && roomStatus == 0) {
+        item["guestStatus"] = this.weblabel.statusReadyCI;
         return item["guestStatus"];
       } else {
         item["guestStatus"] = this.weblabel.notCheckedInYet;
@@ -403,11 +418,14 @@ export default {
       }
     },
     handleStatusColor(item) {
+      const roomStatus = item["room-status"].split(" ")[0];
       let returnedColor = "";
       if (item["res-status"] == "1 - Guest Already Checkin") {
         returnedColor = "teal";
-      } else if (item["ifdata-sent"] == true) {
+      } else if (item["ifdata-sent"] == true && roomStatus != 0) {
         returnedColor = "orange";
+      } else if (item["ifdata-sent"] == true && roomStatus == 0) {
+        returnedColor = "blue";
       } else {
         returnedColor = "gray";
       }
@@ -605,6 +623,7 @@ export default {
       sessionStorage.setItem("listData", JSON.stringify(this.guestData));
       sessionStorage.setItem("settings", JSON.stringify(this.setup));
       const resstatus = this.selectedData["res-status"].split(" - ");
+      const roomStatus = this.selectedData["room-status"].split(" ")[0];
       if (parseInt(resstatus[0]) == 1) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: true });
@@ -618,7 +637,8 @@ export default {
         });
       } else if (
         this.selectedData["ifdata-sent"] == true &&
-        this.selectedData["res-status"] != "1 - Guest Already Checkin"
+        this.selectedData["res-status"] != "1 - Guest Already Checkin" &&
+        roomStatus != 0
       ) {
         // Add RoomReady Variable
         Object.assign(this.selectedData, { roomReady: false });

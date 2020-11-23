@@ -279,6 +279,13 @@ export default {
         } else {
           // console.log("akan pci");
           const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+          dataGuest[0].rmshare = [];
+          if (dataGuest[0]["room-sharer"] != "") {
+            dataGuest[0].rmshare.push(dataGuest[0]["room-sharer"]);
+          }
+          if (dataGuest[0]["accompaying-guest"] != "") {
+            dataGuest[0].rmshare.push(dataGuest[0]["accompaying-guest"]);
+          }
           router.push({
             name: "Home",
             params: {
