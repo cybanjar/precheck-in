@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">
+  <div v-if="iconOta.color == '#1890ff'">
     <div
       style="
         display: flex;
@@ -527,7 +527,7 @@ export default {
       emailPhoto: "",
       memberPhoto: "",
       member: "",
-      loading: true,
+      loading: false,
       confirmLoading: false,
       hotelImage: "",
       hotelName: "",
@@ -1690,13 +1690,13 @@ export default {
     },
     showAnimation() {
       if (localStorage.getItem("labels") == null) {
-        this.timer = 7000;
+        this.timer = 2000;
       } else {
-        this.timer = 5000;
+        this.timer = 1000;
       }
       setTimeout(() => {
         this.loading = false;
-        // console.log("setTimeout is Triggered", this.timer);
+        console.log("setTimeout is Triggered", this.timer);
       }, this.timer);
     },
   },
