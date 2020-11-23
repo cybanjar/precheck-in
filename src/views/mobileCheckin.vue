@@ -644,6 +644,7 @@ export default {
       isMobile: false,
       termSMOOKING: "",
       policy: "",
+      policeTrans: "",
       kiosCheckin: false,
     };
   },
@@ -946,6 +947,7 @@ export default {
       });
       this.licenseMembership = tempLicenseMember[0]["setupflag"];
       this.policy = privacyPolicy.responses["0"].policy;
+      this.policeTrans = privacyPolicy.responses["0"].policeTrans;
       const tempSMOOKING = this.tempsetup.filter((item, index) => {
         //  condition SMOOKING
         return item.number1 === 6 && item.number2 === 3;
@@ -996,6 +998,7 @@ export default {
       obj["defaultCountry"] = this.defaultCountry;
       obj["termSMOOKING"] = this.termSMOOKING;
       obj["policy"] = this.policy;
+      obj["policeTrans"] = this.policeTrans;
       obj["kiosCheckin"] = this.kiosCheckin;
       this.setup.push(obj);
       // console.log(this.setup);

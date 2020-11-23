@@ -1206,12 +1206,15 @@ export default {
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
+        this.policy = this.currDataSetting["policy"];
         break;
       case "idn":
         this.programLabel = "program-label2";
+        this.policy = this.currDataSetting["policeTrans"];
         break;
       default:
         this.programLabel = "program-label1";
+        this.policy = this.currDataSetting["policy"];
         break;
     }
     this.hotelEndpoint = this.currDataSetting["hotelEndpoint"];
