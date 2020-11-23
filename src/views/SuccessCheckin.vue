@@ -367,7 +367,7 @@
                   {{ weblabel.mciSuccessMsg[0] }}
                 </p>
                 <p
-                  style="font-size: 1.3em; font-weight: 600; margin-bottom: 1px"
+                  style="font-size: 1.3em; font-weight: 600; margin-bottom: 1px; color: #0b0b0d"
                 >
                   {{ weblabel.mciSuccessMsg[1] }}
                 </p>
