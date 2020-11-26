@@ -154,7 +154,7 @@
               v-if="roomReady"
             />
             <img
-              src="../assets/app-user-colour.svg"
+              src="../assets/email_notify.svg"
               style="height: 250px"
               v-else
             />
@@ -321,7 +321,7 @@
                 v-if="roomReady"
               />
               <img
-                src="../assets/app-user-colour.svg"
+                src="../assets/email_notify.svg"
                 style="height: 250px"
                 v-else
               />
@@ -333,7 +333,7 @@
                 v-if="roomReady"
               />
               <img
-                src="../assets/app-user-colour.svg"
+                src="../assets/email_notify.svg"
                 style="height: 250px"
                 v-else
               />
