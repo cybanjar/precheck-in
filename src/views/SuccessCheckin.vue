@@ -30,6 +30,7 @@
           <div
             class="col-12 text-center mci-success-padding"
             style="word-wrap: break-word"
+            v-show="smsParam == null"
           >
             <!-- Guest Complete Name -->
             <p>{{ weblabel.guestName }}</p>
@@ -60,7 +61,7 @@
               "
             >
               <!-- Handle Kotak -->
-              <div class="row">
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.guests }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
                   {{ adult }} {{ weblabel.adult }}
@@ -79,12 +80,18 @@
                 </div>
               </div>
               <div class="row">
+                <div class="col-6">{{ weblabel.package }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ arrangement }}
+                </div>
+              </div>
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.arrival }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
                   {{ checkInDate }} {{ timeNow }}
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.departure }}</div>
                 <div
                   class="col-6"
@@ -116,6 +123,7 @@
           <div
             class="col-12 text-center mci-success-margin"
             style="display: flex; justify-content: center; margin-top: 10px"
+            v-show="imageID != ''"
           >
             <!-- Room Number -->
             <div>
@@ -239,7 +247,7 @@
               "
             >
               <!-- Handle Kotak -->
-              <div class="row">
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.guests }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
                   {{ adult }} {{ weblabel.adult }}
@@ -257,13 +265,13 @@
                   {{ wifiPassword }}
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.arrival }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
                   {{ checkInDate }} {{ timeNow }}
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-show="smsParam == null">
                 <div class="col-6">{{ weblabel.departure }}</div>
                 <div
                   class="col-6"
@@ -539,7 +547,24 @@ export default {
   created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
-    if (this.setup == null || this.guestData == null) {
+    this.smsParam = this.$route.params.smsParam;
+    if (this.smsParam != null || sessionStorage.getItem("smsParam") != null) {
+      /* Handle SMS */
+      if (this.smsParam == null) {
+        this.smsParam = sessionStorage.getItem("smsParam");
+      }
+
+      if (sessionStorage.getItem("guestData") != null) {
+        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
+      }
+      if (sessionStorage.getItem("settings") != null) {
+        this.setup = JSON.parse(sessionStorage.getItem("settings"));
+      }
+      this.guestData["resnr"] = this.smsParam.keyString.split("|")[1];
+      this.guestData["reslinnr"] = this.smsParam.keyString.split("|")[2];
+      this.guestData["zinr"] = this.smsParam.roomNumber;
+      this.guestData["argt-str"] = this.smsParam.arrangement.trim();
+    } else if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
       }
@@ -565,8 +590,9 @@ export default {
     this.hotelParams = decodeURIComponent(tempParam);
     this.wifiAddress = this.setup.wifiAddress;
     this.wifiPassword = this.setup.wifiPassword;
-    // Get Parsing Guest Data
     this.timeNow = moment().format("HH:mm");
+
+    // Get Parsing Guest Data
     this.coDate = this.formatDateFind(this.guestData["co"]);
     this.checkOutDate = this.formatDate(this.guestData["co"]);
     this.checkInDate = this.formatDate(this.guestData["ci"]);
@@ -622,8 +648,7 @@ export default {
           },
         })
         .json();
-      // console.log(parsed, "lol");
-      if (parsed.response.imagedata != null) {
+      if (parsed.response.imagedata != "") {
         this.imageID = "data:image/png;base64," + parsed.response.imagedata;
       } else {
         this.imageID = "";
@@ -791,95 +816,103 @@ export default {
       });
     },
     goBack() {
-      this.gobackLoading = true;
-      (async () => {
-        const data = await ky
-          .post(this.hotelEndpoint + "mobileCI/findReservation", {
-            json: {
-              request: {
-                coDate: this.setup.SearchCO,
-                bookCode: this.setup.SearchValue,
-                chName: " ",
-                earlyCI: "false",
-                maxRoom: "1",
-                citime: this.serverTime,
-                groupFlag: "false",
+      if (this.smsParam != null) {
+        this.backToHome();
+      } else {
+        this.gobackLoading = true;
+        (async () => {
+          const data = await ky
+            .post(this.hotelEndpoint + "mobileCI/findReservation", {
+              json: {
+                request: {
+                  coDate: this.setup.SearchCO,
+                  bookCode: this.setup.SearchValue,
+                  chName: " ",
+                  earlyCI: "false",
+                  maxRoom: "1",
+                  citime: this.serverTime,
+                  groupFlag: "false",
+                },
               },
-            },
-          })
-          .json();
-        this.message = data.response["messResult"];
-        const messResult = this.message.split("-");
-        const messMessage = messResult[1].split(",");
-        this.gobackLoading = false;
-        switch (messResult[0].trim()) {
-          case "0":
-            // Reservation is Found
-            const reservation = [];
-            /* Get Temporary Total Reservation */
-            reservation.push(
-              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-            );
-            // Reservation Without Room Sharer (Main Guest Reservation)
-            const mainReservation = reservation[0].filter((item, index) => {
-              if (item["room-sharer"] === true) {
-              } else {
-                return item;
-              }
-            });
-            if (mainReservation.length > 1) {
-              // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
-              const acceptRsv = mainReservation.filter((item, index) => {
-                if (
-                  item["room-status"] == "1 Room Already assign or Overlapping"
-                ) {
+            })
+            .json();
+          this.message = data.response["messResult"];
+          const messResult = this.message.split("-");
+          const messMessage = messResult[1].split(",");
+          this.gobackLoading = false;
+          switch (messResult[0].trim()) {
+            case "0":
+              // Reservation is Found
+              const reservation = [];
+              /* Get Temporary Total Reservation */
+              reservation.push(
+                data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+              );
+              // Reservation Without Room Sharer (Main Guest Reservation)
+              const mainReservation = reservation[0].filter((item, index) => {
+                if (item["room-sharer"] === true) {
                 } else {
                   return item;
                 }
               });
-              this.setup.TotalData = acceptRsv.length;
-              // Reservation Room Share Only
-              const roomShare = reservation[0].filter((item, index) => {
-                return item["room-sharer"] === true;
-              });
-              // Attach Room Share into Main Guest Reservation
-              // Also counting Total Of Checked-in and Waiting List
-              let countCheckedIn = 0;
-              let countWaiting = 0;
-              mainReservation.forEach((item, index) => {
-                Object.assign(item, { rmshare: [] });
-                roomShare.forEach((guest, index) => {
-                  if (item["zinr"] == guest["zinr"]) {
-                    item["rmshare"].push(guest["gast"]);
+              if (mainReservation.length > 1) {
+                // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
+                const acceptRsv = mainReservation.filter((item, index) => {
+                  if (
+                    item["room-status"] ==
+                    "1 Room Already assign or Overlapping"
+                  ) {
+                  } else {
+                    return item;
                   }
                 });
-                if (item["res-status"] == "1 - Guest Already Checkin") {
-                  // Checked In Guest
-                  countCheckedIn++;
-                } else if (item["ifdata-sent"] == true) {
-                  // Waiting List Guest
-                  countWaiting++;
+                this.setup.TotalData = acceptRsv.length;
+                // Reservation Room Share Only
+                const roomShare = reservation[0].filter((item, index) => {
+                  return item["room-sharer"] === true;
+                });
+                // Attach Room Share into Main Guest Reservation
+                // Also counting Total Of Checked-in and Waiting List
+                let countCheckedIn = 0;
+                let countWaiting = 0;
+                mainReservation.forEach((item, index) => {
+                  Object.assign(item, { rmshare: [] });
+                  roomShare.forEach((guest, index) => {
+                    if (item["zinr"] == guest["zinr"]) {
+                      item["rmshare"].push(guest["gast"]);
+                    }
+                  });
+                  if (item["res-status"] == "1 - Guest Already Checkin") {
+                    // Checked In Guest
+                    countCheckedIn++;
+                  } else if (item["ifdata-sent"] == true) {
+                    // Waiting List Guest
+                    countWaiting++;
+                  }
+                });
+                if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
+                  // Open Modal Question
+                  sessionStorage.setItem(
+                    "listData",
+                    JSON.stringify(mainReservation)
+                  );
+                  sessionStorage.setItem(
+                    "settings",
+                    JSON.stringify(this.setup)
+                  );
+                  this.infoMCIConfim = true;
+                } else {
+                  this.backToHome();
                 }
-              });
-              if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
-                // Open Modal Question
-                sessionStorage.setItem(
-                  "listData",
-                  JSON.stringify(mainReservation)
-                );
-                sessionStorage.setItem("settings", JSON.stringify(this.setup));
-                this.infoMCIConfim = true;
               } else {
                 this.backToHome();
               }
-            } else {
-              this.backToHome();
-            }
-            break;
-          default:
-            break;
-        }
-      })();
+              break;
+            default:
+              break;
+          }
+        })();
+      }
     },
     showAnimation() {
       setTimeout(() => {
