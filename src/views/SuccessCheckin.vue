@@ -316,7 +316,7 @@
           >
             <div v-if="!QRshow">
               <img
-                src="../assets/char7.svg"
+                src="../assets/reached_maximum_amount_of_keycard-03.svg"
                 style="height: 250px"
                 v-if="roomReady"
               />
