@@ -1807,6 +1807,8 @@ export default {
     showAnimation() {
       if (localStorage.getItem("labels") == null) {
         this.timer = 7000;
+      } else if(this.hotelParams.substring(0, 3) == "sms"){
+        this.timer = 2000;
       } else {
         this.timer = 5000;
       }

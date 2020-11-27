@@ -548,10 +548,10 @@ export default {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
     this.smsParam = this.$route.params.smsParam;
-    if (this.smsParam != null || sessionStorage.getItem("smsParam") != null) {
+    if (this.smsParam != null || sessionStorage.getItem("smsParam") != null) {      
       /* Handle SMS */
       if (this.smsParam == null) {
-        this.smsParam = sessionStorage.getItem("smsParam");
+        this.smsParam = JSON.parse(sessionStorage.getItem("smsParam"));
       }
 
       if (sessionStorage.getItem("guestData") != null) {
@@ -565,6 +565,8 @@ export default {
       this.guestData["zinr"] = this.smsParam.roomNumber;
       this.guestData["argt-str"] = this.smsParam.arrangement.trim();
       this.guestData["rmtype-str"] = this.smsParam.roomType;
+      
+      
     } else if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
@@ -572,7 +574,7 @@ export default {
       if (sessionStorage.getItem("settings") != null) {
         this.setup = JSON.parse(sessionStorage.getItem("settings"));
       }
-    }
+    }    
     // Get Label From LocalStorage
     this.labels = JSON.parse(localStorage.getItem("labels"));
     // Get Parsing Web Setting
