@@ -6,6 +6,13 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: "/",
+    name: "mobileCheckin",
+    beforeEnter() {
+      location.href = "https://sindata.net/";
+    },
+  },
+  {
     path: "/precheckinform",
     name: "Home",
     component: Home,
