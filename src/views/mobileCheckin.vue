@@ -767,6 +767,10 @@ export default {
           wifiAddress: code.response["wifiAddress"],
         });
         Object.assign(this.smsParam, { wifiPass: code.response["wifiPass"] });
+        Object.assign(this.smsParam, { roomType: code.response["roomType"] });
+        Object.assign(this.smsParam, { hotelUrl: code.response["hotelUrl"] });
+
+        this.location = code.response["hotelUrl"];
       }
       /* Assign Hotel Initial Setup */
       this.tempHotel = code.response.pciSetup["pci-setup"];

@@ -564,6 +564,7 @@ export default {
       this.guestData["reslinnr"] = this.smsParam.keyString.split("|")[2];
       this.guestData["zinr"] = this.smsParam.roomNumber;
       this.guestData["argt-str"] = this.smsParam.arrangement.trim();
+      this.guestData["rmtype-str"] = this.smsParam.roomType;
     } else if (this.setup == null || this.guestData == null) {
       if (sessionStorage.getItem("guestData") != null) {
         this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
