@@ -646,6 +646,7 @@ export default {
       policy: "",
       policeTrans: "",
       kiosCheckin: false,
+      smsParam: {},
     };
   },
   created() {
@@ -702,6 +703,7 @@ export default {
       this.hotelParams = tempParam.hotelParams;
       const encodedURI = encodeURIComponent(this.hotelParams);
       this.location += `/mobilecheckin?${encodedURI}`;
+      // console.log(location.search.substring(1), tempParam);
     }
     /* Get Client Today Date For Initializing Data */
     const today = new Date();
@@ -714,20 +716,57 @@ export default {
     sessionStorage.setItem("location", this.location);
     /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
     (async () => {
-      const code = await ky
-        .post("http://54.251.169.160:8080/logserver/rest/loginServer/getUrl", {
-          json: {
-            request: {
-              hotelCode: this.hotelParams,
-            },
-          },
-        })
-        .json();
+      let code = undefined;
+      if (this.hotelParams.substring(0, 3) == "sms") {
+        const hotelParams = this.hotelParams.substring(4);
+
+        /* Handling SMS */
+        code = await ky
+          .post(
+            "http://54.251.169.160:8080/logserver/rest/loginServer/getBcastReservation",
+            {
+              json: {
+                request: {
+                  encryptedText: hotelParams,
+                },
+              },
+            }
+          )
+          .json();
+      } else {
+        /* Default Get Param */
+        code = await ky
+          .post(
+            "http://54.251.169.160:8080/logserver/rest/loginServer/getUrl",
+            {
+              json: {
+                request: {
+                  hotelCode: this.hotelParams,
+                },
+              },
+            }
+          )
+          .json();
+      }
+
+      // console.log(code.response);
       /* IF Null Response */
       if (code.response["messResult"] == null) {
         router.replace({
           name: "404",
         });
+      } else if (this.hotelParams.substring(0, 3) == "sms") {
+        Object.assign(this.smsParam, {
+          arrangement: code.response["arrangement"],
+        });
+        Object.assign(this.smsParam, { keyString: code.response["keyString"] });
+        Object.assign(this.smsParam, {
+          roomNumber: code.response["roomNumber"],
+        });
+        Object.assign(this.smsParam, {
+          wifiAddress: code.response["wifiAddress"],
+        });
+        Object.assign(this.smsParam, { wifiPass: code.response["wifiPass"] });
       }
       /* Assign Hotel Initial Setup */
       this.tempHotel = code.response.pciSetup["pci-setup"];
@@ -826,7 +865,6 @@ export default {
       });
       this.termENG = tempTermENG[0]["setupvalue"];
       // console.log('termEng di atas',this.termENG, tempTermENG);
-
       const tempTermIDN = this.tempsetup.filter((item, index) => {
         // Term IDN
         return item.number1 === 6 && item.number2 === 2;
@@ -1061,6 +1099,7 @@ export default {
           this.infoMCIEarlyCheckin = true;
         }
       }
+      // console.log('Before TempParamBook', this.hotelParams);
       if (this.tempParambook != "") {
         /* PCI Get Data */
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
@@ -1093,6 +1132,8 @@ export default {
             this.handleFindRsv("pci");
           }
         }
+      } else if (this.hotelParams.substring(0, 3) == "sms") {
+        this.handleSMS();
       }
       /* Handling Locale */
       /* Set Variable Label */
@@ -1410,6 +1451,66 @@ export default {
       const coDate = moment(`${dMonth}/${dDate}/${dYear}`, "MM/DD/YYYY")._i;
       return coDate;
     },
+    handleSMS() {
+      /* Create Dummy Object */
+      const dummyGuest = {};
+      dummyGuest["adult"] = "";
+      dummyGuest["argt"] = "";
+      dummyGuest["argt-str"] = "";
+      dummyGuest["child"] = "";
+      dummyGuest["ci"] = "";
+      dummyGuest["co"] = "";
+      dummyGuest["currency-usage"] = "";
+      dummyGuest["gast"] = "";
+      dummyGuest["gastno"] = "";
+      dummyGuest["guest-country"] = "";
+      dummyGuest["guest-email"] = "";
+      dummyGuest["guest-nation"] = "";
+      dummyGuest["guest-phnumber"] = "";
+      dummyGuest["guest-region"] = "";
+      dummyGuest["guestStatus"] = "";
+      dummyGuest["i-counter"] = "";
+      dummyGuest["ifdata-sent"] = "";
+      dummyGuest["image-flag"] = "";
+      dummyGuest["ispopup"] = false;
+      dummyGuest["key-generated"] = "";
+      dummyGuest["kontakt-nr"] = "";
+      dummyGuest["l-selected"] = false;
+      dummyGuest["new-zinr"] = false;
+      dummyGuest["pre-checkin"] = false;
+      dummyGuest["preAuth-flag"] = false;
+      dummyGuest["preference"] = "";
+      dummyGuest["purposeofstay"] = "";
+      dummyGuest["res-status"] = "";
+      dummyGuest["reslinnr"] = "";
+      dummyGuest["resnr"] = "";
+      dummyGuest["rmshare"] = [];
+      dummyGuest["rmtype"] = "";
+      dummyGuest["rmtype-str"] = "";
+      dummyGuest["room-preference"] = "";
+      dummyGuest["room-sharer"] = false;
+      dummyGuest["room-status"] = "";
+      dummyGuest["zikatnr"] = "";
+      dummyGuest["zinr"] = "";
+      dummyGuest["roomReady"] = true;
+
+      // Assigning Setup
+      Object.assign(this.setup[0], { TotalData: 1 });
+      Object.assign(this.setup[0], { SearchMethod: "SMS" });
+      Object.assign(this.setup[0], { SearchValue: "SMS" });
+      Object.assign(this.setup[0], { SearchCO: this.getCoDate() });
+      sessionStorage.setItem("guestData", JSON.stringify(dummyGuest));
+      sessionStorage.setItem("settings", JSON.stringify(this.setup[0]));
+      sessionStorage.setItem("smsParam", JSON.stringify(this.smsParam));
+      router.push({
+        name: "SuccessCheckIn",
+        params: {
+          Data: dummyGuest,
+          setting: this.setup[0],
+          smsParam: this.smsParam,
+        },
+      });
+    },
     handleFindRsv(mode) {
       // console.log('handleFindRsv');
       // console.log(mode);
@@ -1539,6 +1640,7 @@ export default {
                   Object.assign(this.setup[0], { SearchValue: searchVar });
                   Object.assign(this.setup[0], { SearchCO: coDate });
                   // console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
+                  // console.log(rsvFix, this.setup[0]);
                   if (rsvFix.length > 1) {
                     router.push({
                       name: "ListCheckIn",
@@ -1588,6 +1690,11 @@ export default {
                   if (guest["res-status"] == "1 - Guest Already Checkin") {
                     // Langsung ke SuccessCheckin.vue
                     Object.assign(guest, { roomReady: true });
+                    sessionStorage.setItem("guestData", JSON.stringify(guest));
+                    sessionStorage.setItem(
+                      "settings",
+                      JSON.stringify(this.setup[0])
+                    );
                     router.push({
                       name: "SuccessCheckIn",
                       params: {
@@ -1597,6 +1704,11 @@ export default {
                     });
                   } else if (guest["ifdata-sent"] == true) {
                     Object.assign(guest, { roomReady: false });
+                    sessionStorage.setItem("guestData", JSON.stringify(guest));
+                    sessionStorage.setItem(
+                      "settings",
+                      JSON.stringify(this.setup[0])
+                    );
                     router.push({
                       name: "SuccessCheckIn",
                       params: {
