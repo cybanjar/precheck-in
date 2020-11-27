@@ -328,7 +328,7 @@
             </div>
             <div v-else>
               <img
-                src="../assets/holding-phone-colour.svg"
+                src="../assets/ScanQRCode.svg"
                 style="height: 250px"
                 v-if="roomReady"
               />
