@@ -5,6 +5,10 @@
 .listGuest {
   max-width: 100vw;
 }
+.rmcattag {
+  font-weight: normal !important;
+  font-size: 0.8em !important;
+}
 .guestItem {
   min-height: 18rem !important;
 }
@@ -65,4 +69,10 @@
   display: flex;
   align-self: center;
   justify-content: flex-end;
+}
+@media only screen and (min-width: 375px) {
+  .rmcattag {
+    font-weight: normal !important;
+    font-size: 1em !important;
+  }
 }

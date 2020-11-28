@@ -53,7 +53,7 @@
 }
 
 .mci-success-body {
-  padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+  padding: 1.5rem 0;
   color: #606060 !important;
 }
 
@@ -95,5 +95,23 @@
   .borderStyle {
     width: 60% !important;
     padding: 0;
+  }
+}
+
+.divButtonMci {
+  width: 100%;
+}
+
+.buttonMci {
+  max-width: 100% !important;
+}
+
+@media only screen and (min-width: 577px) {
+  .buttonMci {
+    max-width: none !important;
+    width: auto !important;
+  }
+  .divButtonMci {
+    width: auto;
   }
 }

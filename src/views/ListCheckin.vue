@@ -107,7 +107,7 @@
                 </div>
                 <div :class="zinrClass">
                   {{ guest["zinr"] }}
-                  <a-tag color="green" style="font-weight: normal !important">{{
+                  <a-tag color="green" class="rmcattag">{{
                     guest["rmtype-str"]
                   }}</a-tag>
                 </div>

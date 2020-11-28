@@ -430,7 +430,7 @@
                     </a-col>
                   </a-row>
                   <a-row class :gutter="[16, 8]">
-                    <a-col :span="3" :xl="3" :xs="24">
+                    <a-col :span="5" :xl="5" :xs="24">
                       <a-form-item :label="weblabel.purposeStay">
                         <a-select
                           v-decorator="[
@@ -510,7 +510,7 @@
                       </a-form-item>
                     </a-col>
 
-                    <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+                    <a-col :span="5" :xl="5" :xs="24">
                       <div v-if="country === 'INA' || country === 'ina'">
                         <a-form-item :label="weblabel.region">
                           <a-select
@@ -637,20 +637,6 @@
                     </a-col>
                     <a-col :span="10" :xl="10" :xs="12">
                       <div>
-                        <!-- <q-btn
-                          class="font-weight-bold mt-3 mr-3"
-                          color="primary"
-                          :disabled="paid || paymentLoading"
-                          @click="checkPayment()"
-                        >
-                          {{ weblabel.pay }}
-                          <q-spinner
-                            v-if="paymentLoading"
-                            style="margin-left: 10px;"
-                            color="primary"
-                            size="12px"
-                          />
-                        </q-btn> -->
                         <q-form
                           action="https://staging.doku.com/Suite/Receive"
                           method="post"
@@ -780,12 +766,12 @@
                         {{ weblabel.depositPaymentVerError }}
                       </p>
                     </div>
-                    <div v-else>
-                      <p>
-                        <a-checkbox v-model="pay">
-                          {{ weblabel.termCashBasis }}
-                        </a-checkbox>
-                      </p>
+                    <div v-if="!paid">
+                      <q-checkbox
+                        v-model="pay"
+                        :label="weblabel.termCashBasis"
+                        style="font-size: 14px !important"
+                      />
                     </div>
                   </a-row>
                 </div>
@@ -819,41 +805,43 @@
               </template>
             </q-stepper>
           </div>
-
-          <a-row class :gutter="[16, 8]">
-            <a-col :span="4" :xl="4" :xs="24">
-              <a-form-item>
-                <div v-if="!paid">
-                  <a-button
-                    :xl="12"
-                    class="font-weight-bold mt-3"
-                    type="primary"
-                    block
-                    :size="size"
-                    @click="save"
-                    v-if="step == 4"
-                    html-type="submit"
-                    :disabled="!pay"
-                    >{{ weblabel.ciNow }}</a-button
-                  >
-                </div>
-                <div v-else>
-                  <a-button
-                    :xl="12"
-                    class="font-weight-bold mt-3"
-                    type="primary"
-                    block
-                    :size="size"
-                    @click="save"
-                    v-if="step == 4"
-                    html-type="submit"
-                    >{{ weblabel.ciNow }}</a-button
-                  >
-                </div>
-              </a-form-item>
-            </a-col>
-          </a-row>
         </a-form>
+        <div
+          style="
+            display: flex;
+            width: 100%;
+            height: 5em;
+            justify-content: flex-end;
+          "
+        >
+          <div class="divButtonMci" v-if="!paid">
+            <a-button
+              :xl="12"
+              class="font-weight-bold mt-3 buttonMci"
+              type="primary"
+              block
+              :size="size"
+              @click="save"
+              v-if="step == 4"
+              html-type="submit"
+              :disabled="!pay"
+              >{{ weblabel.ciNow }}</a-button
+            >
+          </div>
+          <div class="divButtonMci" v-else>
+            <a-button
+              :xl="12"
+              class="font-weight-bold mt-3 buttonMci"
+              type="primary"
+              block
+              :size="size"
+              @click="save"
+              v-if="step == 4"
+              html-type="submit"
+              >{{ weblabel.ciNow }}</a-button
+            >
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1310,62 +1298,6 @@ export default {
         this.paidNetworkError = false;
         this.paidVerError = true;
       }
-      /** Handle Nicepay */
-      /*
-      if (this.errorCode == "1004") {
-        //this.tempParam.resultCd.substring(0, 1)        
-        this.paidNetworkError = true;
-        this.paidVerError = false;
-      } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
-        this.paidNetworkError = true;
-        this.paidVerError = false;
-      } else {
-        this.currDataPrepare["preAuth-flag"] = true;
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare["resnr"],
-                  rsvlineNumber: this.currDataPrepare["reslinnr"],
-                  userInit: "MC",
-                  newRoomno: "",
-                  purposeOfStay: "",
-                  email: "",
-                  guestPhnumber: "",
-                  guestNation: "",
-                  guestCountry: "",
-                  guestRegion: "",
-                  base64image: "",
-                  vehicleNumber: "",
-                  preAuthString: this.callbackParam,
-                },
-              },
-            })
-            .json();
-          const responses = data.response["resultMessage"].split(" - ");
-          if (parseInt(responses[0]) > 0) {
-            this.preauthModal = true;
-          } else {
-            this.currDataPrepare["preAuth-flag"] = true;
-            this.paid = this.currDataPrepare["preAuth-flag"];
-            this.paidNetworkError = false;
-            this.paidVerError = false;
-            // console.log(this.currDataPrepare);
-            // Session Storage Set
-            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-          }
-        })();
-      }
-      */
     }
     /* Handle Stepper */
     // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
@@ -1496,7 +1428,7 @@ export default {
     );
     this.weblabel.requiredID = this.findLabel("required_id", "sentenceCase");
     this.weblabel.idPhoto = this.findLabel("id_photo", "titleCase");
-    this.weblabel.idPhotoDesc = this.findLabel("id_photo_desc", "titleCase");
+    this.weblabel.idPhotoDesc = this.findLabel("id_photo_desc", "sentenceCase");
     this.weblabel.pay = this.findLabel("pay", "titleCase");
     this.weblabel.deposit = this.findLabel("deposit", "titleCase");
     this.weblabel.cashBasis = this.findLabel("cash_basis", "titleCase");
@@ -1514,7 +1446,7 @@ export default {
     );
     this.weblabel.termCashBasis = this.findLabel(
       "term_cash_basis",
-      "titleCase"
+      "sentenceCase"
     );
     this.weblabel.prev = this.findLabel("prev", "titleCase");
     this.weblabel.next = this.findLabel("next", "titleCase");
