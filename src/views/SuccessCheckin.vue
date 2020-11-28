@@ -446,9 +446,7 @@
       :closable="false"
     >
       <template slot="footer">
-        <a-button type="primary" @click="backToHome">{{
-          weblabel.no
-        }}</a-button>
+        <a-button @click="backToHome">{{ weblabel.no }}</a-button>
         <a-button type="primary" @click="backToList">{{
           weblabel.yes
         }}</a-button>
