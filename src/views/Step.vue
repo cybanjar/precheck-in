@@ -210,11 +210,7 @@
             {{ termSMOOKING }}
           </p>
 
-          <p
-            style="white-space: pre-wrap"
-            v-show="stepTerm == 2"
-            v-html="policy"
-          ></p>
+          <p v-show="stepTerm == 2" v-html="policy"></p>
         </q-card-section>
 
         <q-separator />
