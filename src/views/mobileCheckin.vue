@@ -350,7 +350,6 @@
                 v-model="member"
                 class="ant-input-h"
                 ref="member"
-                type="number"
                 outlined
                 dense
                 :placeholder="weblabel.inputMembership"
