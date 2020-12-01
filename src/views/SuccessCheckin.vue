@@ -172,7 +172,7 @@
             style="display: flex; justify-content: center; margin-top: 10px"
           >
             <!-- Message -->
-            <div v-if="roomReady">
+            <div style="padding: 0 1rem !important" v-if="roomReady">
               <p style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px">
                 {{ weblabel.mciSuccessWoKeyMsg[0] }}
               </p>
@@ -180,7 +180,7 @@
                 {{ weblabel.mciSuccessWoKeyMsg[1] }}
               </p>
             </div>
-            <div v-else>
+            <div style="padding: 0 1rem !important" v-else>
               <p style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px">
                 {{ weblabel.mciSuccessNotReadyMsg[0] }}
               </p>
@@ -352,7 +352,7 @@
             style="display: flex; justify-content: center; margin-top: 10px"
           >
             <!-- Message -->
-            <div v-if="roomReady">
+            <div style="padding: 0 1rem !important" v-if="roomReady">
               <div v-if="QRshow == false" style="margin-top: 2rem">
                 <p
                   style="font-size: 1.2em; font-weight: 400; margin-bottom: 1px"
@@ -384,7 +384,7 @@
                 </p>
               </div>
             </div>
-            <div v-else>
+            <div style="padding: 0 1rem !important" v-else>
               <div class="row justify-center">
                 <div>
                   <p
