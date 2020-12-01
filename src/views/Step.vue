@@ -766,7 +766,12 @@
                       <q-checkbox
                         v-model="pay"
                         :label="weblabel.termCashBasis"
-                        style="font-size: 14px !important"
+                        style="
+                          font-size: 14px !important;
+                          background: transparent !important;
+                          color: #1b262c !important;
+                        "
+                        :disable="Deposit == 0"
                       />
                     </div>
                   </a-row>
@@ -1130,7 +1135,7 @@ export default {
         originalText
           .split("&")
           .toString()
-          .substr(1)
+          .substr(0)
           .split(",")
           .forEach((item, index) => {
             let objProperty = "";
@@ -1142,7 +1147,6 @@ export default {
             this.callbackParam += `&${objProperty}=${objValue}`;
           });
         this.callbackParam = this.callbackParam.substring(1);
-        // console.log(this.tempParam,this.callbackParam);
       }
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
@@ -1233,6 +1237,8 @@ export default {
         this.Deposit = this.maximumDeposit;
       }
     }
+    this.Deposit == 0 ? (this.pay = true) : (this.pay = false);
+
     // DOKU First Param
     this.dokuData.amount = `${this.Deposit}.00`;
     this.dokuData.basket = `Deposit,${this.Deposit}.00,1,${this.Deposit}.00`;
