@@ -293,6 +293,11 @@ export default {
       this.isMobile = false;
     }
     /* Assign ispopup property for tempData */
+    this.setup = setting;
+    if (tempData == null) {
+      window.open(this.setup.location, "_self");
+    }
+
     tempData.forEach((item) => {
       if (item["gast"].length >= 36) {
         this.guestNameClass =
@@ -307,7 +312,7 @@ export default {
       Object.assign(item, { guestStatus: "" });
     });
     this.guestData = tempData;
-    this.setup = setting;
+
     // console.log(this.guestData, this.setup);
     /* Do Sorting For Guest Data */
     const guestNotMCI = [];

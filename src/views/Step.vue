@@ -1095,6 +1095,7 @@ export default {
         color: "",
       },
       isMobile: false,
+      isUploaded: false,
     };
   },
   watch: {
@@ -1144,9 +1145,15 @@ export default {
             objProperty = decodeURIComponent(item.split("=")[0]);
             objValue = decodeURIComponent(item.split("=")[1]);
             Object.assign(this.tempParam, { [objProperty]: objValue });
-            this.callbackParam += `&${objProperty}=${objValue}`;
+
+            if (objProperty != "WORDS") {
+              this.callbackParam += `&${objProperty}=${objValue}`;
+            }
           });
         this.callbackParam = this.callbackParam.substring(1);
+        const words = `${this.dokuData.MALLID}${this.dokuData.SHAREDKEY}${this.tempParam.TRANSIDMERCHANT}${this.tempParam.SESSIONID}`;
+        const encryptedWords = CryptoJS.SHA1(words).toString();
+        this.callbackParam += `&WORDS=${encryptedWords}`;
       }
       if (sessionStorage.getItem("guestData") != null) {
         this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
@@ -1156,6 +1163,9 @@ export default {
       }
       if (sessionStorage.getItem("errorCode") != null) {
         this.errorCode = JSON.parse(sessionStorage.getItem("errorCode"));
+      }
+      if (sessionStorage.getItem("isUploaded") != null) {
+        this.isUploaded = JSON.parse(sessionStorage.getItem("isUploaded"));
       }
     }
     this.url = require(`../assets/PassportVerification.svg`);
@@ -1253,49 +1263,77 @@ export default {
       if (this.tempParam.RESPONSECODE == "0000") {
         this.currDataPrepare["preAuth-flag"] = true;
         // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/resCI", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare["resnr"],
-                  rsvlineNumber: this.currDataPrepare["reslinnr"],
-                  userInit: "MC",
-                  newRoomno: "",
-                  purposeOfStay: "",
-                  email: "",
-                  guestPhnumber: "",
-                  guestNation: "",
-                  guestCountry: "",
-                  guestRegion: "",
-                  base64image: "",
-                  vehicleNumber: "",
-                  preAuthString: this.callbackParam,
+        if (this.isUploaded) {
+          this.currDataPrepare["preAuth-flag"] = true;
+          this.paid = this.currDataPrepare["preAuth-flag"];
+          this.paidNetworkError = false;
+          this.paidVerError = false;
+          // console.log(this.currDataPrepare);
+          // Session Storage Set
+          // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+          sessionStorage.removeItem("listData");
+          sessionStorage.setItem(
+            "guestData",
+            JSON.stringify(this.currDataPrepare)
+          );
+          sessionStorage.setItem(
+            "isUploaded",
+            JSON.stringify(this.currDataPrepare["preAuth-flag"])
+          );
+          sessionStorage.setItem(
+            "settings",
+            JSON.stringify(this.currDataSetting)
+          );
+        } else {
+          (async () => {
+            const data = await ky
+              .post(this.hotelEndpoint + "mobileCI/resCI", {
+                json: {
+                  request: {
+                    rsvNumber: this.currDataPrepare["resnr"],
+                    rsvlineNumber: this.currDataPrepare["reslinnr"],
+                    userInit: "MC",
+                    newRoomno: "",
+                    purposeOfStay: "",
+                    email: "",
+                    guestPhnumber: "",
+                    guestNation: "",
+                    guestCountry: "",
+                    guestRegion: "",
+                    base64image: "",
+                    vehicleNumber: "",
+                    preAuthString: this.callbackParam,
+                  },
                 },
-              },
-            })
-            .json();
-          const responses = data.response["resultMessage"].split(" - ");
-          if (parseInt(responses[0]) > 0) {
-            this.preauthModal = true;
-          } else {
-            this.currDataPrepare["preAuth-flag"] = true;
-            this.paid = this.currDataPrepare["preAuth-flag"];
-            this.paidNetworkError = false;
-            this.paidVerError = false;
-            // console.log(this.currDataPrepare);
-            // Session Storage Set
-            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-          }
-        })();
+              })
+              .json();
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+              // console.log(this.currDataPrepare);
+              // Session Storage Set
+              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+              sessionStorage.removeItem("listData");
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "isUploaded",
+                JSON.stringify(this.currDataPrepare["preAuth-flag"])
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
+          })();
+        }
       } else {
         this.paidNetworkError = false;
         this.paidVerError = true;
@@ -1537,110 +1575,81 @@ export default {
         // console.log('statusCode',this.tempParam.statuscode);
         if (this.tempParam.RESPONSECODE == "0000") {
           this.currDataPrepare["preAuth-flag"] = true;
-          (async () => {
-            // console.log('CallBack',this.callbackParam);
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/resCI", {
-                json: {
-                  request: {
-                    rsvNumber: this.currDataPrepare["resnr"],
-                    rsvlineNumber: this.currDataPrepare["reslinnr"],
-                    userInit: "MC",
-                    newRoomno: "",
-                    purposeOfStay: "",
-                    email: "",
-                    guestPhnumber: "",
-                    guestNation: "",
-                    guestCountry: "",
-                    guestRegion: "",
-                    base64image: "",
-                    vehicleNumber: "",
-                    preAuthString: this.callbackParam,
+          if (this.isUploaded) {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+            // console.log(this.currDataPrepare);
+            // Session Storage Set
+            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+            sessionStorage.removeItem("listData");
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "isUploaded",
+              JSON.stringify(this.currDataPrepare["preAuth-flag"])
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          } else {
+            (async () => {
+              const data = await ky
+                .post(this.hotelEndpoint + "mobileCI/resCI", {
+                  json: {
+                    request: {
+                      rsvNumber: this.currDataPrepare["resnr"],
+                      rsvlineNumber: this.currDataPrepare["reslinnr"],
+                      userInit: "MC",
+                      newRoomno: "",
+                      purposeOfStay: "",
+                      email: "",
+                      guestPhnumber: "",
+                      guestNation: "",
+                      guestCountry: "",
+                      guestRegion: "",
+                      base64image: "",
+                      vehicleNumber: "",
+                      preAuthString: this.callbackParam,
+                    },
                   },
-                },
-              })
-              .json();
-            const responses = data.response["resultMessage"].split(" - ");
-            if (parseInt(responses[0]) > 0) {
-              this.preauthModal = true;
-            } else {
-              this.currDataPrepare["preAuth-flag"] = true;
-              this.paid = this.currDataPrepare["preAuth-flag"];
-              this.paidNetworkError = false;
-              this.paidVerError = false;
-              // console.log(this.currDataPrepare);
-              // Session Storage Set
-              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
-              sessionStorage.setItem(
-                "guestData",
-                JSON.stringify(this.currDataPrepare)
-              );
-              sessionStorage.setItem(
-                "settings",
-                JSON.stringify(this.currDataSetting)
-              );
-            }
-          })();
+                })
+                .json();
+              const responses = data.response["resultMessage"].split(" - ");
+              if (parseInt(responses[0]) > 0) {
+                this.preauthModal = true;
+              } else {
+                this.currDataPrepare["preAuth-flag"] = true;
+                this.paid = this.currDataPrepare["preAuth-flag"];
+                this.paidNetworkError = false;
+                this.paidVerError = false;
+                // console.log(this.currDataPrepare);
+                // Session Storage Set
+                // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+                sessionStorage.removeItem("listData");
+                sessionStorage.setItem(
+                  "guestData",
+                  JSON.stringify(this.currDataPrepare)
+                );
+                sessionStorage.setItem(
+                  "isUploaded",
+                  JSON.stringify(this.currDataPrepare["preAuth-flag"])
+                );
+                sessionStorage.setItem(
+                  "settings",
+                  JSON.stringify(this.currDataSetting)
+                );
+              }
+            })();
+          }
         } else {
           this.paidNetworkError = false;
           this.paidVerError = true;
         }
-        /** Handle Nicepay */
-        /*
-        if (this.errorCode == "1004") {
-          //this.tempParam.resultCd.substring(0, 1)        
-          this.paidNetworkError = true;
-          this.paidVerError = false;
-        } else if (this.errorCode == "9002" || this.errorCode == "8021") {        
-          this.paidNetworkError = true;
-          this.paidVerError = false;
-        } else {
-          this.currDataPrepare["preAuth-flag"] = true;
-          (async () => {
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/resCI", {
-                json: {
-                  request: {
-                    rsvNumber: this.currDataPrepare["resnr"],
-                    rsvlineNumber: this.currDataPrepare["reslinnr"],
-                    userInit: "MC",
-                    newRoomno: "",
-                    purposeOfStay: "",
-                    email: "",
-                    guestPhnumber: "",
-                    guestNation: "",
-                    guestCountry: "",
-                    guestRegion: "",
-                    base64image: "",
-                    vehicleNumber: "",
-                    preAuthString: this.callbackParam,
-                  },
-                },
-              })
-              .json();
-            const responses = data.response["resultMessage"].split(" - ");
-            if (parseInt(responses[0]) > 0) {
-              this.preauthModal = true;
-            } else {
-              this.currDataPrepare["preAuth-flag"] = true;
-              this.paid = this.currDataPrepare["preAuth-flag"];
-              this.paidNetworkError = false;
-              this.paidVerError = false;
-              // console.log(this.currDataPrepare);
-              // Session Storage Set
-              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
-              sessionStorage.setItem(
-                "guestData",
-                JSON.stringify(this.currDataPrepare)
-              );
-              sessionStorage.setItem(
-                "settings",
-                JSON.stringify(this.currDataSetting)
-              );
-            }
-          })();
-        }
-        */
       }
     },
     async getFile() {
@@ -1849,22 +1858,6 @@ export default {
           this.ipAddr +
           `&cartData={}&callBackUrl=${this.stepUrl}` +
           "&instmntType=1&instmntMon=1&reccurOpt=0&paymentExpTm=000100";
-        // const datas = {
-        //   codate: this.formatDate(this.currDataPrepare["co"]),
-        //   userInit: "01",
-        //   resrNumber: this.currDataPrepare["resnr"],
-        //   resLineNumber: this.currDataPrepare["reslinnr"],
-        //   guestEmail: this.currDataPrepare["guest-email"],
-        //   guestPhnumber: this.currDataPrepare["guest-phnumber"],
-        //   purposeOfStay: this.currDataPrepare["purposeofstay"],
-        //   guestNation: this.currDataPrepare["guest-nation"],
-        //   guestCountry: this.currDataPrepare["guest-country"],
-        //   guestRegion: this.currDataPrepare["guest-region"],
-        //   step: this.step,
-        //   vreg: this.currDataPrepare["vreg"],
-        //   location: this.location,
-        // };
-        // CookieS.set("data", datas);
         // Session Storage Set
         sessionStorage.removeItem("guestData");
         sessionStorage.removeItem("settings");
@@ -1908,35 +1901,6 @@ export default {
             }
           });
       });
-    },
-    check() {
-      // console.log('check');
-      const token = CryptoJS.SHA256(
-        "IONPAYTESTTRX202009070000000250000033F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
-      );
-      const params =
-        "iMid=IONPAYTEST&&merchantToken=" +
-        token.toString() +
-        "&tXid=IONPAYTEST01202009221236456216&amt=500000&referenceNo=TRX2020090700000002";
-      fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(
-          "https://dev.nicepay.co.id/nicepay/api/onePassStatus.do?" + params
-        )}`
-      )
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("Network response was not ok.");
-        })
-        .then((data) => {
-          this.resPaid = JSON.parse(data.contents);
-          if (this.resPaid.resultCd == "0000") {
-            this.paymentStatus = true;
-            // console.log("payment valid");
-          } else {
-            this.paymentStatus = false;
-            // console.log("payment invalid");
-          }
-        });
     },
     closeModal() {
       // console.log('closeModal');
@@ -2032,6 +1996,10 @@ export default {
           })();
           this.hasUpload = "0 image id already exist";
           this.currDataPrepare["image-flag"] = this.hasUpload;
+          sessionStorage.setItem(
+            "guestData",
+            JSON.stringify(this.currDataPrepare)
+          );
         };
       };
     },
