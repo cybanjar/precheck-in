@@ -1107,7 +1107,7 @@ export default {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
-    // console.log("GuestData", this.currDataPrepare);
+
     // Detect Mobile Device
     if (
       /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
@@ -1226,7 +1226,7 @@ export default {
     } else {
       this.terms = this.term1;
     }
-    // console.log('setting',this.currDataSetting);
+
     // router.push(this.location);
     /* Handling Deposit Other Value */
     const ciDate = moment(this.handleArrayDate(this.currDataPrepare["ci"]));
@@ -1262,15 +1262,15 @@ export default {
       /** Handle DOKU */
       if (this.tempParam.RESPONSECODE == "0000") {
         this.currDataPrepare["preAuth-flag"] = true;
-        // console.log('data',this.hotelEndpoint + "mobileCI/resCI");
+
         if (this.isUploaded) {
           this.currDataPrepare["preAuth-flag"] = true;
           this.paid = this.currDataPrepare["preAuth-flag"];
           this.paidNetworkError = false;
           this.paidVerError = false;
-          // console.log(this.currDataPrepare);
+
           // Session Storage Set
-          // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+
           sessionStorage.removeItem("listData");
           sessionStorage.setItem(
             "guestData",
@@ -1315,9 +1315,9 @@ export default {
               this.paid = this.currDataPrepare["preAuth-flag"];
               this.paidNetworkError = false;
               this.paidVerError = false;
-              // console.log(this.currDataPrepare);
+
               // Session Storage Set
-              // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+
               sessionStorage.removeItem("listData");
               sessionStorage.setItem(
                 "guestData",
@@ -1340,7 +1340,7 @@ export default {
       }
     }
     /* Handle Stepper */
-    // console.log(this.currDataPrepare["purposeofstay"],this.currDataPrepare["step"]);
+
     if (this.precheckin) {
       if (
         this.currDataPrepare["guest-email"] == "" ||
@@ -1375,7 +1375,6 @@ export default {
       }
       this.step = this.currDataPrepare["step"];
     } else {
-      // console.log('Not PCI',this.currDataPrepare["preAuth-flag"]);
       if (
         this.currDataPrepare["preAuth-flag"] == true ||
         this.afterPayment == true
@@ -1500,7 +1499,6 @@ export default {
       this.stepTerm = this.stepTerm - 1;
     },
     findLabel(nameKey, used) {
-      // console.log('FindLabel');
       let labels = undefined;
       if (localStorage.getItem("labels") == null) {
         labels = localStorage.getItem("labels");
@@ -1509,7 +1507,7 @@ export default {
       }
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
-      const label = this.labels.find((el) => {
+      const label = labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
       if (label === undefined) {
@@ -1546,7 +1544,6 @@ export default {
       return fixLabel;
     },
     async autoScrollNation() {
-      // console.log('autoScrollNation');
       await this.$nextTick();
       if (this.currDataPrepare["guest-nation"] == "") {
         this.form.setFieldsValue({
@@ -1556,7 +1553,6 @@ export default {
       }
     },
     async autoScrollCountry() {
-      // console.log('autoScrollCountry');
       await this.$nextTick();
       if (this.currDataPrepare["guest-country"] == "") {
         this.form.setFieldsValue({
@@ -1567,12 +1563,11 @@ export default {
       }
     },
     resendPreauth() {
-      // console.log('resendPreauth');
       this.preauthModal = false;
       if (this.tempParam.RESPONSECODE != null) {
         this.afterPayment = true;
         /** Handle DOKU */
-        // console.log('statusCode',this.tempParam.statuscode);
+
         if (this.tempParam.RESPONSECODE == "0000") {
           this.currDataPrepare["preAuth-flag"] = true;
           if (this.isUploaded) {
@@ -1580,9 +1575,9 @@ export default {
             this.paid = this.currDataPrepare["preAuth-flag"];
             this.paidNetworkError = false;
             this.paidVerError = false;
-            // console.log(this.currDataPrepare);
+
             // Session Storage Set
-            // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+
             sessionStorage.removeItem("listData");
             sessionStorage.setItem(
               "guestData",
@@ -1627,9 +1622,9 @@ export default {
                 this.paid = this.currDataPrepare["preAuth-flag"];
                 this.paidNetworkError = false;
                 this.paidVerError = false;
-                // console.log(this.currDataPrepare);
+
                 // Session Storage Set
-                // console.log('Success',this.currDataPrepare["preAuth-flag"]);
+
                 sessionStorage.removeItem("listData");
                 sessionStorage.setItem(
                   "guestData",
@@ -1653,12 +1648,10 @@ export default {
       }
     },
     async getFile() {
-      // console.log('getFile');
       await this.$nextTick();
       this.$refs.fileurl.click();
     },
     handleArrayDate(date) {
-      // console.log('handleArrayDate');
       const dDate = String(moment(date, "YYYY-MM-DD").date()).padStart(2, "0");
       const dMonth = String(moment(date, "YYYY-MM-DD").month()).padStart(
         2,
@@ -1669,15 +1662,12 @@ export default {
       return dateArray;
     },
     handleChange(value) {
-      // console.log('handleChange');
       this.errorCode = value;
     },
     handleChangeCountry(value) {
-      // console.log('handleChangeCountry');
       this.country = value;
     },
     isNumber(evt) {
-      // console.log('isNumber');
       evt = evt ? evt : window.event;
       const charCode = evt.which ? evt.which : evt.keyCode;
       if (
@@ -1691,7 +1681,6 @@ export default {
       }
     },
     next() {
-      // console.log('next');
       switch (this.step) {
         case 1:
           const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -1762,7 +1751,6 @@ export default {
       }
     },
     prev() {
-      // console.log('prev');
       switch (this.step) {
         case 4:
           if (!this.precheckin) {
@@ -1824,7 +1812,7 @@ export default {
     },
     payDeposit() {
       // NICEPAY
-      // console.log('payDeposit');
+
       this.paymentLoading = true;
       async function getIP() {
         const response = await fetch("http://api.ipify.org/?format=json");
@@ -1833,7 +1821,7 @@ export default {
       }
       getIP().then((dataip) => {
         this.ipAddr = dataip;
-        // console.log(this.ipAddr);
+
         const token = CryptoJS.SHA256(
           "IONPAYTESTTRX2020090700000002" +
             this.Deposit +
@@ -1881,15 +1869,13 @@ export default {
             throw new Error("Network response was not ok.");
           })
           .then((data) => {
-            // console.log('after cors',data);
             const resp = data.contents.substr(
               data.contents.indexOf("{"),
               data.contents.length
             );
             this.resReg = JSON.parse(resp);
-            // console.log(this.resReg);
+
             if (this.resReg.data["resultCd"] == "0000") {
-              // console.log(this.resReg);
               const urlInq =
                 "https://dev.nicepay.co.id/nicepay/api/orderInquiry.do?tXid=" +
                 this.resReg.data["tXid"] +
@@ -1903,11 +1889,9 @@ export default {
       });
     },
     closeModal() {
-      // console.log('closeModal');
       this.paymentModal = false;
     },
     hideAllModal() {
-      // console.log('hideAllModal');
       this.confirmMailModal = false;
       this.termcondition = false;
       this.overlappingModal = false;
@@ -1916,7 +1900,6 @@ export default {
       this.preauthModal = false;
     },
     onFileChange(e) {
-      // console.log('onFileChange');
       const file = e.target.files[0];
       /* Start Handling Images Compression */
       const reader = new FileReader();
@@ -1991,7 +1974,6 @@ export default {
               })
               .json();
             if (uploadResult.response.resultMessage != "") {
-              // console.log(uploadResult.response.resultMessage);
             }
           })();
           this.hasUpload = "0 image id already exist";
@@ -2004,20 +1986,16 @@ export default {
       };
     },
     onKeydown(event) {
-      // console.log('onKeydown');
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
         event.preventDefault();
       }
     },
     scrollToTop() {
-      // console.log('scrollToTop');
       window.scrollTo(0, 0);
       //this.step = 0;
     },
     checkValidation(caseType) {
-      // console.log('checkValidation');
-      // console.log("checkValidation is triggered");
       (async () => {
         const parsed = await ky
           .post(this.hotelEndpoint + "mobileCI/checkValidation", {
@@ -2030,7 +2008,7 @@ export default {
             },
           })
           .json();
-        // console.log(parsed);
+
         switch (caseType) {
           case "1":
             const responses = parsed.response["resStatus"].split(" - ");
@@ -2082,7 +2060,6 @@ export default {
       })();
     },
     handleResCi() {
-      // console.log('handleResCi');
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
@@ -2107,7 +2084,7 @@ export default {
             },
           })
           .json();
-        // console.log(parsed);
+
         const responses = parsed.response["resultMessage"].split(" - ");
         this.responseStatus.statusNumber = responses[0];
         this.responseStatus.statusMessage = responses[1];
@@ -2148,7 +2125,6 @@ export default {
       })();
     },
     save() {
-      // console.log('save');
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
       if (parseInt(rmStatus) == 1) {
         /* Overlapping */
@@ -2159,7 +2135,6 @@ export default {
       }
     },
     handleYes() {
-      // console.log('handleYes');
       this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
@@ -2178,7 +2153,7 @@ export default {
           "guest-phnumber"
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
         // Handling Interface WA atau SMS
-        // console.log(data);
+
         (async () => {
           const parsed = await ky
             .post(this.hotelEndpoint + "mobileCI/createInterface", {
@@ -2199,7 +2174,7 @@ export default {
           const responses = parsed.response["resultMessage"];
           this.responseStatus.statusNumber = responses[0];
           this.responseStatus.statusMessage = responses[1];
-          // console.log(responses);
+
           if (this.responseStatus.statusNumber == 0) {
             Object.assign(this.currDataPrepare, { roomReady: false });
             // Session Storage Set
@@ -2227,7 +2202,6 @@ export default {
       }
     },
     back() {
-      // console.log('back');
       if (this.counter == this.id.length) {
         return false;
       }
@@ -2235,11 +2209,9 @@ export default {
       this.currDataPrepare = this.id[this.counter];
     },
     handleOk(e) {
-      // console.log(this.stepTerm);
       if (this.stepTerm < 2) {
         this.stepTerm = this.stepTerm + 1;
       } else {
-        // console.log('handleOk');
         this.ModalText = "The modal will be closed after two seconds";
         this.confirmLoading = true;
         setTimeout(() => {
@@ -2253,11 +2225,9 @@ export default {
       }
     },
     disagree() {
-      // console.log('disagree');
       window.open(this.location, "_self");
     },
     formatDate(datum) {
-      // console.log('formatDate');
       const dDate =
         String(moment(datum, "YYYY-MM-DD").date()).length == 1
           ? `0${String(moment(datum, "YYYY-M-DD").date())}`
@@ -2271,11 +2241,9 @@ export default {
       return fixDate;
     },
     handleBack() {
-      // console.log('handleBack');
       window.open(this.location, "_self");
     },
     checkPayment() {
-      // console.log('checkPayment');
       this.checkValidation("2");
     },
   },
@@ -2284,7 +2252,6 @@ export default {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {
@@ -2297,7 +2264,7 @@ export default {
             c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
           c = "0x" + c.join("");
-          // console.log('thishexa');
+
           return (
             "rgba(" +
             [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +

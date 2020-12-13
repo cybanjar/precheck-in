@@ -396,16 +396,13 @@ export default {
       this.response = parsed;
 
       this.tempsetup = parsed.response.pciSetup["pci-setup"];
-      // console.log(this.tempsetup, 'tempsetup');
     })();
   },
   methods: {
     onChangeBC(e) {
-      // console.log('radio checked', e.target.value);
       this.colorPicker = e.target.value;
     },
     onChangeFC(e) {
-      // console.log('radio checked', e.target.value);
       this.fontColor = e.target.value;
     },
     showModalBC() {
@@ -423,7 +420,6 @@ export default {
       }, 300);
     },
     handleCancelBC(e) {
-      // console.log('Clicked cancel button');
       this.defaultBC = "#1890FF";
       this.visibleBC = false;
     },
@@ -436,7 +432,6 @@ export default {
       }, 300);
     },
     handleCancelFC(e) {
-      // console.log('Clicked cancel button');
       this.defaultFC = "#1890FF";
       this.visibleFC = false;
     },

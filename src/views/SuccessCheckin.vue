@@ -731,7 +731,7 @@ export default {
       }
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
-      const label = this.labels.find((el) => {
+      const label = labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
       if (label === undefined) {
@@ -837,7 +837,7 @@ export default {
             .json();
           this.message = data.response["messResult"];
           const messResult = this.message.split("-");
-          const messMessage = messResult[1].split(",");
+          //const messMessage = messResult[1].split(",");
           this.gobackLoading = false;
           switch (messResult[0].trim()) {
             case "0":
@@ -848,7 +848,7 @@ export default {
                 data["response"]["arrivalGuestlist"]["arrival-guestlist"]
               );
               // Reservation Without Room Sharer (Main Guest Reservation)
-              const mainReservation = reservation[0].filter((item, index) => {
+              const mainReservation = reservation[0].filter((item) => {
                 if (item["room-sharer"] === true) {
                 } else {
                   return item;
@@ -856,7 +856,7 @@ export default {
               });
               if (mainReservation.length > 1) {
                 // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
-                const acceptRsv = mainReservation.filter((item, index) => {
+                const acceptRsv = mainReservation.filter((item) => {
                   if (
                     item["room-status"] ==
                     "1 Room Already assign or Overlapping"
@@ -867,16 +867,16 @@ export default {
                 });
                 this.setup.TotalData = acceptRsv.length;
                 // Reservation Room Share Only
-                const roomShare = reservation[0].filter((item, index) => {
+                const roomShare = reservation[0].filter((item) => {
                   return item["room-sharer"] === true;
                 });
                 // Attach Room Share into Main Guest Reservation
                 // Also counting Total Of Checked-in and Waiting List
                 let countCheckedIn = 0;
                 let countWaiting = 0;
-                mainReservation.forEach((item, index) => {
+                mainReservation.forEach((item) => {
                   Object.assign(item, { rmshare: [] });
-                  roomShare.forEach((guest, index) => {
+                  roomShare.forEach((guest) => {
                     if (item["zinr"] == guest["zinr"]) {
                       item["rmshare"].push(guest["gast"]);
                     }
@@ -917,8 +917,6 @@ export default {
       setTimeout(() => {
         this.loading = false;
         /* Generate QR Code */
-        const success = btoa(this.data);
-        // console.log(this.data, success);
         QRCode.toDataURL(this.data, { errorCorrectionLevel: "H" }).then(
           (err, url) => {
             if (err) {
@@ -932,16 +930,15 @@ export default {
     },
   },
   watch: {
-    isIdle(newIdle, oldIdle) {
+    isIdle(newIdle) {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   async mounted() {
     await this.$nextTick();
-    // console.log('mounted is triggered');
+
     this.showAnimation();
   },
   computed: {

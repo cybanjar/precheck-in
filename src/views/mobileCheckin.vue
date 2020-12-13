@@ -662,7 +662,7 @@ export default {
     } else {
       this.isMobile = false;
     }
-    // console.log('Created is Triggered');
+
     this.$q.iconSet.arrow.dropdown = "none";
     /* Get Base URL */
     this.location = `${window.location.protocol}//${window.location.host}`;
@@ -702,7 +702,6 @@ export default {
       this.hotelParams = tempParam.hotelParams;
       const encodedURI = encodeURIComponent(this.hotelParams);
       this.location += `/mobilecheckin?${encodedURI}`;
-      // console.log(location.search.substring(1), tempParam);
     }
     /* Get Client Today Date For Initializing Data */
     const today = new Date();
@@ -748,7 +747,6 @@ export default {
           .json();
       }
 
-      // console.log(code.response);
       /* IF Null Response */
       if (code.response["messResult"] == null) {
         router.replace({
@@ -785,7 +783,7 @@ export default {
       this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
       this.hotelCode = tempCode[0]["setupvalue"];
       this.langID = tempLang[0]["setupvalue"];
-      // console.log(this.hotelEndpoint,this.hotelCode,this.langID);
+
       /* Check Used Language */
       switch (this.langID.toLowerCase()) {
         case "eng":
@@ -835,7 +833,7 @@ export default {
           },
         })
         .json();
-      // console.log('setup',setup);
+
       this.tempsetup = setup.response.pciSetup["pci-setup"];
       const jatah = [];
       for (const i in this.tempsetup) {
@@ -867,7 +865,7 @@ export default {
         return item.number1 === 6 && item.number2 === 1;
       });
       this.termENG = tempTermENG[0]["setupvalue"];
-      // console.log('termEng di atas',this.termENG, tempTermENG);
+
       const tempTermIDN = this.tempsetup.filter((item, index) => {
         // Term IDN
         return item.number1 === 6 && item.number2 === 2;
@@ -1042,7 +1040,7 @@ export default {
       obj["policeTrans"] = this.policeTrans;
       obj["kiosCheckin"] = this.kiosCheckin;
       this.setup.push(obj);
-      // console.log(this.setup);
+
       //End Request Set Up
       // Hotel System Date
       const systemDateObj = this.tempsetup.filter((item, index) => {
@@ -1102,7 +1100,7 @@ export default {
           this.infoMCIEarlyCheckin = true;
         }
       }
-      // console.log('Before TempParamBook', this.hotelParams);
+
       if (this.tempParambook != "") {
         /* PCI Get Data */
         this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
@@ -1230,7 +1228,6 @@ export default {
       return returnedClass;
     },
     resetLabel() {
-      // console.log('resetLabel');
       this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
       this.weblabel.vhpSelfCheckIn = this.findLabel(
         "vhp_self_checkIn",
@@ -1300,7 +1297,7 @@ export default {
       }
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
-      const label = this.labels.find((el) => {
+      const label = labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
       if (label === undefined) {
@@ -1334,11 +1331,10 @@ export default {
             break;
         }
       }
-      // console.log(locale,label,fixLabel);
+
       return fixLabel;
     },
     changeLang(data) {
-      // console.log('changeLang');
       // Method for changing MCI Language
       if (data.value == "Indonesia") {
         this.programLabel = "program-label2";
@@ -1357,7 +1353,6 @@ export default {
       }
     },
     async showModalBookingCode() {
-      // console.log('showModalBookingCode');
       // Method for Set Booking Code Input Form to Focus When Activate Modal Booking Code
       this.resetForm();
       this.modalBookingCode = true;
@@ -1365,7 +1360,6 @@ export default {
       this.$refs.bookingcode.focus();
     },
     async showModalGuestName() {
-      // console.log('showModalGuestName');
       // Method for Set Guest Name Input Form to Focus When Activate Modal Guest Name
       this.resetForm();
       this.modalGuestName = true;
@@ -1373,16 +1367,13 @@ export default {
       this.$refs.name.focus();
     },
     async showModalEmailAddress() {
-      // console.log('showModalEmailAddress');
       // Method for Set Email Address Input Form to Focus When Activate Modal Email Address
       this.resetForm();
       this.modalEmailAddress = true;
       await this.$nextTick();
       this.$refs.email.focus();
-      // console.log(this.$refs.email);
     },
     async showModalMembershipID() {
-      // console.log('showModalMembershipID');
       // Method for Set Membership ID Input Form to Focus When Activate Modal Membership
       if (this.licenseMembership) {
         this.resetForm();
@@ -1393,23 +1384,18 @@ export default {
     },
     /* Handling Error Message */
     errorbo() {
-      // console.log('errorbo');
       this.$message.error(this.weblabel.inputBookcode);
     },
     errorname() {
-      // console.log('errorname');
       this.$message.error(this.weblabel.inputGuestName);
     },
     erroremail() {
-      // console.log('erroremail');
       this.$message.error(this.weblabel.inputEmail);
     },
     errormembership() {
-      // console.log('errormembership');
       this.$message.error(this.weblabel.inputMembership);
     },
     erroremailNotTrue() {
-      // console.log('erroremailNotTrue');
       switch (this.langID.toLowerCase()) {
         case "eng":
           this.$message.error("Please enter valid email address");
@@ -1423,12 +1409,10 @@ export default {
       }
     },
     errorco() {
-      // console.log('errorco');
       this.$message.error(this.weblabel.inputCoDate);
     },
     /* End Of Handling Error Message */
     hideMCIModal() {
-      // console.log('hideMCIModal');
       // Method for Hiding All MCI Modal
       this.infoMCIEarlyCheckin = false;
       this.infoMCINotFound = false;
@@ -1436,18 +1420,15 @@ export default {
       this.infoMCIRoomNotAvail = false;
     },
     hideMCISearchModal() {
-      // console.log('hideMCISearchModal');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
       this.modalMembershipID = false;
     },
     reloadPage() {
-      // console.log('reloadPage');
       window.location = this.location;
     },
     getCoDate() {
-      // console.log('getCoDate');
       const dDate = moment(this.date, "DD/MM/YYYY").date();
       const dMonth = moment(this.date, "DD/MM/YYYY").month() + 1;
       const dYear = moment(this.date, "DD/MM/YYYY").year();
@@ -1515,8 +1496,6 @@ export default {
       });
     },
     handleFindRsv(mode) {
-      // console.log('handleFindRsv');
-      // console.log(mode);
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1594,7 +1573,7 @@ export default {
                 throwHttpErrors: false,
               })
               .json();
-            // console.log(data);
+
             this.message = data.response["messResult"];
             const messResult = this.message.split("-");
             const messMessage = messResult[1].split(",");
@@ -1603,9 +1582,8 @@ export default {
                 // Reservation is Found
                 const totalGuest =
                   data.response.arrivalGuestlist["arrival-guestlist"].length;
-                // console.log(totalGuest);
+
                 if (totalGuest > 1) {
-                  // console.log('totalGuest',totalGuest);
                   /* Handling Multiple Guest to ListCheckin.vue */
                   reservation.push(
                     data["response"]["arrivalGuestlist"]["arrival-guestlist"]
@@ -1642,8 +1620,7 @@ export default {
                   Object.assign(this.setup[0], { SearchMethod: mode });
                   Object.assign(this.setup[0], { SearchValue: searchVar });
                   Object.assign(this.setup[0], { SearchCO: coDate });
-                  // console.log('rsv',rsvFix,`tempTotal.Length ${tempTotal.length}`);
-                  // console.log(rsvFix, this.setup[0]);
+
                   if (rsvFix.length > 1) {
                     router.push({
                       name: "ListCheckIn",
@@ -1720,7 +1697,6 @@ export default {
                       },
                     });
                   } else {
-                    // console.log('disini');
                     this.handleSingleGuest(guest, this.setup[0]);
                   }
                 }
@@ -1756,15 +1732,12 @@ export default {
       }
     },
     resetForm() {
-      // console.log('resetForm');
       this.bookingcode = "";
       this.name = "";
       this.email = "";
       this.member = "";
     },
     handleSingleGuest(guest, setup) {
-      // console.log('handleSingleGuest');
-      // console.log(guest);
       const rmStatus = guest["room-status"].split(" ");
       if (parseInt(rmStatus[0]) == 1) {
         // Overlapping
@@ -1785,7 +1758,6 @@ export default {
           this.infoMCIRoomNotAvail = true; //mci_room_not_avail
         }
       } else {
-        // console.log('Single Guest Handle',guest,setup);
         // Ready to MCI Go to Step
         router.push({
           name: "Step",
@@ -1797,7 +1769,6 @@ export default {
       }
     },
     handleCancel() {
-      // console.log('handleCancel');
       this.modalBookingCode = false;
       this.modalGuestName = false;
       this.modalEmailAddress = false;
@@ -1813,13 +1784,12 @@ export default {
       }
       setTimeout(() => {
         this.loading = false;
-        // console.log("setTimeout is Triggered", this.timer);
       }, this.timer);
     },
   },
   async mounted() {
     await this.$nextTick();
-    // console.log('mounted is triggered');
+
     this.showAnimation();
     window.history.pushState(null, "", this.location);
     window.addEventListener("popstate", function (event) {
@@ -1836,7 +1806,7 @@ export default {
             c = [c[0], c[0], c[1], c[1], c[2], c[2]];
           }
           c = "0x" + c.join("");
-          // console.log('thishexa');
+
           return (
             "rgba(" +
             [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +

@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     sessionStorage.setItem("PCI", true);
-    // console.log(this.$route.params);
+
     this.data = this.$route.params.Data;
     this.flagKiosk = this.$route.params.Param.flagKiosk;
     this.hotelParams = this.$route.params.Param.hotelParams;
@@ -112,11 +112,10 @@ export default {
       { errorCorrectionLevel: "H", width: "145", height: "145" }
       // function (error) {
       // if (error) console.error(error);
-      // console.log("success!");
+
       // }
     );
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
-      // console.log(url.split(",")[1]);
       this.url = url.split(",")[1];
     });
     (async () => {
@@ -130,7 +129,6 @@ export default {
           },
         })
         .json();
-      // console.log(parsed);
     })();
   },
   methods: {

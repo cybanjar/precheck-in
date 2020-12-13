@@ -196,8 +196,13 @@ export default {
       this.data = JSON.parse(sessionStorage.getItem("saveData"));
       this.setup = JSON.parse(sessionStorage.getItem("saveSetting"));
     }
-    if (sessionStorage.getItem("PCI") == "true") {
+    if (
+      sessionStorage.getItem("PCI") == "true" ||
+      sessionStorage.getItem("PCIForm") == "true"
+    ) {
       sessionStorage.setItem("PCI", false);
+      sessionStorage.setItem("PCIForm", false);
+      window.location = this.setup.location;
     }
     this.lemparsetup = this.setup;
 
@@ -219,7 +224,7 @@ export default {
       if (this.data[i]["accompaying-guest"] != "") {
         this.data[i].rmshare.push(this.data[i]["accompaying-guest"]);
       }
-      // console.log(i);
+
       this.data[i].key = Number(i) + 1;
     }
     return this.data;
@@ -272,7 +277,6 @@ export default {
             this.setup["checkInTIme"] +
             "}";
 
-          // console.log(this.selectedData[0]["gcomment-desc"]);
           router.push({
             name: "Success",
             params: {
@@ -286,7 +290,6 @@ export default {
             name: "Home",
             params: { Data: data, Param: this.lemparsetup },
           });
-          // console.log(this.selectedData[0]["gcomment-desc"],"sana");
         }
       }
     },
@@ -306,7 +309,6 @@ export default {
         }
         for (const x in this.selectedData) {
           if (this.selectedData[x].key == client.key) {
-            // console.log("msk");
             this.selectedData.splice(x, 1);
           }
         }
@@ -359,16 +361,13 @@ export default {
     },
     handleStatus(item) {
       if (item["gcomment-desc"] == "GUEST ALREADY PCI") {
-        item["guestStatus"] = this.getLabels("status_ci", "sentenceCase");
-        return item["guestStatus"];
-      } else if (item["ifdata-sent"] == true) {
-        item["guestStatus"] = this.getLabels("status_queue", "sentenceCase");
-        return item["guestStatus"];
-      } else {
         item["guestStatus"] = this.getLabels(
-          "not_checked_in_yet",
+          "status_already_pci",
           "sentenceCase"
         );
+        return item["guestStatus"];
+      } else {
+        item["guestStatus"] = this.getLabels("status_not_pci", "sentenceCase");
         return item["guestStatus"];
       }
     },
@@ -376,8 +375,6 @@ export default {
       let returnedColor = "";
       if (item["gcomment-desc"] == "GUEST ALREADY PCI") {
         returnedColor = "teal";
-        // } else if (item["ifdata-sent"] == true) {
-        //   returnedColor = "orange";
       } else {
         returnedColor = "gray";
       }

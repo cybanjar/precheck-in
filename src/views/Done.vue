@@ -70,7 +70,7 @@ export default {
         objValue = objValue.replace(" ", "+");
         Object.assign(tempParams, { hotelParams: objValue });
         this.location += `/precheckin?${tempParam}`;
-        // console.log(this.location);
+
         const parsed = await ky
           .post(
             "http://login.e1-vhp.com:8080/logserver/rest/loginServer/retrieveReservation",
@@ -83,7 +83,7 @@ export default {
             }
           )
           .json();
-        // console.log(parsed);
+
         // Handling null Response
         if (parsed.response.messResult == null) {
           router.push({
@@ -184,7 +184,7 @@ export default {
         if (this.defaultCountry.toLowerCase() == "idn") {
           this.defaultCountry = "INA";
         }
-        // console.log(this.hotelParams);
+
         const jatah = [];
         for (const i in this.tempsetup) {
           if (this.tempsetup[i]["number1"] == 1) {
@@ -240,7 +240,6 @@ export default {
         obj["location"] = this.location;
         this.setting.push(obj);
         if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
-          // console.log("lebih dari 1");
           const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
           sessionStorage.setItem("saveData", JSON.stringify(dataGuest));
           sessionStorage.setItem(
@@ -258,7 +257,6 @@ export default {
           parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
           "GUEST ALREADY PCI"
         ) {
-          // console.log("sudah pci");
           this.currDataPrepare =
             parsed.response.arrivalGuest["arrival-guest"][0];
           const Data =
@@ -277,7 +275,6 @@ export default {
             },
           });
         } else {
-          // console.log("akan pci");
           const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
           dataGuest[0].rmshare = [];
           if (dataGuest[0]["room-sharer"] != "") {

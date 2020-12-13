@@ -304,7 +304,7 @@ export default {
           "col-12 content-guestname content-guestname-space";
       }
       const joinZinr = item["zinr"] + item["rmtype-str"];
-      // console.log(item["gast"], joinZinr, joinZinr.length);
+
       if (joinZinr.length >= 25 && this.isMobile) {
         this.zinrClass = "col-8 guestcard-item-text zinrMinHeight";
       }
@@ -313,7 +313,6 @@ export default {
     });
     this.guestData = tempData;
 
-    // console.log(this.guestData, this.setup);
     /* Do Sorting For Guest Data */
     const guestNotMCI = [];
     const guestWaiting = [];
@@ -330,11 +329,7 @@ export default {
     this.guestData = guestNotMCI.concat(guestWaiting.concat(guestCheckedIn));
     sessionStorage.setItem("listData", JSON.stringify(this.guestData));
     sessionStorage.setItem("settings", JSON.stringify(this.setup));
-    // console.log("Guest Not MCI", guestNotMCI);
-    // console.log("Guest Waiting", guestWaiting);
-    // console.log("Guest Checkin", guestCheckedIn);
-    // console.log(this.guestData);
-    // console.log(this.guestData, this.setup);
+
     if (this.setup.successCheckin != undefined) {
       this.successCheckin = this.setup.successCheckin;
       this.setup.TotalData =
@@ -407,7 +402,7 @@ export default {
   methods: {
     handleStatus(item) {
       const roomStatus = item["room-status"].split(" ")[0];
-      // console.log(item["gast"], roomStatus);
+
       if (item["res-status"] == "1 - Guest Already Checkin") {
         item["guestStatus"] = this.weblabel.statusCi;
         return item["guestStatus"];
@@ -445,7 +440,7 @@ export default {
       }
       let fixLabel = "";
       const locale = localStorage.getItem("locale");
-      const label = this.labels.find((el) => {
+      const label = labels.find((el) => {
         return el["program-variable"] == nameKey;
       });
       if (label === undefined) {
@@ -688,7 +683,6 @@ export default {
       if (newIdle == true || newIdle == "true") {
         window.open(this.location, "_self");
       }
-      // console.log(`NewIdle ${newIdle}`,`OldIdle ${oldIdle}`);
     },
   },
   computed: {

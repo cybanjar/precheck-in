@@ -283,14 +283,13 @@
               </a-form-item>
             </a-col>
             <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <span>{{ currDataPrepare["guest-email"] }}</span>
               <a-form-item :label="getLabels('email', `titleCase`)">
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
                     'email',
                     {
-                      initialValue: email,
+                      initialValue: currDataPrepare['guest-email'],
                       rules: [
                         {
                           required: true,
@@ -642,6 +641,7 @@ export default {
         "_self"
       );
     }
+    sessionStorage.setItem("PCIForm", true);
     this.labels = JSON.parse(localStorage.getItem("labels"));
     this.gambar = this.$route.params.Param["gambar"];
     this.information.backgroundColor = this.$route.params.Param["Background"];
@@ -672,31 +672,30 @@ export default {
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;
     if (this.$route.params.Data.length > 1) {
-      // console.log("masuk couy");
       this.id = this.$route.params.Data;
-      // console.log(this.id);
-      // console.log(this.id.length);
+
       this.currDataPrepare = this.id[this.counter];
-      // console.log(this.currDataPrepare);
     } else {
-      // console.log("masuk cuy");
       this.id = this.$route.params.Data;
-      // console.log(this.id);
-      // console.log(this.id.length);
+
       this.currDataPrepare = this.id["0"];
     }
     this.country = this.currDataPrepare["guest-country"];
     this.email = this.currDataPrepare["guest-email"];
     this.phone = this.currDataPrepare["guest-phone"];
+    this.currDataPrepare["guest-doc-nation"] = this.currDataPrepare[
+      "guest-doc-nation"
+    ].toUpperCase();
+    this.currDataPrepare["guest-country"] = this.currDataPrepare[
+      "guest-country"
+    ].toUpperCase();
     this.counter += 1;
   },
   methods: {
     showModalTerm() {
-      // console.log('showModalTerm is Fired');
       this.visibleTerm = true;
     },
     handleOkTerm(e) {
-      // console.log('handleOkTerm is Fired');
       this.confirmLoading = true;
       setTimeout(() => {
         this.visibleTerm = false;
@@ -704,38 +703,30 @@ export default {
       }, 700);
     },
     Room(e) {
-      // console.log('Room is Fired');
       this.room = e.target.value;
     },
     Bed(e) {
-      // console.log('Bed is Fired');
       this.bed = e.target.value;
     },
     Floor(e) {
-      // console.log('Floor is Fired');
       this.floor = e.target.value;
     },
     Nationality(value) {
-      // console.log('Nationality is Fired');
       this.nationality = value;
     },
     handleChangeRegion(value) {
-      // console.log('handleChangeRegion is Fired');
       this.region = value;
     },
     handleChangeCountry(value) {
       this.country = value;
     },
     scrollToTop() {
-      // console.log('scrollToTop is Fired');
       window.scrollTo(0, 0);
     },
     handleSubmit(e) {
-      // console.log('handleSubmit is Fired');
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // console.log(
           //   {
           //     resNumber: this.currDataPrepare["rsv-number"],
           //     reslineNumber: this.currDataPrepare["rsvline-number"],
@@ -787,7 +778,7 @@ export default {
                 },
               })
               .json();
-            // console.log(parsed, "inputan3");
+
             const tempMessResult = parsed.response.messResult.split(" ");
             this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
           })();
@@ -797,8 +788,6 @@ export default {
       });
     },
     save() {
-      // console.log("save is Fired");
-      // console.log(this.counter, this.id.length);
       if (this.counter == this.id.length) {
         const Data =
           "{" +
@@ -864,7 +853,6 @@ export default {
       this.counter += 1;
     },
     async autoScrollNation() {
-      // console.log('autoScrollNation');
       await this.$nextTick();
       if (this.currDataPrepare["guest-doc-nation"] == "") {
         this.form.setFieldsValue({
@@ -874,7 +862,6 @@ export default {
       }
     },
     async autoScrollCountry() {
-      // console.log('autoScrollCountry');
       await this.$nextTick();
       if (this.currDataPrepare["guest-country"] == "") {
         this.form.setFieldsValue({

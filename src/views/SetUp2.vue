@@ -589,7 +589,6 @@ export default {
       this.response = parsed;
 
       this.tempsetup = parsed.response.pciSetup["pci-setup"];
-      // console.log(this.tempsetup, "tempsetup");
 
       // --
       for (let i = 0; i < this.tempsetup.length; i++) {
@@ -662,48 +661,13 @@ export default {
           this.maxDeposit = datarow["price"];
         }
       }
-
-      // console.log("dataPreferences : ", this.dataPreferences);
-
-      // console.log("this.ssid : ", this.ssid);
-      // console.log("this.wifipass : ", this.wifipass);
-      // --
-      // const ssid = [];
-      // const wifipass = [];
-      // for (const i in this.tempsetup) {
-      //   if (
-      //     this.tempsetup[i]["number1"] == 8 &&
-      //     this.tempsetup[i]["number2"] == 8
-      //   ) {
-      //     ssid.push(this.tempsetup[i]);
-
-      //     for (const ssi in ssid) {
-      //       if (ssid[ssi].setupflag == true) {
-      //         this.ssid = ssid[ssi]["setupvalue"];
-      //       }
-      //     }
-      //   } else if (
-      //     this.tempsetup[i]["number1"] == 8 &&
-      //     this.tempsetup[i]["number2"] == 9
-      //   ) {
-      //     wifipass.push(this.tempsetup[i]);
-
-      //     for (const wifipas in wifipass) {
-      //       if (wifipass[wifipas].setupflag == true) {
-      //         this.wifipass = wifipass[wifipas]["setupvalue"];
-      //       }
-      //     }
-      //   }
-      // }
     })();
   },
   methods: {
     onChangeBC(e) {
-      // console.log('radio checked', e.target.value);
       this.colorPicker = e.target.value;
     },
     onChangeFC(e) {
-      // console.log('radio checked', e.target.value);
       this.fontColor = e.target.value;
     },
     showModalBC() {
@@ -721,7 +685,6 @@ export default {
       }, 300);
     },
     handleCancelBC(e) {
-      // console.log('Clicked cancel button');
       this.bgColor = "#1890FF";
       this.visibleBC = false;
     },
@@ -734,7 +697,6 @@ export default {
       }, 300);
     },
     handleCancelFC(e) {
-      // console.log('Clicked cancel button');
       this.defaultFC = "#1890FF";
       this.visibleFC = false;
     },
@@ -752,17 +714,10 @@ export default {
       });
     },
     onTabChange(key, type) {
-      // console.log(key, type);
       this[type] = key;
     },
     onToggle() {
       this.disabled = !this.disabled;
-    },
-    handlePurpose(value) {
-      // console.log(`selected ${value}`);
-    },
-    changeDeposit(e) {
-      // console.log(`checked = ${e.target.checked}`);
     },
   },
 };
