@@ -8,88 +8,122 @@
         <p :style="textOta" class="mci-hotel">{{ hotelname }}</p>
       </div>
     </div>
-    <div class="justify-around bg-white self-checkin">
-      <div class="row q-mx-md">
-        <div class="mt-3 col-md-7 col-xs-12 col-sm-6">
-          <div class="col-4 label-guestname">
-            {{ getLabels("guest_name", "titleCase") }}
+    <div class="justify-around bg-white self-checkin precheckin-body">
+      <div class="row">
+        <div class="col-md-7 col-sm-6 col-xs-12">
+          <div class="mt-3 row">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="col-4 label-guestname">
+                {{ getLabels("guest_name", "titleCase") }}
+              </div>
+              <h6 class="font-weight-bold">
+                {{ this.currDataPrepare["guest-fname"] }}
+                {{ this.currDataPrepare["guest-lname"] }},
+                {{ this.currDataPrepare["guest-pname"] }}
+              </h6>
+            </div>
           </div>
-          <h6 class="font-weight-bold">
-            {{ this.currDataPrepare["guest-fname"] }}
-            {{ this.currDataPrepare["guest-lname"] }},
-            {{ this.currDataPrepare["guest-pname"] }}
-          </h6>
         </div>
-        <div class="mt-3 col-md-2 col-xs-5 col-sm-6">
-          <p>{{ getLabels("book_code", "titleCase") }}</p>
-          <p>{{ getLabels("stay_period", "titleCase") }}</p>
-          <br />
-          <p>{{ getLabels("room_share", "titleCase") }}</p>
-        </div>
-        <div class="mt-3 col-md-2 col-xs-6 col-sm-6">
-          <p>
-            <strong>{{ this.currDataPrepare["rsv-number"] }}</strong>
-          </p>
-          <p>
-            <strong
-              >{{ formatDate(currDataPrepare.arrive) }} -
-              {{ formatDate(currDataPrepare.depart) }}</strong
-            >
-          </p>
-          <p>
-            <!-- <strong>{{ this.currDataPrepare }}</strong> -->
-            <a-tag color="green" style="font-weight: normal !important">{{
-              this.currDataPrepare["argt-code"]
-            }}</a-tag>
-          </p>
-          <p>
-            <q-chip
-              color="primary"
-              clickable
-              square
-              style="
-                background: white !important;
-                color: #262728 !important;
-                font-size: 0.6rem !important;
-                border: 1px solid gray;
-              "
-              v-if="this.currDataPrepare['rmshare'].length > 0"
-            >
-              {{ getLabels("mci_show", "titleCase") }}
-              <q-menu>
-                <q-banner>
-                  <template v-slot:avatar>
-                    <q-icon name="supervisor_account" color="primary" />
-                  </template>
-                  <p
-                    v-for="rmShare in this.currDataPrepare['rmshare']"
-                    :key="rmShare"
-                    style="margin: 0 !important; text-size: 12px"
-                  >
-                    {{ rmShare }}
-                  </p>
-                </q-banner>
-              </q-menu>
-            </q-chip>
-          </p>
+        <div class="col-md-5 col-sm-5 col-xs-12">
+          <div class="mt-3 row pci-guest-info q-col-gutter-xs">
+            <div class="col-xs-5 col-sm-5 col-md-5">
+              <p>{{ getLabels("book_code", "titleCase") }}</p>
+            </div>
+            <div class="col-xs-7 col-sm-7 col-md-7">
+              <p>
+                <strong>{{ this.currDataPrepare["rsv-number"] }}</strong>
+              </p>
+            </div>
+          </div>
+          <div class="row pci-guest-info">
+            <div class="col-xs-5 col-sm-5 col-md-5">
+              <p>{{ getLabels("stay_period", "titleCase") }}</p>
+            </div>
+            <div class="col-xs-7 col-sm-7 col-md-7">
+              <p>
+                <strong
+                  >{{ formatDate(currDataPrepare.arrive) }} -
+                  {{ formatDate(currDataPrepare.depart) }}</strong
+                >
+              </p>
+            </div>
+          </div>
+          <div class="row pci-guest-info">
+            <div class="col-xs-5 col-sm-5 col-md-5">
+              <p>{{ getLabels("package", "titleCase") }}</p>
+            </div>
+            <div class="col-xs-7 col-sm-7 col-md-7">
+              <p>
+                <!-- <strong>{{ this.currDataPrepare }}</strong> -->
+                <a-tag color="green" style="font-weight: normal !important">{{
+                  this.currDataPrepare["argt-code"]
+                }}</a-tag>
+              </p>
+            </div>
+          </div>
+          <div class="row pci-guest-info">
+            <div class="col-xs-5 col-sm-5 col-md-5">
+              <p>{{ getLabels("room_share", "titleCase") }}</p>
+            </div>
+            <div class="col-xs-7 col-sm-7 col-md-7">
+              <p>
+                <q-chip
+                  color="primary"
+                  clickable
+                  square
+                  style="
+                    background: white !important;
+                    color: #262728 !important;
+                    font-size: 0.6rem !important;
+                    border: 1px solid gray;
+                    margin: 0 !important;
+                  "
+                  v-if="this.currDataPrepare['rmshare'].length > 0"
+                >
+                  {{ getLabels("mci_show", "titleCase") }}
+                  <q-menu>
+                    <q-banner>
+                      <template v-slot:avatar>
+                        <q-icon name="supervisor_account" color="primary" />
+                      </template>
+                      <p
+                        v-for="rmShare in this.currDataPrepare['rmshare']"
+                        :key="rmShare"
+                        style="margin: 0 !important; text-size: 12px"
+                      >
+                        {{ rmShare }}
+                      </p>
+                    </q-banner>
+                  </q-menu>
+                </q-chip>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <q-separator inset />
+      <div>
+        <q-separator inset />
+      </div>
       <div>
         <a-form layout="vertical" :form="form" @submit="handleSubmit">
-          <a-row class="ml-4 mr-3 mt-3 mb-3" :gutter="16">
-            <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">
-                    {{ getLabels("arrival", `titleCase`) }}
-                  </p>
-                </a-col>
-              </a-row>
-            </a-card>
-          </a-row>
-          <a-row class="ml-3" :gutter="16">
-            <a-col :span="4" :xl="4" :lg="5" :md="6" :xs="24">
+          <div class="row formChild">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <a-card class="header-card">
+                <a-row>
+                  <a-col :span="23" :xl="23" :xs="23">
+                    <p class="header-group">
+                      {{ getLabels("arrival", `titleCase`) }}
+                    </p>
+                  </a-col>
+                </a-row>
+              </a-card>
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-lg">
+            <div
+              class="col-md-2 col-sm-3 col-xs-12"
+              style="margin-bottom: -30px !important"
+            >
               <a-form-item
                 layout="vertical"
                 :label="getLabels('eta', `titleCase`)"
@@ -122,28 +156,22 @@
                   </template>
                 </q-input>
               </a-form-item>
-            </a-col>
-            <a-col
-              :span="4"
-              :xl="6"
-              :lg="5"
-              :md="6"
-              :xs="24"
+            </div>
+            <div
+              class="col-md-3 col-sm-3 col-xs-12"
               v-show="showPickupRequest"
+              style="margin-bottom: -30px !important"
             >
               <a-form-item :label="getLabels('request', `titleCase`)">
                 <a-checkbox :checked="showPrice" v-model="showPrice">{{
                   getLabels("pick_req", `titleCase`)
                 }}</a-checkbox>
               </a-form-item>
-            </a-col>
-            <a-col
-              :span="4"
-              :xl="4"
-              :lg="5"
-              :md="5"
-              :xs="24"
+            </div>
+            <div
+              class="col-md-2 col-sm-3 col-xs-12"
               v-show="showPickupRequest"
+              style="margin-bottom: -30px !important"
             >
               <a-form-item :label="getLabels('price', 'titleCase')">
                 <label v-decorator="['currency', { initialValue: money }]">
@@ -156,14 +184,11 @@
                 </label>
                 <span>/ {{ per }}</span>
               </a-form-item>
-            </a-col>
-            <a-col
+            </div>
+            <div
+              class="col-md-5 col-sm-3 col-xs-12"
               v-show="showPrice && showPickupRequest"
-              :span="8"
-              :xl="8"
-              :lg="8"
-              :md="7"
-              :xs="24"
+              style="margin-bottom: -30px !important"
             >
               <a-form-item :label="getLabels('pick_detail', 'titleCase')">
                 <a-input
@@ -174,101 +199,113 @@
                   ]"
                 />
               </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="16">
-            <a-col>
-              <a-form-item :label="getLabels('room_pref', 'titleCase')">
-                <a-radio-group
-                  v-model="room"
-                  name="radioGroup"
-                  v-show="showSmoking"
-                  @change="Room"
-                >
-                  <a-radio value="NonSmoking">
-                    <span class="font-weight-normal">
-                      {{ getLabels("non_smoking", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                  <a-radio value="Smoking">
-                    <span class="font-weight-normal">
-                      {{ getLabels("smoking", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                </a-radio-group>
+            </div>
+          </div>
+          <div class="row">
+            <a-form-item :label="getLabels('room_pref', 'titleCase')">
+              <a-radio-group
+                v-model="room"
+                name="radioGroup"
+                v-show="showSmoking"
+                @change="Room"
+              >
+                <a-radio value="NonSmoking">
+                  <span class="font-weight-normal">
+                    {{ getLabels("non_smoking", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+                <a-radio value="Smoking">
+                  <span class="font-weight-normal">
+                    {{ getLabels("smoking", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
+          </div>
+          <div class="row">
+            <a-form-item label>
+              <a-radio-group
+                v-model="floor"
+                name="radioGroup"
+                v-show="showFloor"
+                @change="Floor"
+              >
+                <a-radio value="LowerFloor">
+                  <span class="font-weight-normal">
+                    {{ getLabels("lower_floor", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+                <a-radio value="HigherFloor">
+                  <span class="font-weight-normal">
+                    {{ getLabels("higher_floor", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
+          </div>
+          <div class="row">
+            <a-form-item label>
+              <a-radio-group
+                name="radioGroup"
+                v-model="bed"
+                v-show="showBed"
+                @change="Bed"
+              >
+                <a-radio value="OneBigBed">
+                  <span class="font-weight-normal">
+                    {{ getLabels("one_big_bed", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+                <a-radio value="TwoSingleBeds">
+                  <span class="font-weight-normal">
+                    {{ getLabels("two_single_beds", `sentenceCase`) }}
+                  </span>
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-6 col-sm-6 col-xs-10">
+              <a-form-item
+                :label="getLabels('special_request', `titleCase`)"
+                style="margin-bottom: 0 !important"
+              >
+                <a-textarea
+                  :rows="4"
+                  :max-length="max"
+                  v-model="text"
+                  style="padding-bottom: 0 !important"
+                />
               </a-form-item>
-              <a-form-item label>
-                <a-radio-group
-                  v-model="floor"
-                  name="radioGroup"
-                  v-show="showFloor"
-                  @change="Floor"
-                >
-                  <a-radio value="LowerFloor">
-                    <span class="font-weight-normal">
-                      {{ getLabels("lower_floor", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                  <a-radio value="HigherFloor">
-                    <span class="font-weight-normal">
-                      {{ getLabels("higher_floor", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-              <a-form-item label>
-                <a-radio-group
-                  name="radioGroup"
-                  v-model="bed"
-                  v-show="showBed"
-                  @change="Bed"
-                >
-                  <a-radio value="OneBigBed">
-                    <span class="font-weight-normal">
-                      {{ getLabels("one_big_bed", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                  <a-radio value="TwoSingleBeds">
-                    <span class="font-weight-normal">
-                      {{ getLabels("two_single_beds", `sentenceCase`) }}
-                    </span>
-                  </a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="9" :xl="9" :lg="9" :md="12" :xs="18">
-              <a-form-item :label="getLabels('special_request', `titleCase`)">
-                <a-textarea :rows="4" :max-length="max" v-model="text" />
-              </a-form-item>
-            </a-col>
-            <a-col class="max-breaker" :span="3" :xl="3" :xs="6">
-              <span v-text="text.length + '/' + max"></span>
-            </a-col>
-          </a-row>
-
-          <a-row class="ml-4 mr-3 mb-3">
-            <a-card class="header-card">
-              <a-row>
-                <a-col :span="23" :xl="23" :xs="23">
-                  <p class="header-group">
-                    {{ getLabels("guest_detail", `titleCase`) }}
-                  </p>
-                </a-col>
-              </a-row>
-            </a-card>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col
-              v-if="email != ''"
-              :span="5"
-              :xl="5"
-              :lg="7"
-              :md="10"
-              :xs="24"
+            </div>
+            <div
+              class="col-md-2 col-sm-2 col-xs-2"
+              style="display: flex; align-items: flex-end"
             >
-              <a-form-item :label="getLabels('email', `titleCase`)">
+              <span v-text="text.length + '/' + max"></span>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12"></div>
+          </div>
+          <div class="row formChild">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <a-card class="header-card">
+                <a-row>
+                  <a-col :span="23" :xl="23" :xs="23">
+                    <p class="header-group">
+                      {{ getLabels("guest_detail", `titleCase`) }}
+                    </p>
+                  </a-col>
+                </a-row>
+              </a-card>
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a-form-item
+                :label="getLabels('email', `titleCase`)"
+                style="margin-bottom: 0 !important"
+                v-if="email != ''"
+              >
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -281,9 +318,11 @@
                   disabled
                 />
               </a-form-item>
-            </a-col>
-            <a-col v-else :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('email', `titleCase`)">
+              <a-form-item
+                :label="getLabels('email', `titleCase`)"
+                style="margin-bottom: 0 !important"
+                v-else
+              >
                 <a-input
                   class="ant-input-h"
                   v-decorator="[
@@ -304,9 +343,12 @@
                   ]"
                 />
               </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('phone_number', `titleCase`)">
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a-form-item
+                :label="getLabels('phone_number', `titleCase`)"
+                style="margin-bottom: 0 !important"
+              >
                 <q-input
                   v-decorator="[
                     'phone',
@@ -325,11 +367,14 @@
                   mask="################"
                 />
               </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="3" :xl="3" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('purpose_stay', `titleCase`)">
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a-form-item
+                :label="getLabels('purpose_stay', `titleCase`)"
+                style="margin-bottom: 0 !important"
+              >
                 <a-select
                   v-decorator="[
                     'purpose',
@@ -346,11 +391,14 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <a-form-item :label="getLabels('nationality', `titleCase`)">
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a-form-item
+                :label="getLabels('nationality', `titleCase`)"
+                style="margin-bottom: 0 !important"
+              >
                 <a-select
                   @focus="autoScrollNation"
                   v-decorator="[
@@ -370,13 +418,13 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-3 col-sm-3 col-xs-12">
               <a-form-item
                 :label="getLabels('country_of_residence', `titleCase`)"
+                style="margin-bottom: 0 !important"
               >
                 <a-select
                   @focus="autoScrollCountry"
@@ -397,9 +445,11 @@
                   >
                 </a-select>
               </a-form-item>
-            </a-col>
-            <a-col :span="5" :xl="5" :lg="7" :md="10" :xs="24">
-              <div
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a-form-item
+                :label="getLabels('region', `titleCase`)"
+                style="margin-bottom: 0 !important"
                 v-if="
                   country === 'INA' ||
                   country === 'ina' ||
@@ -407,71 +457,47 @@
                   country === ' '
                 "
               >
-                <a-form-item :label="getLabels('region', `titleCase`)">
-                  <a-select
-                    v-decorator="[
-                      'region',
-                      {
-                        initialValue: currDataPrepare['guest-prov'],
-                        rules: [{ required: true }],
-                      },
-                    ]"
-                    @change="handleChangeRegion"
+                <a-select
+                  v-decorator="[
+                    'region',
+                    {
+                      initialValue: currDataPrepare['guest-prov'],
+                      rules: [{ required: true }],
+                    },
+                  ]"
+                  @change="handleChangeRegion"
+                >
+                  <a-select-option
+                    v-for="item in filteredProvince"
+                    :key="item['descr']"
+                    :value="item['descr']"
+                    >{{ item.setupvalue }}</a-select-option
                   >
-                    <a-select-option
-                      v-for="item in filteredProvince"
-                      :key="item['descr']"
-                      :value="item['descr']"
-                      >{{ item.setupvalue }}</a-select-option
-                    >
-                  </a-select>
-                </a-form-item>
-              </div>
-              <!--<div v-else>
-                <a-form-item :label="getLabels('state', `titleCase`)">
-                  <a-input
-                    class="ant-input-h"
-                    v-decorator="[
-                      'State',
-                      {
-                        initialValue: State,
-                        rules: [{ message: 'Please input your State' }],
-                      },
-                    ]"
-                  />
-                </a-form-item>
-              </div>-->
-            </a-col>
-          </a-row>
-
-          <!-- Address -->
-          <a-row class="ml-3 mb-3" :gutter="[16, 8]">
-            <a-col :span="1" :xl="1" :xs="2">
-              <a-checkbox v-model="agree" />
-            </a-col>
-            <a-col class="fix-agreement" :span="23" :xl="23" :xs="22">
-              {{ getLabels("pci_tc", `sentenceCase`) }}
-              <a @click="showModalTerm">{{
-                getLabels("t_c", `sentenceCase`)
-              }}</a>
-              {{ hotelname }}.
-            </a-col>
-            <a-modal
-              :title="getLabels('t_c', `titleCase`)"
-              :visible="visibleTerm"
-              :confirm-loading="confirmLoadingTerm"
-              :closable="false"
+                </a-select>
+              </a-form-item>
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div
+              class="col-md-8 col-sm-8 col-xs-12"
+              style="display: flex; flex-direction: row"
             >
-              <template slot="footer">
-                <a-button key="submit" type="primary" @click="handleOkTerm">{{
-                  getLabels("close", `sentenceCase`)
-                }}</a-button>
-              </template>
-              <p>{{ term }}</p>
-            </a-modal>
-          </a-row>
-          <a-row class="ml-3" :gutter="[16, 8]">
-            <a-col :span="4" :xl="4" :lg="7" :xs="24">
+              <span
+                style="margin-right: 0.8rem; display: flex; align-items: center"
+              >
+                <a-checkbox v-model="agree" />
+              </span>
+              <span>
+                {{ getLabels("pci_tc", `sentenceCase`) }}
+                <a @click="showModalTerm">{{
+                  getLabels("t_c", `sentenceCase`)
+                }}</a>
+                {{ hotelname }}.
+              </span>
+            </div>
+          </div>
+          <div class="row formChild q-col-gutter-md">
+            <div class="col-md-3 col-sm-3 col-xs-12">
               <a-form-item>
                 <a-button
                   :xl="12"
@@ -484,8 +510,28 @@
                   >{{ getLabels("ci_now", `titleCase`) }}</a-button
                 >
               </a-form-item>
-            </a-col>
-          </a-row>
+            </div>
+          </div>
+
+          <!-- MODAL -->
+          <a-modal
+            :title="getLabels('t_c', `titleCase`)"
+            :visible="visibleTerm"
+            :confirm-loading="confirmLoadingTerm"
+            :closable="false"
+          >
+            <template slot="footer">
+              <a-button key="submit" type="primary" @click="handleOkTerm">{{
+                getLabels("close", `sentenceCase`)
+              }}</a-button>
+            </template>
+            <q-card-section
+              style="max-height: 50vh; padding: 5px 5px 5px 0px !important"
+              class="scroll"
+            >
+              <p style="white-space: pre-wrap">{{ term }}</p>
+            </q-card-section>
+          </a-modal>
         </a-form>
       </div>
     </div>
@@ -668,6 +714,7 @@ export default {
     this.hotelLogo = this.$route.params.Param["hotelLogo"];
     this.textOta.color = this.$route.params.Param["Font"];
     this.ota.backgroundColor = this.$route.params.Param["Background"];
+    this.flagKiosk = this.$route.params.Param["flagKiosk"];
     this.filteredRegion = this.Region;
     this.filteredProvince = this.province;
     this.FilterCountry = this.countries;

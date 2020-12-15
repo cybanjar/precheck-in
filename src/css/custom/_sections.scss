@@ -105,7 +105,12 @@
 .buttonMci {
   max-width: 100% !important;
 }
-
+.pci-guest-info p {
+  margin-bottom: 0.5rem !important;
+}
+.formChild {
+  margin-bottom: 1.5rem;
+}
 @media only screen and (min-width: 577px) {
   .buttonMci {
     max-width: none !important;

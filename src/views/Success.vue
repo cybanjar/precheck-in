@@ -78,6 +78,7 @@ export default {
 
     this.data = this.$route.params.Data;
     this.flagKiosk = this.$route.params.Param.flagKiosk;
+
     this.hotelParams = this.$route.params.Param.hotelParams;
     this.hotelEndpoint = this.$route.params.Param.hotelEndpoint;
     this.hotelName = this.$route.params.Param.hotelName;

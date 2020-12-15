@@ -70,10 +70,13 @@
                 <div class="col-4">
                   {{ getLabels("room_number", `titleCase`) }}
                 </div>
-                <div class="col-8 guestcard-item-text">
-                  {{ item["rsv-number"] }}
+                <div
+                  class="col-8 guestcard-item-text"
+                  v-show="item['rmno'] != ''"
+                >
+                  {{ item["rmno"] }}
                   <a-tag color="green" style="font-weight: normal !important">{{
-                    item["argt-code"]
+                    item["rmdesc"]
                   }}</a-tag>
                 </div>
               </div>
