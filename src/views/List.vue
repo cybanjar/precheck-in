@@ -190,6 +190,8 @@ export default {
       },
       hotelLogo: "",
       guestNameClass: "col-12 content-guestname",
+      serverTime: "",
+      systemTime: "",
     };
   },
   created() {
@@ -216,6 +218,8 @@ export default {
     this.textOta.color = this.setup["Font"];
     this.ota.backgroundColor = this.setup["Background"];
     this.hotelLogo = this.setup["hotelLogo"];
+    this.serverTime = this.setup["serverTime"];
+    this.systemTime = this.setup["systemTime"];
 
     for (const i in this.data) {
       this.data[i].isSelected = false;
@@ -234,65 +238,74 @@ export default {
   },
 
   mounted() {
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
   },
   methods: {
     send() {
-      if (this.selectedData.length > 1) {
-        // for (const i in this.selectedData) {
-        const jumlah = this.selectedData.filter((item, index) => {
-          return item["gcomment-desc"] == "GUEST ALREADY PCI";
+      if (!(this.serverTime > this.systemTime)) {
+        router.push({
+          name: "Info",
+          params: {
+            Param: this.lemparsetup,
+          },
         });
-        if (this.selectedData.length == jumlah.length) {
-          const Data =
-            "{" +
-            this.selectedData[0]["rsv-number"] +
-            ";" +
-            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
-            "," +
-            this.setup["checkInTIme"] +
-            "}";
-          router.push({
-            name: "Success",
-            params: {
-              Data: Data,
-              Param: this.lemparsetup,
-            },
-          });
-        } else {
-          const asli = this.selectedData.filter((item, index) => {
-            return item["gcomment-desc"] != "GUEST ALREADY PCI";
-          });
-          const data = asli;
-          router.push({
-            name: "Home",
-            params: { Data: data, Param: this.lemparsetup },
-          });
-        }
       } else {
-        if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
-          const Data =
-            "{" +
-            this.selectedData[0]["rsv-number"] +
-            ";" +
-            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
-            "," +
-            this.setup["checkInTIme"] +
-            "}";
-
-          router.push({
-            name: "Success",
-            params: {
-              Data: Data,
-              Param: this.lemparsetup,
-            },
+        if (this.selectedData.length > 1) {
+          // for (const i in this.selectedData) {
+          const jumlah = this.selectedData.filter((item, index) => {
+            return item["gcomment-desc"] == "GUEST ALREADY PCI";
           });
+          if (this.selectedData.length == jumlah.length) {
+            const Data =
+              "{" +
+              this.selectedData[0]["rsv-number"] +
+              ";" +
+              moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+              "," +
+              this.setup["checkInTIme"] +
+              "}";
+            router.push({
+              name: "Success",
+              params: {
+                Data: Data,
+                Param: this.lemparsetup,
+              },
+            });
+          } else {
+            const asli = this.selectedData.filter((item, index) => {
+              return item["gcomment-desc"] != "GUEST ALREADY PCI";
+            });
+            const data = asli;
+            router.push({
+              name: "Home",
+              params: { Data: data, Param: this.lemparsetup },
+            });
+          }
         } else {
-          const data = this.selectedData;
-          router.push({
-            name: "Home",
-            params: { Data: data, Param: this.lemparsetup },
-          });
+          if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
+            const Data =
+              "{" +
+              this.selectedData[0]["rsv-number"] +
+              ";" +
+              moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+              "," +
+              this.setup["checkInTIme"] +
+              "}";
+
+            router.push({
+              name: "Success",
+              params: {
+                Data: Data,
+                Param: this.lemparsetup,
+              },
+            });
+          } else {
+            const data = this.selectedData;
+            router.push({
+              name: "Home",
+              params: { Data: data, Param: this.lemparsetup },
+            });
+          }
         }
       }
     },
@@ -351,7 +364,7 @@ export default {
           returnedClass = "notselected pl-3 font-weight-bold";
         }
       } else if (used == "status") {
-        const locale = localStorage.getItem("locale");
+        const locale = sessionStorage.getItem("locale");
         if (locale == "EN") {
           returnedClass = "infoCardEN";
         } else if (locale == "ID") {

@@ -17,9 +17,9 @@
                 {{ getLabels("guest_name", "titleCase") }}
               </div>
               <h6 class="font-weight-bold">
-                {{ this.currDataPrepare["guest-fname"] }}
-                {{ this.currDataPrepare["guest-lname"] }},
-                {{ this.currDataPrepare["guest-pname"] }}
+                {{ this.currDataPrepare["guest-fname"] || "" }}
+                {{ this.currDataPrepare["guest-lname"] || "" }},
+                {{ this.currDataPrepare["guest-pname"] || "" }}
               </h6>
             </div>
           </div>
@@ -566,7 +566,7 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
-import ky from "ky";
+import api from "../api/Endpoint";
 Vue.use(Antd);
 Vue.use(Quasar, {
   components: {
@@ -688,7 +688,7 @@ export default {
       );
     }
     sessionStorage.setItem("PCIForm", true);
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
     this.gambar = this.$route.params.Param["gambar"];
     this.information.backgroundColor = this.$route.params.Param["Background"];
     this.information.color = this.$route.params.Param["Font"];
@@ -772,7 +772,7 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      this.form.validateFields((err, values) => {
+      this.form.validateFields(async (err, values) => {
         if (!err) {
           //   {
           //     resNumber: this.currDataPrepare["rsv-number"],
@@ -796,39 +796,32 @@ export default {
           //   },
           //   "inputan"
           // );
-          (async () => {
-            const tempParam = location.search.substring(1);
-            const parsed = await ky
-              .post(this.hotelEndpoint + "preCI/updateData", {
-                json: {
-                  request: {
-                    resNumber: this.currDataPrepare["rsv-number"],
-                    reslineNumber: this.currDataPrepare["rsvline-number"],
-                    estAT: this.hour,
-                    pickrequest: this.showPrice,
-                    pickdetail:
-                      this.showPrice == false ||
-                      values.flight == " " ||
-                      values.flight == undefined
-                        ? ""
-                        : values.flight,
-                    roomPreferences:
-                      this.room + "$" + this.floor + "$" + this.bed,
-                    specialReq: this.text,
-                    guestPhnumber: values.phone,
-                    guestNationality: values.nationality,
-                    guestCountry: values.country,
-                    guestRegion: values.country != "INA" ? " " : values.region,
-                    agreedTerm: true,
-                    purposeOfStay: values.purpose,
-                  },
-                },
-              })
-              .json();
-
-            const tempMessResult = parsed.response.messResult.split(" ");
-            this.guests = parsed.response.arrivalGuest["arrival-guest"].length;
-          })();
+          const tempParam = location.search.substring(1);
+          const parsed = await api.doFetch(
+            this.hotelEndpoint + "preCI/updateData",
+            {
+              resNumber: this.currDataPrepare["rsv-number"],
+              reslineNumber: this.currDataPrepare["rsvline-number"],
+              estAT: this.hour,
+              pickrequest: this.showPrice,
+              pickdetail:
+                this.showPrice == false ||
+                values.flight == " " ||
+                values.flight == undefined
+                  ? ""
+                  : values.flight,
+              roomPreferences: this.room + "$" + this.floor + "$" + this.bed,
+              specialReq: this.text,
+              guestPhnumber: values.phone,
+              guestNationality: values.nationality,
+              guestCountry: values.country,
+              guestRegion: values.country != "INA" ? " " : values.region,
+              agreedTerm: true,
+              purposeOfStay: values.purpose,
+            }
+          );
+          console.log(parsed.response);
+          const tempMessResult = parsed.response.messResult.split(" ");
           this.scrollToTop();
           this.save();
         }

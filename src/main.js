@@ -6,6 +6,8 @@ import store from "@/store/store";
 
 import style from "./css/style.scss";
 import "./quasar";
+import VueCompositionAPI from "@vue/composition-api";
+import VueRouter from "vue-router";
 
 Vue.config.productionTip = false;
 
@@ -14,6 +16,9 @@ const eventsHub = new Vue({
   style,
   render: (h) => h(App),
 }).$mount("#app");
+
+Vue.use(VueCompositionAPI);
+Vue.use(VueRouter);
 
 Vue.use(IdleVue, {
   eventEmitter: eventsHub,

@@ -460,10 +460,10 @@
 import "viewerjs/dist/viewer.css";
 import store from "@/store/store";
 import QRCode from "qrcode";
-import ky from "ky";
 import moment from "moment";
 import router from "../router";
 import Viewer from "viewerjs";
+import api from "../api/Endpoint";
 export default {
   data() {
     return {
@@ -542,7 +542,7 @@ export default {
       timeNow: "",
     };
   },
-  created() {
+  async created() {
     this.setup = this.$route.params.setting;
     this.guestData = this.$route.params.Data;
     this.smsParam = this.$route.params.smsParam;
@@ -551,28 +551,42 @@ export default {
       if (this.smsParam == null) {
         this.smsParam = JSON.parse(sessionStorage.getItem("smsParam"));
       }
-
-      if (sessionStorage.getItem("guestData") != null) {
-        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
-      }
       if (sessionStorage.getItem("settings") != null) {
         this.setup = JSON.parse(sessionStorage.getItem("settings"));
+      } else {
+        window.open(
+          `${window.location.protocol}//${window.location.host}`,
+          "_self"
+        );
       }
+      if (sessionStorage.getItem("guestData") != null) {
+        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
+      } else {
+        window.open(this.setup["location"], "_self");
+      }
+
       this.guestData["resnr"] = this.smsParam.keyString.split("|")[1];
       this.guestData["reslinnr"] = this.smsParam.keyString.split("|")[2];
       this.guestData["zinr"] = this.smsParam.roomNumber;
       this.guestData["argt-str"] = this.smsParam.arrangement.trim();
       this.guestData["rmtype-str"] = this.smsParam.roomType;
     } else if (this.setup == null || this.guestData == null) {
-      if (sessionStorage.getItem("guestData") != null) {
-        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
-      }
       if (sessionStorage.getItem("settings") != null) {
         this.setup = JSON.parse(sessionStorage.getItem("settings"));
+      } else {
+        window.open(
+          `${window.location.protocol}//${window.location.host}`,
+          "_self"
+        );
+      }
+      if (sessionStorage.getItem("guestData") != null) {
+        this.guestData = JSON.parse(sessionStorage.getItem("guestData"));
+      } else {
+        window.open(this.setup["location"], "_self");
       }
     }
     // Get Label From LocalStorage
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
     // Get Parsing Web Setting
     this.hotelLogo = this.setup.hotelLogo;
     this.hotelEndpoint = this.setup.hotelEndpoint;
@@ -616,43 +630,36 @@ export default {
         break;
     }
     // Check Validation of Keycard
-    (async () => {
-      const parsed = await ky
-        .post(this.hotelEndpoint + "mobileCI/checkValidation", {
-          json: {
-            request: {
-              rsvNumber: this.bookingcode,
-              rsvlineNumber: this.reslinnr,
-              caseType: "3", // 1 = check res status; 2 = check payment; 3 = check keycard
-            },
-          },
-        })
-        .json();
-      this.data = parsed.response.keyString;
-      if (parsed.response.keyAvail <= 0) {
-        this.QRshow = false;
-      } else {
-        this.QRshow = true;
+    const parsed = await api.doFetch(
+      this.hotelEndpoint + "mobileCI/checkValidation",
+      {
+        rsvNumber: this.bookingcode,
+        rsvlineNumber: this.reslinnr,
+        caseType: "3", // 1 = check res status; 2 = check payment; 3 = check keycard
       }
-    })();
+    );
+
+    this.data = parsed.response.keyString;
+    if (parsed.response.keyAvail <= 0) {
+      this.QRshow = false;
+    } else {
+      this.QRshow = true;
+    }
+
     // Generate QRCode
     // Get Guest Image
-    (async () => {
-      const parsed = await ky
-        .post(this.hotelEndpoint + "mobileCI/loadIDCard", {
-          json: {
-            request: {
-              guestno: this.guestData["gastno"],
-            },
-          },
-        })
-        .json();
-      if (parsed.response.imagedata != "") {
-        this.imageID = "data:image/png;base64," + parsed.response.imagedata;
-      } else {
-        this.imageID = "";
+    const giResponse = await api.doFetch(
+      this.hotelEndpoint + "mobileCI/loadIDCard",
+      {
+        guestno: this.guestData["gastno"],
       }
-    })();
+    );
+    if (giResponse.response.imagedata != "") {
+      this.imageID = "data:image/png;base64," + giResponse.response.imagedata;
+    } else {
+      this.imageID = "";
+    }
+
     // Labeling
     this.weblabel.roomNumber = this.findLabel("room_number", "titleCase");
     this.weblabel.adult = this.findLabel("adult", "titleCase");
@@ -724,15 +731,15 @@ export default {
   methods: {
     findLabel(nameKey, used) {
       let labels = undefined;
-      if (localStorage.getItem("labels") == null) {
-        labels = localStorage.getItem("labels");
+      if (sessionStorage.getItem("labels") == null) {
+        labels = sessionStorage.getItem("labels");
       } else {
         labels = this.labels;
       }
       let fixLabel = "";
-      const locale = localStorage.getItem("locale");
+      const locale = sessionStorage.getItem("locale");
       const label = labels.find((el) => {
-        return el["program-variable"] == nameKey;
+        return el["program-variable"].trim() == nameKey.trim();
       });
       if (label === undefined) {
         fixLabel = "";
@@ -814,103 +821,95 @@ export default {
         },
       });
     },
-    goBack() {
+    async goBack() {
       if (this.smsParam != null) {
         this.backToHome();
       } else {
         this.gobackLoading = true;
-        (async () => {
-          const data = await ky
-            .post(this.hotelEndpoint + "mobileCI/findReservation", {
-              json: {
-                request: {
-                  coDate: this.setup.SearchCO,
-                  bookCode: this.setup.SearchValue,
-                  chName: " ",
-                  earlyCI: "false",
-                  maxRoom: "1",
-                  citime: this.serverTime,
-                  groupFlag: "false",
-                },
-              },
-            })
-            .json();
-          this.message = data.response["messResult"];
-          const messResult = this.message.split("-");
-          //const messMessage = messResult[1].split(",");
-          this.gobackLoading = false;
-          switch (messResult[0].trim()) {
-            case "0":
-              // Reservation is Found
-              const reservation = [];
-              /* Get Temporary Total Reservation */
-              reservation.push(
-                data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-              );
-              // Reservation Without Room Sharer (Main Guest Reservation)
-              const mainReservation = reservation[0].filter((item) => {
-                if (item["room-sharer"] === true) {
+        const data = await api.doFetch(
+          this.hotelEndpoint + "mobileCI/findReservation",
+          {
+            coDate: this.setup.SearchCO,
+            bookCode: this.setup.SearchValue,
+            chName: " ",
+            earlyCI: "false",
+            maxRoom: "1",
+            citime: this.serverTime,
+            groupFlag: "false",
+          }
+        );
+
+        this.message = data.response["messResult"];
+        const messResult = this.message.split("-");
+        //const messMessage = messResult[1].split(",");
+        this.gobackLoading = false;
+        switch (messResult[0].trim()) {
+          case "0":
+            // Reservation is Found
+            const reservation = [];
+            /* Get Temporary Total Reservation */
+            reservation.push(
+              data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+            );
+            // Reservation Without Room Sharer (Main Guest Reservation)
+            const mainReservation = reservation[0].filter((item) => {
+              if (item["room-sharer"] === true) {
+              } else {
+                return item;
+              }
+            });
+            if (mainReservation.length > 1) {
+              // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
+              const acceptRsv = mainReservation.filter((item) => {
+                if (
+                  item["room-status"] == "1 Room Already assign or Overlapping"
+                ) {
                 } else {
                   return item;
                 }
               });
-              if (mainReservation.length > 1) {
-                // Reservation Without Room Sharer + Overlapping (Acceptable Reservation)
-                const acceptRsv = mainReservation.filter((item) => {
-                  if (
-                    item["room-status"] ==
-                    "1 Room Already assign or Overlapping"
-                  ) {
-                  } else {
-                    return item;
+              this.setup.TotalData = acceptRsv.length;
+              // Reservation Room Share Only
+              const roomShare = reservation[0].filter((item) => {
+                return item["room-sharer"] === true;
+              });
+              // Attach Room Share into Main Guest Reservation
+              // Also counting Total Of Checked-in and Waiting List
+              let countCheckedIn = 0;
+              let countWaiting = 0;
+              mainReservation.forEach((item) => {
+                Object.assign(item, { rmshare: [] });
+                roomShare.forEach((guest) => {
+                  if (item["zinr"] == guest["zinr"]) {
+                    item["rmshare"].push(guest["gast"]);
                   }
                 });
-                this.setup.TotalData = acceptRsv.length;
-                // Reservation Room Share Only
-                const roomShare = reservation[0].filter((item) => {
-                  return item["room-sharer"] === true;
-                });
-                // Attach Room Share into Main Guest Reservation
-                // Also counting Total Of Checked-in and Waiting List
-                let countCheckedIn = 0;
-                let countWaiting = 0;
-                mainReservation.forEach((item) => {
-                  Object.assign(item, { rmshare: [] });
-                  roomShare.forEach((guest) => {
-                    if (item["zinr"] == guest["zinr"]) {
-                      item["rmshare"].push(guest["gast"]);
-                    }
-                  });
-                  if (item["res-status"] == "1 - Guest Already Checkin") {
-                    // Checked In Guest
-                    countCheckedIn++;
-                  } else if (item["ifdata-sent"] == true) {
-                    // Waiting List Guest
-                    countWaiting++;
-                  }
-                });
-                if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
-                  // Open Modal Question
-                  sessionStorage.setItem(
-                    "listData",
-                    JSON.stringify(mainReservation)
-                  );
-                  sessionStorage.setItem(
-                    "settings",
-                    JSON.stringify(this.setup)
-                  );
-                  this.infoMCIConfim = true;
-                } else {
-                  this.backToHome();
+                if (item["res-status"] == "1 - Guest Already Checkin") {
+                  // Checked In Guest
+                  countCheckedIn++;
+                } else if (item["ifdata-sent"] == true) {
+                  // Waiting List Guest
+                  countWaiting++;
                 }
+              });
+              if (acceptRsv.length - (countCheckedIn + countWaiting) >= 1) {
+                // Open Modal Question
+                sessionStorage.setItem(
+                  "listData",
+                  JSON.stringify(mainReservation)
+                );
+                sessionStorage.setItem("settings", JSON.stringify(this.setup));
+                this.infoMCIConfim = true;
               } else {
                 this.backToHome();
               }
-              break;
-            default:
-              break;
-          }
-        })();
+            } else {
+              this.backToHome();
+            }
+            break;
+          default:
+            break;
+        }
       }
     },
     showAnimation() {

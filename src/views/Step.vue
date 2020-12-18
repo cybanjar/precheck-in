@@ -1,8 +1,19 @@
 <template>
-  <div class="spin-load-table" v-if="loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 100px" spin />
-    </a-spin>
+  <div v-if="loading">
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        margin-top: -50px;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
+    </div>
   </div>
   <div v-else>
     <!-- Modal Response Room Status -->
@@ -869,9 +880,8 @@ import Antd, {
 } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import moment from "moment";
-import ky from "ky";
 import CryptoJS from "crypto-js";
-import CookieS from "vue-cookies";
+import api from "../api/Endpoint";
 Vue.use(Antd);
 export default {
   data() {
@@ -1103,7 +1113,7 @@ export default {
       key;
     },
   },
-  created() {
+  async created() {
     this.stepUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     this.currDataPrepare = this.$route.params.guestData;
     this.currDataSetting = this.$route.params.setting;
@@ -1123,7 +1133,7 @@ export default {
     }
     this.errorCode = "0000";
     if (this.currDataPrepare == null || this.currDataSetting == null) {
-      if (location.search.substring(1) != undefined) {
+      if (location.search.substring(1).length > 0) {
         // For Handling Payment Callback
         //this.callbackParam = location.search.substring(1);
         let parameter = decodeURIComponent(location.search.substring(1));
@@ -1155,21 +1165,28 @@ export default {
         const encryptedWords = CryptoJS.SHA1(words).toString();
         this.callbackParam += `&WORDS=${encryptedWords}`;
       }
-      if (sessionStorage.getItem("guestData") != null) {
-        this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
-      }
-      if (sessionStorage.getItem("settings") != null) {
+      if (sessionStorage.getItem("settings")) {
         this.currDataSetting = JSON.parse(sessionStorage.getItem("settings"));
+      } else {
+        window.open(
+          `${window.location.protocol}//${window.location.host}`,
+          "_self"
+        );
       }
-      if (sessionStorage.getItem("errorCode") != null) {
+      if (sessionStorage.getItem("guestData")) {
+        this.currDataPrepare = JSON.parse(sessionStorage.getItem("guestData"));
+      } else {
+        window.open(this.currDataSetting["location"], "_self");
+      }
+      if (sessionStorage.getItem("errorCode")) {
         this.errorCode = JSON.parse(sessionStorage.getItem("errorCode"));
       }
-      if (sessionStorage.getItem("isUploaded") != null) {
+      if (sessionStorage.getItem("isUploaded")) {
         this.isUploaded = JSON.parse(sessionStorage.getItem("isUploaded"));
       }
     }
     this.url = require(`../assets/PassportVerification.svg`);
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
     this.precheckin = this.currDataPrepare["pre-checkin"];
     this.hasUpload = this.currDataPrepare["image-flag"];
     this.country = this.currDataPrepare["guest-country"];
@@ -1285,54 +1302,50 @@ export default {
             JSON.stringify(this.currDataSetting)
           );
         } else {
-          (async () => {
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/resCI", {
-                json: {
-                  request: {
-                    rsvNumber: this.currDataPrepare["resnr"],
-                    rsvlineNumber: this.currDataPrepare["reslinnr"],
-                    userInit: "MC",
-                    newRoomno: "",
-                    purposeOfStay: "",
-                    email: "",
-                    guestPhnumber: "",
-                    guestNation: "",
-                    guestCountry: "",
-                    guestRegion: "",
-                    base64image: "",
-                    vehicleNumber: "",
-                    preAuthString: this.callbackParam,
-                  },
-                },
-              })
-              .json();
-            const responses = data.response["resultMessage"].split(" - ");
-            if (parseInt(responses[0]) > 0) {
-              this.preauthModal = true;
-            } else {
-              this.currDataPrepare["preAuth-flag"] = true;
-              this.paid = this.currDataPrepare["preAuth-flag"];
-              this.paidNetworkError = false;
-              this.paidVerError = false;
-
-              // Session Storage Set
-
-              sessionStorage.removeItem("listData");
-              sessionStorage.setItem(
-                "guestData",
-                JSON.stringify(this.currDataPrepare)
-              );
-              sessionStorage.setItem(
-                "isUploaded",
-                JSON.stringify(this.currDataPrepare["preAuth-flag"])
-              );
-              sessionStorage.setItem(
-                "settings",
-                JSON.stringify(this.currDataSetting)
-              );
+          const data = await api.doFetch(
+            this.hotelEndpoint + "mobileCI/resCI",
+            {
+              rsvNumber: this.currDataPrepare["resnr"],
+              rsvlineNumber: this.currDataPrepare["reslinnr"],
+              userInit: "MC",
+              newRoomno: "",
+              purposeOfStay: "",
+              email: "",
+              guestPhnumber: "",
+              guestNation: "",
+              guestCountry: "",
+              guestRegion: "",
+              base64image: "",
+              vehicleNumber: "",
+              preAuthString: this.callbackParam,
             }
-          })();
+          );
+
+          const responses = data.response["resultMessage"].split(" - ");
+          if (parseInt(responses[0]) > 0) {
+            this.preauthModal = true;
+          } else {
+            this.currDataPrepare["preAuth-flag"] = true;
+            this.paid = this.currDataPrepare["preAuth-flag"];
+            this.paidNetworkError = false;
+            this.paidVerError = false;
+
+            // Session Storage Set
+
+            sessionStorage.removeItem("listData");
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "isUploaded",
+              JSON.stringify(this.currDataPrepare["preAuth-flag"])
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+          }
         }
       } else {
         this.paidNetworkError = false;
@@ -1500,15 +1513,15 @@ export default {
     },
     findLabel(nameKey, used) {
       let labels = undefined;
-      if (localStorage.getItem("labels") == null) {
-        labels = localStorage.getItem("labels");
+      if (sessionStorage.getItem("labels") == null) {
+        labels = sessionStorage.getItem("labels");
       } else {
         labels = this.labels;
       }
       let fixLabel = "";
-      const locale = localStorage.getItem("locale");
+      const locale = sessionStorage.getItem("locale");
       const label = labels.find((el) => {
-        return el["program-variable"] == nameKey;
+        return el["program-variable"].trim() == nameKey.trim();
       });
       if (label === undefined) {
         fixLabel = "";
@@ -1562,7 +1575,7 @@ export default {
         this.currDataPrepare["guest-country"] = this.defaultCountry;
       }
     },
-    resendPreauth() {
+    async resendPreauth() {
       this.preauthModal = false;
       if (this.tempParam.RESPONSECODE != null) {
         this.afterPayment = true;
@@ -1592,54 +1605,50 @@ export default {
               JSON.stringify(this.currDataSetting)
             );
           } else {
-            (async () => {
-              const data = await ky
-                .post(this.hotelEndpoint + "mobileCI/resCI", {
-                  json: {
-                    request: {
-                      rsvNumber: this.currDataPrepare["resnr"],
-                      rsvlineNumber: this.currDataPrepare["reslinnr"],
-                      userInit: "MC",
-                      newRoomno: "",
-                      purposeOfStay: "",
-                      email: "",
-                      guestPhnumber: "",
-                      guestNation: "",
-                      guestCountry: "",
-                      guestRegion: "",
-                      base64image: "",
-                      vehicleNumber: "",
-                      preAuthString: this.callbackParam,
-                    },
-                  },
-                })
-                .json();
-              const responses = data.response["resultMessage"].split(" - ");
-              if (parseInt(responses[0]) > 0) {
-                this.preauthModal = true;
-              } else {
-                this.currDataPrepare["preAuth-flag"] = true;
-                this.paid = this.currDataPrepare["preAuth-flag"];
-                this.paidNetworkError = false;
-                this.paidVerError = false;
-
-                // Session Storage Set
-
-                sessionStorage.removeItem("listData");
-                sessionStorage.setItem(
-                  "guestData",
-                  JSON.stringify(this.currDataPrepare)
-                );
-                sessionStorage.setItem(
-                  "isUploaded",
-                  JSON.stringify(this.currDataPrepare["preAuth-flag"])
-                );
-                sessionStorage.setItem(
-                  "settings",
-                  JSON.stringify(this.currDataSetting)
-                );
+            const data = await api.doFetch(
+              this.hotelEndpoint + "mobileCI/resCI",
+              {
+                rsvNumber: this.currDataPrepare["resnr"],
+                rsvlineNumber: this.currDataPrepare["reslinnr"],
+                userInit: "MC",
+                newRoomno: "",
+                purposeOfStay: "",
+                email: "",
+                guestPhnumber: "",
+                guestNation: "",
+                guestCountry: "",
+                guestRegion: "",
+                base64image: "",
+                vehicleNumber: "",
+                preAuthString: this.callbackParam,
               }
-            })();
+            );
+
+            const responses = data.response["resultMessage"].split(" - ");
+            if (parseInt(responses[0]) > 0) {
+              this.preauthModal = true;
+            } else {
+              this.currDataPrepare["preAuth-flag"] = true;
+              this.paid = this.currDataPrepare["preAuth-flag"];
+              this.paidNetworkError = false;
+              this.paidVerError = false;
+
+              // Session Storage Set
+
+              sessionStorage.removeItem("listData");
+              sessionStorage.setItem(
+                "guestData",
+                JSON.stringify(this.currDataPrepare)
+              );
+              sessionStorage.setItem(
+                "isUploaded",
+                JSON.stringify(this.currDataPrepare["preAuth-flag"])
+              );
+              sessionStorage.setItem(
+                "settings",
+                JSON.stringify(this.currDataSetting)
+              );
+            }
           }
         } else {
           this.paidNetworkError = false;
@@ -1911,7 +1920,7 @@ export default {
         // Output to Web
         // this.url = event.target.result;
         // Handling Image Element
-        imgElement.onload = (e) => {
+        imgElement.onload = async (e) => {
           // Creating Canvas and Scale Size
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 500;
@@ -1958,24 +1967,19 @@ export default {
           const base64Canvas = ctx.canvas
             .toDataURL("image/jpeg")
             .split(";base64,")[1];
-          (async () => {
-            this.imgb64 = base64Canvas;
-            const uploadResult = await ky
-              .post(this.hotelEndpoint + "mobileCI/saveIDCard", {
-                json: {
-                  request: {
-                    inpResnr: this.currDataPrepare["resnr"],
-                    inpReslinnr: this.currDataPrepare["reslinnr"],
-                    guestno: this.currDataPrepare["gastno"],
-                    imagedata: this.imgb64,
-                    userinit: "01",
-                  },
-                },
-              })
-              .json();
-            if (uploadResult.response.resultMessage != "") {
+          this.imgb64 = base64Canvas;
+          const uploadResult = await api.doFetch(
+            this.hotelEndpoint + "mobileCI/saveIDCard",
+            {
+              inpResnr: this.currDataPrepare["resnr"],
+              inpReslinnr: this.currDataPrepare["reslinnr"],
+              guestno: this.currDataPrepare["gastno"],
+              imagedata: this.imgb64,
+              userinit: "01",
             }
-          })();
+          );
+          if (uploadResult.response.resultMessage != "") {
+          }
           this.hasUpload = "0 image id already exist";
           this.currDataPrepare["image-flag"] = this.hasUpload;
           sessionStorage.setItem(
@@ -1995,134 +1999,121 @@ export default {
       window.scrollTo(0, 0);
       //this.step = 0;
     },
-    checkValidation(caseType) {
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "mobileCI/checkValidation", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare["resnr"],
-                rsvlineNumber: this.currDataPrepare["reslinnr"],
-                caseType: caseType,
-              },
-            },
-          })
-          .json();
-
-        switch (caseType) {
-          case "1":
-            const responses = parsed.response["resStatus"].split(" - ");
-            const responseStatus = {
-              statusNumber: "",
-              statusMessage: "",
-            };
-            responseStatus.statusNumber = responses[0];
-            responseStatus.statusMessage = responses[1];
-            if (responseStatus.statusNumber == "1") {
-              //Reservation Already Check-In!
-              // Go To Success Checkin
-              Object.assign(this.currDataPrepare, { roomReady: true });
-              // Session Storage Set
-              sessionStorage.setItem(
-                "guestData",
-                JSON.stringify(this.currDataPrepare)
-              );
-              sessionStorage.setItem(
-                "settings",
-                JSON.stringify(this.currDataSetting)
-              );
-              router.push({
-                name: "SuccessCheckIn",
-                params: {
-                  Data: this.currDataPrepare,
-                  setting: this.currDataSetting,
-                },
-              });
-            } else if (responseStatus.statusNumber == "0") {
-              //Reservation Not Check-In Yet!
-              this.handleResCi();
-            }
-            break;
-          case "2":
-            const responsess = parsed.response["paymentFlag"].split(" - ");
-            if (parseInt(responsess[0]) == 0) {
-              //this.payDeposit();
-              this.payDeposit();
-            } else {
-              this.paid = true;
-            }
-            break;
-          case "3":
-            break;
-          default:
-            break;
+    async checkValidation(caseType) {
+      const parsed = await api.doFetch(
+        this.hotelEndpoint + "mobileCI/checkValidation",
+        {
+          rsvNumber: this.currDataPrepare["resnr"],
+          rsvlineNumber: this.currDataPrepare["reslinnr"],
+          caseType: caseType,
         }
-      })();
+      );
+
+      switch (caseType) {
+        case "1":
+          const responses = parsed.response["resStatus"].split(" - ");
+          const responseStatus = {
+            statusNumber: "",
+            statusMessage: "",
+          };
+          responseStatus.statusNumber = responses[0];
+          responseStatus.statusMessage = responses[1];
+          if (responseStatus.statusNumber == "1") {
+            //Reservation Already Check-In!
+            // Go To Success Checkin
+            Object.assign(this.currDataPrepare, { roomReady: true });
+            // Session Storage Set
+            sessionStorage.setItem(
+              "guestData",
+              JSON.stringify(this.currDataPrepare)
+            );
+            sessionStorage.setItem(
+              "settings",
+              JSON.stringify(this.currDataSetting)
+            );
+            router.push({
+              name: "SuccessCheckIn",
+              params: {
+                Data: this.currDataPrepare,
+                setting: this.currDataSetting,
+              },
+            });
+          } else if (responseStatus.statusNumber == "0") {
+            //Reservation Not Check-In Yet!
+            this.handleResCi();
+          }
+          break;
+        case "2":
+          const responsess = parsed.response["paymentFlag"].split(" - ");
+          if (parseInt(responsess[0]) == 0) {
+            //this.payDeposit();
+            this.payDeposit();
+          } else {
+            this.paid = true;
+          }
+          break;
+        case "3":
+          break;
+        default:
+          break;
+      }
     },
-    handleResCi() {
+    async handleResCi() {
       if (this.currDataPrepare["vreg"] == null) {
         this.currDataPrepare["vreg"] = "";
       }
-      (async () => {
-        const parsed = await ky
-          .post(this.hotelEndpoint + "mobileCI/resCI", {
-            json: {
-              request: {
-                rsvNumber: this.currDataPrepare["resnr"],
-                rsvlineNumber: this.currDataPrepare["reslinnr"],
-                userInit: "MC",
-                newRoomno: this.currDataPrepare["zinr"],
-                purposeOfStay: this.currDataPrepare["purposeofstay"],
-                email: this.currDataPrepare["guest-email"],
-                guestPhnumber: this.currDataPrepare["guest-phnumber"],
-                guestNation: this.currDataPrepare["guest-nation"],
-                guestCountry: this.currDataPrepare["guest-country"],
-                guestRegion: this.currDataPrepare["guest-region"],
-                vehicleNumber: this.currDataPrepare["vreg"],
-                base64image: this.imgb64,
-              },
-            },
-          })
-          .json();
+      const parsed = await api.doFetch(this.hotelEndpoint + "mobileCI/resCI", {
+        rsvNumber: this.currDataPrepare["resnr"],
+        rsvlineNumber: this.currDataPrepare["reslinnr"],
+        userInit: "MC",
+        newRoomno: this.currDataPrepare["zinr"],
+        purposeOfStay: this.currDataPrepare["purposeofstay"],
+        email: this.currDataPrepare["guest-email"],
+        guestPhnumber: this.currDataPrepare["guest-phnumber"],
+        guestNation: this.currDataPrepare["guest-nation"],
+        guestCountry: this.currDataPrepare["guest-country"],
+        guestRegion: this.currDataPrepare["guest-region"],
+        vehicleNumber: this.currDataPrepare["vreg"],
+        base64image: this.imgb64,
+      });
 
-        const responses = parsed.response["resultMessage"].split(" - ");
-        this.responseStatus.statusNumber = responses[0];
-        this.responseStatus.statusMessage = responses[1];
-        if (
-          this.responseStatus.statusNumber == "99" ||
-          this.responseStatus.statusNumber == "1" ||
-          this.responseStatus.statusNumber == "2" ||
-          this.responseStatus.statusNumber == "3" ||
-          this.responseStatus.statusNumber == "4" ||
-          this.responseStatus.statusNumber == "5"
-        ) {
-          // Showing Modal Cannot MCI -> mci_error_not_avail
-        } else if (
-          this.responseStatus.statusNumber == "6" ||
-          this.responseStatus.statusNumber == "7"
-        ) {
-          this.confirmMailModal = true;
-          this.roomReady = false;
-        } else {
-          Object.assign(this.currDataPrepare, { roomReady: true });
-          // Session Storage Set
-          sessionStorage.setItem(
-            "guestData",
-            JSON.stringify(this.currDataPrepare)
-          );
-          sessionStorage.setItem(
-            "settings",
-            JSON.stringify(this.currDataSetting)
-          );
-          router.push({
-            name: "SuccessCheckIn",
-            params: {
-              Data: this.currDataPrepare,
-              setting: this.currDataSetting,
-            },
-          });
-        }
-      })();
+      const responses = parsed.response["resultMessage"].split(" - ");
+      this.responseStatus.statusNumber = responses[0];
+      this.responseStatus.statusMessage = responses[1];
+      if (
+        this.responseStatus.statusNumber == "99" ||
+        this.responseStatus.statusNumber == "1" ||
+        this.responseStatus.statusNumber == "2" ||
+        this.responseStatus.statusNumber == "3" ||
+        this.responseStatus.statusNumber == "4" ||
+        this.responseStatus.statusNumber == "5"
+      ) {
+        // Showing Modal Cannot MCI -> mci_error_not_avail
+      } else if (
+        this.responseStatus.statusNumber == "6" ||
+        this.responseStatus.statusNumber == "7"
+      ) {
+        this.confirmMailModal = true;
+        this.roomReady = false;
+      } else {
+        Object.assign(this.currDataPrepare, { roomReady: true });
+        // Session Storage Set
+        sessionStorage.setItem(
+          "guestData",
+          JSON.stringify(this.currDataPrepare)
+        );
+        sessionStorage.setItem(
+          "settings",
+          JSON.stringify(this.currDataSetting)
+        );
+        router.push({
+          name: "SuccessCheckIn",
+          params: {
+            Data: this.currDataPrepare,
+            setting: this.currDataSetting,
+          },
+        });
+      }
     },
     save() {
       const rmStatus = this.currDataPrepare["room-status"].split(" ")[0];
@@ -2134,7 +2125,7 @@ export default {
         this.checkValidation("1");
       }
     },
-    handleYes() {
+    async handleYes() {
       this.loadingConfirmEmail = true;
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.formresubmit.getFieldValue(["guest-email"][0]) == "") {
@@ -2154,51 +2145,47 @@ export default {
         ] = this.formresubmit.getFieldValue(["guest-phone"][0]);
         // Handling Interface WA atau SMS
 
-        (async () => {
-          const parsed = await ky
-            .post(this.hotelEndpoint + "mobileCI/createInterface", {
-              json: {
-                request: {
-                  rsvNumber: this.currDataPrepare["resnr"],
-                  rsvlineNumber: this.currDataPrepare["reslinnr"],
-                  userInit: "MC",
-                  email: this.currDataPrepare["guest-email"],
-                  guestPhnumber: this.currDataPrepare["guest-phnumber"],
-                  hotelCode: `${this.hotelcode}|${this.langID}`,
-                  roomPreference: this.currDataPrepare["room-preference"],
-                  urlMCI: this.location,
-                },
-              },
-            })
-            .json();
-          const responses = parsed.response["resultMessage"];
-          this.responseStatus.statusNumber = responses[0];
-          this.responseStatus.statusMessage = responses[1];
-
-          if (this.responseStatus.statusNumber == 0) {
-            Object.assign(this.currDataPrepare, { roomReady: false });
-            // Session Storage Set
-            sessionStorage.setItem(
-              "guestData",
-              JSON.stringify(this.currDataPrepare)
-            );
-            sessionStorage.setItem(
-              "settings",
-              JSON.stringify(this.currDataSetting)
-            );
-            router.push({
-              name: "SuccessCheckIn",
-              params: {
-                Data: this.currDataPrepare,
-                setting: this.currDataSetting,
-              },
-            });
-          } else {
-            // Handling Apabila Gagal Simpan ke Table Interface
-            this.interfacingModal = true;
+        const parsed = await api.doFetch(
+          this.hotelEndpoint + "mobileCI/createInterface",
+          {
+            rsvNumber: this.currDataPrepare["resnr"],
+            rsvlineNumber: this.currDataPrepare["reslinnr"],
+            userInit: "MC",
+            email: this.currDataPrepare["guest-email"],
+            guestPhnumber: this.currDataPrepare["guest-phnumber"],
+            hotelCode: `${this.hotelcode}|${this.langID}`,
+            roomPreference: this.currDataPrepare["room-preference"],
+            urlMCI: this.location,
           }
-          this.loadingConfirmEmail = false;
-        })();
+        );
+
+        const responses = parsed.response["resultMessage"];
+        this.responseStatus.statusNumber = responses[0];
+        this.responseStatus.statusMessage = responses[1];
+
+        if (this.responseStatus.statusNumber == 0) {
+          Object.assign(this.currDataPrepare, { roomReady: false });
+          // Session Storage Set
+          sessionStorage.setItem(
+            "guestData",
+            JSON.stringify(this.currDataPrepare)
+          );
+          sessionStorage.setItem(
+            "settings",
+            JSON.stringify(this.currDataSetting)
+          );
+          router.push({
+            name: "SuccessCheckIn",
+            params: {
+              Data: this.currDataPrepare,
+              setting: this.currDataSetting,
+            },
+          });
+        } else {
+          // Handling Apabila Gagal Simpan ke Table Interface
+          this.interfacingModal = true;
+        }
+        this.loadingConfirmEmail = false;
       }
     },
     back() {

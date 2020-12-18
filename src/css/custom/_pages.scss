@@ -46,6 +46,29 @@ body {
   color: #606060;
 }
 
+.info-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.info-title {
+  height: 120px;
+}
+.info-data {
+  width: 100%;
+  background: white;
+  color: #2c3e50;
+  height: 100vh;
+  margin-top: 0 !important;
+  padding: 1rem;
+}
+.info-msg-font {
+  font-size: 1.2em;
+  font-weight: 400;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
 @media only screen and (min-width: 577px) {
   .mci-hotel {
     font-weight: bold;

@@ -1,4 +1,4 @@
-const labels = JSON.parse(localStorage.getItem("langs"));
+const labels = JSON.parse(sessionStorage.getItem("langs"));
 
 export function getLabels(nameKey) {
   for (let x = 0; x < labels.length; x++) {

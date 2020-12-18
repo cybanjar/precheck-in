@@ -1,5 +1,21 @@
 <template>
-  <div>
+  <div v-if="loading">
+    <div
+      style="
+        display: flex;
+        width: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        margin-top: -50px;
+      "
+    >
+      <q-spinner-ball color="red" size="8em" style="" />
+    </div>
+  </div>
+  <div v-else>
     <!-- Information Room Not Avail (For Overlapping) -->
     <div v-show="informationModal">
       <a-modal
@@ -194,6 +210,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+      loading: true,
       selectedData: [],
       gambar: "",
       hotelname: "",
@@ -265,19 +282,22 @@ export default {
       this.$route.params.guestData == null ||
       this.$route.params.setting == null
     ) {
-      if (sessionStorage.getItem("listData") != null) {
-        tempData = JSON.parse(sessionStorage.getItem("listData"));
-      } else {
-        tempData = null;
-      }
       if (sessionStorage.getItem("settings") != null) {
         setting = JSON.parse(sessionStorage.getItem("settings"));
+        this.loading = false;
       } else {
-        setting = null;
+        window.open(
+          `${window.location.protocol}//${window.location.host}`,
+          "_self"
+        );
+      }
+      if (sessionStorage.getItem("listData") != null) {
+        tempData = JSON.parse(sessionStorage.getItem("listData"));
       }
     } else {
       tempData = this.$route.params.guestData;
       setting = this.$route.params.setting;
+      this.loading = false;
     }
     // Detect Mobile Device
     if (
@@ -345,7 +365,7 @@ export default {
     this.information.color = this.setup["FontColor"];
     this.hotelname = this.setup["hotelName"];
     this.langID = this.setup["langID"];
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
     switch (this.langID.toLowerCase()) {
       case "eng":
         this.programLabel = "program-label1";
@@ -433,15 +453,15 @@ export default {
     },
     findLabel(nameKey, used) {
       let labels = undefined;
-      if (localStorage.getItem("labels") == null) {
-        labels = localStorage.getItem("labels");
+      if (sessionStorage.getItem("labels") == null) {
+        labels = sessionStorage.getItem("labels");
       } else {
         labels = this.labels;
       }
       let fixLabel = "";
-      const locale = localStorage.getItem("locale");
+      const locale = sessionStorage.getItem("locale");
       const label = labels.find((el) => {
-        return el["program-variable"] == nameKey;
+        return el["program-variable"].trim() == nameKey.trim();
       });
       if (label === undefined) {
         fixLabel = "";
@@ -526,7 +546,7 @@ export default {
           returnedClass = "notselected pl-3 font-weight-bold";
         }
       } else if (used == "status") {
-        const locale = localStorage.getItem("locale");
+        const locale = sessionStorage.getItem("locale");
         if (locale == "EN") {
           returnedClass = "infoCardEN";
         } else if (locale == "ID") {
@@ -610,7 +630,7 @@ export default {
         // Show Pop Up Message
         this.informationQueue = true;
       } else {
-        
+
       }
       */
       const findData = this.successCheckin.find((item) => {

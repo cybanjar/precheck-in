@@ -489,8 +489,8 @@ Vue.use(Quasar, {
   plugins: {},
 });
 import moment from "moment";
-import ky from "ky";
-import CookieS from "vue-cookies";
+import api from "../api/Endpoint";
+
 export default {
   data() {
     return {
@@ -646,9 +646,12 @@ export default {
       policeTrans: "",
       kiosCheckin: false,
       smsParam: {},
+      cekbosku: {},
     };
   },
-  created() {
+  async created() {
+    sessionStorage.clear();
+
     // Detect Mobile Device
     if (
       /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
@@ -678,7 +681,7 @@ export default {
       /* EncodedURI For Full URL Redirecting save at this.location */
       const encodedURI = encodeURIComponent(this.hotelParams);
       this.location += `/mobilecheckin?${encodedURI}`;
-    } else if (location.search.substring(1) != undefined) {
+    } else if (location.search.substring(1).length > 0) {
       location.search
         .split("&")
         .toString()
@@ -710,376 +713,365 @@ export default {
     const yyyy = today.getFullYear();
     this.date = dd + "/" + mm + "/" + yyyy;
     // Save Location
-    sessionStorage.clear();
     sessionStorage.setItem("location", this.location);
     /* Async Get Hotel Setup (Hotel Endpoint, Hotel Code, Hotel Language) */
-    (async () => {
-      let code = undefined;
-      if (this.hotelParams.substring(0, 3) == "sms") {
-        const hotelParams = this.hotelParams.substring(4);
+    let code = undefined;
+    if (this.hotelParams.substring(0, 3) == "sms") {
+      const hotelParams = this.hotelParams.substring(4);
 
-        /* Handling SMS */
-        code = await ky
-          .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/getBcastReservation",
-            {
-              json: {
-                request: {
-                  encryptedText: hotelParams,
-                },
-              },
-            }
-          )
-          .json();
-      } else {
-        /* Default Get Param */
-        code = await ky
-          .post(
-            "http://54.251.169.160:8080/logserver/rest/loginServer/getUrl",
-            {
-              json: {
-                request: {
-                  hotelCode: this.hotelParams,
-                },
-              },
-            }
-          )
-          .json();
-      }
-
-      /* IF Null Response */
-      if (code.response["messResult"] == null) {
-        router.replace({
-          name: "404",
-        });
-      } else if (this.hotelParams.substring(0, 3) == "sms") {
-        Object.assign(this.smsParam, {
-          arrangement: code.response["arrangement"],
-        });
-        Object.assign(this.smsParam, { keyString: code.response["keyString"] });
-        Object.assign(this.smsParam, {
-          roomNumber: code.response["roomNumber"],
-        });
-        Object.assign(this.smsParam, {
-          wifiAddress: code.response["wifiAddress"],
-        });
-        Object.assign(this.smsParam, { wifiPass: code.response["wifiPass"] });
-        Object.assign(this.smsParam, { roomType: code.response["roomType"] });
-        Object.assign(this.smsParam, { hotelUrl: code.response["hotelUrl"] });
-
-        this.location = code.response["hotelUrl"];
-      }
-      /* Assign Hotel Initial Setup */
-      this.tempHotel = code.response.pciSetup["pci-setup"];
-      const tempEndpoint = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 2;
+      /* Handling SMS */
+      code = await api.getParam("getBcastReservation", {
+        encryptedText: hotelParams,
       });
-      const tempCode = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 3;
+    } else {
+      /* Default Get Param */
+      code = await api.getParam("getUrl", {
+        hotelCode: this.hotelParams,
       });
-      const tempLang = this.tempHotel.filter((item, index) => {
-        return item.number1 === 99 && item.number2 === 5;
-      });
-      this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
-      this.hotelCode = tempCode[0]["setupvalue"];
-      this.langID = tempLang[0]["setupvalue"];
+    }
 
-      /* Check Used Language */
-      switch (this.langID.toLowerCase()) {
-        case "eng":
-          this.programLabel = "program-label1";
-          this.selectedLang = "English";
-          localStorage.setItem("locale", "EN");
-          break;
-        case "idn":
-          this.programLabel = "program-label2";
-          this.selectedLang = "Indonesia";
-          localStorage.setItem("locale", "ID");
-          break;
-        default:
-          this.programLabel = "program-label1";
-          this.selectedLang = "English";
-          localStorage.setItem("locale", "ENG");
-          break;
+    /* IF Null Response */
+    if (code.response["messResult"] == null) {
+      router.replace({
+        name: "404",
+      });
+    } else if (this.hotelParams.substring(0, 3) == "sms") {
+      Object.assign(this.smsParam, {
+        arrangement: code.response["arrangement"],
+      });
+      Object.assign(this.smsParam, { keyString: code.response["keyString"] });
+      Object.assign(this.smsParam, {
+        roomNumber: code.response["roomNumber"],
+      });
+      Object.assign(this.smsParam, {
+        wifiAddress: code.response["wifiAddress"],
+      });
+      Object.assign(this.smsParam, { wifiPass: code.response["wifiPass"] });
+      Object.assign(this.smsParam, { roomType: code.response["roomType"] });
+      Object.assign(this.smsParam, { hotelUrl: code.response["hotelUrl"] });
+
+      this.location = code.response["hotelUrl"];
+    }
+    /* Assign Hotel Initial Setup */
+    this.tempHotel = code.response.pciSetup["pci-setup"];
+    const tempEndpoint = this.tempHotel.filter((item, index) => {
+      return item.number1 === 99 && item.number2 === 2;
+    });
+    const tempCode = this.tempHotel.filter((item, index) => {
+      return item.number1 === 99 && item.number2 === 3;
+    });
+    const tempLang = this.tempHotel.filter((item, index) => {
+      return item.number1 === 99 && item.number2 === 5;
+    });
+    this.hotelEndpoint = tempEndpoint[0]["setupvalue"];
+    this.hotelCode = tempCode[0]["setupvalue"];
+    this.langID = tempLang[0]["setupvalue"];
+
+    /* Check Used Language */
+    switch (this.langID.toLowerCase()) {
+      case "eng":
+        this.programLabel = "program-label1";
+        this.selectedLang = "English";
+        sessionStorage.setItem("locale", "EN");
+        break;
+      case "idn":
+        this.programLabel = "program-label2";
+        this.selectedLang = "Indonesia";
+        sessionStorage.setItem("locale", "ID");
+        break;
+      default:
+        this.programLabel = "program-label1";
+        this.selectedLang = "English";
+        sessionStorage.setItem("locale", "ENG");
+        break;
+    }
+
+    /* Async Get Label From Database */
+    const parsed = await api.getParam("loadVariableLabel", {
+      countryId1: "ENG",
+      countryId2: "IDN",
+      inpVariable: " ",
+    });
+    sessionStorage.setItem(
+      "labels",
+      JSON.stringify(parsed.response.countryLabels["country-labels"])
+    );
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
+
+    /* Load All PCI Setup Based On Hotel Endpoint */
+    const setup = await api.doFetch(this.hotelEndpoint + "preCI/loadSetup", {
+      icase: 1,
+    });
+
+    this.tempsetup = setup.response.pciSetup["pci-setup"];
+    const jatah = [];
+    for (const i in this.tempsetup) {
+      if (this.tempsetup[i]["number1"] == 1) {
+        this.FilterPurposeofStay.push(this.tempsetup[i]);
+        if (this.tempsetup[i].setupflag == true) {
+          this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
+        }
+      } else if (
+        this.tempsetup[i]["number1"] == 9 &&
+        this.tempsetup[i]["number2"] == 2
+      ) {
+        const country = {};
+        country["descr"] = this.tempsetup[i]["descr"]; //data country
+        country["setupvalue"] = this.tempsetup[i]["setupvalue"];
+        this.countries.push(country);
+      } else if (
+        this.tempsetup[i]["number1"] == 9 &&
+        this.tempsetup[i]["number2"] == 3
+      ) {
+        const land = {};
+        land["descr"] = this.tempsetup[i]["descr"]; //data province
+        land["setupvalue"] = this.tempsetup[i]["setupvalue"];
+        this.province.push(land);
       }
-      /* Async Get Label From Database */
-      const parsed = await ky
-        .post(
-          "http://54.251.169.160:8080/logserver/rest/loginServer/loadVariableLabel",
-          {
-            json: {
-              request: {
-                countryId1: "ENG",
-                countryId2: "IDN",
-                inpVariable: " ",
-              },
-            },
-          }
-        )
-        .json();
-      localStorage.removeItem("labels");
-      localStorage.setItem(
-        "labels",
-        JSON.stringify(parsed.response.countryLabels["country-labels"])
+    }
+    const tempTermENG = this.tempsetup.filter((item, index) => {
+      // Term ENG
+      return item.number1 === 6 && item.number2 === 1;
+    });
+    this.termENG = tempTermENG[0]["setupvalue"];
+
+    const tempTermIDN = this.tempsetup.filter((item, index) => {
+      // Term IDN
+      return item.number1 === 6 && item.number2 === 2;
+    });
+    this.termIDN = tempTermIDN[0]["setupvalue"];
+    const tempCurrency = this.tempsetup.filter((item, index) => {
+      //  Currency
+      return item.number1 === 2 && item.setupflag == true;
+    });
+    this.money = tempCurrency["0"]["price"];
+    this.currency = tempCurrency["0"]["remarks"];
+    this.per = tempCurrency["0"]["setupvalue"].split("PER")[1];
+    const tempScandID = this.tempsetup.filter((item, index) => {
+      //  Scand ID
+      return item.number1 === 8 && item.number2 == 1;
+    });
+    this.scanid = tempScandID["0"]["setupflag"];
+    const tempwifiAddress = this.tempsetup.filter((item, index) => {
+      //  Wifi Address
+      return item.number1 === 8 && item.number2 == 8;
+    });
+    this.wifiAddress = tempwifiAddress["0"]["setupvalue"];
+    const tempwifiPassword = this.tempsetup.filter((item, index) => {
+      //  Wifi Password
+      return item.number1 === 8 && item.number2 == 9;
+    });
+    this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
+    const tempSkipDeposit = this.tempsetup.filter((item, index) => {
+      //  Skip Deposit
+      return item.number1 === 8 && item.number2 == 4;
+    });
+    this.SkipDeposit = tempSkipDeposit["0"]["setupvalue"];
+    const tempMinDeposit = this.tempsetup.filter((item, index) => {
+      //  Minimum Deposit
+      return item.number1 === 8 && item.number2 == 5;
+    });
+    this.minimumDeposit = tempMinDeposit["0"]["price"];
+    const tempMaxDeposit = this.tempsetup.filter((item, index) => {
+      //  Maximum Deposit
+      return item.number1 === 8 && item.number2 == 7;
+    });
+    this.maximumDeposit = tempMaxDeposit["0"]["price"];
+    const tempOverNightDeposit = this.tempsetup.filter((item, index) => {
+      //  DEPOSIT OVER ONE NIGHT
+      return item.number1 === 8 && item.number2 == 6;
+    });
+    this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
+    const tempfreeParking = this.tempsetup.filter((item, index) => {
+      //  Free Parking
+      return item.number1 === 8 && item.number2 == 14;
+    });
+    this.freeParking = tempfreeParking["0"]["setupflag"];
+    const tempDEFAULTCHECKINTIME = this.tempsetup.filter((item, index) => {
+      //  DEFAULT CHECKIN TIME
+      return item.number1 === 8 && item.number2 == 2;
+    });
+    this.defaultCI = tempDEFAULTCHECKINTIME["0"]["setupvalue"];
+    const tempBG = this.tempsetup.filter((item, index) => {
+      //  Background Color
+      return item.number1 === 4 && item.setupflag === true;
+    });
+    this.ota.backgroundColor = tempBG[0]["setupvalue"];
+    this.iconOta.backgroundColor = this.hexAToRGBA(tempBG[0]["setupvalue"]);
+    this.iconOta.color = tempBG[0]["setupvalue"];
+    this.BG = tempBG[0]["setupvalue"];
+    const tempFG = this.tempsetup.filter((item, index) => {
+      //  Foreground Color
+      return item.number1 === 5 && item.setupflag === true;
+    });
+    this.textOta.color = tempFG[0]["setupvalue"];
+    this.FG = tempFG[0]["setupvalue"];
+    const tempImage = this.tempsetup.filter((item, index) => {
+      //  Image Hotel
+      return item.number1 === 7 && item.number2 === 1;
+    });
+    this.hotelImage = tempImage[0]["setupvalue"];
+    const tempKiosCheckin = this.tempsetup.filter((item, index) => {
+      //  FLAG KIOSK CHECKIN USAGE
+      return item.number1 === 8 && item.number2 === 10;
+    });
+    this.kiosCheckin = tempKiosCheckin[0]["setupflag"];
+    const tempLogo = this.tempsetup.filter((item, index) => {
+      //  Logo Hotel
+      return item.number1 === 7 && item.number2 === 6;
+    });
+    this.hotelLogo = tempLogo[0]["setupvalue"];
+    const tempHotelName = this.tempsetup.filter((item, index) => {
+      //  Hotel Name
+      return item.number1 === 99 && item.number2 === 1;
+    });
+    this.hotelName = tempHotelName[0]["setupvalue"];
+    const tempSystemDate = this.tempsetup.filter((item, index) => {
+      //  SYSTEM DATE
+      return item.number1 === 9 && item.number2 === 4;
+    });
+    this.SystemDate = tempSystemDate[0]["setupvalue"];
+    const tempLICENSE = this.tempsetup.filter((item, index) => {
+      //  LICENSE WA/SMS GATEWAY
+      return item.number1 === 9 && item.number2 === 5;
+    });
+    this.LICENSE = tempLICENSE[0]["setupflag"];
+    const tempTodayOcc = this.tempsetup.filter((item, index) => {
+      //  LICENSE WA/SMS GATEWAY
+      return item.number1 === 9 && item.number2 === 6;
+    });
+    this.todayOcc = tempTodayOcc[0]["price"];
+    const defCountry = this.tempsetup.filter((item, index) => {
+      //  Default Country Code
+      return item.number1 === 9 && item.number2 === 1;
+    });
+    this.defaultCountry = defCountry[0]["setupvalue"];
+    if (this.defaultCountry.toLowerCase() == "idn") {
+      this.defaultCountry = "INA";
+    }
+    const tempLicenseMember = this.tempsetup.filter((item, index) => {
+      //  LICENSE WA/SMS GATEWAY
+      return item.number1 === 9 && item.number2 === 8;
+    });
+    this.licenseMembership = tempLicenseMember[0]["setupflag"];
+    this.policy = privacyPolicy.responses["0"].policy;
+    this.policeTrans = privacyPolicy.responses["0"].policeTrans;
+    const tempSMOOKING = this.tempsetup.filter((item, index) => {
+      //  condition SMOOKING
+      return item.number1 === 6 && item.number2 === 3;
+    });
+    this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
+    const tempServer = this.tempsetup.filter((item, index) => {
+      //  Server Time
+      return (
+        item.number1 === 9 && item.number2 === 7 && item.descr == "SERVER TIME"
       );
-      this.labels = JSON.parse(localStorage.getItem("labels"));
-      /* Load All PCI Setup Based On Hotel Endpoint */
-      const setup = await ky
-        .post(this.hotelEndpoint + "preCI/loadSetup", {
-          json: {
-            request: {
-              icase: 1,
-            },
-          },
-        })
-        .json();
+    });
+    this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
+    this.server = "15:00";
+    const msServerClock = moment(this.server, "HH:mm").valueOf();
+    const obj = {};
+    obj["FilterPurposeofStay"] = this.FilterPurposeofStay;
+    obj["PurposeofStay"] = this.purpose;
+    obj["countries"] = this.countries;
+    obj["province"] = this.province;
+    obj["termENG"] = this.termENG;
+    obj["termIDN"] = this.termIDN;
+    obj["minimumDeposit"] = this.minimumDeposit;
+    obj["maximumDeposit"] = this.maximumDeposit;
+    obj["OverNightDeposit"] = this.OverNightDeposit;
+    obj["money"] = this.money;
+    obj["currency"] = this.currency;
+    obj["per"] = this.per;
+    obj["scanid"] = this.scanid;
+    obj["wifiAddress"] = this.wifiAddress;
+    obj["wifiPassword"] = this.wifiPassword;
+    obj["SkipDeposit"] = this.SkipDeposit;
+    obj["BackgroundColor"] = this.BG;
+    obj["FontColor"] = this.FG;
+    obj["freeParking"] = this.freeParking;
+    obj["hotelImage"] = this.hotelImage;
+    obj["hotelName"] = this.hotelName;
+    obj["hotelEndpoint"] = this.hotelEndpoint;
+    obj["hotelCode"] = this.hotelCode;
+    obj["langID"] = this.langID;
+    obj["serverTime"] = this.server;
+    obj["SystemDate"] = this.SystemDate;
+    obj["LICENSE"] = this.LICENSE;
+    obj["location"] = this.location;
+    obj["defaultCI"] = this.defaultCI;
+    obj["hotelLogo"] = this.hotelLogo;
+    obj["defaultCountry"] = this.defaultCountry;
+    obj["termSMOOKING"] = this.termSMOOKING;
+    obj["policy"] = this.policy;
+    obj["policeTrans"] = this.policeTrans;
+    obj["kiosCheckin"] = this.kiosCheckin;
+    this.setup.push(obj);
 
-      this.tempsetup = setup.response.pciSetup["pci-setup"];
-      const jatah = [];
-      for (const i in this.tempsetup) {
-        if (this.tempsetup[i]["number1"] == 1) {
-          this.FilterPurposeofStay.push(this.tempsetup[i]);
-          if (this.tempsetup[i].setupflag == true) {
-            this.purpose = this.tempsetup[i].setupvalue; //data purpose of stay
+    //End Request Set Up
+    // Hotel System Date
+    const systemDateObj = this.tempsetup.filter((item, index) => {
+      return item.number1 === 9 && item.number2 === 4;
+    });
+    // Handling Hotel System Date to Set At Calendar
+    const systemDate = systemDateObj[0]["setupvalue"];
+    const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
+      2,
+      "0"
+    );
+    const dMonth = String(
+      moment(systemDate, "DD/MM/YYYY").month() + 1
+    ).padStart(2, "0");
+    const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
+    const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
+    this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
+    this.minDate = `${dYear}/${dMonth}/${dDate}`;
+    this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
+    this.minCalendar = `${dYear}/${dMonth}`;
+    // Get Hotel Default Checkin Time
+    const checkinTime = this.tempsetup.filter((item, index) => {
+      return item.number1 === 8 && item.number2 === 2;
+    });
+    this.checkin = checkinTime[0]["setupvalue"];
+    // Convert Check-in Time to Milisecond
+    let msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
+    // Get Earliest Checkin Time
+    const earliestCI = this.tempsetup.filter((item, index) => {
+      return item.number1 === 8 && item.number2 === 11;
+    });
+    this.earliestCiTime = earliestCI[0]["setupvalue"];
+    this.earliestCiFlag = earliestCI[0]["setupflag"];
+    // Convert Earliest Check-in Time to Milisecond
+    const msEarliestCiTime = moment(this.earliestCiTime, "HH:mm").valueOf();
+    /** Compare Check-in Time with Server Time
+     *  If Erliest CI Flag is Active : Server Time < Earliest CI Time Then Show Pop Up Cannot MCI
+     *  If Server Time < Check-in Time Then Show Pop Up Cannot MCI
+     */
+    if (this.earliestCiFlag) {
+      this.checkin = this.earliestCiTime;
+      if (msServerClock < msEarliestCiTime) {
+        this.infoMCIEarlyCheckin = true;
+      } else {
+        /* Occupancy Checking */
+        if (this.todayOcc > this.baseOccupancy) {
+          this.infoMCINotAvail = true; // mci_not_avail
+        } else {
+          /* Checking License */
+          if (!this.LICENSE) {
+            this.infoMCINotAvail = true; // mci_not_avail
           }
-        } else if (
-          this.tempsetup[i]["number1"] == 9 &&
-          this.tempsetup[i]["number2"] == 2
-        ) {
-          const country = {};
-          country["descr"] = this.tempsetup[i]["descr"]; //data country
-          country["setupvalue"] = this.tempsetup[i]["setupvalue"];
-          this.countries.push(country);
-        } else if (
-          this.tempsetup[i]["number1"] == 9 &&
-          this.tempsetup[i]["number2"] == 3
-        ) {
-          const land = {};
-          land["descr"] = this.tempsetup[i]["descr"]; //data province
-          land["setupvalue"] = this.tempsetup[i]["setupvalue"];
-          this.province.push(land);
         }
       }
-      const tempTermENG = this.tempsetup.filter((item, index) => {
-        // Term ENG
-        return item.number1 === 6 && item.number2 === 1;
-      });
-      this.termENG = tempTermENG[0]["setupvalue"];
-
-      const tempTermIDN = this.tempsetup.filter((item, index) => {
-        // Term IDN
-        return item.number1 === 6 && item.number2 === 2;
-      });
-      this.termIDN = tempTermIDN[0]["setupvalue"];
-      const tempCurrency = this.tempsetup.filter((item, index) => {
-        //  Currency
-        return item.number1 === 2 && item.setupflag == true;
-      });
-      this.money = tempCurrency["0"]["price"];
-      this.currency = tempCurrency["0"]["remarks"];
-      this.per = tempCurrency["0"]["setupvalue"].split("PER")[1];
-      const tempScandID = this.tempsetup.filter((item, index) => {
-        //  Scand ID
-        return item.number1 === 8 && item.number2 == 1;
-      });
-      this.scanid = tempScandID["0"]["setupflag"];
-      const tempwifiAddress = this.tempsetup.filter((item, index) => {
-        //  Wifi Address
-        return item.number1 === 8 && item.number2 == 8;
-      });
-      this.wifiAddress = tempwifiAddress["0"]["setupvalue"];
-      const tempwifiPassword = this.tempsetup.filter((item, index) => {
-        //  Wifi Password
-        return item.number1 === 8 && item.number2 == 9;
-      });
-      this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
-      const tempSkipDeposit = this.tempsetup.filter((item, index) => {
-        //  Skip Deposit
-        return item.number1 === 8 && item.number2 == 4;
-      });
-      this.SkipDeposit = tempSkipDeposit["0"]["setupvalue"];
-      const tempMinDeposit = this.tempsetup.filter((item, index) => {
-        //  Minimum Deposit
-        return item.number1 === 8 && item.number2 == 5;
-      });
-      this.minimumDeposit = tempMinDeposit["0"]["price"];
-      const tempMaxDeposit = this.tempsetup.filter((item, index) => {
-        //  Maximum Deposit
-        return item.number1 === 8 && item.number2 == 7;
-      });
-      this.maximumDeposit = tempMaxDeposit["0"]["price"];
-      const tempOverNightDeposit = this.tempsetup.filter((item, index) => {
-        //  DEPOSIT OVER ONE NIGHT
-        return item.number1 === 8 && item.number2 == 6;
-      });
-      this.OverNightDeposit = tempOverNightDeposit["0"]["price"];
-      const tempfreeParking = this.tempsetup.filter((item, index) => {
-        //  Free Parking
-        return item.number1 === 8 && item.number2 == 14;
-      });
-      this.freeParking = tempfreeParking["0"]["setupflag"];
-      const tempDEFAULTCHECKINTIME = this.tempsetup.filter((item, index) => {
-        //  DEFAULT CHECKIN TIME
-        return item.number1 === 8 && item.number2 == 2;
-      });
-      this.defaultCI = tempDEFAULTCHECKINTIME["0"]["setupvalue"];
-      const tempBG = this.tempsetup.filter((item, index) => {
-        //  Background Color
-        return item.number1 === 4 && item.setupflag === true;
-      });
-      this.ota.backgroundColor = tempBG[0]["setupvalue"];
-      this.iconOta.backgroundColor = this.hexAToRGBA(tempBG[0]["setupvalue"]);
-      this.iconOta.color = tempBG[0]["setupvalue"];
-      this.BG = tempBG[0]["setupvalue"];
-      const tempFG = this.tempsetup.filter((item, index) => {
-        //  Foreground Color
-        return item.number1 === 5 && item.setupflag === true;
-      });
-      this.textOta.color = tempFG[0]["setupvalue"];
-      this.FG = tempFG[0]["setupvalue"];
-      const tempImage = this.tempsetup.filter((item, index) => {
-        //  Image Hotel
-        return item.number1 === 7 && item.number2 === 1;
-      });
-      this.hotelImage = tempImage[0]["setupvalue"];
-      const tempKiosCheckin = this.tempsetup.filter((item, index) => {
-        //  FLAG KIOSK CHECKIN USAGE
-        return item.number1 === 8 && item.number2 === 10;
-      });
-      this.kiosCheckin = tempKiosCheckin[0]["setupflag"];
-      const tempLogo = this.tempsetup.filter((item, index) => {
-        //  Logo Hotel
-        return item.number1 === 7 && item.number2 === 6;
-      });
-      this.hotelLogo = tempLogo[0]["setupvalue"];
-      const tempHotelName = this.tempsetup.filter((item, index) => {
-        //  Hotel Name
-        return item.number1 === 99 && item.number2 === 1;
-      });
-      this.hotelName = tempHotelName[0]["setupvalue"];
-      const tempSystemDate = this.tempsetup.filter((item, index) => {
-        //  SYSTEM DATE
-        return item.number1 === 9 && item.number2 === 4;
-      });
-      this.SystemDate = tempSystemDate[0]["setupvalue"];
-      const tempLICENSE = this.tempsetup.filter((item, index) => {
-        //  LICENSE WA/SMS GATEWAY
-        return item.number1 === 9 && item.number2 === 5;
-      });
-      this.LICENSE = tempLICENSE[0]["setupflag"];
-      const tempTodayOcc = this.tempsetup.filter((item, index) => {
-        //  LICENSE WA/SMS GATEWAY
-        return item.number1 === 9 && item.number2 === 6;
-      });
-      this.todayOcc = tempTodayOcc[0]["price"];
-      const defCountry = this.tempsetup.filter((item, index) => {
-        //  Default Country Code
-        return item.number1 === 9 && item.number2 === 1;
-      });
-      this.defaultCountry = defCountry[0]["setupvalue"];
-      if (this.defaultCountry.toLowerCase() == "idn") {
-        this.defaultCountry = "INA";
+    } else {
+      if (msServerClock < msCheckinClock) {
+        this.infoMCIEarlyCheckin = true;
       }
-      const tempLicenseMember = this.tempsetup.filter((item, index) => {
-        //  LICENSE WA/SMS GATEWAY
-        return item.number1 === 9 && item.number2 === 8;
-      });
-      this.licenseMembership = tempLicenseMember[0]["setupflag"];
-      this.policy = privacyPolicy.responses["0"].policy;
-      this.policeTrans = privacyPolicy.responses["0"].policeTrans;
-      const tempSMOOKING = this.tempsetup.filter((item, index) => {
-        //  condition SMOOKING
-        return item.number1 === 6 && item.number2 === 3;
-      });
-      this.termSMOOKING = tempSMOOKING[0]["setupvalue"];
-      const tempServer = this.tempsetup.filter((item, index) => {
-        //  Server Time
-        return (
-          item.number1 === 9 &&
-          item.number2 === 7 &&
-          item.descr == "SERVER TIME"
-        );
-      });
-      this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
-      this.server = "15:00";
-      const msServerClock = moment(this.server, "HH:mm").valueOf();
-      const obj = {};
-      obj["FilterPurposeofStay"] = this.FilterPurposeofStay;
-      obj["PurposeofStay"] = this.purpose;
-      obj["countries"] = this.countries;
-      obj["province"] = this.province;
-      obj["termENG"] = this.termENG;
-      obj["termIDN"] = this.termIDN;
-      obj["minimumDeposit"] = this.minimumDeposit;
-      obj["maximumDeposit"] = this.maximumDeposit;
-      obj["OverNightDeposit"] = this.OverNightDeposit;
-      obj["money"] = this.money;
-      obj["currency"] = this.currency;
-      obj["per"] = this.per;
-      obj["scanid"] = this.scanid;
-      obj["wifiAddress"] = this.wifiAddress;
-      obj["wifiPassword"] = this.wifiPassword;
-      obj["SkipDeposit"] = this.SkipDeposit;
-      obj["BackgroundColor"] = this.BG;
-      obj["FontColor"] = this.FG;
-      obj["freeParking"] = this.freeParking;
-      obj["hotelImage"] = this.hotelImage;
-      obj["hotelName"] = this.hotelName;
-      obj["hotelEndpoint"] = this.hotelEndpoint;
-      obj["hotelCode"] = this.hotelCode;
-      obj["langID"] = this.langID;
-      obj["serverTime"] = this.server;
-      obj["SystemDate"] = this.SystemDate;
-      obj["LICENSE"] = this.LICENSE;
-      obj["location"] = this.location;
-      obj["defaultCI"] = this.defaultCI;
-      obj["hotelLogo"] = this.hotelLogo;
-      obj["defaultCountry"] = this.defaultCountry;
-      obj["termSMOOKING"] = this.termSMOOKING;
-      obj["policy"] = this.policy;
-      obj["policeTrans"] = this.policeTrans;
-      obj["kiosCheckin"] = this.kiosCheckin;
-      this.setup.push(obj);
+    }
 
-      //End Request Set Up
-      // Hotel System Date
-      const systemDateObj = this.tempsetup.filter((item, index) => {
-        return item.number1 === 9 && item.number2 === 4;
-      });
-      // Handling Hotel System Date to Set At Calendar
-      const systemDate = systemDateObj[0]["setupvalue"];
-      const dDate = String(moment(systemDate, "DD/MM/YYYY").date()).padStart(
-        2,
-        "0"
-      );
-      const dMonth = String(
-        moment(systemDate, "DD/MM/YYYY").month() + 1
-      ).padStart(2, "0");
-      const dYear = String(moment(systemDate, "DD/MM/YYYY").year());
-      const dYearMax = String(moment(systemDate, "DD/MM/YYYY").year() + 5); // Only 5 years
-      this.date = moment(`${dDate}/${dMonth}/${dYear}`, "DD/MM/YYYY")._i;
-      this.minDate = `${dYear}/${dMonth}/${dDate}`;
-      this.maxDate = `${dYearMax}/${dMonth}/${dDate}`;
-      this.minCalendar = `${dYear}/${dMonth}`;
-      // Get Hotel Default Checkin Time
-      const checkinTime = this.tempsetup.filter((item, index) => {
-        return item.number1 === 8 && item.number2 === 2;
-      });
-      this.checkin = checkinTime[0]["setupvalue"];
-      // Convert Check-in Time to Milisecond
-      let msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-      // Get Earliest Checkin Time
-      const earliestCI = this.tempsetup.filter((item, index) => {
-        return item.number1 === 8 && item.number2 === 11;
-      });
-      this.earliestCiTime = earliestCI[0]["setupvalue"];
-      this.earliestCiFlag = earliestCI[0]["setupflag"];
-      // Convert Earliest Check-in Time to Milisecond
-      const msEarliestCiTime = moment(this.earliestCiTime, "HH:mm").valueOf();
-      /** Compare Check-in Time with Server Time
-       *  If Erliest CI Flag is Active : Server Time < Earliest CI Time Then Show Pop Up Cannot MCI
-       *  If Server Time < Check-in Time Then Show Pop Up Cannot MCI
-       */
+    if (this.tempParambook != "") {
+      /* PCI Get Data */
+      this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
+      msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
       if (this.earliestCiFlag) {
         this.checkin = this.earliestCiTime;
         if (msServerClock < msEarliestCiTime) {
@@ -1092,112 +1084,83 @@ export default {
             /* Checking License */
             if (!this.LICENSE) {
               this.infoMCINotAvail = true; // mci_not_avail
+            } else {
+              this.bookingcode = this.tempParambook;
+              this.date = this.tempParamcodate.replace(/%2F/g, "/");
+              this.handleFindRsv("pci");
             }
           }
         }
       } else {
         if (msServerClock < msCheckinClock) {
           this.infoMCIEarlyCheckin = true;
-        }
-      }
-
-      if (this.tempParambook != "") {
-        /* PCI Get Data */
-        this.checkin = this.tempParamcitime.replace(/%3A/g, ":");
-        msCheckinClock = moment(this.checkin, "HH:mm").valueOf();
-        if (this.earliestCiFlag) {
-          this.checkin = this.earliestCiTime;
-          if (msServerClock < msEarliestCiTime) {
-            this.infoMCIEarlyCheckin = true;
-          } else {
-            /* Occupancy Checking */
-            if (this.todayOcc > this.baseOccupancy) {
-              this.infoMCINotAvail = true; // mci_not_avail
-            } else {
-              /* Checking License */
-              if (!this.LICENSE) {
-                this.infoMCINotAvail = true; // mci_not_avail
-              } else {
-                this.bookingcode = this.tempParambook;
-                this.date = this.tempParamcodate.replace(/%2F/g, "/");
-                this.handleFindRsv("pci");
-              }
-            }
-          }
         } else {
-          if (msServerClock < msCheckinClock) {
-            this.infoMCIEarlyCheckin = true;
-          } else {
-            this.bookingcode = this.tempParambook;
-            this.date = this.tempParamcodate.replace(/%2F/g, "/");
-            this.handleFindRsv("pci");
-          }
+          this.bookingcode = this.tempParambook;
+          this.date = this.tempParamcodate.replace(/%2F/g, "/");
+          this.handleFindRsv("pci");
         }
-      } else if (this.hotelParams.substring(0, 3) == "sms") {
-        this.handleSMS();
       }
-      /* Handling Locale */
-      /* Set Variable Label */
-      this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
-      this.weblabel.vhpSelfCheckIn = this.findLabel(
-        "vhp_self_checkIn",
-        "titleCase"
+    } else if (this.hotelParams.substring(0, 3) == "sms") {
+      this.handleSMS();
+    }
+    /* Handling Locale */
+    /* Set Variable Label */
+    this.weblabel.findRsv = this.findLabel("find_rsv", "titleCase");
+    this.weblabel.vhpSelfCheckIn = this.findLabel(
+      "vhp_self_checkIn",
+      "titleCase"
+    );
+    this.weblabel.chooseOption = this.findLabel(
+      "choose_option",
+      "sentenceCase"
+    );
+    this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
+    this.weblabel.cancel = this.findLabel("cancel", "titleCase");
+    this.weblabel.search = this.findLabel("search", "titleCase");
+    this.weblabel.inputBookcode = this.findLabel(
+      "input_bookcode",
+      "sentenceCase"
+    );
+    this.weblabel.coDate = this.findLabel("co_date", "titleCase");
+    this.weblabel.inputCoDate = this.findLabel("input_codate", "sentenceCase");
+    this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
+    this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.inputGuestName = this.findLabel(
+      "input_guest_name",
+      "sentenceCase"
+    );
+    this.weblabel.email = this.findLabel("email", "titleCase");
+    this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
+    this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
+    this.weblabel.inputMembership = this.findLabel(
+      "input_membership",
+      "sentenceCase"
+    );
+    this.weblabel.information = this.findLabel("information", "titleCase");
+    this.weblabel.close = this.findLabel("close", "titleCase");
+    this.weblabel.earlyCheckin = this.findLabel(
+      "early_checkin",
+      "sentenceCase"
+    );
+    this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
+    this.weblabel.mciErrorNotFound = this.findLabel(
+      "mci_error_not_found",
+      "sentenceCase"
+    );
+    this.weblabel.mciErrorNotAvail = this.findLabel(
+      "mci_error_not_avail",
+      "sentenceCase"
+    );
+    this.weblabel.mciRoomNotAvail = this.findLabel(
+      "mci_room_not_avail",
+      "sentenceCase"
+    );
+    this.FilterPurposeofStay.forEach((item) => {
+      item["setupvalue"] = this.findLabel(
+        item["setupvalue"].toLowerCase(),
+        "upperCase"
       );
-      this.weblabel.chooseOption = this.findLabel(
-        "choose_option",
-        "sentenceCase"
-      );
-      this.weblabel.bookCode = this.findLabel("book_code", "titleCase");
-      this.weblabel.cancel = this.findLabel("cancel", "titleCase");
-      this.weblabel.search = this.findLabel("search", "titleCase");
-      this.weblabel.inputBookcode = this.findLabel(
-        "input_bookcode",
-        "sentenceCase"
-      );
-      this.weblabel.coDate = this.findLabel("co_date", "titleCase");
-      this.weblabel.inputCoDate = this.findLabel(
-        "input_codate",
-        "sentenceCase"
-      );
-      this.weblabel.iconName = this.findLabel("icon_name", "titleCase");
-      this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
-      this.weblabel.inputGuestName = this.findLabel(
-        "input_guest_name",
-        "sentenceCase"
-      );
-      this.weblabel.email = this.findLabel("email", "titleCase");
-      this.weblabel.inputEmail = this.findLabel("input_email", "sentenceCase");
-      this.weblabel.membershipID = this.findLabel("membership_id", "titleCase");
-      this.weblabel.inputMembership = this.findLabel(
-        "input_membership",
-        "sentenceCase"
-      );
-      this.weblabel.information = this.findLabel("information", "titleCase");
-      this.weblabel.close = this.findLabel("close", "titleCase");
-      this.weblabel.earlyCheckin = this.findLabel(
-        "early_checkin",
-        "sentenceCase"
-      );
-      this.weblabel.okMessage = this.findLabel("ok_message", "titleCase");
-      this.weblabel.mciErrorNotFound = this.findLabel(
-        "mci_error_not_found",
-        "sentenceCase"
-      );
-      this.weblabel.mciErrorNotAvail = this.findLabel(
-        "mci_error_not_avail",
-        "sentenceCase"
-      );
-      this.weblabel.mciRoomNotAvail = this.findLabel(
-        "mci_room_not_avail",
-        "sentenceCase"
-      );
-      this.FilterPurposeofStay.forEach((item) => {
-        item["setupvalue"] = this.findLabel(
-          item["setupvalue"].toLowerCase(),
-          "upperCase"
-        );
-      });
-    })();
+    });
   },
   methods: {
     handleBodyPadding() {
@@ -1290,28 +1253,32 @@ export default {
     },
     findLabel(nameKey, used) {
       let labels = undefined;
-      if (localStorage.getItem("labels") == null) {
-        labels = localStorage.getItem("labels");
+
+      if (sessionStorage.getItem("labels") == null) {
+        labels = JSON.parse(sessionStorage.getItem("labels"));
       } else {
         labels = this.labels;
       }
+
       let fixLabel = "";
-      const locale = localStorage.getItem("locale");
+      const locale = sessionStorage.getItem("locale");
+
       const label = labels.find((el) => {
-        return el["program-variable"] == nameKey;
+        return el["program-variable"].trim() == nameKey.trim();
       });
+
       if (label === undefined) {
         fixLabel = "";
       } else {
         switch (locale) {
           case "EN":
-            fixLabel = label["program-label1"];
+            fixLabel = label["program-label1"].trim();
             break;
           case "ID":
-            fixLabel = label["program-label2"];
+            fixLabel = label["program-label2"].trim();
             break;
           default:
-            fixLabel = label["program-label1"];
+            fixLabel = label["program-label1"].trim();
             break;
         }
         switch (used) {
@@ -1341,14 +1308,14 @@ export default {
         this.langID = "IDN";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "Indonesia";
-        localStorage.setItem("locale", "ID");
+        sessionStorage.setItem("locale", "ID");
         this.resetLabel();
       } else {
         this.programLabel = "program-label1";
         this.langID = "ENG";
         this.setup[0]["langID"] = this.langID;
         this.selectedLang = "English";
-        localStorage.setItem("locale", "EN");
+        sessionStorage.setItem("locale", "EN");
         this.resetLabel();
       }
     },
@@ -1495,7 +1462,7 @@ export default {
         },
       });
     },
-    handleFindRsv(mode) {
+    async handleFindRsv(mode) {
       /* Turn On Loading */
       this.confirmLoading = true;
       /* Variable Assignment */
@@ -1554,181 +1521,169 @@ export default {
         this.errorco();
         this.confirmLoading = false;
       } else {
-        (async () => {
-          try {
-            const data = await ky
-              .post(this.hotelEndpoint + "mobileCI/findReservation", {
-                json: {
-                  request: {
-                    coDate: coDate,
-                    bookCode: searchVar,
-                    chName: " ",
-                    earlyCI: "false",
-                    maxRoom: "1",
-                    citime: this.server,
-                    groupFlag: "false",
-                  },
-                },
-                timeout: 10000,
-                throwHttpErrors: false,
-              })
-              .json();
-
-            this.message = data.response["messResult"];
-            const messResult = this.message.split("-");
-            const messMessage = messResult[1].split(",");
-            switch (messResult[0].trim()) {
-              case "0":
-                // Reservation is Found
-                const totalGuest =
-                  data.response.arrivalGuestlist["arrival-guestlist"].length;
-
-                if (totalGuest > 1) {
-                  /* Handling Multiple Guest to ListCheckin.vue */
-                  reservation.push(
-                    data["response"]["arrivalGuestlist"]["arrival-guestlist"]
-                  );
-                  // Get Total Guest
-                  const rsvFix = reservation[0].filter((item, index) => {
-                    if (item["room-sharer"] === true) {
-                    } else {
-                      return item;
-                    }
-                  });
-                  const tempTotal = rsvFix.filter((item, index) => {
-                    if (
-                      item["room-status"] ==
-                      "1 Room Already assign or Overlapping"
-                    ) {
-                    } else {
-                      return item;
-                    }
-                  });
-                  const roomShare = reservation[0].filter((item, index) => {
-                    return item["room-sharer"] === true;
-                  });
-                  rsvFix.forEach((item, index) => {
-                    Object.assign(item, { rmshare: [] });
-                    roomShare.forEach((guest, index) => {
-                      if (item["zinr"] == guest["zinr"]) {
-                        item["rmshare"].push(guest["gast"]);
-                      }
-                    });
-                  });
-                  // Assigning Setup
-                  Object.assign(this.setup[0], { TotalData: tempTotal.length });
-                  Object.assign(this.setup[0], { SearchMethod: mode });
-                  Object.assign(this.setup[0], { SearchValue: searchVar });
-                  Object.assign(this.setup[0], { SearchCO: coDate });
-
-                  if (rsvFix.length > 1) {
-                    router.push({
-                      name: "ListCheckIn",
-                      params: {
-                        guestData: rsvFix,
-                        setting: this.setup[0],
-                      },
-                    });
-                  } else {
-                    if (
-                      rsvFix[0]["res-status"] == "1 - Guest Already Checkin"
-                    ) {
-                      // Langsung ke SuccessCheckin.vue
-                      Object.assign(rsvFix[0], { roomReady: true });
-                      router.push({
-                        name: "SuccessCheckIn",
-                        params: {
-                          Data: rsvFix[0],
-                          setting: this.setup[0],
-                        },
-                      });
-                    } else if (rsvFix[0]["ifdata-sent"] == true) {
-                      Object.assign(rsvFix[0], { roomReady: false });
-                      router.push({
-                        name: "SuccessCheckIn",
-                        params: {
-                          Data: rsvFix[0],
-                          setting: this.setup[0],
-                        },
-                      });
-                    } else {
-                      this.handleSingleGuest(rsvFix[0], this.setup[0]);
-                    }
-                  }
-                } else {
-                  // Assigning Setup
-                  Object.assign(this.setup[0], { TotalData: 1 });
-                  Object.assign(this.setup[0], { SearchMethod: mode });
-                  Object.assign(this.setup[0], { SearchValue: searchVar });
-                  Object.assign(this.setup[0], { SearchCO: coDate });
-                  const guest =
-                    data.response.arrivalGuestlist["arrival-guestlist"][0];
-                  Object.assign(guest, { vreg: "" });
-                  Object.assign(guest, { step: "" });
-                  Object.assign(guest, { rmshare: [] });
-                  // Handling Resstatus
-                  if (guest["res-status"] == "1 - Guest Already Checkin") {
-                    // Langsung ke SuccessCheckin.vue
-                    Object.assign(guest, { roomReady: true });
-                    sessionStorage.setItem("guestData", JSON.stringify(guest));
-                    sessionStorage.setItem(
-                      "settings",
-                      JSON.stringify(this.setup[0])
-                    );
-                    router.push({
-                      name: "SuccessCheckIn",
-                      params: {
-                        Data: guest,
-                        setting: this.setup[0],
-                      },
-                    });
-                  } else if (guest["ifdata-sent"] == true) {
-                    Object.assign(guest, { roomReady: false });
-                    sessionStorage.setItem("guestData", JSON.stringify(guest));
-                    sessionStorage.setItem(
-                      "settings",
-                      JSON.stringify(this.setup[0])
-                    );
-                    router.push({
-                      name: "SuccessCheckIn",
-                      params: {
-                        Data: guest,
-                        setting: this.setup[0],
-                      },
-                    });
-                  } else {
-                    this.handleSingleGuest(guest, this.setup[0]);
-                  }
-                }
-                break;
-              case "01":
-                this.infoMCIRoomNotAvail = true;
-                break;
-              case "1":
-                this.infoMCINotFound = true; // Reservation's Not Found
-                break;
-              case "2":
-                this.infoMCINotFound = true;
-                break;
-              case "02":
-                this.infoMCIRoomNotAvail = true;
-                break;
-              case "9":
-                this.infoMCIEarlyCheckin = true; // Early Checkin
-                break;
-              default:
-                this.infoMCINotAvail = true; //mci_error_not_avail
-                break;
-            }
-            this.confirmLoading = false;
-            this.hideMCISearchModal();
-            /* Reset Form */
-            this.resetForm();
-          } catch (error) {
-            this.confirmLoading = false;
-            this.$message.error(error.toString());
+        const data = await api.doFetch(
+          this.hotelEndpoint + "mobileCI/findReservation",
+          {
+            coDate: coDate,
+            bookCode: searchVar,
+            chName: " ",
+            earlyCI: "false",
+            maxRoom: "1",
+            citime: this.server,
+            groupFlag: "false",
           }
-        })();
+        );
+
+        this.message = data.response["messResult"];
+        const messResult = this.message.split("-");
+        const messMessage = messResult[1].split(",");
+        switch (messResult[0].trim()) {
+          case "0":
+            // Reservation is Found
+            const totalGuest =
+              data.response.arrivalGuestlist["arrival-guestlist"].length;
+
+            if (totalGuest > 1) {
+              /* Handling Multiple Guest to ListCheckin.vue */
+              reservation.push(
+                data["response"]["arrivalGuestlist"]["arrival-guestlist"]
+              );
+              // Get Total Guest
+              const rsvFix = reservation[0].filter((item, index) => {
+                if (item["room-sharer"] === true) {
+                } else {
+                  return item;
+                }
+              });
+              const tempTotal = rsvFix.filter((item, index) => {
+                if (
+                  item["room-status"] == "1 Room Already assign or Overlapping"
+                ) {
+                } else {
+                  return item;
+                }
+              });
+              const roomShare = reservation[0].filter((item, index) => {
+                return item["room-sharer"] === true;
+              });
+              rsvFix.forEach((item, index) => {
+                Object.assign(item, { rmshare: [] });
+                roomShare.forEach((guest, index) => {
+                  if (item["zinr"] == guest["zinr"]) {
+                    item["rmshare"].push(guest["gast"]);
+                  }
+                });
+              });
+              // Assigning Setup
+              Object.assign(this.setup[0], { TotalData: tempTotal.length });
+              Object.assign(this.setup[0], { SearchMethod: mode });
+              Object.assign(this.setup[0], { SearchValue: searchVar });
+              Object.assign(this.setup[0], { SearchCO: coDate });
+
+              if (rsvFix.length > 1) {
+                router.push({
+                  name: "ListCheckIn",
+                  params: {
+                    guestData: rsvFix,
+                    setting: this.setup[0],
+                  },
+                  query: {
+                    guestData: btoa(JSON.stringify(rsvFix)),
+                  },
+                });
+              } else {
+                if (rsvFix[0]["res-status"] == "1 - Guest Already Checkin") {
+                  // Langsung ke SuccessCheckin.vue
+                  Object.assign(rsvFix[0], { roomReady: true });
+                  router.push({
+                    name: "SuccessCheckIn",
+                    params: {
+                      Data: rsvFix[0],
+                      setting: this.setup[0],
+                    },
+                  });
+                } else if (rsvFix[0]["ifdata-sent"] == true) {
+                  Object.assign(rsvFix[0], { roomReady: false });
+                  router.push({
+                    name: "SuccessCheckIn",
+                    params: {
+                      Data: rsvFix[0],
+                      setting: this.setup[0],
+                    },
+                  });
+                } else {
+                  this.handleSingleGuest(rsvFix[0], this.setup[0]);
+                }
+              }
+            } else {
+              // Assigning Setup
+              Object.assign(this.setup[0], { TotalData: 1 });
+              Object.assign(this.setup[0], { SearchMethod: mode });
+              Object.assign(this.setup[0], { SearchValue: searchVar });
+              Object.assign(this.setup[0], { SearchCO: coDate });
+              const guest =
+                data.response.arrivalGuestlist["arrival-guestlist"][0];
+              Object.assign(guest, { vreg: "" });
+              Object.assign(guest, { step: "" });
+              Object.assign(guest, { rmshare: [] });
+              // Handling Resstatus
+              if (guest["res-status"] == "1 - Guest Already Checkin") {
+                // Langsung ke SuccessCheckin.vue
+                Object.assign(guest, { roomReady: true });
+                sessionStorage.setItem("guestData", JSON.stringify(guest));
+                sessionStorage.setItem(
+                  "settings",
+                  JSON.stringify(this.setup[0])
+                );
+                router.push({
+                  name: "SuccessCheckIn",
+                  params: {
+                    Data: guest,
+                    setting: this.setup[0],
+                  },
+                });
+              } else if (guest["ifdata-sent"] == true) {
+                Object.assign(guest, { roomReady: false });
+                sessionStorage.setItem("guestData", JSON.stringify(guest));
+                sessionStorage.setItem(
+                  "settings",
+                  JSON.stringify(this.setup[0])
+                );
+                router.push({
+                  name: "SuccessCheckIn",
+                  params: {
+                    Data: guest,
+                    setting: this.setup[0],
+                  },
+                });
+              } else {
+                this.handleSingleGuest(guest, this.setup[0]);
+              }
+            }
+            break;
+          case "01":
+            this.infoMCIRoomNotAvail = true;
+            break;
+          case "1":
+            this.infoMCINotFound = true; // Reservation's Not Found
+            break;
+          case "2":
+            this.infoMCINotFound = true;
+            break;
+          case "02":
+            this.infoMCIRoomNotAvail = true;
+            break;
+          case "9":
+            this.infoMCIEarlyCheckin = true; // Early Checkin
+            break;
+          default:
+            this.infoMCINotAvail = true; //mci_error_not_avail
+            break;
+        }
+        this.confirmLoading = false;
+        this.hideMCISearchModal();
+        /* Reset Form */
+        this.resetForm();
       }
     },
     resetForm() {
@@ -1775,7 +1730,7 @@ export default {
       this.modalMembershipID = false;
     },
     showAnimation() {
-      if (localStorage.getItem("labels") == null) {
+      if (!sessionStorage.getItem("labels")) {
         this.timer = 7000;
       } else if (this.hotelParams.substring(0, 3) == "sms") {
         this.timer = 2000;

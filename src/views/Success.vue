@@ -24,11 +24,6 @@
           <span class="font-weight-bold">{{ ciTime }}</span>
         </p>
         <p>
-          <a-button type="primary" @click="checkin">{{
-            getLabels("ci_now", `titleCase`)
-          }}</a-button>
-        </p>
-        <p>
           <br />
         </p>
         <p v-if="flagKiosk == false" class="p-mobile">
@@ -44,7 +39,7 @@
 
 <script>
 import QRCode from "qrcode";
-import ky from "ky";
+import api from "../api/Endpoint";
 import moment from "moment";
 import router from "../router";
 export default {
@@ -73,7 +68,7 @@ export default {
       hotelLogo: "",
     };
   },
-  mounted() {
+  async mounted() {
     sessionStorage.setItem("PCI", true);
 
     this.data = this.$route.params.Data;
@@ -85,7 +80,7 @@ export default {
     this.ota.backgroundColor = this.$route.params.Param.Background;
     this.textOta.color = this.$route.params.Param.Font;
     this.hotelLogo = this.$route.params.Param.hotelLogo;
-    this.labels = JSON.parse(localStorage.getItem("labels"));
+    this.labels = JSON.parse(sessionStorage.getItem("labels"));
     const success = btoa(this.data);
     this.bookingCode = this.data.substring(1, this.data.indexOf(";"));
     this.coDate = this.data.substring(
@@ -119,18 +114,10 @@ export default {
     QRCode.toDataURL(success, { errorCorrectionLevel: "H" }).then((url) => {
       this.url = url.split(",")[1];
     });
-    (async () => {
-      const parsed = await ky
-        .post(this.hotelEndpoint + "preCI/storeQRCode", {
-          json: {
-            request: {
-              base64image: this.url,
-              resno: this.bookingCode,
-            },
-          },
-        })
-        .json();
-    })();
+    const parsed = await api.doFetch(this.hotelEndpoint + "preCI/storeQRCode", {
+      base64image: this.url,
+      resno: this.bookingCode,
+    });
   },
   methods: {
     checkin() {
