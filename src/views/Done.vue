@@ -121,7 +121,7 @@ export default {
       const tempTerm = this.tempsetup.filter((item, index) => {
         return item.number1 === 6 && item.setupflag === true;
       });
-      this.term = tempTerm[0]["setupvalue"];
+      this.term = tempTerm[0]["setupvalue"].trim();
       const temRequest = this.tempsetup.filter((item, index) => {
         return item.number1 === 2 && item.setupflag === true;
       });
@@ -271,30 +271,73 @@ export default {
         parsed.response.arrivalGuest["arrival-guest"]["0"]["gcomment-desc"] ==
         "GUEST ALREADY PCI"
       ) {
-        /* If Single Guest Already PCI */
-        this.currDataPrepare = parsed.response.arrivalGuest["arrival-guest"][0];
-        const Data =
-          "{" +
-          this.currDataPrepare["rsv-number"] +
-          ";" +
-          moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
-          "," +
-          this.checkInTIme +
-          "}";
-        router.push({
-          name: "Success",
-          params: {
-            Data: Data,
-            Param: this.setting[0],
-          },
-        });
-      } else {
-        /* Compare ServerTime and SystemTime */
+        const ciDate = moment(
+          `${parsed.response.arrivalGuest["arrival-guest"]["0"]["arrive"]}`,
+          "YYYY-MM-DD"
+        );
+        const dDate = ciDate.date();
+        const dMonth = ciDate.month() + 1;
+        const dYear = ciDate.year();
+
+        this.systemDate = moment(
+          `${dDate}/${dMonth}/${dYear} ${this.maxPCITime}`,
+          "DD/MM/YYYY HH:mm:ss"
+        );
+        systemTimeValue = this.systemDate.valueOf();
+
         if (serverTimeValue > systemTimeValue) {
           /* Go To Could Not PCI Screen */
+          router.push({
+            name: "Info",
+            params: {
+              Param: this.setting[0],
+            },
+          });
         } else {
-          /* If Single Guest PCI */
-          const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+          /* If Single Guest Already PCI */
+          this.currDataPrepare =
+            parsed.response.arrivalGuest["arrival-guest"][0];
+          const Data =
+            "{" +
+            this.currDataPrepare["rsv-number"] +
+            ";" +
+            moment(this.currDataPrepare.depart).format("MM/DD/YYYY") +
+            "," +
+            this.checkInTIme +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.setting[0],
+            },
+          });
+        }
+      } else {
+        /* If Single Guest PCI */
+        const dataGuest = parsed.response.arrivalGuest["arrival-guest"];
+
+        const ciDate = moment(`${dataGuest["0"]["arrive"]}`, "YYYY-MM-DD");
+        const dDate = ciDate.date();
+        const dMonth = ciDate.month() + 1;
+        const dYear = ciDate.year();
+
+        this.systemDate = moment(
+          `${dDate}/${dMonth}/${dYear} ${this.maxPCITime}`,
+          "DD/MM/YYYY HH:mm:ss"
+        );
+        systemTimeValue = this.systemDate.valueOf();
+
+        /* Check Time */
+        if (serverTimeValue > systemTimeValue) {
+          /* Go To Could Not PCI Screen */
+          router.push({
+            name: "Info",
+            params: {
+              Param: this.setting[0],
+            },
+          });
+        } else {
           dataGuest[0].rmshare = [];
           if (dataGuest[0]["room-sharer"] != "") {
             dataGuest[0].rmshare.push(dataGuest[0]["room-sharer"]);

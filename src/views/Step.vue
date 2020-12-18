@@ -214,11 +214,13 @@
         <q-separator />
 
         <q-card-section style="max-height: 50vh" class="scroll">
+          <p
+            style="white-space: pre-wrap"
+            v-show="stepTerm == 1"
+            v-html="terms.trim()"
+          ></p>
           <p style="white-space: pre-wrap" v-show="stepTerm == 1">
-            {{ terms }}
-          </p>
-          <p style="white-space: pre-wrap" v-show="stepTerm == 1">
-            {{ termSMOOKING }}
+            {{ termSMOOKING.trim() }}
           </p>
 
           <p v-show="stepTerm == 2" v-html="policy"></p>

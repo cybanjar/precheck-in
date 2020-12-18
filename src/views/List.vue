@@ -192,6 +192,7 @@ export default {
       guestNameClass: "col-12 content-guestname",
       serverTime: "",
       systemTime: "",
+      systemDate: undefined,
     };
   },
   created() {
@@ -242,90 +243,95 @@ export default {
   },
   methods: {
     send() {
-      if (!(this.serverTime > this.systemTime)) {
-        router.push({
-          name: "Info",
-          params: {
-            Param: this.lemparsetup,
-          },
+      if (this.selectedData.length > 1) {
+        // for (const i in this.selectedData) {
+        const jumlah = this.selectedData.filter((item, index) => {
+          return item["gcomment-desc"] == "GUEST ALREADY PCI";
         });
-      } else {
-        if (this.selectedData.length > 1) {
-          // for (const i in this.selectedData) {
-          const jumlah = this.selectedData.filter((item, index) => {
-            return item["gcomment-desc"] == "GUEST ALREADY PCI";
+        if (this.selectedData.length == jumlah.length) {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
           });
-          if (this.selectedData.length == jumlah.length) {
-            const Data =
-              "{" +
-              this.selectedData[0]["rsv-number"] +
-              ";" +
-              moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
-              "," +
-              this.setup["checkInTIme"] +
-              "}";
-            router.push({
-              name: "Success",
-              params: {
-                Data: Data,
-                Param: this.lemparsetup,
-              },
-            });
-          } else {
-            const asli = this.selectedData.filter((item, index) => {
-              return item["gcomment-desc"] != "GUEST ALREADY PCI";
-            });
-            const data = asli;
-            router.push({
-              name: "Home",
-              params: { Data: data, Param: this.lemparsetup },
-            });
-          }
         } else {
-          if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
-            const Data =
-              "{" +
-              this.selectedData[0]["rsv-number"] +
-              ";" +
-              moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
-              "," +
-              this.setup["checkInTIme"] +
-              "}";
+          const asli = this.selectedData.filter((item, index) => {
+            return item["gcomment-desc"] != "GUEST ALREADY PCI";
+          });
+          const data = asli;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
+        }
+      } else {
+        if (this.selectedData[0]["gcomment-desc"] == "GUEST ALREADY PCI") {
+          const Data =
+            "{" +
+            this.selectedData[0]["rsv-number"] +
+            ";" +
+            moment(this.selectedData[0].depart).format("MM/DD/YYYY") +
+            "," +
+            this.setup["checkInTIme"] +
+            "}";
 
-            router.push({
-              name: "Success",
-              params: {
-                Data: Data,
-                Param: this.lemparsetup,
-              },
-            });
-          } else {
-            const data = this.selectedData;
-            router.push({
-              name: "Home",
-              params: { Data: data, Param: this.lemparsetup },
-            });
-          }
+          router.push({
+            name: "Success",
+            params: {
+              Data: Data,
+              Param: this.lemparsetup,
+            },
+          });
+        } else {
+          const data = this.selectedData;
+          router.push({
+            name: "Home",
+            params: { Data: data, Param: this.lemparsetup },
+          });
         }
       }
     },
     select(client) {
-      if (client.isSelected == false) {
-        this.selectedData.push(client);
-        for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = true;
-          }
-        }
+      const ciDate = moment(`${client["arrive"]}`, "YYYY-MM-DD");
+      const dDate = ciDate.date();
+      const dMonth = ciDate.month() + 1;
+      const dYear = ciDate.year();
+
+      this.systemDate = moment(
+        `${dDate}/${dMonth}/${dYear} ${this.maxPCITime}`,
+        "DD/MM/YYYY HH:mm:ss"
+      );
+      const systemTimeValue = this.systemDate.valueOf();
+      if (this.setup["serverTime"] > systemTimeValue) {
+        alert("nda bisa pci");
       } else {
-        for (const i in this.data) {
-          if (this.data[i].key == client.key) {
-            this.data[i].isSelected = false;
+        if (client.isSelected == false) {
+          this.selectedData.push(client);
+          for (const i in this.data) {
+            if (this.data[i].key == client.key) {
+              this.data[i].isSelected = true;
+            }
           }
-        }
-        for (const x in this.selectedData) {
-          if (this.selectedData[x].key == client.key) {
-            this.selectedData.splice(x, 1);
+        } else {
+          for (const i in this.data) {
+            if (this.data[i].key == client.key) {
+              this.data[i].isSelected = false;
+            }
+          }
+          for (const x in this.selectedData) {
+            if (this.selectedData[x].key == client.key) {
+              this.selectedData.splice(x, 1);
+            }
           }
         }
       }

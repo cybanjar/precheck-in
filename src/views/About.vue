@@ -820,7 +820,6 @@ export default {
               purposeOfStay: values.purpose,
             }
           );
-          console.log(parsed.response);
           const tempMessResult = parsed.response.messResult.split(" ");
           this.scrollToTop();
           this.save();

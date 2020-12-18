@@ -602,7 +602,15 @@ export default {
     const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
     this.hotelParams = decodeURIComponent(tempParam);
     this.wifiAddress = this.setup.wifiAddress;
-    this.wifiPassword = this.setup.wifiPassword;
+    if (
+      this.guestData["wifi-password"] ||
+      this.guestData["wifi-password"] != ""
+    ) {
+      this.wifiPassword = this.guestData["wifi-password"];
+    } else {
+      this.wifiPassword = this.setup.wifiPassword;
+    }
+
     this.timeNow = moment().format("HH:mm");
 
     // Get Parsing Guest Data

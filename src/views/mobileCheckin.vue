@@ -802,6 +802,7 @@ export default {
     const setup = await api.doFetch(this.hotelEndpoint + "preCI/loadSetup", {
       icase: 1,
     });
+    console.log(setup);
 
     this.tempsetup = setup.response.pciSetup["pci-setup"];
     const jatah = [];
@@ -833,13 +834,14 @@ export default {
       // Term ENG
       return item.number1 === 6 && item.number2 === 1;
     });
-    this.termENG = tempTermENG[0]["setupvalue"];
+    this.termENG = tempTermENG[0]["setupvalue"].trim();
 
     const tempTermIDN = this.tempsetup.filter((item, index) => {
       // Term IDN
       return item.number1 === 6 && item.number2 === 2;
     });
-    this.termIDN = tempTermIDN[0]["setupvalue"];
+    this.termIDN = tempTermIDN[0]["setupvalue"].trim();
+
     const tempCurrency = this.tempsetup.filter((item, index) => {
       //  Currency
       return item.number1 === 2 && item.setupflag == true;
