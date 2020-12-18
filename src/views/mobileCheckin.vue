@@ -646,7 +646,8 @@ export default {
       policeTrans: "",
       kiosCheckin: false,
       smsParam: {},
-      cekbosku: {},
+      wifiUserByRoom: false,
+      wifiUsername: "",
     };
   },
   async created() {
@@ -802,9 +803,9 @@ export default {
     const setup = await api.doFetch(this.hotelEndpoint + "preCI/loadSetup", {
       icase: 1,
     });
-    console.log(setup);
 
     this.tempsetup = setup.response.pciSetup["pci-setup"];
+
     const jatah = [];
     for (const i in this.tempsetup) {
       if (this.tempsetup[i]["number1"] == 1) {
@@ -842,13 +843,6 @@ export default {
     });
     this.termIDN = tempTermIDN[0]["setupvalue"].trim();
 
-    const tempCurrency = this.tempsetup.filter((item, index) => {
-      //  Currency
-      return item.number1 === 2 && item.setupflag == true;
-    });
-    this.money = tempCurrency["0"]["price"];
-    this.currency = tempCurrency["0"]["remarks"];
-    this.per = tempCurrency["0"]["setupvalue"].split("PER")[1];
     const tempScandID = this.tempsetup.filter((item, index) => {
       //  Scand ID
       return item.number1 === 8 && item.number2 == 1;
@@ -864,6 +858,19 @@ export default {
       return item.number1 === 8 && item.number2 == 9;
     });
     this.wifiPassword = tempwifiPassword["0"]["setupvalue"];
+
+    const tempWifiUserFlag = this.tempsetup.filter((item, index) => {
+      //  Wifi Password
+      return item.number1 === 8 && item.number2 == 13;
+    });
+    this.wifiUserByRoom = tempWifiUserFlag["0"]["setupflag"];
+
+    const tempWifiUsername = this.tempsetup.filter((item, index) => {
+      //  Wifi Password
+      return item.number1 === 8 && item.number2 == 15;
+    });
+    this.wifiUsername = tempWifiUsername["0"]["setupvalue"];
+
     const tempSkipDeposit = this.tempsetup.filter((item, index) => {
       //  Skip Deposit
       return item.number1 === 8 && item.number2 == 4;
@@ -1008,6 +1015,8 @@ export default {
     obj["policy"] = this.policy;
     obj["policeTrans"] = this.policeTrans;
     obj["kiosCheckin"] = this.kiosCheckin;
+    obj["wifiUserByRoom"] = this.wifiUserByRoom;
+    obj["wifiUsername"] = this.wifiUsername;
     this.setup.push(obj);
 
     //End Request Set Up

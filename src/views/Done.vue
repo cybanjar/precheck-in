@@ -122,14 +122,17 @@ export default {
         return item.number1 === 6 && item.setupflag === true;
       });
       this.term = tempTerm[0]["setupvalue"].trim();
+
       const temRequest = this.tempsetup.filter((item, index) => {
-        return item.number1 === 2 && item.setupflag === true;
+        return item.number1 === 2;
       });
       this.showPickupRequest = temRequest[0].setupflag;
       this.money = temRequest[0]["price"];
       this.currency = temRequest[0]["remarks"];
       const tempPer = temRequest[0]["setupvalue"].split("PER")[1];
+
       this.per = this.getLabels(tempPer.toLowerCase().trim(), `sentenceCase`);
+
       this.tempHour = this.tempsetup.filter((item, index) => {
         return item.number1 === 8 && item.number2 === 2;
       });
@@ -190,7 +193,7 @@ export default {
         `${tempSystemDate[0]["setupvalue"]} ${this.maxPCITime}`,
         "DD/MM/YYYY HH:mm:ss"
       );
-      const systemTimeValue = this.systemDate.valueOf();
+      let systemTimeValue = this.systemDate.valueOf();
 
       const defCountry = this.tempsetup.filter((item, index) => {
         //  Default Country Code
@@ -255,6 +258,8 @@ export default {
       obj["location"] = this.location;
       obj["serverTime"] = serverTimeValue;
       obj["systemTime"] = systemTimeValue;
+      obj["maxPCITime"] = this.maxPCITime;
+      obj["serverDate"] = this.serverTime;
       this.setting.push(obj);
       if (parsed.response.arrivalGuest["arrival-guest"].length > 1) {
         const dataGuest = parsed.response.arrivalGuest["arrival-guest"];

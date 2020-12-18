@@ -73,6 +73,24 @@
                   {{ wifiAddress }}
                 </div>
               </div>
+              <div
+                class="row"
+                v-if="wifiUserByRoom && guestData['zinr'].length != 0"
+              >
+                <div class="col-6">{{ weblabel.wifiUsername }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ guestData["zinr"] }}
+                </div>
+              </div>
+              <div
+                class="row"
+                v-else-if="!wifiUserByRoom && wifiUsername.length != 0"
+              >
+                <div class="col-6">{{ weblabel.wifiUsername }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ wifiUsername }}
+                </div>
+              </div>
               <div class="row">
                 <div class="col-6">{{ weblabel.wifiPassword }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
@@ -259,6 +277,28 @@
                   {{ wifiAddress }}
                 </div>
               </div>
+
+              <div
+                class="row"
+                v-if="wifiUserByRoom && guestData['zinr'].length != 0"
+                v-show="roomReady"
+              >
+                <div class="col-6">{{ weblabel.wifiUsername }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ guestData["zinr"] }}
+                </div>
+              </div>
+              <div
+                class="row"
+                v-else-if="!wifiUserByRoom && wifiUsername.length != 0"
+                v-show="roomReady"
+              >
+                <div class="col-6">{{ weblabel.wifiUsername }}</div>
+                <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
+                  {{ wifiUsername }}
+                </div>
+              </div>
+
               <div class="row" v-show="roomReady">
                 <div class="col-6">{{ weblabel.wifiPassword }}</div>
                 <div class="col-6" style="font-weight: bold; padding: 0.2rem 0">
@@ -530,6 +570,7 @@ export default {
         mciSuccessMaxKeyMsg: [],
         mciSuccessWoKeyMsg: [],
         package: "",
+        wifiUsername: "",
       },
       infoMCIConfim: false,
       loading: true,
@@ -540,6 +581,8 @@ export default {
       checkOutDate: "",
       checkIntDate: "",
       timeNow: "",
+      wifiUserByRoom: false,
+      wifiUsername: "",
     };
   },
   async created() {
@@ -599,6 +642,8 @@ export default {
     this.TotalData = this.setup.TotalData;
     this.location = this.setup.location;
     this.serverTime = this.setup.serverTime;
+    this.wifiUserByRoom = this.setup.wifiUserByRoom;
+    this.wifiUsername = this.setup.wifiUsername;
     const tempParam = this.location.slice(this.location.lastIndexOf("?") + 1);
     this.hotelParams = decodeURIComponent(tempParam);
     this.wifiAddress = this.setup.wifiAddress;
@@ -701,6 +746,7 @@ export default {
       "sentenceCase"
     );
     this.weblabel.guestName = this.findLabel("guest_name", "titleCase");
+    this.weblabel.wifiUsername = this.findLabel("wifi_username", "titleCase");
     this.weblabel.mciSuccessWoKeystation = this.findLabel(
       "mci_success_wo_keystation",
       "sentenceCase"
