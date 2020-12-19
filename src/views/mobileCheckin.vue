@@ -977,6 +977,8 @@ export default {
       );
     });
     this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
+    this.server = this.server.substring(0, 5);
+
     //this.server = "15:00";
     const msServerClock = moment(this.server, "HH:mm").valueOf();
     const obj = {};
