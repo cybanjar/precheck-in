@@ -409,7 +409,7 @@
           weblabel.close
         }}</a-button>
       </template>
-      <p>{{ weblabel.earlyCheckin }}{{ checkin }}</p>
+      <p>{{ weblabel.earlyCheckin }} {{ checkin }}</p>
     </a-modal>
 
     <!-- Modal MCI Reservation Not Found -->
@@ -977,7 +977,7 @@ export default {
       );
     });
     this.server = moment(tempServer[0]["setupvalue"], "HH:mm")._i;
-    this.server = "15:00";
+    //this.server = "15:00";
     const msServerClock = moment(this.server, "HH:mm").valueOf();
     const obj = {};
     obj["FilterPurposeofStay"] = this.FilterPurposeofStay;
